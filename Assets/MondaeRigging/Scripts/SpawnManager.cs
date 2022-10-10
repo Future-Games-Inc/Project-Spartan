@@ -5,8 +5,6 @@ using Photon.Pun;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] GameObject Human1;
-
     public Vector3 spawnPosition;
 
     // Start is called before the first frame update
