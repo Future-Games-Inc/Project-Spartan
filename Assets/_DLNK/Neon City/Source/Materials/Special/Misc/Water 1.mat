@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water 1
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: 4800000, guid: ee7e4c9a5f6364b688a332c67fc32cca, type: 3}
   m_ValidKeywords:
   - _NORMALMAP
   m_InvalidKeywords: []
@@ -41,6 +41,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 690100f129b982c4095c9ff0fd1b6198, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ClearCoatMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -116,8 +120,10 @@ Material:
     - _AffectDepth: 0.88
     - _AlphaClip: 0
     - _Blend: 0
+    - _BlendOp: 0
     - _BumpMapIntensity: 1
     - _BumpScale: 1
+    - _ClearCoat: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -139,6 +145,7 @@ Material:
     - _GlossMapScale: 1
     - _GlossSmooth: 0.55
     - _Glossiness: 0.5
+    - _GlossinessSource: 0
     - _GlossyReflections: 1
     - _InvertDepth: 0
     - _MapsSmooth: 4.73
@@ -154,8 +161,11 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Refraction: 3.8
+    - _Shininess: 0
     - _Smoothness: 0.5
+    - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
+    - _SpecSource: 0
     - _Specular: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
