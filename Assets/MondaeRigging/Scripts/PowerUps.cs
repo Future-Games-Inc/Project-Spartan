@@ -44,7 +44,7 @@ public class PowerUps : MonoBehaviour
             healthPowerUp = other.gameObject;
         }
 
-        if(other.CompareTag("Enemy)") && shieldActive == false)
+        if(other.CompareTag("Enemy") && shieldActive == false)
         {
             playerStats.currentHealth -= 10;
         }

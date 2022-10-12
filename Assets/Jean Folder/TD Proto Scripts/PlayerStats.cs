@@ -17,13 +17,18 @@ public class PlayerStats : CharacterStats, iDamageable
     [Header("Wave Rounds Completed")]
     public static int Rounds;
 
+    [SerializeField] private Transform player;
+    [SerializeField] private GameObject reactorLocation;
+    [SerializeField] private Vector3 reactorSpawnPointOffset;
+
     private void Start()
     {
+        healthBar = FindObjectOfType<HealthBar>();
+        maxHealth = SetMaxHealthFromHealthLevel();
         healthBar.SetMaxHealth(maxHealth);
+        currentHealth = maxHealth;
         Money = startMoney;
         Lives = startLives;
-        maxHealth = SetMaxHealthFromHealthLevel();
-        currentHealth = maxHealth;
 
 
         Rounds = 0;
@@ -58,7 +63,7 @@ public class PlayerStats : CharacterStats, iDamageable
             Lives -= 1;
 
             // Respawn new pillar or set point
-
+            PlayerDeath();
 
             // trigger a penalty?
             if (Lives == 0)
@@ -68,6 +73,14 @@ public class PlayerStats : CharacterStats, iDamageable
             }
 
         }
+    }
+
+    public void PlayerDeath()
+    {
+        player.transform.position = reactorLocation.transform.position + reactorSpawnPointOffset;
+        maxHealth = SetMaxHealthFromHealthLevel();
+        healthBar.SetMaxHealth(maxHealth);
+        currentHealth = maxHealth;
     }
 
     public void lifeLost()

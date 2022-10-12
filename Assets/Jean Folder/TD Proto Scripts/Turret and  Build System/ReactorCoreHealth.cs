@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class ReactorCoreHealth : CharacterStats, iDamageable
 {
-    [SerializeField]private PlayerStats player;
+    [SerializeField] private PlayerStats player;
 
     [Header("Reactor Core Material Change")]
+    public MeshRenderer reactorMesh;
     public Material OriginalStatus;
     public Material MediumStatus;
     public Material CriticalStatus;
@@ -16,6 +17,10 @@ public class ReactorCoreHealth : CharacterStats, iDamageable
     MeshRenderer meshRenderer;
     private float atHalfHealth;
     private float quarterHealth;
+
+    [SerializeField] private GameObject reactorSpawnPoint;
+    [SerializeField] private Transform reactor;
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +38,7 @@ public class ReactorCoreHealth : CharacterStats, iDamageable
     // Update is called once per frame
     void Update()
     {
-        
+        CheckHealthStatus();
     }
 
 
@@ -59,36 +64,39 @@ public class ReactorCoreHealth : CharacterStats, iDamageable
 
     private void CheckHealthStatus()
     {
-        if (currentHealth == atHalfHealth)
+        if (currentHealth <= atHalfHealth)
         {
-            meshRenderer.material = MediumStatus;
+            reactorMesh.material = MediumStatus;
             electricDistargEffect.Play();
         }
-        if (currentHealth == quarterHealth)
+        if (currentHealth <= quarterHealth)
         {
-            meshRenderer.material = CriticalStatus;
+            reactorMesh.material = CriticalStatus;
         }
 
         if (currentHealth <= 0)
         {
-
+            ReactorDeath();
 
             player.lifeLost();
+            player.PlayerDeath();
 
-            ExplosionEffect.Play();
-
-            // Move Game object to previous position
-
-            // gameObject.SetActive(false);
-
-            //Destroy(gameObject);
-            // Respawn new pillar or set point
-
-            // restart level
-
-
-            // trigger a penalty?
 
         }
     }
+
+    private void ReactorDeath()
+    {
+        ExplosionEffect.Play();
+
+        reactor.transform.position = reactorSpawnPoint.transform.position;
+        electricDistargEffect.Stop();
+        ExplosionEffect.Stop();
+        maxHealth = SetMaxHealthFromHealthLevel();
+        currentHealth = maxHealth;
+        reactorMesh.material = OriginalStatus;
+    }
+
+
 }
+

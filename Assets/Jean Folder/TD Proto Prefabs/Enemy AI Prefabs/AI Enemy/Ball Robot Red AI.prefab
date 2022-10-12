@@ -134,8 +134,6 @@ MonoBehaviour:
   collider: {fileID: 6846413866666763046}
   Damage: 10
   AttackDelay: 0.5
-  enemyMovement: {fileID: 0}
-  enemyLineOfSightCheck: {fileID: 0}
 --- !u!1 &912282057359519747
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,7 +426,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6805374470607865546}
   m_Enabled: 0
-  m_AgentTypeID: 658490984
+  m_AgentTypeID: -1372625422
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
@@ -454,15 +452,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03bc8063c9e95401f9a8a38bc716750d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultMoveMethod: 2
-  Curve:
+  m_Method: 2
+  m_Curve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  ParabolaHeight: 8
-  NavMeshLinkTraversalTypes: []
 --- !u!114 &6355415744162274354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,7 +477,6 @@ MonoBehaviour:
   updateRate: 0.1
   animator: {fileID: 277658014911399434}
   DefaultState: 1
-  _oldToNewState: 0
   IdleLocationRadius: 4
   IdleMoveSpeedMultiplier: 0.5
   waypoints:
@@ -491,8 +486,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   waypointMarchingPath: []
   WaypoinIndex: 0
-  stoppingDistance: 0.5
-  inAttackMode: 0
 --- !u!54 &4047795318024618213
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -523,7 +516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackRadius: {fileID: 7040780562438063210}
   Animator: {fileID: 277658014911399434}
-  enemyMovement: {fileID: 6355415744162274354}
+  movement: {fileID: 0}
   agent: {fileID: 4220705779300127874}
   start_Health: 100
   health: 100
@@ -580,10 +573,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fee0f24a77ad53408ac36eb3bc884b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTarget: {fileID: 0}
-  aISensor: {fileID: 0}
-  enemyMovement: {fileID: 0}
-  scanFrequency: 1.5
+  collider: {fileID: 0}
+  fieldOfView: 0
+  lineOfSightLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &7536504301764994716
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,10 +645,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fee0f24a77ad53408ac36eb3bc884b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTarget: {fileID: 0}
-  aISensor: {fileID: 0}
-  enemyMovement: {fileID: 0}
-  scanFrequency: 1.5
+  collider: {fileID: 0}
+  fieldOfView: 0
+  lineOfSightLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &8626697307934915389
 GameObject:
   m_ObjectHideFlags: 0
