@@ -608,15 +608,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03bc8063c9e95401f9a8a38bc716750d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultMoveMethod: 2
-  Curve:
+  m_Method: 2
+  m_Curve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  ParabolaHeight: 8
-  NavMeshLinkTraversalTypes: []
 --- !u!114 &5139537355586219983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,7 +633,6 @@ MonoBehaviour:
   updateRate: 0.1
   animator: {fileID: 9029105591725477945}
   DefaultState: 1
-  _oldToNewState: 0
   IdleLocationRadius: 4
   IdleMoveSpeedMultiplier: 0.5
   waypoints:
@@ -645,8 +642,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   waypointMarchingPath: []
   WaypoinIndex: 0
-  stoppingDistance: 0.5
-  inAttackMode: 0
 --- !u!54 &6312408971736939553
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -677,7 +672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackRadius: {fileID: 4955352076168262213}
   Animator: {fileID: 9029105591725477945}
-  enemyMovement: {fileID: 5139537355586219983}
+  movement: {fileID: 0}
   agent: {fileID: 5460058113589998241}
   start_Health: 100
   health: 100
@@ -717,7 +712,7 @@ MonoBehaviour:
   scanFrequency: 30
   layers:
     serializedVersion: 2
-    m_Bits: 1152
+    m_Bits: 67118080
   occlusionLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -734,10 +729,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fee0f24a77ad53408ac36eb3bc884b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTarget: {fileID: 0}
-  aISensor: {fileID: 0}
-  enemyMovement: {fileID: 0}
-  scanFrequency: 1.5
+  collider: {fileID: 0}
+  fieldOfView: 0
+  lineOfSightLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &3381495974257587101
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,8 +931,6 @@ MonoBehaviour:
   collider: {fileID: 3689132291378547661}
   Damage: 2
   AttackDelay: 0.1
-  enemyMovement: {fileID: 0}
-  enemyLineOfSightCheck: {fileID: 0}
 --- !u!1 &4276451860864624385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,10 +1190,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fee0f24a77ad53408ac36eb3bc884b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTarget: {fileID: 0}
-  aISensor: {fileID: 0}
-  enemyMovement: {fileID: 0}
-  scanFrequency: 1.5
+  collider: {fileID: 0}
+  fieldOfView: 0
+  lineOfSightLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &5855465649305965180
 GameObject:
   m_ObjectHideFlags: 0

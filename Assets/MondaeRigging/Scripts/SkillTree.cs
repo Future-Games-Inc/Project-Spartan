@@ -12,8 +12,8 @@ public class SkillTree : MonoBehaviour
 
     public int[] SkillLevels;
     public int[] SkillCaps;
-    public string[] SkillNames;
-    public string[] SkilLDescriptions;
+    //public string[] SkillNames;
+    //public string[] SkillDescriptions;
 
     public List<Skill> SkillList;
     public GameObject SkillHolder;
@@ -38,9 +38,9 @@ public class SkillTree : MonoBehaviour
             SkillList[i].id = i;
 
         SkillList[0].ConnectedSkills = new[] { 1, 2 };
-        SkillList[1].ConnectedSkills = new[] { 4};
-        SkillList[2].ConnectedSkills = new[] { 3};
-        SkillList[4].ConnectedSkills = new[] { 5 };
+        SkillList[1].ConnectedSkills = new[] { 3};
+        SkillList[2].ConnectedSkills = new[] { 4};
+        SkillList[3].ConnectedSkills = new[] { 5 };
 
         UpdateAllSkillsUI();
 
