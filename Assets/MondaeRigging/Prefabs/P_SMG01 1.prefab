@@ -393,6 +393,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 24
+  m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:
@@ -477,6 +478,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AttachTransform: {fileID: 3981637660755497819}
+  m_UseDynamicAttach: 0
+  m_MatchAttachPosition: 1
+  m_MatchAttachRotation: 1
+  m_SnapToColliderVolume: 1
   m_AttachEaseInTime: 0.15
   m_MovementType: 2
   m_VelocityDamping: 1
@@ -527,6 +532,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint:
   - {fileID: 5886928618235421878}
-  fireSpeed: 200
+  fireSpeed: 70
   playerBullet: {fileID: 2228136128379212152, guid: eb4eec5d3cf0ef44588f84f9daab7b7a,
     type: 3}

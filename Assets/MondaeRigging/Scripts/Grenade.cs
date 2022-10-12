@@ -31,7 +31,7 @@ public class Grenade : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("LeftHand") || other.CompareTag("LeftHand"))
+        if(other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             alreadyPickedUp=true;
         }

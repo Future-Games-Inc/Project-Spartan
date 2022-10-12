@@ -11,7 +11,7 @@ public class DontDestroy : MonoBehaviour
     {
         string tag = this.tag;
         gameObjectTag = tag;
-        if (GameObject.FindGameObjectsWithTag(gameObjectTag).Length == 0)
+        if (GameObject.FindGameObjectsWithTag(gameObjectTag).Length == 1)
             DontDestroyOnLoad(gameObject);
         else
             Destroy(this.gameObject);
