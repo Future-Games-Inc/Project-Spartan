@@ -29,7 +29,7 @@ public class GrappleBullet : MonoBehaviour
             hitPoint = collision.contacts[0].point;
             collisionObject = collision.gameObject;
             fixedJoint = gameObject.AddComponent<FixedJoint>();
-            fixedJoint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
+            fixedJoint.connectedBody = collisionObject.GetComponent<Rigidbody>();
 
             grappleGun.Swing();
         }

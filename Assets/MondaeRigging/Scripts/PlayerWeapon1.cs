@@ -28,7 +28,7 @@ public class PlayerWeapon1 : MonoBehaviour
         foreach (Transform t in spawnPoint)
         {
             GameObject spawnedBullet = Instantiate(playerBullet, t.position, Quaternion.identity);
-            spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+            spawnedBullet.GetComponent<Rigidbody>().velocity = t.right * fireSpeed;
         }
     }
     

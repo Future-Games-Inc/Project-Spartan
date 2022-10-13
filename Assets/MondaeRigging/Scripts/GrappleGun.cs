@@ -24,7 +24,8 @@ public class GrappleGun : MonoBehaviour
     public GameObject playerGameObject;
     Transform playerTransform;
     public CharacterController characterController;
-    public TrailRenderer trailRenderer;
+    public Rigidbody characterRb;
+    //public TrailRenderer trailRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -37,21 +38,24 @@ public class GrappleGun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(grappled)
-        {
-            characterController.enabled = false;
-        }
+        //if(grappled)
+        //{
+        //    characterController.enabled = false;
+        //    characterRb.isKinematic = false;
+        //}
 
         if(!grappled)
         {
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
             characterController.enabled = true;
+            characterRb.isKinematic = true;
         }
 
         if (Input.GetButtonDown(m_grappleButton))
         {
             FireRaycastIntoScene();
+            Debug.Log("GrappleTry");
         }
 
         if (Input.GetButtonUp(m_grappleButton))
@@ -66,14 +70,18 @@ public class GrappleGun : MonoBehaviour
 
         if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetLayer))
         {
-            trailRenderer.enabled = true;
+            Debug.Log("GrappleHit");
+            //trailRenderer.enabled = true;
             bulletTransform.position = barrelTransform.position;
-            bulletRb.velocity = bulletTransform.forward * bulletSpeed;
+            Debug.Log("1");
+            bulletRb.velocity = barrelTransform.forward * bulletSpeed;
+            Debug.Log("2");
             grappled = true;
+            Debug.Log("3");
         }
     }
 
-    public void CancelGrapple()
+    void CancelGrapple()
     {
         grappled = false;
         Destroy(springJoint);
@@ -82,6 +90,8 @@ public class GrappleGun : MonoBehaviour
 
     public void Swing()
     {
+        characterController.enabled = false;
+        characterRb.isKinematic = false;
         springJoint = playerGameObject.AddComponent<SpringJoint>();
         springJoint.connectedBody = bulletScript.collisionObject.GetComponent<Rigidbody>();
         springJoint.autoConfigureConnectedAnchor = false;
@@ -90,11 +100,11 @@ public class GrappleGun : MonoBehaviour
 
         float disJointToPlayer = Vector3.Distance(playerTransform.position, bulletTransform.position);
 
-        springJoint.maxDistance = disJointToPlayer * .6f;
+        springJoint.maxDistance = disJointToPlayer * .4f;
         springJoint.minDistance = disJointToPlayer * .1f;
 
         springJoint.damper = 100f;
-        springJoint.spring = 700f;
+        springJoint.spring = 400f;
     }
 
 }
