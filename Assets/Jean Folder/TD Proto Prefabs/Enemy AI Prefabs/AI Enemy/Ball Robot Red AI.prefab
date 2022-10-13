@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2136648390707798297}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: RigTail1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 960030011788831339}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: RigBarrel02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 1537951137337921995}
   - component: {fileID: 6846413866666763046}
   - component: {fileID: 7040780562438063210}
-  m_Layer: 18
+  m_Layer: 11
   m_Name: Attack Radius
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5918612424514839842}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: RigBarrel01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3675044080551319454}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: RigTail3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,7 +207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7392429751932551701}
   - component: {fileID: 1361855248667971779}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: Ball Robot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2121469117084593897}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: RigTail2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -370,7 +370,7 @@ GameObject:
   - component: {fileID: -917848821126069384}
   - component: {fileID: 8158583629378050586}
   - component: {fileID: 5917989389015725006}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: Ball Robot Red AI
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -455,7 +455,25 @@ MonoBehaviour:
   m_Method: 2
   m_Curve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -2.239382
+      outSlope: -2.239382
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.020852195
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -556,7 +574,7 @@ MonoBehaviour:
   scanFrequency: 30
   layers:
     serializedVersion: 2
-    m_Bits: 67118080
+    m_Bits: 67122176
   occlusionLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -590,7 +608,7 @@ GameObject:
   - component: {fileID: 961565469952638594}
   - component: {fileID: 4495179486562581099}
   - component: {fileID: 9146462503120341150}
-  m_Layer: 18
+  m_Layer: 11
   m_Name: Enemy Line of Sight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,7 +677,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7686392499885773403}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4846060778354115387}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBLLeg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7782010533203077500}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFLLegPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 691790708827707044}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBLLegPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8390626920938274501}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBRLeg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2487839571751675170}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBRLeg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3651072575116115635}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFRLeg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7391076044653081982}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9016507378118023970}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFRLeg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 718271364829156070}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFLLegAnkle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4691530835382363135}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBRLegPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +324,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3917787901978280784}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFRLegPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 298183831076319954}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFLLeg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -389,7 +389,7 @@ GameObject:
   - component: {fileID: 4258568817114841122}
   - component: {fileID: 3740445753636281116}
   - component: {fileID: 7300818734918538537}
-  m_Layer: 18
+  m_Layer: 11
   m_Name: Attack Radius
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -448,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4956626343112225614}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 1691544137215786751}
   - component: {fileID: 2113593897063491213}
   - component: {fileID: 4543351243731476079}
-  m_Layer: 17
+  m_Layer: 9
   m_Name: Hermit Robot Red AI SHOOT
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -589,7 +589,25 @@ MonoBehaviour:
   m_Method: 2
   m_Curve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -2.239382
+      outSlope: -2.239382
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.020852195
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -685,7 +703,7 @@ MonoBehaviour:
   scanFrequency: 30
   layers:
     serializedVersion: 2
-    m_Bits: 67118080
+    m_Bits: 67122176
   occlusionLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -716,7 +734,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3289150709207942115}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBRLegAnkle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -747,7 +765,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 329160411922927185}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBLLegAnkle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,7 +799,7 @@ GameObject:
   - component: {fileID: 6114847515851153710}
   - component: {fileID: 7691793674318725118}
   - component: {fileID: 3627164777167849083}
-  m_Layer: 18
+  m_Layer: 11
   m_Name: Enemy Line Of Sight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -884,7 +902,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5841569070513429147}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigRGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -915,7 +933,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2027525444036762011}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFRLegAnkle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -947,7 +965,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5383633049758081443}
   - component: {fileID: 7638730590557987344}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hermit Robot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1047,7 +1065,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5302146102768109575}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigLGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1078,7 +1096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9092074846331544791}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1109,7 +1127,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3567276327179337636}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigFLLeg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1141,7 +1159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5992030093309815129}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RigBLLeg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
