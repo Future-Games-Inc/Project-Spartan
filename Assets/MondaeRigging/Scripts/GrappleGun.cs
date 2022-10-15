@@ -15,9 +15,14 @@ public class GrappleGun : MonoBehaviour
 
     [Header("Gun Info")]
     public Transform barrelTransform;
+    public Transform fingerTransform;
     private string m_grappleButton;
     private Handness m_hand2 = Handness.Left;
     public bool grappled;
+    public Material grappleDroneHighlight;
+    public Material defaultMaterial;
+    public bool droneHighlighted;
+    private Transform _selection;
 
     [Header("Player Info")]
     SpringJoint springJoint;
@@ -33,18 +38,19 @@ public class GrappleGun : MonoBehaviour
         bulletTransform = bulletPrefab.transform;
         m_grappleButton = "XRI_" + m_hand2 + "_SecondaryButton";
         playerTransform = playerGameObject.transform;
+        droneHighlighted = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if(grappled)
+        //if (grappled)
         //{
         //    characterController.enabled = false;
         //    characterRb.isKinematic = false;
         //}
 
-        if(!grappled)
+        if (!grappled)
         {
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
@@ -62,13 +68,34 @@ public class GrappleGun : MonoBehaviour
         {
             CancelGrapple();
         }
+        if(_selection != null)
+        {
+            var selectionRenderer = _selection.GetComponent<Renderer>();
+            selectionRenderer.material = defaultMaterial;
+            _selection = null;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(fingerTransform.position, fingerTransform.TransformDirection(Vector3.forward), out hit, targetLayer))
+        {
+            var selection = hit.transform;
+            if (selection.CompareTag("GrapplePoint"))
+            {
+                var selectionRenderer = selection.GetComponent<Renderer>();
+                if (selectionRenderer != null)
+                {
+                    selectionRenderer.material = grappleDroneHighlight;
+                    droneHighlighted = true;
+                }
+                _selection = selection;
+            }
+
+        }
     }
 
     void FireRaycastIntoScene()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetLayer))
+        if (droneHighlighted == true)
         {
             Debug.Log("GrappleHit");
             //trailRenderer.enabled = true;
@@ -90,6 +117,7 @@ public class GrappleGun : MonoBehaviour
 
     public void Swing()
     {
+        Debug.Log("Swinging");
         characterController.enabled = false;
         characterRb.isKinematic = false;
         springJoint = playerGameObject.AddComponent<SpringJoint>();

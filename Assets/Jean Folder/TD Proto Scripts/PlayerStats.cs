@@ -55,7 +55,7 @@ public class PlayerStats : CharacterStats, iDamageable
 
     }
 
-    private void CheckHealthStatus()
+    public void CheckHealthStatus()
     {
         healthBar.SetCurrentHealth(currentHealth);
         if (currentHealth <= 0)
