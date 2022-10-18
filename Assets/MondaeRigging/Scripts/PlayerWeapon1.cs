@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class PlayerWeapon1 : MonoBehaviour
 {
     public Transform[] spawnPoint;
-    public float fireSpeed = 100;
+    public float fireSpeed = 70;
 
     public GameObject playerBullet;
 

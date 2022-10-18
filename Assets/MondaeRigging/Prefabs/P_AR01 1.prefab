@@ -158,9 +158,9 @@ GameObject:
   - component: {fileID: 5477054721215033047}
   - component: {fileID: 419594176334782868}
   - component: {fileID: -4336413566776134431}
+  - component: {fileID: -1436945640054753514}
   - component: {fileID: 3667626094929896063}
   - component: {fileID: 1571211277025928384}
-  - component: {fileID: 3793216932502772220}
   m_Layer: 0
   m_Name: P_AR01 1
   m_TagString: Untagged
@@ -276,21 +276,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3667626094929896063
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6070498584136505867}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4527820454404153660, guid: 33f4b7c3b6072e94cbdd124444b3737e, type: 3}
---- !u!114 &1571211277025928384
+--- !u!114 &-1436945640054753514
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,24 +285,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6070498584136505867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21518068ef9639140becd12d9ed00b3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPoint:
-  - {fileID: 4744910375881860279}
-  fireSpeed: 70
-  playerBullet: {fileID: 2228136128379212152, guid: eb4eec5d3cf0ef44588f84f9daab7b7a,
-    type: 3}
---- !u!114 &3793216932502772220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6070498584136505867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: a7011927d0b11984a929b2184a617fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -410,7 +379,7 @@ MonoBehaviour:
   m_OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
-  m_AttachTransform: {fileID: 7721041024438867569}
+  m_AttachTransform: {fileID: 0}
   m_UseDynamicAttach: 0
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
@@ -451,3 +420,34 @@ MonoBehaviour:
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
+--- !u!64 &3667626094929896063
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6070498584136505867}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4527820454404153660, guid: 33f4b7c3b6072e94cbdd124444b3737e, type: 3}
+--- !u!114 &1571211277025928384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6070498584136505867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21518068ef9639140becd12d9ed00b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoint:
+  - {fileID: 4744910375881860279}
+  fireSpeed: 70
+  playerBullet: {fileID: 2228136128379212152, guid: eb4eec5d3cf0ef44588f84f9daab7b7a,
+    type: 3}

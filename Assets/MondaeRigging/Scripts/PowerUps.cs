@@ -19,6 +19,7 @@ public class PowerUps : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(HealthRegen());
         shieldActive = false;
     }
 
@@ -35,7 +36,6 @@ public class PowerUps : MonoBehaviour
             StartCoroutine(ShieldPowerUp());
             shieldPowerUp = other.gameObject;
             shieldActive = true;
-            StartCoroutine(HealthRegen());
         }
 
         if (other.CompareTag("HealthPowerUp"))
@@ -52,11 +52,10 @@ public class PowerUps : MonoBehaviour
 
     private IEnumerator HealthRegen()
     {
-        while (shieldActive == true)
+        while (shieldObject.activeInHierarchy)
         {
-            yield return new WaitForSeconds(3);
-            playerStats.currentHealth += 2;
-            playerStats.CheckHealthStatus();
+            yield return new WaitForSeconds(1);
+            playerStats.currentHealth++;
         }
     }
 
@@ -78,8 +77,7 @@ public class PowerUps : MonoBehaviour
     IEnumerator HealthPowerUp()
     {
         yield return new WaitForSeconds(0);
-        playerStats.currentHealth += 20;
-        playerStats.CheckHealthStatus();
+        playerStats.currentHealth += 100;
         Destroy(healthPowerUp);
     }
 }

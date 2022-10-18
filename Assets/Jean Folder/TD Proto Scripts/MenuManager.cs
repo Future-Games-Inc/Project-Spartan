@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
 
-    public string levelToLoad = "TD Main Menu";
+    public string levelToLoad = "MainLevel";
     public SceneFader sceneFader;
 
     public void Play()
@@ -16,7 +16,7 @@ public class MenuManager : MonoBehaviour
 
     public void Quit()
     {
-        Debug.Log("Exiting the game");
+        Debug.Log("Exciting the game");
         Application.Quit();
     }
 
