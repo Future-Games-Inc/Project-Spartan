@@ -31,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump Velocity")]
     public float jumpVelocity = 100f;
     public bool isJumping;
+    public AudioSource audioSource;
+    public AudioClip jumpSFX;
 
 
     private CharacterController character;
@@ -107,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isJumping = true;
             character.Move(Vector3.up * jumpVelocity * Time.fixedDeltaTime);
+            audioSource.PlayOneShot(jumpSFX);
 
         }
         else if (!isJumping && CheckIfGrounded() && primaryButtonPressed)

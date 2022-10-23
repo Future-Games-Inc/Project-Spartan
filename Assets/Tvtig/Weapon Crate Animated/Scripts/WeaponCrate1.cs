@@ -5,6 +5,10 @@ using UnityEngine.VFX;
 
 public class WeaponCrate1 : MonoBehaviour
 {
+    public AudioSource audioSource;
+    public AudioClip openSFX;
+    public AudioClip dropSFX;
+
     [SerializeField]
     private VisualEffect _visualEffect;
 
@@ -31,6 +35,7 @@ public class WeaponCrate1 : MonoBehaviour
             _collider.enabled = false;
             _animator.SetBool("Open", true);
             OnLidLifted();
+            audioSource.PlayOneShot(openSFX);
             StartCoroutine(WeaponCache());
         }
     }
@@ -47,7 +52,9 @@ public class WeaponCrate1 : MonoBehaviour
 
     IEnumerator WeaponCache()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0);
+        audioSource.PlayOneShot(openSFX);
+        yield return new WaitForSeconds(2);
         Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation);
         Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation);
         //Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation);

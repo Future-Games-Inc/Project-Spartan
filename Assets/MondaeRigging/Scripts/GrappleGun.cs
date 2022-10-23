@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -18,6 +19,8 @@ public class GrappleGun : MonoBehaviour
     private string m_grappleButton;
     private Handness m_hand2 = Handness.Left;
     public bool grappled;
+    public AudioSource audioSource;
+    public AudioClip grappleSFX;
 
     [Header("Player Info")]
     SpringJoint springJoint;
@@ -25,6 +28,11 @@ public class GrappleGun : MonoBehaviour
     Transform playerTransform;
     public CharacterController characterController;
     public Rigidbody characterRb;
+    public Transform _selection;
+    public Material defaultMaterial;
+    public Material highlightMaterial;
+    public AbilityDash playerDash;
+
     //public TrailRenderer trailRenderer;
 
     // Start is called before the first frame update
@@ -38,47 +46,59 @@ public class GrappleGun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if(grappled)
+        //if (grappled)
         //{
         //    characterController.enabled = false;
         //    characterRb.isKinematic = false;
         //}
 
-        if(!grappled)
+        if (!grappled)
         {
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
             characterController.enabled = true;
             characterRb.isKinematic = true;
+            playerDash.enabled = true;
         }
 
-        if (Input.GetButtonDown(m_grappleButton))
+        if (Input.GetButtonDown(m_grappleButton) && !grappled)
         {
             FireRaycastIntoScene();
-            Debug.Log("GrappleTry");
         }
-
-        if (Input.GetButtonUp(m_grappleButton))
+        else if (Input.GetButtonUp(m_grappleButton))
         {
             CancelGrapple();
+        }
+
+        if(_selection != null)
+        {
+            var selectionRenderer = _selection.GetComponent<Renderer>();
+            selectionRenderer.material = defaultMaterial;
+            _selection = null;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, targetLayer))
+        {
+            var selection = hit.transform;
+            if(selection.CompareTag("GrapplePoint"))
+            {
+                var selectionRenderer = selection.GetComponent<Renderer>();
+                if(selectionRenderer != null)
+                {
+                    selectionRenderer.material = highlightMaterial;
+                }
+                _selection = selection;
+
+            }
         }
     }
 
     void FireRaycastIntoScene()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetLayer))
-        {
-            Debug.Log("GrappleHit");
-            //trailRenderer.enabled = true;
-            bulletTransform.position = barrelTransform.position;
-            Debug.Log("1");
-            bulletRb.velocity = barrelTransform.forward * bulletSpeed;
-            Debug.Log("2");
             grappled = true;
-            Debug.Log("3");
-        }
+            bulletTransform.position = barrelTransform.position;
+            bulletRb.velocity = barrelTransform.forward * bulletSpeed;
     }
 
     void CancelGrapple()
@@ -90,6 +110,7 @@ public class GrappleGun : MonoBehaviour
 
     public void Swing()
     {
+        playerDash.enabled = false;
         characterController.enabled = false;
         characterRb.isKinematic = false;
         springJoint = playerGameObject.AddComponent<SpringJoint>();
@@ -97,6 +118,7 @@ public class GrappleGun : MonoBehaviour
         springJoint.autoConfigureConnectedAnchor = false;
         springJoint.connectedAnchor = bulletScript.collisionObject.transform.InverseTransformPoint(bulletScript.hitPoint);
         springJoint.anchor = Vector3.zero;
+        audioSource.PlayOneShot(grappleSFX);
 
         float disJointToPlayer = Vector3.Distance(playerTransform.position, bulletTransform.position);
 

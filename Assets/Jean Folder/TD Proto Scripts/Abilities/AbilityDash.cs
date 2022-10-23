@@ -10,6 +10,8 @@ public class AbilityDash : Abilities
 
     [SerializeField] private int boostPercentage;
     [SerializeField] PlayerMovement movement;
+    public AudioSource audioSource;
+    public AudioClip dashSFX;
 
     private float boostAsPercent;
 
@@ -44,6 +46,7 @@ public class AbilityDash : Abilities
 
     private void AbilityEffect()
     {
+        audioSource.PlayOneShot(dashSFX);
         movement.Boost(boostAsPercent);
         Invoke("ResetAbility", duration);
     }

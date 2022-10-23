@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class PowerUps : MonoBehaviour
 {
+    public AudioSource audioSource;
+    public AudioClip shieldSFX;
+    public AudioClip healthSFX;
     public GameObject shieldObject;
     public GameObject shieldText;
 
@@ -62,6 +65,7 @@ public class PowerUps : MonoBehaviour
     IEnumerator ShieldPowerUp()
     {
         yield return new WaitForSeconds (0);
+        audioSource.PlayOneShot(shieldSFX);
         shieldObject.SetActive (true);
         shieldText.SetActive(true);
         Destroy(shieldPowerUp);
@@ -77,6 +81,7 @@ public class PowerUps : MonoBehaviour
     IEnumerator HealthPowerUp()
     {
         yield return new WaitForSeconds(0);
+        audioSource.PlayOneShot(healthSFX);
         playerStats.currentHealth += 100;
         Destroy(healthPowerUp);
     }

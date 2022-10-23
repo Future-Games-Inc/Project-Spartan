@@ -30,7 +30,7 @@ public class ReactorCoreHealth : CharacterStats, iDamageable
         maxHealth = SetMaxHealthFromHealthLevel();
         currentHealth = maxHealth;
 
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        reactorMesh = GetComponent<MeshRenderer>();
         atHalfHealth = maxHealth / 2;
         quarterHealth = maxHealth / 4;
     }
