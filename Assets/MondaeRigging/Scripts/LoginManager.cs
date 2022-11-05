@@ -23,7 +23,7 @@ public class LoginManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     #endregion
 
@@ -57,7 +57,10 @@ public class LoginManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        connectButton.SetActive(true);
+        if (PhotonNetwork.CurrentLobby != null)
+        {
+            connectButton.SetActive(true);
+        }
     }
 
     public void EnterRoom1()

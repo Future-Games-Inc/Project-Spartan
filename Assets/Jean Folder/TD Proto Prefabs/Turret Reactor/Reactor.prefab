@@ -195,7 +195,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4
+    m_Bits: 4294967295
+  m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:
@@ -256,6 +257,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AttachTransform: {fileID: 0}
+  m_UseDynamicAttach: 0
+  m_MatchAttachPosition: 1
+  m_MatchAttachRotation: 1
+  m_SnapToColliderVolume: 1
   m_AttachEaseInTime: 0.15
   m_MovementType: 2
   m_VelocityDamping: 1
@@ -323,10 +328,8 @@ MonoBehaviour:
   healthLevel: 10
   maxHealth: 0
   currentHealth: 0
-  staminaLevel: 10
-  maxStamina: 0
-  currentStamina: 0
   player: {fileID: 0}
+  reactorMesh: {fileID: 0}
   OriginalStatus: {fileID: 2100000, guid: 19050c8b5962b5b4fa34f275ba6bd644, type: 2}
   MediumStatus: {fileID: 2100000, guid: 9efb8211ac4af1440986cc4808522557, type: 2}
   CriticalStatus: {fileID: 2100000, guid: 034996e8a67fadc48bcd60002297b569, type: 2}
@@ -334,6 +337,8 @@ MonoBehaviour:
     type: 3}
   ExplosionEffect: {fileID: 3440701397426506916, guid: 64e684d37f2322a4c88fc30c69773050,
     type: 3}
+  reactorSpawnPoint: {fileID: 0}
+  reactor: {fileID: 0}
 --- !u!1 &8033213990861774146
 GameObject:
   m_ObjectHideFlags: 0

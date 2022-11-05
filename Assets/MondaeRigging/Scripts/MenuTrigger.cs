@@ -11,27 +11,26 @@ public class MenuTrigger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            MainMenu.SetActive(true);
-            touchParticles.SetActive(true);
+            if (MainMenu.activeInHierarchy == false)
+            {
+                MainMenu.SetActive(true);
+                touchParticles.SetActive(true);
+            }
+            MainMenu.SetActive(false);
+            touchParticles.SetActive(false);
         }
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        MainMenu.SetActive(false);
-        touchParticles.SetActive(false);
     }
 }

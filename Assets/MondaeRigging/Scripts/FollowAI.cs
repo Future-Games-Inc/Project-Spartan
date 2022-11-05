@@ -32,7 +32,7 @@ public class FollowAI : MonoBehaviour
     public int currentWaypoint;
     // Start is called before the first frame update
     void Start()
-    {        
+    {
         if (agent == null)
         {
             agent = GetComponent<NavMeshAgent>();
@@ -87,29 +87,29 @@ public class FollowAI : MonoBehaviour
                 break;
         }
     }
-   private void CheckForPlayer()
+    private void CheckForPlayer()
     {
         directionToTarget = targetTransform.position - transform.position;
 
         RaycastHit hitInfo;
-        if(Physics.Raycast(transform.position, directionToTarget.normalized, out hitInfo))
+        if (Physics.Raycast(transform.position, directionToTarget.normalized, out hitInfo))
         {
             inSight = hitInfo.transform.CompareTag("Player");
         }
     }
     private void Patrol()
     {
-        if(agent.destination != waypoints[currentWaypoint].position)
+        if (agent.destination != waypoints[currentWaypoint].position)
         {
             agent.destination = waypoints[currentWaypoint].position;
         }
 
-        if(HasReached())
+        if (HasReached())
         {
-            currentWaypoint = (currentWaypoint + Random.Range(1,6)) % waypoints.Length;
+            currentWaypoint = (currentWaypoint + Random.Range(1, 6)) % waypoints.Length;
         }
 
-        if(inSight && directionToTarget.magnitude <= maxFollowDistance)
+        if (inSight && directionToTarget.magnitude <= maxFollowDistance)
         {
             currentState = States.Follow;
         }
@@ -130,7 +130,7 @@ public class FollowAI : MonoBehaviour
                 agent.SetDestination(targetTransform.position);
             }
 
-            if(directionToTarget.magnitude > maxFollowDistance)
+            if (directionToTarget.magnitude > maxFollowDistance)
             {
                 currentState = States.Patrol;
             }
@@ -139,7 +139,7 @@ public class FollowAI : MonoBehaviour
 
     private void Attack()
     {
-        if(!inSight || directionToTarget.magnitude > shootDistance)
+        if (!inSight || directionToTarget.magnitude > shootDistance)
         {
             currentState = States.Follow;
         }
@@ -166,14 +166,24 @@ public class FollowAI : MonoBehaviour
     {
         Health -= damage;
 
-        if(Health <= 0)
-        {
-            Invoke(nameof(DestroyEnemy), 5f);
-        }    
+        //if (Health <= 0)
+        //{
+        //    Invoke(nameof(DestroyEnemy), 5f);
+        //}
     }
 
-    private void DestroyEnemy()
+    //private void DestroyEnemy()
+    //{
+    //    Destroy(gameObject);
+    //    //PhotonNetwork.Destroy(gameObject);
+    //}
+
+    void OnTriggerEnter(Collider collider)
     {
-        PhotonNetwork.Destroy(gameObject);
+        if (collider.CompareTag("Bullet"))
+        {
+            TakeDamage(10);
+            Destroy(collider.gameObject);
+        }
     }
 }

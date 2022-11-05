@@ -2523,7 +2523,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 8
+    m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -4089,9 +4089,15 @@ MonoBehaviour:
   bulletScript: {fileID: 288606447693157026}
   barrelTransform: {fileID: 288606446772828804}
   grappled: 0
+  audioSource: {fileID: 0}
+  grappleSFX: {fileID: 0}
   playerGameObject: {fileID: 288606446158360845}
   characterController: {fileID: 288606446583645650}
-  trailRenderer: {fileID: 0}
+  characterRb: {fileID: 0}
+  _selection: {fileID: 0}
+  defaultMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 0}
+  playerDash: {fileID: 0}
 --- !u!1 &288606446255657993
 GameObject:
   m_ObjectHideFlags: 0
@@ -5676,7 +5682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55cbceb070ede844d8848fc79750ec28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mainCamera: {fileID: 288606446577033655}
+  m_mainCamera: {fileID: 0}
   m_sunLight: {fileID: 0}
   m_enableLayerCulling: 1
   m_additionalCullingDistance: 0
@@ -5839,12 +5845,12 @@ MonoBehaviour:
   healthLevel: 10
   maxHealth: 0
   currentHealth: 0
-  staminaLevel: 10
-  maxStamina: 0
-  currentStamina: 0
   startMoney: 400
   startLives: 3
   healthBar: {fileID: 4415614458192266820}
+  player: {fileID: 0}
+  reactorLocation: {fileID: 0}
+  reactorSpawnPointOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &288606446583645660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5867,6 +5873,8 @@ MonoBehaviour:
   right_HandButtonSource: 5
   jumpVelocity: 100
   isJumping: 0
+  audioSource: {fileID: 0}
+  jumpSFX: {fileID: 0}
   primaryButtonPressed: 0
 --- !u!135 &288606446583645663
 SphereCollider:
@@ -5899,6 +5907,8 @@ MonoBehaviour:
     type: 3}
   boostPercentage: 300
   movement: {fileID: 288606446583645660}
+  audioSource: {fileID: 0}
+  dashSFX: {fileID: 0}
 --- !u!54 &288606446583645657
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5942,6 +5952,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d35aa8109f6fb84290ef642f351f612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  shieldSFX: {fileID: 0}
+  healthSFX: {fileID: 0}
   shieldObject: {fileID: 6708661239635293532}
   shieldText: {fileID: 288606447382981869}
   playerStats: {fileID: 288606446583645661}
@@ -7434,7 +7447,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 24
+    m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -8461,7 +8474,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 8
+    m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -10353,7 +10366,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 24
+    m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_StartingSelectedInteractable: {fileID: 0}

@@ -46,6 +46,16 @@ public class PlayerStats : CharacterStats, iDamageable
         return maxHealth;
     }
 
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("EnemyBullet"))
+        {
+            TakeDamage(5);
+            CheckHealthStatus();
+
+        }
+    }
+
     public void TakeDamage(int Damage)
     {
         currentHealth = currentHealth - Damage;

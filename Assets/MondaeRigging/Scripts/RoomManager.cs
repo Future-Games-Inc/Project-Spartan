@@ -16,7 +16,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+        //PhotonNetwork.AutomaticallySyncScene = true;
 
         //if(!PhotonNetwork.IsConnectedAndReady)
         //{
@@ -51,7 +51,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         //    PhotonNetwork.JoinLobby();
         //}
         mapType = MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1;
-        ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY,mapType} };
+        ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
         PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
         Debug.Log("Level 1");
     }
@@ -97,10 +97,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
         CreateAndJoinRoom();
     }
 
-    public override void OnConnectedToMaster()
-    {
-        PhotonNetwork.JoinLobby();
-    }
+    //public override void OnConnectedToMaster()
+    //{
+    //    PhotonNetwork.JoinLobby();
+    //}
     public override void OnCreatedRoom()
     {
         Debug.Log("A room is created with name: " + PhotonNetwork.CurrentRoom.Name);
@@ -109,25 +109,29 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("The local player: " + PhotonNetwork.NickName + "joined to " + PhotonNetwork.CurrentRoom.Name + "Player Count " + PhotonNetwork.CurrentRoom.PlayerCount);
-
-        if(PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(MultiplayerVRConstants.MAP_TYPE_KEY))
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(MultiplayerVRConstants.MAP_TYPE_KEY))
         {
             object mapType;
-            if(PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(MultiplayerVRConstants.MAP_TYPE_KEY, out mapType))
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(MultiplayerVRConstants.MAP_TYPE_KEY, out mapType))
             {
                 Debug.Log("Joined room with map: " + (string)mapType);
-                if((string) mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1)
+                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1)
                 {
-                    PhotonNetwork.LoadLevel("Multiplayer1");
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        PhotonNetwork.LoadLevel("Multiplayer1");
+                    }
                 }
                 if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2)
-                {
-                    PhotonNetwork.LoadLevel("Multiplayer2");
-                }
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        PhotonNetwork.LoadLevel("Multiplayer2");
+                    }
                 if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3)
-                {
-                    PhotonNetwork.LoadLevel("Multiplayer3");
-                }
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        PhotonNetwork.LoadLevel("Multiplayer3");
+                    }
             }
         }
     }
@@ -139,17 +143,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        if(roomList.Count == 0)
+        if (roomList.Count == 0)
         {
             occupancyMultiplayer1.text = 0 + "/" + 20;
             occupancyMultiplayer2.text = 0 + "/" + 20;
             occupancyMultiplayer3.text = 0 + "/" + 20;
         }
 
-        foreach(RoomInfo room in roomList)
+        foreach (RoomInfo room in roomList)
         {
             Debug.Log(room.Name);
-            if(room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
+            if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
             {
                 occupancyMultiplayer1.text = room.PlayerCount + "/" + 20;
             }
@@ -166,25 +170,25 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("Joined Lobby.");
-    }
+    //public override void OnJoinedLobby()
+    //{
+    //    Debug.Log("Joined Lobby.");
+    //}
 
     #endregion
 
     #region Private Methods
     private void CreateAndJoinRoom()
     {
-        string randomRoomName = "Room" + mapType +  Random.Range(0, 10000);
+        string randomRoomName = "Room" + mapType + Random.Range(0, 10000);
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 20;
 
-        string[] roomPropsInLobby = {MultiplayerVRConstants.MAP_TYPE_KEY};
+        string[] roomPropsInLobby = { MultiplayerVRConstants.MAP_TYPE_KEY };
 
-        ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable() { {MultiplayerVRConstants.MAP_TYPE_KEY,mapType} };
+        ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
 
         roomOptions.CustomRoomPropertiesForLobby = roomPropsInLobby;
         roomOptions.CustomRoomProperties = customRoomProperties;

@@ -44,8 +44,8 @@ public class Bullet : MonoBehaviour
             if (Random.Range(0, 100f) < criticalChance)
             {
                 //critical hit here
-                EnemyHealth enemyDamageCrit = other.GetComponent<EnemyHealth>();
-                enemyDamageCrit.TakeDamage(30);
+                PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
+                playerDamageCrit.TakeDamage(30);
                 PhotonNetwork.Destroy(gameObject);
             }
             PlayerHealth playerDamage = other.GetComponent<PlayerHealth>();

@@ -1812,7 +1812,6 @@ GameObject:
   - component: {fileID: 1132709373}
   - component: {fileID: 4942940328236149714}
   - component: {fileID: 1132709376}
-  - component: {fileID: 5218694087567762250}
   - component: {fileID: 1132709368}
   - component: {fileID: 1132709375}
   m_Layer: 0
@@ -1979,49 +1978,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &5218694087567762250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agent: {fileID: 0}
-  targetTransform: {fileID: 0}
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  maxFollowDistance: 20
-  shootDistance: 5
-  attackWeapon: {fileID: 1433567382}
-  Health: 100
-  inSight: 0
-  currentState: 0
-  currentWaypoint: 0
 --- !u!195 &1132709368
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2601,18 +2557,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006, type: 3}
---- !u!114 &1433567382 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 557148516056721407, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,
-    type: 3}
-  m_PrefabInstance: {fileID: 557148516946863977}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5467523400129128 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 551707658316430593, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,

@@ -310,6 +310,7 @@ GameObject:
   - component: {fileID: 6884694939569036263}
   - component: {fileID: -6559163744943180889}
   - component: {fileID: 5340515473716510071}
+  - component: {fileID: 3922273393681797052}
   m_Layer: 22
   m_Name: Grenade
   m_TagString: Untagged
@@ -427,7 +428,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 24
+    m_Bits: 4294967295
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
@@ -580,3 +581,16 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!65 &3922273393681797052
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7763522763483147599}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.064472854, y: 0.1141814, z: 0.06870258}
+  m_Center: {x: -0.0013158023, y: 0.05945605, z: 0.0012355447}
