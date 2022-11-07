@@ -108,7 +108,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("The local player: " + PhotonNetwork.NickName + "joined to " + PhotonNetwork.CurrentRoom.Name + "Player Count " + PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log("The local player: " + PhotonNetwork.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name + ". Player Count " + PhotonNetwork.CurrentRoom.PlayerCount);
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(MultiplayerVRConstants.MAP_TYPE_KEY))
         {
             object mapType;
@@ -180,7 +180,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     #region Private Methods
     private void CreateAndJoinRoom()
     {
-        string randomRoomName = "Room" + mapType + Random.Range(0, 10000);
+        string randomRoomName = "Room " + mapType + Random.Range(0, 10000);
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;

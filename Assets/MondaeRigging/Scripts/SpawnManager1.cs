@@ -70,7 +70,7 @@ public class SpawnManager1 : MonoBehaviour
         while (enemyCount <= 20)
         {
             spawnEnemy = false;
-            PhotonNetwork.Instantiate("enemyAI", enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(enemyAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             enemyCount += 1;
             yield return new WaitForSeconds(3f);
             spawnEnemy = true;
@@ -83,7 +83,7 @@ public class SpawnManager1 : MonoBehaviour
         while (securityCount <= 10)
         {
             spawnSecurity = false;
-            PhotonNetwork.Instantiate("securityAI", enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             securityCount += 1;
             yield return new WaitForSeconds(5f);
             spawnSecurity = true;
@@ -96,7 +96,7 @@ public class SpawnManager1 : MonoBehaviour
         while (weaponCount <= 5)
         {
             spawnCache = false;
-            PhotonNetwork.Instantiate("weaponCache", weaponDrop[Random.Range(0, weaponDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(weaponCache.name, weaponDrop[Random.Range(0, weaponDrop.Length)].position, Quaternion.identity);
             weaponCount += 1;
             yield return new WaitForSeconds(6f);
             spawnCache = false;

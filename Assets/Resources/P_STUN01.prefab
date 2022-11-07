@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -8847835447066355539}
   - component: {fileID: -495441240973181426}
   - component: {fileID: 6446195171061301390}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: P_STUN01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 24
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
@@ -343,7 +343,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint:
   - {fileID: 8381854917849677634}
-  fireSpeed: 20
+  fireSpeed: 750
+  bullet: {fileID: 5451881146956983319, guid: 809e8dd747bd1ec4296dddd927918dcb, type: 3}
 --- !u!1 &4360926913362065709
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1868890440211155757}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Attach
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8381854917849677634}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: bulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +418,7 @@ GameObject:
   - component: {fileID: 6144990594373783665}
   - component: {fileID: 7322544255249581666}
   - component: {fileID: 3954736209580859642}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_STUN01_Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

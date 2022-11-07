@@ -8,6 +8,7 @@ public class MenuTrigger : MonoBehaviour
     public GameObject MainMenu;
     public GameObject touchParticles;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,13 +25,15 @@ public class MenuTrigger : MonoBehaviour
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            if (MainMenu.activeInHierarchy == false)
-            {
-                MainMenu.SetActive(true);
-                touchParticles.SetActive(true);
-            }
-            MainMenu.SetActive(false);
-            touchParticles.SetActive(false);
+            MainMenu.SetActive(true);
+            touchParticles.SetActive(true);
         }
     }
+
+    public void OnTriggerExit(Collider other)
+    {
+        MainMenu.SetActive(false);
+        touchParticles.SetActive(false);
+    }
 }
+

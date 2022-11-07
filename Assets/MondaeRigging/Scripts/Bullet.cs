@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            float criticalChance = 30f;
+            float criticalChance = 10f;
 
             //cal it at random probability
             if (Random.Range(0, 100f) < criticalChance)
@@ -37,9 +37,26 @@ public class Bullet : MonoBehaviour
             PhotonNetwork.Destroy(gameObject);
         }
 
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Security"))
         {
-            float criticalChance = 20f;
+            float criticalChance = 30f;
+
+            //cal it at random probability
+            if (Random.Range(0, 100f) < criticalChance)
+            {
+                //critical hit here
+                EnemyHealth enemyDamageCrit = other.GetComponent<EnemyHealth>();
+                enemyDamageCrit.TakeDamage(50);
+                PhotonNetwork.Destroy(gameObject);
+            }
+            EnemyHealth enemyDamage = other.GetComponent<EnemyHealth>();
+            enemyDamage.TakeDamage(25);
+            PhotonNetwork.Destroy(gameObject);
+        }
+
+        if (other.CompareTag("Player"))
+        {
+            float criticalChance = 15f;
 
             if (Random.Range(0, 100f) < criticalChance)
             {

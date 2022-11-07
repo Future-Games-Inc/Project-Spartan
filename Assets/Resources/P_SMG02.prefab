@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1724389774908720151}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: bulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 289175148343829804}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Attach
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 8079690805938511365}
   - component: {fileID: 4484559964357566265}
   - component: {fileID: 6502986443364642241}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_SMG02_Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: -1223852303363068723}
   - component: {fileID: 6283474936230042884}
   - component: {fileID: -3517682916912872484}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: P_SMG02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 24
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
@@ -488,4 +488,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint:
   - {fileID: 1724389774908720151}
-  fireSpeed: 20
+  fireSpeed: 750
+  bullet: {fileID: 5451881146956983319, guid: 809e8dd747bd1ec4296dddd927918dcb, type: 3}

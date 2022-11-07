@@ -6,23 +6,23 @@ using Photon.Pun;
 public class SpawnManager : MonoBehaviour
 {
     public Vector3 spawnPosition;
+    public GameObject playerPrefab;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(PhotonNetwork.IsConnectedAndReady)
-        {
-            PhotonNetwork.Instantiate("Player", spawnPosition, Quaternion.identity);
-        }
-        else
-        {
-            Debug.Log("Network not ready");
-        }
+        StartCoroutine(SpawnPlayer());
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+
+    }
+
+    IEnumerator SpawnPlayer()
+    {
+        yield return new WaitForSeconds(2);
+        PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition, Quaternion.identity);
     }
 }

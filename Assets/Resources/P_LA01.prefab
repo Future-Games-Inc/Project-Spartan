@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 6234226116805080925}
   - component: {fileID: 2376081809182647443}
   - component: {fileID: 7957776232216509439}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: P_LA01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 24
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
@@ -345,7 +345,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: []
-  fireSpeed: 20
+  fireSpeed: 750
+  bullet: {fileID: 5451881146956983319, guid: 809e8dd747bd1ec4296dddd927918dcb, type: 3}
 --- !u!1 &1504441569688337923
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +358,7 @@ GameObject:
   - component: {fileID: 1346686715607751831}
   - component: {fileID: 6635172196173673367}
   - component: {fileID: 5246046251552084}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_LA01_Battery
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +444,7 @@ GameObject:
   - component: {fileID: 465604746047687466}
   - component: {fileID: 2619313654216455303}
   - component: {fileID: 6122048628721586999}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_LA01_Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -525,7 +526,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2614489920818065294}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Attach
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -558,7 +559,7 @@ GameObject:
   - component: {fileID: 68094146324721663}
   - component: {fileID: 6405070067855628387}
   - component: {fileID: 7271056338310129593}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_LA01_Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -639,7 +640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2022189844849531389}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: bulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -8,6 +8,7 @@ public class PlayerWeapon : MonoBehaviour
 {
     public Transform[] spawnPoint;
     public float fireSpeed = 20;
+    public GameObject bullet;
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +27,8 @@ public class PlayerWeapon : MonoBehaviour
     {
         foreach (Transform t in spawnPoint)
         {
-            GameObject spawnedBullet = PhotonNetwork.Instantiate("bullet", t.position, Quaternion.identity);
-            spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+            GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity);
+            spawnedBullet.GetComponent<Rigidbody>().velocity = t.right * fireSpeed;
         }
     }
     

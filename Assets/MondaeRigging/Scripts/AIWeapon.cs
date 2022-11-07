@@ -22,7 +22,7 @@ public class AIWeapon : MonoBehaviour
     
     public void Fire()
     {
-        Rigidbody rb = Instantiate(bullet, bulletTransform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        Rigidbody rb = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity).GetComponent<Rigidbody>();
         rb.AddForce(transform.right * shootForce);
         //rb.AddForce(transform.forward * 500f);
     }

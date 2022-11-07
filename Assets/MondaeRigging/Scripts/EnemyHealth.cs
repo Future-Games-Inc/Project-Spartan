@@ -8,20 +8,22 @@ public class EnemyHealth : MonoBehaviour
     public FollowAI aiScript;
     public float Health;
     public GameObject xpDrop;
+    public SpawnManager1 enemyCounter;
+    public bool alive;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        alive = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (aiScript.Health <= 0)
+        if (aiScript.Health <= 0 && alive == true)
         {
-            Instantiate(xpDrop, transform.position, Quaternion.identity);
-            Invoke(nameof(DestroyEnemy), 0.5f);
+            StartCoroutine(KillEnemy());
         }
 
     }
@@ -32,8 +34,24 @@ public class EnemyHealth : MonoBehaviour
 
     }
 
+    IEnumerator KillEnemy()
+    {
+        yield return new WaitForSeconds(0);
+        alive = false;
+        PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
+        if (gameObject.tag == "Enemy")
+        {
+            enemyCounter.enemyCount -= 1;
+        }
+        if (gameObject.tag == "Security")
+        {
+            enemyCounter.securityCount -= 1;
+        }
+        Invoke(nameof(DestroyEnemy),0f);
+    }
+
     private void DestroyEnemy()
     {
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 }
