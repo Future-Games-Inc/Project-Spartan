@@ -7,11 +7,18 @@ public class SpawnManager : MonoBehaviour
 {
     public Vector3 spawnPosition;
     public GameObject playerPrefab;
+    public bool gameOver;
+    public GameObject winnerPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnPlayer());
+        if (PhotonNetwork.IsConnectedAndReady)
+        {
+            StartCoroutine(SpawnPlayer());
+        }
+        gameOver = false;
+        winnerPlayer = null;
     }
 
     // Update is called once per frame
@@ -22,7 +29,10 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPlayer()
     {
-        yield return new WaitForSeconds(2);
-        PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition, Quaternion.identity);
+        yield return new WaitForSeconds(0);
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition, Quaternion.identity);
+        }
     }
 }

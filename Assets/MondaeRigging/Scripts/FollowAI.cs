@@ -17,6 +17,7 @@ public class FollowAI : MonoBehaviour
     public Transform targetTransform;
 
     public Transform[] waypoints;
+    public GameObject[] players;
 
     [Header("AI Properties")]
     public float maxFollowDistance = 20f;
@@ -30,28 +31,33 @@ public class FollowAI : MonoBehaviour
     public States currentState;
 
     public int currentWaypoint;
+
+    public AudioSource audioSource;
+    public AudioClip bulletHit;
     // Start is called before the first frame update
     void Start()
     {
+        GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
+        waypoints = waypointObject.GetComponentsInChildren<Transform>();
+
         if (agent == null)
         {
             agent = GetComponent<NavMeshAgent>();
         }
 
-        currentWaypoint = Random.Range(0, 15);
+        currentWaypoint = Random.Range(1, 9);
 
         FindClosestEnemy();
 
     }
 
-    public GameObject FindClosestEnemy()
+    public void FindClosestEnemy()
     {
-        GameObject[] gos;
-        gos = GameObject.FindGameObjectsWithTag("Player");
+        players = GameObject.FindGameObjectsWithTag("Player");
         GameObject closest = null;
         float distance = Mathf.Infinity;
         Vector3 position = transform.position;
-        foreach (GameObject go in gos)
+        foreach (GameObject go in players)
         {
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;
@@ -62,14 +68,15 @@ public class FollowAI : MonoBehaviour
             }
         }
         targetTransform = closest.transform;
-        return closest;
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {        
+        FindClosestEnemy();
         CheckForPlayer();
         UpdateStates();
+
     }
 
     private void UpdateStates()
@@ -99,6 +106,7 @@ public class FollowAI : MonoBehaviour
     }
     private void Patrol()
     {
+        attackWeapon.fireWeaponBool = false;
         if (agent.destination != waypoints[currentWaypoint].position)
         {
             agent.destination = waypoints[currentWaypoint].position;
@@ -117,6 +125,7 @@ public class FollowAI : MonoBehaviour
 
     private void Follow()
     {
+        attackWeapon.fireWeaponBool = false;
         if (directionToTarget.magnitude <= shootDistance && inSight)
         {
             agent.ResetPath();
@@ -164,26 +173,7 @@ public class FollowAI : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        audioSource.PlayOneShot(bulletHit);
         Health -= damage;
-
-        //if (Health <= 0)
-        //{
-        //    Invoke(nameof(DestroyEnemy), 5f);
-        //}
-    }
-
-    //private void DestroyEnemy()
-    //{
-    //    Destroy(gameObject);
-    //    //PhotonNetwork.Destroy(gameObject);
-    //}
-
-    void OnTriggerEnter(Collider collider)
-    {
-        if (collider.CompareTag("Bullet"))
-        {
-            TakeDamage(10);
-            Destroy(collider.gameObject);
-        }
     }
 }

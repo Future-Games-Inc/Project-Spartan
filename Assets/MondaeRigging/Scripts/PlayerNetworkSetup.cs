@@ -15,49 +15,53 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
 
     public GameObject[] AvatarModelPrefabs;
 
-    public TextMeshProUGUI playerNameText;
+    public TextMeshProUGUI[] playerNameText;
 
     // Start is called before the first frame update
     void Start()
     {
         //if (PhotonNetwork.IsConnectedAndReady)
         //{
-            if (photonView.IsMine)
-            {
-                localXRRigGameObject.SetActive(true);
-                localVRIK.enabled = true;
-                //localCalibrator.enabled = true;
+        if (photonView.IsMine)
+        {
+            localXRRigGameObject.SetActive(true);
+            localVRIK.enabled = true;
+            //localCalibrator.enabled = true;
 
-                object avatarSelectionNumber;
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
-                {
-                    Debug.Log("Avatar Selection Number: " + (int)avatarSelectionNumber);
-                    photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
-                }
-
-                TeleportationArea[] teleportationAreas = GameObject.FindObjectsOfType<TeleportationArea>();
-                if (teleportationAreas.Length > 0)
-                {
-                    Debug.Log("Found " + teleportationAreas.Length + " teleportation areas.");
-                    foreach (var item in teleportationAreas)
-                    {
-                        item.teleportationProvider = localXRRigGameObject.GetComponent<TeleportationProvider>();
-                    }
-                }
-                localXRRigGameObject.AddComponent<AudioListener>();
-            }
-            else
+            object avatarSelectionNumber;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
             {
-                localXRRigGameObject.SetActive(false);
-                localVRIK.enabled = false;
-                //localCalibrator.enabled = false;
+                Debug.Log("Avatar Selection Number: " + (int)avatarSelectionNumber);
+                photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
             }
 
-            if (playerNameText.text != null)
-            {
-                playerNameText.text = photonView.Owner.NickName;
-            }
+            //TeleportationArea[] teleportationAreas = GameObject.FindObjectsOfType<TeleportationArea>();
+            //if (teleportationAreas.Length > 0)
+            //{
+            //    Debug.Log("Found " + teleportationAreas.Length + " teleportation areas.");
+            //    foreach (var item in teleportationAreas)
+            //    {
+            //        item.teleportationProvider = localXRRigGameObject.GetComponent<TeleportationProvider>();
+            //    }
+            //}
+            //localXRRigGameObject.AddComponent<AudioListener>();
         }
+        else
+        {
+            localXRRigGameObject.SetActive(false);
+            localVRIK.enabled = false;
+            //localCalibrator.enabled = false;
+        }
+
+        if (PhotonNetwork.NickName != null)
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
+            {
+                playerText.text = PhotonNetwork.NickName;
+            }
+
+        }
+    }
     //}
 
     // Update is called once per frame

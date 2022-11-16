@@ -2,28 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using PathologicalGames;
 
 public class SpawnManager1 : MonoBehaviour
 {
     public GameObject enemyAI;
     public GameObject securityAI;
-    public GameObject weaponCache;
+    public GameObject reactor;
+    public GameObject health;
 
     public Transform[] enemyDrop;
-    public Transform[] weaponDrop;
+    public Transform[] reactorDrop;
+    public Transform[] healthDrop;
 
     public int enemyCount;
     public int securityCount;
-    public int weaponCount;
+    public int reactorCount;
+    public int healthCount;
 
     public bool spawnEnemy = true;
     public bool spawnSecurity = true;
-    public bool spawnCache = true;
+    public bool spawnReactor = true;
+    public bool spawnHealth = true;
 
-    //public float enemySpawnTimer = 20f;
-    //public float securitySpawnTimer = 10f;
-    //public float cacheSpawnTimer = 60f;
-    // Start is called before the first frame update
     void Start()
     {
 
@@ -32,47 +33,32 @@ public class SpawnManager1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //enemySpawnTimer -= Time.deltaTime;
-        //securitySpawnTimer -= Time.deltaTime;
-        //cacheSpawnTimer -= Time.deltaTime;
-
-        //if (enemyCount < 20 && enemySpawnTimer <= 0)
-        //{
-        //    StartCoroutine(EnemySpawn());
-        //}
-        //if (securityCount < 10 && securitySpawnTimer <= 0)
-        //{
-        //    StartCoroutine(SecuritySpawn());
-        //}
-        //if (weaponCount < 5 && cacheSpawnTimer <= 0)
-        //{
-        //    StartCoroutine(CacheSpawn());
-        //}
-        if (spawnEnemy == true)
+        if (spawnEnemy == true && enemyCount < 10)
         {
             StartCoroutine(EnemySpawn());
         }
-        if (spawnSecurity == true)
+        if (spawnSecurity == true && securityCount < 5)
         {
             StartCoroutine(SecuritySpawn());
         }
-        if (spawnCache == true)
+        if (spawnReactor == true && reactorCount < 1)
         {
-            StartCoroutine(CacheSpawn());
+            StartCoroutine(ReactorSpawn());
         }
-        //StartCoroutine(CacheSpawn());
-        //StartCoroutine(SecuritySpawn());
-        //StartCoroutine(EnemySpawn());
+        if (spawnHealth == true && healthCount < 4)
+        {
+            StartCoroutine(HealthSpawn());
+        }
     }
 
     IEnumerator EnemySpawn()
     {
-        while (enemyCount <= 20)
+        while (enemyCount < 10)
         {
             spawnEnemy = false;
             PhotonNetwork.Instantiate(enemyAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             enemyCount += 1;
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(10f);
             spawnEnemy = true;
         }
         //enemySpawnTimer = 20f;
@@ -80,27 +66,38 @@ public class SpawnManager1 : MonoBehaviour
 
     IEnumerator SecuritySpawn()
     {
-        while (securityCount <= 10)
+        while (securityCount < 5)
         {
             spawnSecurity = false;
             PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             securityCount += 1;
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(15f);
             spawnSecurity = true;
         }
         //securitySpawnTimer = 10f;
     }
 
-    IEnumerator CacheSpawn()
+    IEnumerator ReactorSpawn()
     {
-        while (weaponCount <= 5)
+        while (reactorCount < 1)
         {
-            spawnCache = false;
-            PhotonNetwork.Instantiate(weaponCache.name, weaponDrop[Random.Range(0, weaponDrop.Length)].position, Quaternion.identity);
-            weaponCount += 1;
-            yield return new WaitForSeconds(6f);
-            spawnCache = false;
+            spawnReactor = false;
+            PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity);
+            reactorCount += 1;
+            yield return new WaitForSeconds(30f);
+            spawnReactor = true;
         }
-        //cacheSpawnTimer = 60f;
+    }
+
+    IEnumerator HealthSpawn()
+    {
+        while (healthCount < 4)
+        {
+            spawnHealth = false;
+            PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity);
+            healthCount += 1;
+            yield return new WaitForSeconds(35f);
+            spawnHealth = true;
+        }
     }
 }

@@ -43,7 +43,10 @@ public class SkillTree : MonoBehaviour
         SkillList[3].ConnectedSkills = new[] { 5 };
 
         UpdateAllSkillsUI();
-
+        if(saveData == null)
+        {
+            saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();
+        }
     }
 
     // Update is called once per frame

@@ -4,12 +4,14 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
+
 public class LoginManager1 : MonoBehaviourPunCallbacks
 {
     public TMP_InputField playerNameInput;
     public RoomManager roomManager;
     public GameObject connectButton;
 
+    const string playerNamePrefKey = "PlayerName";
     #region Unity Methods
     // Start is called before the first frame update
     void Start()
@@ -35,11 +37,17 @@ public class LoginManager1 : MonoBehaviourPunCallbacks
 
     public void ConnectToPhotonServer()
     {
+        string defaultName = string.Empty;
         if (playerNameInput != null)
         {
-            PhotonNetwork.NickName = playerNameInput.text;
-            PhotonNetwork.ConnectUsingSettings();
+            if (PlayerPrefs.HasKey(playerNamePrefKey))
+            {
+                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+                playerNameInput.text = defaultName;
+            }
         }
+        PhotonNetwork.NickName = defaultName;
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     #endregion
