@@ -19,10 +19,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
 
-        occupancyMultiplayer1.text = 0 + "/" + 20 + " Reacts Currently In This Session";
-        occupancyMultiplayer2.text = 0 + "/" + 20 + " Reacts Currently In This Session";
-        occupancyMultiplayer3.text = 0 + "/" + 20 + " Reacts Currently In This Session";
-
         //if (PhotonNetwork.IsConnectedAndReady)
         //{
         //    PhotonNetwork.JoinLobby();
@@ -140,9 +136,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (roomList.Count == 0)
         {
-            occupancyMultiplayer1.text = 0 + "/" + 20;
-            occupancyMultiplayer2.text = 0 + "/" + 20;
-            occupancyMultiplayer3.text = 0 + "/" + 20;
+            occupancyMultiplayer1.text = 0 + "/" + 20 + " Reacts Currently In This Session";
+            occupancyMultiplayer2.text = 0 + "/" + 20 + " Reacts Currently In This Session";
+            occupancyMultiplayer3.text = 0 + "/" + 20 + " Reacts Currently In This Session";
         }
 
         foreach (RoomInfo room in roomList)

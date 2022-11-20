@@ -40,18 +40,18 @@ public class ActivateWristUI : MonoBehaviour
         if (triggerValue >= .98f && pinchValue >= .98f && activated == false)
         {
             timer += Time.deltaTime;
-            if (timer >= 1f)
+            if (timer > .75f)
             {
                 StartCoroutine(WristUI());
             }
         }
 
-        if (triggerValue < .98f && pinchValue < .98f)
+        if (triggerValue < .98f || pinchValue < .98f)
         {
             timer = 0f;
         }
 
-        if (triggerValue >= .98f && activated == true && timer < 1f || pinchValue >= .98f && activated == true && timer <1f)
+        if (triggerValue >= .98f && activated == true && timer < .75f || pinchValue >= .98f && activated == true && timer < .75f)
         {
             activated = false;
         }

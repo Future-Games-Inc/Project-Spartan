@@ -53,13 +53,20 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
             //localCalibrator.enabled = false;
         }
 
-        if (PhotonNetwork.NickName != null)
+        if (PhotonNetwork.LocalPlayer.NickName != null)
         {
             foreach (TextMeshProUGUI playerText in playerNameText)
             {
                 playerText.text = PhotonNetwork.NickName;
             }
 
+        }
+        else
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
+            {
+                playerText.text = "Unknown React";
+            }
         }
     }
     //}
