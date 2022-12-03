@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: e601176dc029b5245bac0aaf70f3cf80
 ModelImporter:
-  serializedVersion: 19300
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       1: 100000
@@ -769,6 +769,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -784,7 +785,8 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
+    extraUserProperties:
+    - '#BAKERY{"meshName":["CityTerrain_Base_3x5","CityTerrain_Base_3x2.5","CityTerrain_Base_1x5","CityTerrain_Base_cut3x0.5","CityTerrain_Base_5x2.5","CityTerrain_Base_10x5","CityTerrain_Base_10x10","CityTerrain_Base_corner5x5","CityTerrain_Base_3x1","CityTerrain_Base_cut3x5","CityTerrain_Base_ramp3x0.5x2.5","CityTerrain_Base_ramp3x5x5","CityTerrain_Base_3x10","CityTerrain_Base_2.5x2.5","CityTerrain_Base_1x10","CityTerrain_Base_5x5","CityTerrain_Base_arcwall3x5x2.5","CityTerrain_Base_arcwall3x5","CityTerrain_Base_3x0.5","CityTerrain_Base_cornerwall5x5","CityTerrain_Base_arcwallhalf3x2.5","CityTerrain_Base_0.5x0.5","CityTerrain_Base_arcwallhalf3x2.5x2.5","CityTerrain_Base_corner5x2.5","CityTerrain_Base_2x2","CityTerrain_Base_2x1","CityTerrain_Base_1x2.5","CityTerrain_Base_cornerwall5x2.5","CityTerrain_Base_1x0.5","CityTerrain_Base_1x1","CityTerrain_Base_2x0.5","CityTerrain_Base_cut3x1","CityTerrain_Base_ramp3x1x2.5"],"padding":[149,211,256,256,183,97,64,163,256,211,210,107,105,231,183,121,147,189,256,125,256,256,207,231,256,256,256,141,256,256,256,256,206],"unwrapper":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}'
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -798,20 +800,27 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -845,6 +854,8 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

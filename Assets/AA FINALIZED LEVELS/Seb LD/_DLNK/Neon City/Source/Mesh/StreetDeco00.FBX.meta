@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: ded14b7acdcdbe740ad6f9f85ea3bae2
 ModelImporter:
-  serializedVersion: 19300
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       1: 100000
@@ -2228,6 +2228,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -2243,7 +2244,8 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
+    extraUserProperties:
+    - '#BAKERY{"meshName":["Cylinder019","TrashBag00","Object002","Box040","Line008","Line006","Line004","Cylinder014","Cylinder009","Cylinder016","Cylinder006","Box074","Object011","Box072","Box021","Box020","Plane008","Box023","Box022","Plane007","Box019","Box018","Box017","Box015","Cylinder005","Box068","Line007","Box042","Line002","Cylinder004","Cylinder003","Coolbox00","Tube002","Box041","Box065","Box073","Cylinder018","Cylinder010","Cylinder007","Cylinder028","Cylinder027","Line001","Cylinder002","Cylinder001","Object001","Can00","Coolbox01","Box002","Cylinder017","Box075","Box037","Cylinder022","Tube003","Box063","Tube016","Tube015","Tube014","Box035","Box031","Box030","Box036","Box033","Box032","Box034","Box029","Box028","Plane009","Box027","Box026","Box025","Box024","Line003","Line005","Box038","Box064","Cylinder008","Cylinder015","Cylinder026","Box039","Line009","Box061","Object005","Object009","Object008","CityTerrain_Base_10x012","Tube011","Tube012","Tube013","Box062","Box069","Cylinder011","Cylinder013","CityTerrain_Base_10x011","Cylinder020","Cylinder021","Object","Object003","Tube005","Tube006","Tube010","Tube009"],"padding":[256,256,256,167,256,256,256,256,256,256,256,256,256,256,256,222,194,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,207,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,243,256,256,230,186,256,97,256,256,256,256,256,256,256,64,256,256,99,162,256,256,256,256],"unwrapper":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}'
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -2257,20 +2259,27 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -2304,6 +2313,8 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
