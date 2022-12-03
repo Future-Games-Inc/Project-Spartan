@@ -9,17 +9,16 @@ public class Skill : MonoBehaviour
     public SkillTree skillTree;
 
     public int id;
+    public int cost;
 
     public TMP_Text TitleText;
     public TMP_Text BodyText;
 
     public int[] ConnectedSkills;
 
-
-
     void Update()
     {
-        BodyText.text = $"Cost: {skillTree.saveData.SkillPoints}/1 SP";
+        BodyText.text = $"Cost: {skillTree.saveData.SkillPoints}/{cost} Cs";
         GetComponent<Image>().color = skillTree.saveData.SkillPoints >= 1 ? Color.white : Color.grey;
     }
     public void UpdateUI()
@@ -34,9 +33,9 @@ public class Skill : MonoBehaviour
 
     public void Buy()
     {
-        if (skillTree.saveData.SkillPoints < 1 || skillTree.SkillLevels[id] >= skillTree.SkillCaps[id])
+        if (skillTree.saveData.SkillPoints < cost || skillTree.SkillLevels[id] >= skillTree.SkillCaps[id])
             return;
-        skillTree.saveData.UpdateSkills(-1);
+        skillTree.saveData.UpdateSkills(-cost);
         skillTree.SkillLevels[id]++;
         skillTree.UpdateAllSkillsUI();
     }

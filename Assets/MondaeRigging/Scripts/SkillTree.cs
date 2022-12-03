@@ -21,13 +21,17 @@ public class SkillTree : MonoBehaviour
     public SaveData saveData;
     public TMP_Text EXPText;
 
+    public float powerUpCount = 0f;
+
     private void Update()
     {
-        EXPText.text = "EXP: " + saveData.SkillPoints.ToString();  
+        EXPText.text = "CINTS: " + saveData.SkillPoints.ToString();  
     }
     // Start is called before the first frame update
     void Start()
     {
+        powerUpCount = 0f;
+
         SkillLevels = new int[6];
         SkillCaps = new[] { 10, 7, 7, 5, 5, 4, };
 
