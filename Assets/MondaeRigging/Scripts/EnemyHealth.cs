@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using UnityEngine.AI;
-using static RootMotion.FinalIK.GenericPoser;
-using Unity.XR.CoreUtils;
 
 public class EnemyHealth : MonoBehaviour
 {
     public FollowAI aiScript;
     public GameObject xpDrop;
+    public GameObject xpDropExtra;
     public SpawnManager1 enemyCounter;
     public bool alive;
 
     public Animator animator;
+    public GameObject deathElectric;
+
+    public Transform[] lootSpawn;
+    public float xpDropRate;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         alive = true;
@@ -28,24 +30,49 @@ public class EnemyHealth : MonoBehaviour
         if (aiScript.Health <= 0 && alive == true)
         {
             alive = false;
-            StartCoroutine(KillEnemy());
+            KillEnemy();
         }
     }
 
-    IEnumerator KillEnemy()
+    public void KillEnemy()
     {
-        yield return new WaitForSeconds(0);
         enemyCounter.enemyCount -= 1;
-        StartCoroutine(DestroyEnemy());
+        enemyCounter.enemiesKilled += 1;
+        DestroyEnemy();
     }
 
-    IEnumerator DestroyEnemy()
+    public void DestroyEnemy()
     {
-        yield return new WaitForSeconds(0);
         this.aiScript.enabled = false;
         animator.SetTrigger("Death");
-        PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity); 
-        yield return new WaitForSeconds(4f);
+        deathElectric.SetActive(true);
+
+        foreach (Transform t in lootSpawn)
+        {
+            if (tag == "Enemy")
+            {
+                xpDropRate = 5f;
+            }
+
+            else if (tag == "BossEnemy")
+            {
+                xpDropRate = 15f;
+            }
+
+            if (Random.Range(0, 100f) < xpDropRate)
+            {
+                PhotonNetwork.Instantiate(xpDropExtra.name, transform.position, Quaternion.identity);
+            }
+            else
+                PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
+        }
+
+        StartCoroutine(Destroy());
+    }
+
+    IEnumerator Destroy()
+    {
+        yield return new WaitForSeconds(4f); 
         PhotonNetwork.Destroy(gameObject);
     }
 }

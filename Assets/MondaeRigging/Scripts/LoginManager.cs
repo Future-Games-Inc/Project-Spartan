@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
-using UnityEngine.UIElements;
-using UnityEngine.UI;
 
 public class LoginManager : MonoBehaviourPunCallbacks
 {
@@ -12,7 +10,6 @@ public class LoginManager : MonoBehaviourPunCallbacks
     public RoomManager roomManager;
     public GameObject connectButton;
 
-    const string playerNamePrefKey = "PlayerName";
     #region Unity Methods
     // Start is called before the first frame update
     void Start()
@@ -26,7 +23,7 @@ public class LoginManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        
     }
     #endregion
 
@@ -38,7 +35,11 @@ public class LoginManager : MonoBehaviourPunCallbacks
 
     public void ConnectToPhotonServer()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        if (playerNameInput != null)
+        {
+            PhotonNetwork.LocalPlayer.NickName = playerNameInput.text;
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
     #endregion
@@ -50,26 +51,13 @@ public class LoginManager : MonoBehaviourPunCallbacks
     }
     public override void OnConnectedToMaster()
     {
-        string defaultName = string.Empty;
-        if (playerNameInput != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                playerNameInput.text = defaultName;
-            }
-        }
-        PhotonNetwork.NickName = defaultName;
-        Debug.Log("Conencted to Master Server with player name: " + PhotonNetwork.NickName);
+        Debug.Log("Conencted to Master Server with player name: " + PhotonNetwork.LocalPlayer.NickName);
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
-        if (PhotonNetwork.CurrentLobby != null)
-        {
-            connectButton.SetActive(true);
-        }
+        connectButton.SetActive(true);
     }
 
     public void EnterRoom1()

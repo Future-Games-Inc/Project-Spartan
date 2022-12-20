@@ -1,12 +1,40 @@
 
+using RootMotion.FinalIK;
+
 public class MultiplayerVRConstants
 {
     public const string MAP_TYPE_KEY = "map";
-    public const string MAP_TYPE_VALUE_MULTIPLAYER1 = "1Multiplayer";
-    public const string MAP_TYPE_VALUE_MULTIPLAYER2 = "2Multiplayer";
-    public const string MAP_TYPE_VALUE_MULTIPLAYER3 = "3Multiplayer";
-
+    public const string MAP_TYPE_VALUE_MULTIPLAYER1 = "multiplayer1";
+    public const string MAP_TYPE_VALUE_MULTIPLAYER2 = "multiplayer2";
+    public const string MAP_TYPE_VALUE_MULTIPLAYER3 = "multiplayer3";
 
     public const string AVATAR_SELECTION_NUMBER = "Avatar_Selection_Number";
-}
 
+    public const string BULLET_MODIFIER = "Bullet_Modifier";
+    public const string REACTOR_EXTRACTION = "Reactor_Extraction";
+    public const string TOXICITY_DAMAGE = "Toxicity_Damage";
+    public const string DAMAGAE_TAKEN = "Damage_Taken";
+    public const string SHIELD_DURATION = "Shield_Duration";
+    public const string PLAYER_SPEED = "Player_Speed";
+    public const string PLAYER_HEALTH = "Player_Health";
+    public const string PLAYER_DASH = "Player_Dash";
+    public const string HEALTH_POWERUP = "Health_Powerup";
+    public const string DASH_COOLDOWN = "Dash_Cooldown";
+    public const string AMMO_OVERLOAD = "Ammo_Overload";
+    public const string HEALTH_REGEN = "Health_Regen";
+
+    public const string HEALTH_STIM = "Health_Stim";
+    public const string LEECH = "Leech";
+    public const string ACTIVE_CAMO = "Active_Camo";
+    public const string STEALTH = "Stealth";
+    public const string DOUBLE_AGENT = "Double_Agent";
+    public const string PROXIMITY_BOMB = "Proximity_Bomb";
+    public const string SMOKE_BOMB = "Smoke_Bomb";
+    public const string EXPLOSIVE_DEATH = "Explosive_Death";
+    public const string BERSERKER_FURY = "Berserker_Fury";
+    public const string AI_COMPANION = "AI_Companion";
+    public const string DECOY_DEPLOYMENT = "Decoy_Deployment";
+    public const string SAVING_GRACE = "Saving_Grace";
+
+    public const string CINTS = "Cints";
+}

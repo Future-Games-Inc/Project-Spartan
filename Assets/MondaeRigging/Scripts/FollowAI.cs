@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
+using CSCore;
+using Invector.vCharacterController.AI;
 
 public class FollowAI : MonoBehaviour
 {
@@ -72,7 +74,7 @@ public class FollowAI : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {        
+    {
         FindClosestEnemy();
         CheckForPlayer();
         UpdateStates();

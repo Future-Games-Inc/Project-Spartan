@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using PathologicalGames;
 
 public class SpawnManager1 : MonoBehaviour
 {
-    public GameObject enemyAI;
+    public GameObject[] enemyAI;
+    public GameObject[] enemyBoss;
     public GameObject securityAI;
     public GameObject reactor;
     public GameObject health;
+
 
     public Transform[] enemyDrop;
     public Transform[] reactorDrop;
@@ -19,13 +20,20 @@ public class SpawnManager1 : MonoBehaviour
     public int securityCount;
     public int reactorCount;
     public int healthCount;
+    public int enemiesKilled;
 
     public bool spawnEnemy = true;
     public bool spawnSecurity = true;
     public bool spawnReactor = true;
     public bool spawnHealth = true;
+    public bool spawnBoss = true;
 
     void Start()
+    {
+
+    }
+
+    private void Awake()
     {
 
     }
@@ -33,11 +41,11 @@ public class SpawnManager1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (spawnEnemy == true && enemyCount < 10)
+        if (spawnEnemy == true && enemyCount < 5)
         {
             StartCoroutine(EnemySpawn());
         }
-        if (spawnSecurity == true && securityCount < 5)
+        if (spawnSecurity == true && securityCount < 3)
         {
             StartCoroutine(SecuritySpawn());
         }
@@ -49,14 +57,20 @@ public class SpawnManager1 : MonoBehaviour
         {
             StartCoroutine(HealthSpawn());
         }
+
+        if (spawnBoss == true && enemiesKilled > 5)
+        {
+            StartCoroutine(SpawnBoss());
+        }
     }
 
     IEnumerator EnemySpawn()
     {
-        while (enemyCount < 10)
+        while (enemyCount < 5)
         {
             spawnEnemy = false;
-            PhotonNetwork.Instantiate(enemyAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)].gameObject;
+            PhotonNetwork.Instantiate(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             enemyCount += 1;
             yield return new WaitForSeconds(10f);
             spawnEnemy = true;
@@ -66,7 +80,7 @@ public class SpawnManager1 : MonoBehaviour
 
     IEnumerator SecuritySpawn()
     {
-        while (securityCount < 5)
+        while (securityCount < 3)
         {
             spawnSecurity = false;
             PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
@@ -98,6 +112,18 @@ public class SpawnManager1 : MonoBehaviour
             healthCount += 1;
             yield return new WaitForSeconds(35f);
             spawnHealth = true;
+        }
+    }
+    IEnumerator SpawnBoss()
+    {
+        while (enemiesKilled > 5)
+        {
+            spawnBoss = false;
+            GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)].gameObject;
+            PhotonNetwork.Instantiate(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            enemiesKilled = 3;
+            yield return new WaitForSeconds(45f);
+            spawnBoss = true;
         }
     }
 }

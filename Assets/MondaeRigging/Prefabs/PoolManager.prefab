@@ -1,0 +1,480 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1202632049257575182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2461025798139151511}
+  - component: {fileID: 3843594147614212644}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2461025798139151511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202632049257575182}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -30.070498, y: 10.23467, z: 15.43403}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2364960375528534322}
+  - {fileID: 3247215441146072903}
+  - {fileID: 2555806348701813253}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3843594147614212644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202632049257575182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 010308c95968db641afdc24ccf5c0c0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punPrefabPool:
+    manager: {fileID: 0}
+--- !u!1 &1820093386792400850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2555806348701813253}
+  - component: {fileID: 3669361101511635731}
+  m_Layer: 0
+  m_Name: securityAI Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2555806348701813253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820093386792400850}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2461025798139151511}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3669361101511635731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820093386792400850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1543886777, guid: 901c3234e90460240bf35ffc5f78c51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition:
+    initialSize: 10
+    initialiseOnStart: 1
+    isPoolingEnabled: 1
+    logMessages: 1
+    notificationMode: 1
+    dontDestroyOnLoad: 0
+    instantiateWhenEmpty: 1
+    reparentPooledObjects: 1
+    maximumSize: 20
+    recordStatistics: 1
+    warnOnDestroy: 0
+    frozen: 0
+    sourceObject: {fileID: 0}
+  currentSettings:
+    initialSize: 10
+    initialiseOnStart: 1
+    isPoolingEnabled: 1
+    logMessages: 2
+    notificationMode: 1
+    dontDestroyOnLoad: 1
+    instantiateWhenEmpty: 1
+    reparentPooledObjects: 1
+    maximumSize: 50
+    recordStatistics: 1
+    warnOnDestroy: 0
+    frozen: 0
+    sourceObject: {fileID: 3941197441095112601, guid: 7330c93786b386f4bbd3abcfced3b425,
+      type: 3}
+  isInitialised: 0
+  pool:
+    isInitialised: 0
+    logMessages: 0
+    instantiateWhenEmpty: 0
+    initialPoolSize: 0
+    maximumPoolSize: 0
+    recordStatistics: 0
+    countWhenSerialised: 0
+    serialisedStatistics:
+      objectsAliveInsideAndOutsidePool: 0
+      objectsAliveOutsidePool: 0
+      instantiationCount: 0
+      destructionCount: 0
+      acquireCount: 0
+      releaseCount: 0
+      highestAliveCount: 0
+      recommendedPoolSize: 0
+      initialisedTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      initialisedTimeHasValue: 0
+      lastAcquireTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastAcquireTimeHasValue: 0
+      lastReleaseTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastReleaseTimeHasValue: 0
+      lastInstantiateTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastInstantiateTimeHasValue: 0
+      lastDestroyTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastDestroyTimeHasValue: 0
+    sourceObject: {fileID: 0}
+    parent: {fileID: 0}
+    notificationMode: 0
+    reparentPooledObjects: 0
+    warnOnDestroy: 0
+    gameObjectToPoolable:
+      keys: []
+      values: []
+    serialisedGameObjects: []
+    sourceObjectTransform: {fileID: 0}
+  ObjectInstantiatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectAcquiredEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectDestroyedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &5611574555514366148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2364960375528534322}
+  - component: {fileID: 4351916230176512064}
+  m_Layer: 0
+  m_Name: bullet Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2364960375528534322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5611574555514366148}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2461025798139151511}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4351916230176512064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5611574555514366148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1543886777, guid: 901c3234e90460240bf35ffc5f78c51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition:
+    initialSize: 10
+    initialiseOnStart: 1
+    isPoolingEnabled: 1
+    logMessages: 1
+    notificationMode: 1
+    dontDestroyOnLoad: 0
+    instantiateWhenEmpty: 1
+    reparentPooledObjects: 1
+    maximumSize: 20
+    recordStatistics: 1
+    warnOnDestroy: 0
+    frozen: 0
+    sourceObject: {fileID: 0}
+  currentSettings:
+    initialSize: 500
+    initialiseOnStart: 1
+    isPoolingEnabled: 1
+    logMessages: 2
+    notificationMode: 1
+    dontDestroyOnLoad: 1
+    instantiateWhenEmpty: 1
+    reparentPooledObjects: 1
+    maximumSize: 1000
+    recordStatistics: 1
+    warnOnDestroy: 0
+    frozen: 0
+    sourceObject: {fileID: 5451881146956983319, guid: 809e8dd747bd1ec4296dddd927918dcb,
+      type: 3}
+  isInitialised: 0
+  pool:
+    isInitialised: 0
+    logMessages: 0
+    instantiateWhenEmpty: 0
+    initialPoolSize: 0
+    maximumPoolSize: 0
+    recordStatistics: 0
+    countWhenSerialised: 0
+    serialisedStatistics:
+      objectsAliveInsideAndOutsidePool: 0
+      objectsAliveOutsidePool: 0
+      instantiationCount: 0
+      destructionCount: 0
+      acquireCount: 0
+      releaseCount: 0
+      highestAliveCount: 0
+      recommendedPoolSize: 0
+      initialisedTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      initialisedTimeHasValue: 0
+      lastAcquireTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastAcquireTimeHasValue: 0
+      lastReleaseTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastReleaseTimeHasValue: 0
+      lastInstantiateTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastInstantiateTimeHasValue: 0
+      lastDestroyTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastDestroyTimeHasValue: 0
+    sourceObject: {fileID: 0}
+    parent: {fileID: 0}
+    notificationMode: 0
+    reparentPooledObjects: 0
+    warnOnDestroy: 0
+    gameObjectToPoolable:
+      keys: []
+      values: []
+    serialisedGameObjects: []
+    sourceObjectTransform: {fileID: 0}
+  ObjectInstantiatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectAcquiredEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectDestroyedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &5708334679951140305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3247215441146072903}
+  - component: {fileID: 3547268103347220240}
+  m_Layer: 0
+  m_Name: enemyAI Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3247215441146072903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5708334679951140305}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2461025798139151511}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3547268103347220240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5708334679951140305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1543886777, guid: 901c3234e90460240bf35ffc5f78c51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition:
+    initialSize: 10
+    initialiseOnStart: 1
+    isPoolingEnabled: 1
+    logMessages: 1
+    notificationMode: 1
+    dontDestroyOnLoad: 0
+    instantiateWhenEmpty: 1
+    reparentPooledObjects: 1
+    maximumSize: 20
+    recordStatistics: 1
+    warnOnDestroy: 0
+    frozen: 0
+    sourceObject: {fileID: 0}
+  currentSettings:
+    initialSize: 10
+    initialiseOnStart: 1
+    isPoolingEnabled: 1
+    logMessages: 2
+    notificationMode: 1
+    dontDestroyOnLoad: 1
+    instantiateWhenEmpty: 1
+    reparentPooledObjects: 1
+    maximumSize: 50
+    recordStatistics: 1
+    warnOnDestroy: 0
+    frozen: 0
+    sourceObject: {fileID: 1824041771042350, guid: acdebd102d9a9fb48a32dae3525b7c0e,
+      type: 3}
+  isInitialised: 0
+  pool:
+    isInitialised: 0
+    logMessages: 0
+    instantiateWhenEmpty: 0
+    initialPoolSize: 0
+    maximumPoolSize: 0
+    recordStatistics: 0
+    countWhenSerialised: 0
+    serialisedStatistics:
+      objectsAliveInsideAndOutsidePool: 0
+      objectsAliveOutsidePool: 0
+      instantiationCount: 0
+      destructionCount: 0
+      acquireCount: 0
+      releaseCount: 0
+      highestAliveCount: 0
+      recommendedPoolSize: 0
+      initialisedTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      initialisedTimeHasValue: 0
+      lastAcquireTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastAcquireTimeHasValue: 0
+      lastReleaseTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastReleaseTimeHasValue: 0
+      lastInstantiateTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastInstantiateTimeHasValue: 0
+      lastDestroyTime:
+        frameCount: 0
+        realtimeSinceStartup: 0
+        time: 0
+        unscaledTime: 0
+      lastDestroyTimeHasValue: 0
+    sourceObject: {fileID: 0}
+    parent: {fileID: 0}
+    notificationMode: 0
+    reparentPooledObjects: 0
+    warnOnDestroy: 0
+    gameObjectToPoolable:
+      keys: []
+      values: []
+    serialisedGameObjects: []
+    sourceObjectTransform: {fileID: 0}
+  ObjectInstantiatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectAcquiredEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ObjectDestroyedEvent:
+    m_PersistentCalls:
+      m_Calls: []

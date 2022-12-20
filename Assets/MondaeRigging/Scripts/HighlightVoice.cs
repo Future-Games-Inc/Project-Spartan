@@ -17,7 +17,8 @@ public class HighlightVoice : MonoBehaviour
 
 
     private void Awake()
-    {       
+    {
+        
         //micImage = GetComponentInParent<VoiceDebugUI>().transform.Find("Image_Mic").GetComponent<Image>();
         this.micImage.enabled = false;
         this.speakerImage.enabled = false;

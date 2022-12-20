@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -19,21 +18,13 @@ public class GrappleGun : MonoBehaviour
     private string m_grappleButton;
     private Handness m_hand2 = Handness.Left;
     public bool grappled;
-    public AudioSource audioSource;
-    public AudioClip grappleSFX;
 
     [Header("Player Info")]
     SpringJoint springJoint;
     public GameObject playerGameObject;
     Transform playerTransform;
     public CharacterController characterController;
-    public Rigidbody characterRb;
-    public Transform _selection;
-    public Material defaultMaterial;
-    public Material highlightMaterial;
-    public AbilityDash playerDash;
-
-    //public TrailRenderer trailRenderer;
+    public TrailRenderer trailRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -46,62 +37,43 @@ public class GrappleGun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (grappled)
-        //{
-        //    characterController.enabled = false;
-        //    characterRb.isKinematic = false;
-        //}
+        if(grappled)
+        {
+            characterController.enabled = false;
+        }
 
-        if (!grappled)
+        if(!grappled)
         {
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
             characterController.enabled = true;
-            characterRb.isKinematic = true;
-            playerDash.enabled = true;
         }
 
-        if (Input.GetButtonDown(m_grappleButton) && !grappled)
+        if (Input.GetButtonDown(m_grappleButton))
         {
             FireRaycastIntoScene();
         }
-        else if (Input.GetButtonUp(m_grappleButton))
+
+        if (Input.GetButtonUp(m_grappleButton))
         {
             CancelGrapple();
-        }
-
-        if(_selection != null)
-        {
-            var selectionRenderer = _selection.GetComponent<Renderer>();
-            selectionRenderer.material = defaultMaterial;
-            _selection = null;
-        }
-
-        RaycastHit hit;
-        if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, targetLayer))
-        {
-            var selection = hit.transform;
-            if(selection.CompareTag("GrapplePoint"))
-            {
-                var selectionRenderer = selection.GetComponent<Renderer>();
-                if(selectionRenderer != null)
-                {
-                    selectionRenderer.material = highlightMaterial;
-                }
-                _selection = selection;
-
-            }
         }
     }
 
     void FireRaycastIntoScene()
     {
-            grappled = true;
+        RaycastHit hit;
+
+        if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetLayer))
+        {
+            trailRenderer.enabled = true;
             bulletTransform.position = barrelTransform.position;
-            bulletRb.velocity = barrelTransform.forward * bulletSpeed;
+            bulletRb.velocity = bulletTransform.forward * bulletSpeed;
+            grappled = true;
+        }
     }
 
-    void CancelGrapple()
+    public void CancelGrapple()
     {
         grappled = false;
         Destroy(springJoint);
@@ -110,23 +82,19 @@ public class GrappleGun : MonoBehaviour
 
     public void Swing()
     {
-        playerDash.enabled = false;
-        characterController.enabled = false;
-        characterRb.isKinematic = false;
         springJoint = playerGameObject.AddComponent<SpringJoint>();
         springJoint.connectedBody = bulletScript.collisionObject.GetComponent<Rigidbody>();
         springJoint.autoConfigureConnectedAnchor = false;
         springJoint.connectedAnchor = bulletScript.collisionObject.transform.InverseTransformPoint(bulletScript.hitPoint);
         springJoint.anchor = Vector3.zero;
-        audioSource.PlayOneShot(grappleSFX);
 
         float disJointToPlayer = Vector3.Distance(playerTransform.position, bulletTransform.position);
 
-        springJoint.maxDistance = disJointToPlayer * .4f;
+        springJoint.maxDistance = disJointToPlayer * .6f;
         springJoint.minDistance = disJointToPlayer * .1f;
 
         springJoint.damper = 100f;
-        springJoint.spring = 400f;
+        springJoint.spring = 700f;
     }
 
 }

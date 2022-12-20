@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,8 +11,6 @@ public class AbilityDash : Abilities
 
     [SerializeField] private int boostPercentage;
     [SerializeField] PlayerMovement movement;
-    public AudioSource audioSource;
-    public AudioClip dashSFX;
 
     private float boostAsPercent;
 
@@ -30,7 +29,18 @@ public class AbilityDash : Abilities
     void Start()
     {
         movement = GetComponent<PlayerMovement>();
-        boostAsPercent = (100 + boostPercentage) / 100;
+
+        object storedPlayerDash;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_DASH, out storedPlayerDash) && (int)storedPlayerDash >= 1)
+            boostAsPercent = ((100 + boostPercentage) / 100) +((int)storedPlayerDash * (int)0.75);
+        else
+            boostAsPercent = (100 + boostPercentage) / 100;
+
+        object storedDashCooldown;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DASH_COOLDOWN, out storedDashCooldown) && (int)storedDashCooldown >= 1)
+            coolDown = 5 - (int)storedDashCooldown;
+        else
+            coolDown = 5;
     }
 
     // Update is called once per frame
@@ -46,7 +56,6 @@ public class AbilityDash : Abilities
 
     private void AbilityEffect()
     {
-        audioSource.PlayOneShot(dashSFX);
         movement.Boost(boostAsPercent);
         Invoke("ResetAbility", duration);
     }

@@ -7,14 +7,14 @@ using TMPro;
 public class SkillUI : MonoBehaviour
 {
     public TextMeshProUGUI skillText;
-    public SaveData saveData;
+    public PlayerHealth playerHealth;
 
     private void Start()
     {
-        saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();  
+        
     }
     private void Update()
     {
-        skillText.text = "Skill Points: " + saveData.SkillPoints.ToString();
+        skillText.text = "Cints: " + playerHealth.playerCints.ToString();
     }
 }

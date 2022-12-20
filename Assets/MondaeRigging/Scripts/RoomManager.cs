@@ -90,11 +90,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.Log(message);
         CreateAndJoinRoom();
     }
-
-    //public override void OnConnectedToMaster()
-    //{
-    //    PhotonNetwork.JoinLobby();
-    //}
     public override void OnCreatedRoom()
     {
         Debug.Log("A room is created with name: " + PhotonNetwork.CurrentRoom.Name);
@@ -161,11 +156,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //public override void OnJoinedLobby()
-    //{
-    //    Debug.Log("Joined Lobby.");
-    //}
-
     #endregion
 
     #region Private Methods
@@ -174,6 +164,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         string randomRoomName = "Room " + mapType + " " + Random.Range(0, 10000);
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
+        roomOptions.BroadcastPropsChangeToAll = true;
         roomOptions.IsVisible = true;
         roomOptions.MaxPlayers = 20;
 

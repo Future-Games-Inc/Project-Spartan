@@ -1,26 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using RootMotion.FinalIK;
-using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
-using Unity.VisualScripting;
 
-public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
+public class PlayerNetworkSetup : MonoBehaviour
 {
     public GameObject localXRRigGameObject;
     public VRIK localVRIK;
+    public Camera myCamera;
 
     public GameObject[] AvatarModelPrefabs;
 
     public TextMeshProUGUI[] playerNameText;
+    PhotonView photonView;
 
     // Start is called before the first frame update
+
     void Start()
     {
-        if (photonView.IsMine)
+        photonView = GetComponent<PhotonView>();
+        if(!photonView.IsMine)
         {
+            myCamera.enabled = false;
+            localXRRigGameObject.SetActive(false);
+            localVRIK.enabled = false;
+        }
+
+        else if (photonView.IsMine)
+        {
+            myCamera.enabled = true;
             localXRRigGameObject.SetActive(true);
             localVRIK.enabled = true;
 
@@ -29,11 +37,6 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
             {
                 photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
             }
-        }
-        else
-        {
-            localXRRigGameObject.SetActive(false);
-            localVRIK.enabled = false;
         }
 
         if (PhotonNetwork.LocalPlayer.NickName != null)

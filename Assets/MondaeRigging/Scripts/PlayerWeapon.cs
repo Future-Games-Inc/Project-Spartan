@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.XR.Interaction.Toolkit;
+using TMPro;
 
 public class PlayerWeapon : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlayerWeapon : MonoBehaviour
     public int ammoLeft;
 
     public GameObject reloadingScreen;
+    public TextMeshProUGUI ammoText;
 
     public AudioSource audioSource;
     public AudioClip weaponFire;
@@ -26,6 +28,7 @@ public class PlayerWeapon : MonoBehaviour
         reloadingScreen.SetActive(false);
         maxAmmo = 25;
         ammoLeft = maxAmmo;
+        ammoText.text = ammoLeft.ToString();
         XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
         grabbable.activated.AddListener(FireBullet);
     }
@@ -33,7 +36,7 @@ public class PlayerWeapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        ammoText.text = ammoLeft.ToString();
     }
 
     public void FireBullet(ActivateEventArgs arg)
@@ -44,7 +47,9 @@ public class PlayerWeapon : MonoBehaviour
             {
                 audioSource.PlayOneShot(weaponFire);
                 GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity);
-                spawnedBullet.transform.parent = player.transform;
+                spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
+                spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
+                spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                 spawnedBullet.GetComponent<Rigidbody>().velocity = t.right * fireSpeed;
                 ammoLeft -= 1;
             }
@@ -70,9 +75,8 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            player = other.gameObject;
+            player = other.transform.parent.gameObject;
+            maxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo;
         }
     }
-
-
 }

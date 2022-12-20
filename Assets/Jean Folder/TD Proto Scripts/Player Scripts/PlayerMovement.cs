@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using Unity.XR.CoreUtils;
+using Photon.Pun;
 // using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
@@ -12,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Controller Movement")]
     public XRNode inputSource;
 
-    private XROrigin rig;
+    public XROrigin rig;
 
     [Header("Ground Floor & Gravity ")]
     public float gravity = -9.81f;
@@ -31,8 +32,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump Velocity")]
     public float jumpVelocity = 100f;
     public bool isJumping;
-    public AudioSource audioSource;
-    public AudioClip jumpSFX;
 
 
     private CharacterController character;
@@ -43,8 +42,14 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         character = GetComponent<CharacterController>();
-        rig = GetComponent<XROrigin>();
 
+        object storedPlayerSpeed;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_SPEED, out storedPlayerSpeed) && (int)storedPlayerSpeed >= 1)
+        {
+            movementSpeed = (6f + ((int)storedPlayerSpeed / 10));
+        }
+        else
+            movementSpeed = 6f;
     }
 
     // Update is called once per frame
@@ -109,7 +114,6 @@ public class PlayerMovement : MonoBehaviour
         {
             isJumping = true;
             character.Move(Vector3.up * jumpVelocity * Time.fixedDeltaTime);
-            audioSource.PlayOneShot(jumpSFX);
 
         }
         else if (!isJumping && CheckIfGrounded() && primaryButtonPressed)

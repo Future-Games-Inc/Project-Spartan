@@ -4,12 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneHealth : MonoBehaviour, IPunPrefabPool
+public class DroneHealth : MonoBehaviour
 {
     public float Health = 100f;
     public GameObject xpDrop;
+    public GameObject xpDropExtra;
     public SpawnManager1 enemyCounter;
     public bool alive;
+    public Transform[] lootSpawn;
+    public float xpDropRate;
 
     public AudioSource audioSource;
     public AudioClip bulletHit;
@@ -17,7 +20,7 @@ public class DroneHealth : MonoBehaviour, IPunPrefabPool
     public GameObject explosionEffect;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         explosionEffect.SetActive(false);
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
@@ -51,19 +54,22 @@ public class DroneHealth : MonoBehaviour, IPunPrefabPool
     IEnumerator DestroyEnemy()
     {
         yield return new WaitForSeconds(0);
-        explosionEffect.SetActive(true);            
+        explosionEffect.SetActive(true);
+
+        foreach (Transform t in lootSpawn)
+        {
+            xpDropRate = 10f;
+            if (Random.Range(0, 100f) < xpDropRate)
+            {
+                PhotonNetwork.Instantiate(xpDropExtra.name, transform.position, Quaternion.identity);
+            }
+            else
+                PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
+        }
         PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
+
         yield return new WaitForSeconds(.75f);
         PhotonNetwork.Destroy(gameObject);
     }
-
-    public GameObject Instantiate(string prefabId, Vector3 position, Quaternion rotation)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void Destroy(GameObject gameObject)
-    {
-        throw new System.NotImplementedException();
-    }
 }
+

@@ -15,7 +15,7 @@ namespace ES3Types
 		protected override void WriteComponent(object obj, ES3Writer writer)
 		{
 			var instance = (SaveData)obj;
-
+			
 			writer.WriteProperty("SkillPoints", instance.SkillPoints, ES3Type_int.Instance);
 		}
 

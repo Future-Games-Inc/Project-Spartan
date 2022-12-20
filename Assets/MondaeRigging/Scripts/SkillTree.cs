@@ -20,12 +20,20 @@ public class SkillTree : MonoBehaviour
 
     public SaveData saveData;
     public TMP_Text EXPText;
+    public TMP_Text purchasedText;
 
     public float powerUpCount = 0f;
 
     private void Update()
     {
-        EXPText.text = "CINTS: " + saveData.SkillPoints.ToString();  
+        if (saveData == null)
+        {
+            saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();
+        }
+
+        EXPText.text = "CINTS: " + saveData.SkillPoints.ToString();
+        purchasedText.text = $"Purchased: {powerUpCount}/2 Implants";
+
     }
     // Start is called before the first frame update
     void Start()
@@ -33,7 +41,7 @@ public class SkillTree : MonoBehaviour
         powerUpCount = 0f;
 
         SkillLevels = new int[6];
-        SkillCaps = new[] { 10, 7, 7, 5, 5, 4, };
+        SkillCaps = new[] { 7, 5, 5, 3, 3, 1, };
 
         foreach (var skill in SkillHolder.GetComponentsInChildren<Skill>()) 
             SkillList.Add(skill);
