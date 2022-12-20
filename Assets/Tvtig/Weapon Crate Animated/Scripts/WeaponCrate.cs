@@ -18,9 +18,7 @@ public class WeaponCrate : MonoBehaviour
     private Animator _animator;
     private BoxCollider _collider;
 
-    public AudioSource audioSource;
-    public AudioClip openClip;
-    public AudioClip spawnClip;
+
     void Start()
     {
         _animator = GetComponent<Animator>();
@@ -31,7 +29,6 @@ public class WeaponCrate : MonoBehaviour
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player"))
         {
-            audioSource.PlayOneShot(openClip);
             _collider.enabled = false;
             _animator.SetBool("Open", true);
             OnLidLifted();
@@ -46,16 +43,15 @@ public class WeaponCrate : MonoBehaviour
 
     private void OnLidLifted()
     {
-        _visualEffect.SendEvent("OnPlay");        
-        audioSource.PlayOneShot(spawnClip);
+        _visualEffect.SendEvent("OnPlay");
     }
 
     IEnumerator WeaponCache()
     {
         yield return new WaitForSeconds(1);
         PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation);
-        PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn3.position, spawn3.rotation);
-        yield return new WaitForSeconds(0.5f);
+        PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation);
+        PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation);
         PhotonNetwork.Destroy(gameObject);
     }
 }

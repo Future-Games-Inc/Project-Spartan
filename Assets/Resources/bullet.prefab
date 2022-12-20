@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 5852917385385081113}
   - component: {fileID: 2233471642417106472}
   - component: {fileID: 6385456413640983275}
-  - component: {fileID: 3730580089445719645}
   m_Layer: 0
   m_Name: bullet
   m_TagString: EnemyBullet
@@ -133,7 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletOwner: {fileID: 0}
   playerHealth: {fileID: 0}
-  alive: 0
+  playerBullet: 0
 --- !u!114 &2233471642417106472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,17 +172,3 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!64 &3730580089445719645
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5451881146956983319}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4669573587043112290, guid: 9dca892392a90e245aadf1bc10d3b24c, type: 3}
