@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
 namespace Invector
 {
@@ -85,11 +86,11 @@ namespace Invector
         protected virtual IEnumerator DestroyBomb()
         {
             yield return new WaitForSeconds(0.1f);
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
 
         protected virtual void OnCollisionEnter(Collision collision)
-        {            
+        {
             if (method == ExplosiveMethod.collisionEnter)
                 Explode();
             else if (method == ExplosiveMethod.collisionEnterTimer)
@@ -101,7 +102,7 @@ namespace Invector
             onExplode.Invoke();
             var colliders = Physics.OverlapSphere(transform.position, maxExplosionRadius, applyDamageLayer);
 
-            if(collidersReached == null)
+            if (collidersReached == null)
             {
                 collidersReached = new List<GameObject>();
             }
@@ -112,16 +113,36 @@ namespace Invector
                 {
                     collidersReached.Add(colliders[i].gameObject);
                     var _damage = new vDamage(damage);
-                    if(!_damage.sender) _damage.sender = transform;
+                    if (!_damage.sender) _damage.sender = transform;
 
                     _damage.hitPosition = colliders[i].ClosestPointOnBounds(transform.position);
-                    _damage.receiver = colliders[i].transform;                                        
+                    _damage.receiver = colliders[i].transform;
                     var distance = Vector3.Distance(transform.position, _damage.hitPosition);
                     var damageValue = distance <= minExplosionRadius ? damage.damageValue : GetPercentageForce(distance, damage.damageValue);
                     _damage.activeRagdoll = distance > maxExplosionRadius * 0.5f ? false : _damage.activeRagdoll;
 
                     _damage.damageValue = (int)damageValue;
-                    colliders[i].gameObject.ApplyDamage(_damage, null);
+                    if (colliders[i].gameObject.CompareTag("Enemy") || colliders[i].gameObject.CompareTag("BossEnemy"))
+                    {
+                        FollowAI enemyHealth = colliders[i].gameObject.GetComponent<FollowAI>();
+                        {
+                            if (enemyHealth != null)
+                                enemyHealth.TakeDamage((int)damageValue);
+                        }
+                        DroneHealth droneEnemyHealth = colliders[i].gameObject.GetComponent<DroneHealth>();
+                        {
+                            if (droneEnemyHealth != null)
+                                droneEnemyHealth.TakeDamage((int)damageValue);
+                        }
+                    }
+                    if (colliders[i].gameObject.CompareTag("Player"))
+                    {
+                        PlayerHealth playerhealth = colliders[i].gameObject.GetComponent<PlayerHealth>();
+                        {
+                            if (playerhealth != null)
+                                playerhealth.TakeDamage((int)damageValue);
+                        }
+                    }
                 }
             }
             StartCoroutine(ApplyExplosionForce());
@@ -202,6 +223,15 @@ namespace Invector
         public void RemoveParentOfOther(Transform other)
         {
             other.parent = null;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+            {
+                this.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                this.gameObject.GetComponent<Rigidbody>().useGravity = true;
+            }
         }
     }
 }

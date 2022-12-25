@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class PowerUpBuy : MonoBehaviour
 {
@@ -13,10 +14,13 @@ public class PowerUpBuy : MonoBehaviour
     public TMP_Text BodyText;
 
     public bool powerUpBought;
+    public int powerupButtonAssign;
 
     private void Start()
     {
         powerUpBought = false;
+        powerupButtonAssign = 0;
+        UpdatePowerups();
     }
 
     void Update()
@@ -32,6 +36,130 @@ public class PowerUpBuy : MonoBehaviour
             return;
         skillTree.saveData.UpdateSkills(-cost);
         powerUpBought = true;
-        skillTree.powerUpCount ++;
+        skillTree.powerUpCount++;
+
+        if (powerupButtonAssign == 0)
+        {
+            powerupButtonAssign = 1;
+        }
+        else if (powerupButtonAssign == 1)
+        {
+            powerupButtonAssign = 2;
+        }
+
+
+        UpdatePowerups();
+    }
+
+    public void UpdatePowerups()
+    {
+        if (tag == "healthStim")
+        {
+            ExitGames.Client.Photon.Hashtable healthStimPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.HEALTH_STIM, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(healthStimPurchase);
+
+            ExitGames.Client.Photon.Hashtable healthStimSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.HEALTH_STIM_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(healthStimSlotPurchase);
+        }
+
+        else if (tag == "leech")
+        {
+            ExitGames.Client.Photon.Hashtable leechPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.LEECH, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(leechPurchase);
+
+            ExitGames.Client.Photon.Hashtable leechSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.LEECH_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(leechSlotPurchase);
+        }
+
+        else if (tag == "savingGrace")
+        {
+            ExitGames.Client.Photon.Hashtable savingPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.SAVING_GRACE, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(savingPurchase);
+
+            ExitGames.Client.Photon.Hashtable savingSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.SAVING_GRACE_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(savingSlotPurchase);
+        }
+
+        else if (tag == "activeCamo")
+        {
+
+            ExitGames.Client.Photon.Hashtable activeCamoPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ACTIVE_CAMO, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(activeCamoPurchase);
+
+            ExitGames.Client.Photon.Hashtable activeCamoSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ACTIVE_CAMO_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(activeCamoSlotPurchase);
+        }
+
+        else if (tag == "stealth")
+        {
+            ExitGames.Client.Photon.Hashtable stealthPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.STEALTH, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(stealthPurchase);
+
+            ExitGames.Client.Photon.Hashtable stealthSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.STEALTH_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(stealthSlotPurchase);
+        }
+
+        else if (tag == "doubleAgent")
+        {
+            ExitGames.Client.Photon.Hashtable doublePurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.DOUBLE_AGENT, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(doublePurchase);
+
+            ExitGames.Client.Photon.Hashtable doubleSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.DOUBLE_AGENT_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(doubleSlotPurchase);
+        }
+
+        else if (tag == "proxBomb")
+        {
+            ExitGames.Client.Photon.Hashtable proxPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PROXIMITY_BOMB, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(proxPurchase);
+
+            ExitGames.Client.Photon.Hashtable proxSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(proxSlotPurchase);
+        }
+
+        else if (tag == "smokeBomb")
+        {
+            ExitGames.Client.Photon.Hashtable smokePurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.SMOKE_BOMB, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(smokePurchase);
+
+            ExitGames.Client.Photon.Hashtable smokeSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.SMOKE_BOMB_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(smokeSlotPurchase);
+        }
+
+        else if (tag == "exploBomb")
+        {
+            ExitGames.Client.Photon.Hashtable exploPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.EXPLOSIVE_DEATH, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(exploPurchase);
+
+            ExitGames.Client.Photon.Hashtable exploSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(exploSlotPurchase);
+        }
+
+        else if (tag == "BerserkFury")
+        {
+            ExitGames.Client.Photon.Hashtable berserkPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BERSERKER_FURY, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(berserkPurchase);
+
+            ExitGames.Client.Photon.Hashtable berserkSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BERSERKER_FURY_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(berserkSlotPurchase);
+        }
+
+        else if (tag == "aiComp")
+        {
+            ExitGames.Client.Photon.Hashtable aiPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.AI_COMPANION, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(aiPurchase);
+
+            ExitGames.Client.Photon.Hashtable aiSlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.AI_COMPANION_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(aiSlotPurchase);
+        }
+
+        else if (tag == "decoyDeplo")
+        {
+            ExitGames.Client.Photon.Hashtable decoyPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.DECOY_DEPLOYMENT, powerUpBought } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(decoyPurchase);
+
+            ExitGames.Client.Photon.Hashtable decoySlotPurchase = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, powerupButtonAssign } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(decoySlotPurchase);
+        }
     }
 }

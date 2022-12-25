@@ -36,5 +36,20 @@ public class MultiplayerVRConstants
     public const string DECOY_DEPLOYMENT = "Decoy_Deployment";
     public const string SAVING_GRACE = "Saving_Grace";
 
+    public const string HEALTH_STIM_SLOT = "Health_Stim_Slot";
+    public const string LEECH_SLOT = "Leech_Slot";
+    public const string ACTIVE_CAMO_SLOT = "Active_Camo_Slot";
+    public const string STEALTH_SLOT = "Stealth_Slot";
+    public const string DOUBLE_AGENT_SLOT = "Double_Agent_Slot";
+    public const string PROXIMITY_BOMB_SLOT = "Proximity_Bomb_Slot";
+    public const string SMOKE_BOMB_SLOT = "Smoke_Bomb_Slot";
+    public const string EXPLOSIVE_DEATH_SLOT = "Explosive_Death_Slot";
+    public const string BERSERKER_FURY_SLOT = "Berserker_Fury_Slot";
+    public const string AI_COMPANION_SLOT = "AI_Companion_Slot";
+    public const string DECOY_DEPLOYMENT_SLOT = "Decoy_Deployment_Slot";
+    public const string SAVING_GRACE_SLOT = "Saving_Grace_Slot";
+
     public const string CINTS = "Cints";
+
+    public const string BUTTON_ASSIGN = "Button_Assign";
 }

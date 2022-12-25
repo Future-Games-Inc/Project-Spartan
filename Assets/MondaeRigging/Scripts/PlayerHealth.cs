@@ -7,8 +7,13 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 using ExitGames.Client.Photon;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEditor.Rendering.Universal;
+using UnityEngine.XR;
+using ExitGames.Client.Photon.StructWrapping;
+using Unity.VisualScripting;
+using Pixelplacement.TweenSystem;
+using Invector.vCharacterController.AI;
 
-public class PlayerHealth : MonoBehaviourPunCallbacks
+public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public GameObject player;
     public GameObject toxicEffect;
@@ -17,7 +22,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     public SceneFader sceneFader;
     public XRDirectInteractor[] directInteractors;
     public XRRayInteractor[] rayInteractors;
+    public PlayerMovement movement;
     public GameObject deathToken;
+    public GameObject leechBubble;
+    public GameObject[] minimapSymbol;
+    public GameObject bomb;
+    public GameObject bombDeath;
+    public GameObject smoke;
+    public Transform bombDropLocation;
+    public Color minimapStart;
+    public Color minimapStealth;
+    public GameObject aiCompanionDrone;
+    public GameObject decoySpawner;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -25,15 +41,34 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     public float toxicTimer = 0;
     public float upgradeTimer = 0;
     public float shieldTimer = 0;
+    public float leechEffectTimer = 0;
+    public float leechEffectDuration = 20;
+    public float activeCamoTimer;
+    public float stealthTimer;
+    public float stealthDuration = 30;
     public float toxicEffectTimer;
+    public float activeCamoDuration = 15;
     public float bulletXPTimer;
     public float shieldEffectTimer;
+    public float primaryPowerupTimer = 0;
+    public float secondaryPowerupTimer = 0;
+    public float primaryPowerupEffectTimer = 30;
+    public float secondaryPowerupEffectTimer = 40;
+    public float doubleAgentTimer;
+    public float doubleAgentDuration = 30;
+    public float bombRespawnTimer = 15;
+    public float berserkerFuryDuration = 20;
+    public float startingSpeed;
+    public float aiCompanionDuration = 30;
+    public float decoyDeployDuration = 30;
 
     public int playerLives = 3;
     public int playersKilled;
     public int enemiesKilled;
     public int startingBulletModifier;
     public int playerCints;
+    public int proxBombCount = 3;
+    public int smokeBombCount = 3;
 
     public bool alive;
     public bool reactorHeld;
@@ -43,6 +78,16 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     public bool toxicEffectActive;
     public bool bulletImproved;
     public bool shieldActive;
+    public bool leechEffect;
+    public bool activeCamo;
+    public bool stealth;
+    public bool doubleAgent;
+    public bool slotAvailable = true;
+    public bool decoyDeploy;
+    public bool aiCompanion;
+
+    [SerializeField] private bool primaryButtonPressed;
+    [SerializeField] private bool secondaryButtonPressed;
 
     public int maxHealth;
     public int currentHelath;
@@ -65,6 +110,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     public RespawnUI respawnUI;
     public EnemyKillUI enemyKillUI;
     public PlayerKillUI playerKillUI;
+
+    public SkinnedMeshRenderer[] characterSkins;
+
+    [Header("Left Controller ButtonSource")]
+    public XRNode left_HandButtonSource;
 
     public static readonly byte ExtractionGameMode = 1;
     public static readonly byte PlayerGameMode = 2;
@@ -89,6 +139,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         playerWinner = false;
         enemyWinner = false;
         toxicEffectActive = false;
+        leechEffect = false;
+        activeCamo = false;
+        stealth = false;
+        doubleAgent = false;
         winCanvas.SetActive(false);
         maxHealth = SetMaxHealthFromHealthLevel();
         multiplayerHealth.SetMaxHealth(maxHealth);
@@ -120,6 +174,26 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         object cints;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out cints))
             playerCints = (int)cints;
+
+        object primaryImplant;
+        object primaryNode;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            playerLives += 1;
+        }
+
+        object secondaryImplant;
+        object secondaryNode;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            playerLives += 1;
+        }
+
+        startingBulletModifier = bulletModifier;
     }
 
     private int SetMaxHealthFromHealthLevel()
@@ -132,6 +206,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        primaryPowerupTimer += Time.deltaTime;
+        secondaryPowerupTimer += Time.deltaTime;
+
         if (Health <= 0 && playerLives > 1 && alive == true)
         {
             alive = false;
@@ -164,7 +241,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
             spawnManager.gameOver = true;
             spawnManager.winnerPlayer = this.gameObject;
             StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
-            UpdateSkills(250);
+            UpdateSkills(200);
             ExtractionGame();
         }
 
@@ -184,7 +261,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
             spawnManager.gameOver = true;
             spawnManager.winnerPlayer = this.gameObject;
             StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
-            UpdateSkills(250);
+            UpdateSkills(150);
             EnemyGame();
         }
 
@@ -220,6 +297,97 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
             bulletModifier = startingBulletModifier;
             bulletImproved = false;
         }
+
+        if (leechEffect == true && leechEffectTimer <= leechEffectDuration)
+        {
+            leechEffectTimer += Time.deltaTime;
+            leechBubble.SetActive(true);
+        }
+        if (leechEffectTimer > leechEffectDuration || leechEffect == false)
+        {
+            leechBubble.SetActive(false);
+            leechEffect = false;
+        }
+
+        if (activeCamo == true && activeCamoTimer <= activeCamoDuration)
+        {
+            activeCamoTimer += Time.deltaTime;
+            if (!photonView.IsMine)
+            {
+                foreach (SkinnedMeshRenderer skin in characterSkins)
+                {
+                    skin.enabled = false;
+                }
+            }
+        }
+        if (activeCamoTimer > activeCamoDuration || activeCamo == false)
+        {
+            if (!photonView.IsMine || photonView.IsMine)
+            {
+                foreach (SkinnedMeshRenderer skin in characterSkins)
+                {
+                    skin.enabled = true;
+                }
+            }
+            activeCamo = false;
+        }
+
+        if (stealth == true && stealthTimer <= stealthDuration)
+        {
+            stealthTimer += Time.deltaTime;
+            if (!photonView.IsMine)
+            {
+                foreach (GameObject minimap in minimapSymbol)
+                {
+                    minimap.SetActive(false);
+                }
+            }
+        }
+        if (stealthTimer > stealthDuration || stealth == false)
+        {
+            foreach (GameObject minimap in minimapSymbol)
+            {
+                minimap.SetActive(true);
+            }
+            stealth = false;
+        }
+
+        if (doubleAgent == true && doubleAgentTimer <= doubleAgentDuration)
+        {
+            doubleAgentTimer += Time.deltaTime;
+            if (!photonView.IsMine)
+            {
+                foreach (GameObject minimap in minimapSymbol)
+                {
+                    minimap.GetComponent<SpriteRenderer>().color = minimapStealth;
+                }
+            }
+        }
+        if (doubleAgentTimer > doubleAgentDuration || doubleAgent == false)
+        {
+                foreach (GameObject minimap in minimapSymbol)
+                {
+                    minimap.GetComponent<SpriteRenderer>().color = minimapStart;
+                }
+            doubleAgent = false;
+        }
+
+        if (aiCompanion == true)
+        {
+            aiCompanionDrone.SetActive(true);
+        }
+        else
+            aiCompanionDrone.SetActive(false);
+
+        if (decoyDeploy == true)
+        {
+            decoySpawner.SetActive(true);
+        }
+        else
+            decoySpawner.SetActive(false);
+
+        InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
+        primaryImplant.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -265,7 +433,27 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0);
         sceneFader.ScreenFade();
         var playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, transform.position, Quaternion.identity);
-        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = playerCints / 2;
+
+        object primaryImplant;
+        object primaryNode;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            PhotonNetwork.Instantiate(bombDeath.name, transform.position, Quaternion.identity);
+        }
+
+        object secondaryImplant;
+        object secondaryNode;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            PhotonNetwork.Instantiate(bombDeath.name, transform.position, Quaternion.identity);
+        }
+
+        yield return new WaitForSeconds(2);
+        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = playerCints / 4;
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 
@@ -360,19 +548,20 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     void EnemyGame()
     {
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        SendOptions sendOptions = new SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(EnemyGameMode, null, raiseEventOptions, sendOptions);
     }
 
     IEnumerator DisplayMessage(string message)
     {
+        Debug.Log("Display Start");
         yield return new WaitForSeconds(3);
         winCanvas.SetActive(true);
         messageText.text = message;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
         messageText.text = "";
-        sceneFader.ScreenFade();
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+        Debug.Log("Display End");
     }
 
     IEnumerator WinMessage(string message)
@@ -384,22 +573,22 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == PlayerHealth.ExtractionGameMode)
+        if (photonEvent.Code == ExtractionGameMode)
         {
             string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
-            StartCoroutine(DisplayMessage(name + " has extracted the reactor and won the round. Loading Home Screen."));
+            StartCoroutine(DisplayMessage($"{name} has extracted the reactor for their faction. Returning to Faction Base."));
         }
 
-        if (photonEvent.Code == PlayerHealth.PlayerGameMode)
+        if (photonEvent.Code == PlayerGameMode)
         {
             string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
-            StartCoroutine(DisplayMessage(name + " has defeated 25 players and won the round. Loading Home Screen."));
+            StartCoroutine(DisplayMessage($"{name} has defeated {playersKilled} players and won the territory. Returning to Faction Base."));
         }
 
-        if (photonEvent.Code == PlayerHealth.EnemyGameMode)
+        if (photonEvent.Code == EnemyGameMode)
         {
             string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
-            StartCoroutine(DisplayMessage(name + " has defeated 50 enemies and won the round. Loading Home Screen."));
+            StartCoroutine(DisplayMessage($"{name} has defeated {enemiesKilled} enemies and won the territory. Returning to Faction Base."));
         }
     }
 
@@ -450,5 +639,269 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
         ExitGames.Client.Photon.Hashtable cintsUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, playerCints } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(cintsUpdate);
+        Debug.Log("Cints Updated");
+    }
+
+    void PrimaryImplantActivation()
+    {
+        if (primaryButtonPressed && primaryPowerupTimer >= primaryPowerupEffectTimer)
+        {
+            object primaryImplant;
+            object primaryNode;
+
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                Health += 25;
+                primaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                leechEffect = true;
+                leechEffectTimer = 0;
+                StartCoroutine(PrimaryPowerupDelay(leechEffectDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                activeCamo = true;
+                activeCamoTimer = 0;
+                StartCoroutine(PrimaryPowerupDelay(activeCamoDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                stealth = true;
+                stealthTimer = 0;
+                StartCoroutine(PrimaryPowerupDelay(stealthDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DOUBLE_AGENT, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DOUBLE_AGENT_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                doubleAgent = true;
+                doubleAgentTimer = 0;
+                StartCoroutine(PrimaryPowerupDelay(doubleAgentDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                if (slotAvailable == true)
+                {
+                    if (proxBombCount > 1)
+                        proxBombCount--;
+                    if (proxBombCount == 1)
+                        proxBombCount = 3;
+                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity);
+                }
+                primaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                if (slotAvailable == true)
+                {
+                    if (smokeBombCount > 1)
+                        smokeBombCount--;
+                    if (smokeBombCount == 1)
+                        smokeBombCount = 3;
+                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity);
+                }
+                primaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                Health = maxHealth + 100;
+
+                startingSpeed = movement.movementSpeed;
+                movement.movementSpeed += 2;
+
+                startingBulletModifier = bulletModifier;
+                bulletModifier += 4;
+
+                StartCoroutine(PrimaryBerserkerDelay(berserkerFuryDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                aiCompanion = true;
+                StartCoroutine(PrimaryPowerupDelay(aiCompanionDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out primaryImplant) && (int)primaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out primaryNode) && (int)primaryNode == 1)
+            {
+                decoyDeploy = true;
+                StartCoroutine(PrimaryPowerupDelay(decoyDeployDuration));
+            }
+        }
+    }
+
+    void SecondayImplantActivation()
+    {
+        if (secondaryButtonPressed && secondaryPowerupTimer >= secondaryPowerupEffectTimer)
+        {
+            object secondaryImplant;
+            object secondaryNode;
+
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                Health += 25;
+                secondaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                leechEffect = true;
+                leechEffectTimer = 0;
+                StartCoroutine(SecondaryPowerupDelay(leechEffectDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                activeCamo = true;
+                activeCamoTimer = 0;
+                StartCoroutine(SecondaryPowerupDelay(activeCamoDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                stealth = true;
+                stealthTimer = 0;
+                StartCoroutine(SecondaryPowerupDelay(stealthDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DOUBLE_AGENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DOUBLE_AGENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                doubleAgent = true;
+                doubleAgentTimer = 0;
+                StartCoroutine(SecondaryPowerupDelay(doubleAgentDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                if (slotAvailable == true)
+                {
+                    if (proxBombCount > 1)
+                        proxBombCount--;
+                    if (proxBombCount == 1)
+                        proxBombCount = 3;
+                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity);
+                }
+                secondaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                if (slotAvailable == true)
+                {
+                    if (smokeBombCount > 1)
+                        smokeBombCount--;
+                    if (smokeBombCount == 1)
+                        smokeBombCount = 3;
+                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity);
+                }
+                secondaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                Health = maxHealth + 100;
+
+                startingSpeed = movement.movementSpeed;
+                movement.movementSpeed += 2;
+
+                startingBulletModifier = bulletModifier;
+                bulletModifier += 4;
+
+                StartCoroutine(SecondaryBerserkerDelay(berserkerFuryDuration));
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                aiCompanion = true;
+                StartCoroutine(SecondaryPowerupDelay(aiCompanionDuration));
+                aiCompanion = false;
+                secondaryPowerupTimer = 0;
+            }
+
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+            {
+                decoyDeploy = true;
+                StartCoroutine(SecondaryPowerupDelay(decoyDeployDuration));
+            }
+        }
+    }
+
+    IEnumerator PrimaryPowerupDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        {
+            object secondaryImplant;
+            object secondaryNode;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 1)
+                aiCompanion = false;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 1)
+                decoyDeploy = false;
+            primaryPowerupTimer = 0;
+        }
+    }
+
+    IEnumerator PrimaryBerserkerDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        {
+            Health = maxHealth;
+            movement.movementSpeed = startingSpeed;
+            bulletModifier = startingBulletModifier;
+            primaryPowerupTimer = 0;
+        }
+    }
+    IEnumerator SecondaryPowerupDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        {
+            object secondaryImplant;
+            object secondaryNode;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+                aiCompanion = false;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+                decoyDeploy = false;
+            secondaryPowerupTimer = 0;
+        }
+    }
+
+    IEnumerator SecondaryBerserkerDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        {
+            Health = maxHealth;
+            movement.movementSpeed = startingSpeed;
+            bulletModifier = startingBulletModifier;
+            secondaryPowerupTimer = 0;
+        }
     }
 }

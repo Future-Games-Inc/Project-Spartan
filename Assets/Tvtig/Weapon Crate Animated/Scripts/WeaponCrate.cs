@@ -18,6 +18,9 @@ public class WeaponCrate : MonoBehaviour
     private Animator _animator;
     private BoxCollider _collider;
 
+    public bool cacheActive;
+    public GameObject cacheBase;
+
 
     void Start()
     {
@@ -27,11 +30,12 @@ public class WeaponCrate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player"))
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player") && cacheActive == true)
         {
             _collider.enabled = false;
             _animator.SetBool("Open", true);
             OnLidLifted();
+            cacheActive = false;
             StartCoroutine(WeaponCache());
         }
     }
@@ -52,6 +56,15 @@ public class WeaponCrate : MonoBehaviour
         PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation);
         PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation);
         PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation);
-        PhotonNetwork.Destroy(gameObject);
+        cacheBase.SetActive(false);
+        StartCoroutine(CacheRespawn());
+    }
+
+    IEnumerator CacheRespawn()
+    {
+        yield return new WaitForSeconds(30);
+        cacheBase.SetActive(true);
+        _animator.SetBool("Open", false);
+        cacheActive = true;
     }
 }
