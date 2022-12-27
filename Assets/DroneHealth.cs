@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class DroneHealth : MonoBehaviour
 {
-    public float Health = 100f;
+    public int Health = 100;
     public GameObject xpDrop;
     public GameObject xpDropExtra;
     public SpawnManager1 enemyCounter;
@@ -18,6 +18,7 @@ public class DroneHealth : MonoBehaviour
     public AudioClip bulletHit;
 
     public GameObject explosionEffect;
+    public EnemyHealthBar healthBar;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -25,6 +26,7 @@ public class DroneHealth : MonoBehaviour
         explosionEffect.SetActive(false);
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         alive = true;
+        healthBar.SetMaxHealth(Health);
     }
 
     // Update is called once per frame
@@ -42,6 +44,7 @@ public class DroneHealth : MonoBehaviour
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
+        healthBar.SetCurrentHealth(Health);
     }
 
     IEnumerator KillDrone()

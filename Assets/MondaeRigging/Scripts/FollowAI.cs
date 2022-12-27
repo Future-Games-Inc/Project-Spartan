@@ -17,6 +17,7 @@ public class FollowAI : MonoBehaviour
 
     public NavMeshAgent agent;
     public Transform targetTransform;
+    public EnemyHealthBar healthBar;
 
     public Transform[] waypoints;
     public GameObject[] players;
@@ -25,7 +26,7 @@ public class FollowAI : MonoBehaviour
     public float maxFollowDistance = 20f;
     public float shootDistance = 10f;
     public AIWeapon attackWeapon;
-    public float Health = 100f;
+    public int Health;
 
     public bool inSight;
     private Vector3 directionToTarget;
@@ -50,7 +51,7 @@ public class FollowAI : MonoBehaviour
         currentWaypoint = Random.Range(1, 9);
 
         FindClosestEnemy();
-
+        healthBar.SetMaxHealth(Health);
     }
 
     public void FindClosestEnemy()
@@ -177,5 +178,6 @@ public class FollowAI : MonoBehaviour
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
+        healthBar.SetCurrentHealth(Health);
     }
 }
