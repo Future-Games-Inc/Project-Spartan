@@ -37,9 +37,12 @@ public class FollowAI : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip bulletHit;
+    public AudioClip[] audioClip;
+
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
+        InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
         GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
         waypoints = waypointObject.GetComponentsInChildren<Transform>();
 
@@ -179,5 +182,12 @@ public class FollowAI : MonoBehaviour
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
         healthBar.SetCurrentHealth(Health);
+    }
+
+    public void RandomSFX()
+    {
+        int playAudio = Random.Range(0, 70);
+        if (!audioSource.isPlaying && playAudio <= 70)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 }

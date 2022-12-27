@@ -46,8 +46,6 @@ public class PowerUpBuy : MonoBehaviour
         {
             powerupButtonAssign = 2;
         }
-
-
         UpdatePowerups();
     }
 

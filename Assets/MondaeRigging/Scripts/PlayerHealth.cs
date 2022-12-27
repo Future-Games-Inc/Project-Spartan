@@ -34,6 +34,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public Color minimapStealth;
     public GameObject aiCompanionDrone;
     public GameObject decoySpawner;
+    public GameObject primaryActive;
+    public GameObject secondaryActive;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -50,8 +52,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public float activeCamoDuration = 15;
     public float bulletXPTimer;
     public float shieldEffectTimer;
-    public float primaryPowerupTimer = 0;
-    public float secondaryPowerupTimer = 0;
     public float primaryPowerupEffectTimer = 30;
     public float secondaryPowerupEffectTimer = 40;
     public float doubleAgentTimer;
@@ -69,6 +69,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public int playerCints;
     public int proxBombCount = 3;
     public int smokeBombCount = 3;
+    public int characterInt;
 
     public bool alive;
     public bool reactorHeld;
@@ -85,6 +86,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool slotAvailable = true;
     public bool decoyDeploy;
     public bool aiCompanion;
+    public bool male;
+    public bool primaryPowerupTimer;
+    public bool secondaryPowerupTimer;
 
     [SerializeField] private bool primaryButtonPressed;
     [SerializeField] private bool secondaryButtonPressed;
@@ -102,6 +106,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioSource audioSource;
     public AudioClip bulletHit;
     public AudioClip xpClip;
+    public AudioClip[] winClipsMale;
+    public AudioClip[] winClipsFemale;
 
     public TextMeshProUGUI reactorText;
 
@@ -122,6 +128,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
+        object avatarSelectionNumber;
+        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber);
+        characterInt = (int)avatarSelectionNumber;
+        if (characterInt <= 4)
+        {
+            male = true;
+        }
+        else
+            male = false;
+
+        StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+
         spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
         playerLives = 3;
 
@@ -206,8 +225,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Update is called once per frame
     void Update()
     {
-        primaryPowerupTimer += Time.deltaTime;
-        secondaryPowerupTimer += Time.deltaTime;
+        primaryActive.SetActive(primaryPowerupTimer);
+        secondaryActive.SetActive(secondaryPowerupTimer);
 
         if (Health <= 0 && playerLives > 1 && alive == true)
         {
@@ -365,10 +384,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         if (doubleAgentTimer > doubleAgentDuration || doubleAgent == false)
         {
-                foreach (GameObject minimap in minimapSymbol)
-                {
-                    minimap.GetComponent<SpriteRenderer>().color = minimapStart;
-                }
+            foreach (GameObject minimap in minimapSymbol)
+            {
+                minimap.GetComponent<SpriteRenderer>().color = minimapStart;
+            }
             doubleAgent = false;
         }
 
@@ -507,6 +526,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         reactorUI.UpdateReactorUI();
         reactorTimer = 0;
+
+        int playAudio = Random.Range(0, 100);
     }
 
     public void EnemyKilled()
@@ -518,6 +539,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
         enemyKillUI.CheckEnemiesKilled();
+
+        int playAudio = Random.Range(0, 100);
+        if (!audioSource.isPlaying && playAudio <= 50)
+        {
+            if (male)
+            {
+                audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsMale.Length)]);
+            }
+            else
+                audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
+        }
+
     }
 
     public void PlayersKilled()
@@ -529,6 +562,17 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
         playerKillUI.CheckEnemiesKilled();
+
+        int playAudio = Random.Range(0, 100);
+        if (!audioSource.isPlaying && playAudio <= 50)
+        {
+            if (male)
+            {
+                audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsMale.Length)]);
+            }
+            else
+                audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
+        }
     }
 
     void ExtractionGame()
@@ -642,10 +686,24 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         Debug.Log("Cints Updated");
     }
 
+    IEnumerator PrimaryTimer(float time)
+    {
+        yield return new WaitForSeconds(time);
+        primaryPowerupTimer = true;
+    }
+
+    IEnumerator SecondaryTimer(float time)
+    {
+        yield return new WaitForSeconds(time);
+        secondaryPowerupTimer = true;
+    }
+
     void PrimaryImplantActivation()
     {
-        if (primaryButtonPressed && primaryPowerupTimer >= primaryPowerupEffectTimer)
+        if (primaryButtonPressed && primaryPowerupTimer == true)
         {
+            primaryPowerupTimer = false;
+
             object primaryImplant;
             object primaryNode;
 
@@ -653,7 +711,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                     PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
             {
                 Health += 25;
-                primaryPowerupTimer = 0;
+                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
@@ -699,7 +757,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         proxBombCount = 3;
                     PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity);
                 }
-                primaryPowerupTimer = 0;
+                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
@@ -713,7 +771,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         smokeBombCount = 3;
                     PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity);
                 }
-                primaryPowerupTimer = 0;
+                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out primaryImplant) && (int)primaryImplant >= 1 &&
@@ -748,7 +806,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void SecondayImplantActivation()
     {
-        if (secondaryButtonPressed && secondaryPowerupTimer >= secondaryPowerupEffectTimer)
+        if (secondaryButtonPressed && secondaryPowerupTimer == true)
         {
             object secondaryImplant;
             object secondaryNode;
@@ -757,7 +815,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                     PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
             {
                 Health += 25;
-                secondaryPowerupTimer = 0;
+                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
@@ -803,7 +861,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         proxBombCount = 3;
                     PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity);
                 }
-                secondaryPowerupTimer = 0;
+                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
@@ -817,7 +875,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         smokeBombCount = 3;
                     PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity);
                 }
-                secondaryPowerupTimer = 0;
+                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out secondaryImplant) && (int)secondaryImplant >= 1 &&
@@ -839,8 +897,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 aiCompanion = true;
                 StartCoroutine(SecondaryPowerupDelay(aiCompanionDuration));
-                aiCompanion = false;
-                secondaryPowerupTimer = 0;
             }
 
             else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
@@ -864,7 +920,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
                     PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 1)
                 decoyDeploy = false;
-            primaryPowerupTimer = 0;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
     }
 
@@ -875,7 +931,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             Health = maxHealth;
             movement.movementSpeed = startingSpeed;
             bulletModifier = startingBulletModifier;
-            primaryPowerupTimer = 0;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
     }
     IEnumerator SecondaryPowerupDelay(float time)
@@ -890,7 +946,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
                     PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
                 decoyDeploy = false;
-            secondaryPowerupTimer = 0;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
     }
 
@@ -901,7 +957,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             Health = maxHealth;
             movement.movementSpeed = startingSpeed;
             bulletModifier = startingBulletModifier;
-            secondaryPowerupTimer = 0;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
     }
 }

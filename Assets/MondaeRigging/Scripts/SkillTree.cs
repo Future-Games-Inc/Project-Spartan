@@ -24,6 +24,10 @@ public class SkillTree : MonoBehaviour
 
     public float powerUpCount = 0f;
 
+    public AudioSource audioSource;
+    public AudioClip[] audioClip;
+    public bool initialLoad;
+
     private void Update()
     {
         if (saveData == null)
@@ -38,6 +42,7 @@ public class SkillTree : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        initialLoad = true;
         powerUpCount = 0f;
 
         SkillLevels = new int[6];
@@ -66,5 +71,10 @@ public class SkillTree : MonoBehaviour
     {
         foreach(var skill in SkillList)  
             skill.UpdateUI();
+
+        int playAudio = Random.Range(0, 100);
+        if (!audioSource.isPlaying && playAudio <= 50 && initialLoad == false)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+        initialLoad = false;
     }
 }

@@ -19,10 +19,12 @@ public class DroneHealth : MonoBehaviour
 
     public GameObject explosionEffect;
     public EnemyHealthBar healthBar;
+    public AudioClip[] audioClip;
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
         explosionEffect.SetActive(false);
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         alive = true;
@@ -73,6 +75,13 @@ public class DroneHealth : MonoBehaviour
 
         yield return new WaitForSeconds(.75f);
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    public void RandomSFX()
+    {
+        int playAudio = Random.Range(0, 70);
+        if (!audioSource.isPlaying && playAudio <= 70)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 }
 

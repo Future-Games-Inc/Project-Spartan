@@ -10,6 +10,9 @@ public class MenuTrigger2 : MonoBehaviour
 
     public bool activated;
 
+    public AudioSource audioSource;
+    public AudioClip[] audioClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +39,8 @@ public class MenuTrigger2 : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            if (!audioSource.isPlaying)
+                audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
         }
     }
 

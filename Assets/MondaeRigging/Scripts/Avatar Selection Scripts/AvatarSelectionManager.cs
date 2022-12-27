@@ -14,6 +14,9 @@ public class AvatarSelectionManager : MonoBehaviour
 
     public int avatarSelectionNumber = 0;
 
+    public AudioSource audioSource;
+    public AudioClip[] audioClip;
+
     //public AvatarInputConverter avatarInputConverter;
 
 
@@ -76,6 +79,10 @@ public class AvatarSelectionManager : MonoBehaviour
         }
         ActivateAvatarModelAt(avatarSelectionNumber);
 
+        int playAudio = Random.Range(0, 100);
+        if (!audioSource.isPlaying && playAudio >= 70)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+
     }
 
     public void PreviousAvatar()
@@ -87,7 +94,11 @@ public class AvatarSelectionManager : MonoBehaviour
             avatarSelectionNumber = selectableAvatarModels.Length - 1;
         }
         ActivateAvatarModelAt(avatarSelectionNumber);
-        
+
+        int playAudio = Random.Range(0, 100);
+        if (!audioSource.isPlaying && playAudio >= 70)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+
     }
 
     /// <summary>
