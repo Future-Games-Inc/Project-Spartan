@@ -7,7 +7,7 @@ public class ToxicEffect : MonoBehaviour
 {
     public PlayerHealth player;
     public Collider playerCollider;
-    public float effectRadius = 5f;
+    public float effectRadius = 2.5f;
     // Start is called before the first frame update
     private void OnEnable()
     {

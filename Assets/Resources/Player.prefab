@@ -5979,7 +5979,7 @@ Transform:
   m_GameObject: {fileID: 723107496736747481}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8497919151659092878}
@@ -6081,7 +6081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   playerCollider: {fileID: 2976207320263678052}
-  effectRadius: 5
+  effectRadius: 2.5
 --- !u!1 &734598245693645993
 GameObject:
   m_ObjectHideFlags: 0
@@ -84810,7 +84810,7 @@ Transform:
   m_GameObject: {fileID: 8819899693506956736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8497919151659092878}
@@ -84912,7 +84912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   playerCollider: {fileID: 2976207320263678052}
-  effectRadius: 5
+  effectRadius: 2.5
 --- !u!1 &8826593454424293205
 GameObject:
   m_ObjectHideFlags: 0
@@ -89217,6 +89217,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bomb Drop
       objectReference: {fileID: 0}
+    - target: {fileID: 3405079714262825788, guid: 5e07dfe4eba8231468824b39590c5b2b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6618006978862542493, guid: 5e07dfe4eba8231468824b39590c5b2b,
         type: 3}
       propertyPath: m_RootOrder
@@ -91562,17 +91567,17 @@ PrefabInstance:
     - target: {fileID: 5932214320049833955, guid: 2380048a1e1fac149b6e73da5350e3bc,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5932214320049833955, guid: 2380048a1e1fac149b6e73da5350e3bc,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5932214320049833955, guid: 2380048a1e1fac149b6e73da5350e3bc,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5932214320049833955, guid: 2380048a1e1fac149b6e73da5350e3bc,
         type: 3}
@@ -91582,7 +91587,7 @@ PrefabInstance:
     - target: {fileID: 5932214320049833955, guid: 2380048a1e1fac149b6e73da5350e3bc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.781
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5932214320049833955, guid: 2380048a1e1fac149b6e73da5350e3bc,
         type: 3}
