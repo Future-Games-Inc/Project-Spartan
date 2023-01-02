@@ -24,11 +24,11 @@ public class AIWeapon : MonoBehaviour
         fireWeaponBool = true;
         if (this.transform.parent.gameObject.tag == "Enemy")
         {
-            maxAmmo = 15;
+            maxAmmo = 10;
         }
         else if (this.transform.parent.gameObject.tag == "BossEnemy")
         {
-            maxAmmo = 20;
+            maxAmmo = 15;
         }
         ammoLeft = maxAmmo;
     }

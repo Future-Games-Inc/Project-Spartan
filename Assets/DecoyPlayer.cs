@@ -7,10 +7,13 @@ public class DecoyPlayer : MonoBehaviour
 {
     public int avatarLoader;
     public GameObject[] AvatarModelPrefabs;
+    public GameObject decoyDeath;
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        decoyDeath.SetActive(false);
         StartCoroutine(DestroyDecoy());
         object avatarSelectionNumber;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
@@ -34,12 +37,23 @@ public class DecoyPlayer : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
-            PhotonNetwork.Destroy(gameObject);
+        StartCoroutine(DecoyKilled());
     }
 
     IEnumerator DestroyDecoy()
     {
         yield return new WaitForSeconds(15);
-            PhotonNetwork.Destroy(gameObject);
+        decoyDeath.SetActive(true);
+        animator.SetTrigger("Death");
+        yield return new WaitForSeconds(3f);
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    IEnumerator DecoyKilled()
+    {
+        animator.SetTrigger("Death");
+        decoyDeath.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        PhotonNetwork.Destroy(gameObject);
     }
 }

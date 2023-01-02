@@ -14,19 +14,21 @@ public class PlayerWeapon : MonoBehaviour
 
     public int maxAmmo;
     public int ammoLeft;
+    public int durability;
 
     public GameObject reloadingScreen;
     public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI durabilityText;
 
     public AudioSource audioSource;
     public AudioClip weaponFire;
     public AudioClip weaponReload;
+    public AudioClip weaponBreak;
 
     // Start is called before the first frame update
     void Start()
     {
         reloadingScreen.SetActive(false);
-        maxAmmo = 25;
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
         XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
@@ -37,6 +39,14 @@ public class PlayerWeapon : MonoBehaviour
     void Update()
     {
         ammoText.text = ammoLeft.ToString();
+        durabilityText.text = durability.ToString();  
+        
+        if(durability <= 0)
+        {
+            audioSource.PlayOneShot(weaponBreak);
+            GetComponent<XRGrabNetworkInteractable>().enabled = false;
+            StartCoroutine(DestroyWeapon());
+        }
     }
 
     public void FireBullet(ActivateEventArgs arg)
@@ -68,6 +78,7 @@ public class PlayerWeapon : MonoBehaviour
         audioSource.PlayOneShot(weaponReload);
         yield return new WaitForSeconds(2);
         ammoLeft = maxAmmo;
+        durability --;
         reloadingScreen.SetActive(false);
     }
 
@@ -78,5 +89,11 @@ public class PlayerWeapon : MonoBehaviour
             player = other.transform.parent.gameObject;
             maxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo;
         }
+    }
+
+    IEnumerator DestroyWeapon()
+    {
+        yield return new WaitForSeconds(0.75f);
+        PhotonNetwork.Destroy(gameObject);
     }
 }

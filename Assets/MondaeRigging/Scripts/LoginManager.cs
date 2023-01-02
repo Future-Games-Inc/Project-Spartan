@@ -10,6 +10,7 @@ public class LoginManager : MonoBehaviourPunCallbacks
     public RoomManager roomManager;
     public GameObject connectButton;
 
+    const string playerNamePrefKey = "PlayerName";
     #region Unity Methods
     // Start is called before the first frame update
     void Start()
@@ -28,33 +29,24 @@ public class LoginManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region UI Callback Methods
-    public void ConnectAnonymously1()
-    {
-        roomManager.OnEnterButtonClicked_Multiplayer1();
-    }
-
     public void ConnectToPhotonServer()
     {
+        string defaultName = string.Empty;
         if (playerNameInput != null)
         {
-            PhotonNetwork.LocalPlayer.NickName = playerNameInput.text;
-            PhotonNetwork.ConnectUsingSettings();
+            if (PlayerPrefs.HasKey(playerNamePrefKey))
+            {
+                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+                playerNameInput.text = defaultName;
+            }
         }
+        PhotonNetwork.NickName = defaultName;
+        PhotonNetwork.JoinLobby();
     }
 
     #endregion
 
     #region Photon Callback Methods
-    public override void OnConnected()
-    {
-        Debug.Log("OnConnectred called. Server available.");
-    }
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Conencted to Master Server with player name: " + PhotonNetwork.LocalPlayer.NickName);
-        PhotonNetwork.JoinLobby();
-    }
-
     public override void OnJoinedLobby()
     {
         connectButton.SetActive(true);

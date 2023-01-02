@@ -72,9 +72,9 @@ public class SkillTree : MonoBehaviour
         foreach(var skill in SkillList)  
             skill.UpdateUI();
 
-        int playAudio = Random.Range(0, 100);
-        if (!audioSource.isPlaying && playAudio <= 50 && initialLoad == false)
-            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+        int playAudio = (int)Random.Range(0, 100);
+        if (!audioSource.isPlaying && playAudio <= 70 && initialLoad == false)
+            audioSource.PlayOneShot(audioClip[(int)Random.Range(0, audioClip.Length)]);
         initialLoad = false;
     }
 }

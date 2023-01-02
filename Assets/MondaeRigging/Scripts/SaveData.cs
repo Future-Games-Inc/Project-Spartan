@@ -2,11 +2,15 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class SaveData : MonoBehaviour
 {
     public int SkillPoints;
+    public TopReactsLeaderboard leaderboard;
+
     // Start is called before the first frame update
+    [System.Obsolete]
     void Start()
     {
         object savedCints;
@@ -28,6 +32,7 @@ public class SaveData : MonoBehaviour
         
     }
 
+    [System.Obsolete]
     public void UpdateSkills(int skills)
     {
         SkillPoints += skills;
@@ -36,8 +41,17 @@ public class SaveData : MonoBehaviour
         Save();
     }
 
+    [System.Obsolete]
     public void Save()
     {
         ES3AutoSaveMgr.Current.Save();
+        StartCoroutine(SubmitScore());
+    }
+
+    [System.Obsolete]
+    IEnumerator SubmitScore()
+    {
+        yield return new WaitForSeconds(3f);
+        yield return leaderboard.SubmitScoreRoutine(SkillPoints);
     }
 }

@@ -80,7 +80,7 @@ public class AvatarSelectionManager : MonoBehaviour
         ActivateAvatarModelAt(avatarSelectionNumber);
 
         int playAudio = Random.Range(0, 100);
-        if (!audioSource.isPlaying && playAudio >= 70)
+        if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
 
     }
@@ -96,7 +96,7 @@ public class AvatarSelectionManager : MonoBehaviour
         ActivateAvatarModelAt(avatarSelectionNumber);
 
         int playAudio = Random.Range(0, 100);
-        if (!audioSource.isPlaying && playAudio >= 70)
+        if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
 
     }

@@ -30,11 +30,6 @@ public class LoginManager1 : MonoBehaviourPunCallbacks
     #endregion
 
     #region UI Callback Methods
-    public void ConnectAnonymously1()
-    {
-        roomManager.OnEnterButtonClicked_Multiplayer1();
-    }
-
     public void ConnectToPhotonServer()
     {
         string defaultName = string.Empty;
@@ -47,22 +42,12 @@ public class LoginManager1 : MonoBehaviourPunCallbacks
             }
         }
         PhotonNetwork.NickName = defaultName;
-        PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.JoinLobby();
     }
 
     #endregion
 
     #region Photon Callback Methods
-    public override void OnConnected()
-    {
-        Debug.Log("OnConnectred called. Server available.");
-    }
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Conencted to Master Server with player name: " + PhotonNetwork.NickName);
-        PhotonNetwork.JoinLobby();
-    }
-
     public override void OnJoinedLobby()
     {
         connectButton.SetActive(true);

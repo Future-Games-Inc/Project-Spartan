@@ -24,6 +24,7 @@ public class WeaponCrate : MonoBehaviour
 
     void Start()
     {
+        cacheActive = true;
         _animator = GetComponent<Animator>();
         _collider = GetComponent<BoxCollider>();
     }

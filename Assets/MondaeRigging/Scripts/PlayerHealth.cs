@@ -108,6 +108,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip xpClip;
     public AudioClip[] winClipsMale;
     public AudioClip[] winClipsFemale;
+    public AudioClip roundOverClip;
 
     public TextMeshProUGUI reactorText;
 
@@ -127,7 +128,16 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public static readonly byte EnemyGameMode = 3;
     // Start is called before the first frame update
     void Start()
-    {
+    {        
+        object storedPlayerHealth;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out storedPlayerHealth) && (int)storedPlayerHealth >= 1)
+            Health = 100 + ((int)storedPlayerHealth * 10);
+        else
+            Health = 100;
+
+        primaryPowerupTimer = false;
+        secondaryPowerupTimer = false;
+
         object avatarSelectionNumber;
         PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber);
         characterInt = (int)avatarSelectionNumber;
@@ -138,17 +148,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         else
             male = false;
 
-        StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-        StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-
         spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
         playerLives = 3;
 
-        object storedPlayerHealth;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out storedPlayerHealth) && (int)storedPlayerHealth >= 1)
-            Health = 100 + ((int)storedPlayerHealth * 10);
-        else
-            Health = 100;
+        StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
 
         reactorExtraction = 0;
         playersKilled = 0;
@@ -407,6 +411,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         primaryImplant.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
+
+        InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
+        secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
     }
 
     private void OnTriggerEnter(Collider other)

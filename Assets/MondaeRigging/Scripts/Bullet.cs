@@ -34,10 +34,10 @@ public class Bullet : MonoBehaviour
             playerHealth = null;
         }
 
-        if (bulletModifier == 0)
-        {
-            bulletModifier = 1;
-        }
+        //if (bulletModifier == 0)
+        //{
+        //    bulletModifier = 1;
+        //}
 
         if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
         {

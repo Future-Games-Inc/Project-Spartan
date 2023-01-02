@@ -119,6 +119,7 @@ public class DroneCompanion : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         GameObject spawnedBullet = PhotonNetwork.Instantiate(droneBullet.name, droneBulletSpawn.position, Quaternion.identity);
+        spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(1, 4);
         shootForce = (int)Random.Range(40, 75);
         spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce;
     }
