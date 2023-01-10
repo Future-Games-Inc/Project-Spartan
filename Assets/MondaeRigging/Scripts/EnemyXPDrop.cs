@@ -90,9 +90,9 @@ public class EnemyXPDrop : MonoBehaviour
         else if (this.tag == "toxicDropExtra")
         {
             if (other.CompareTag("Player"))
-            {                
-                other.GetComponent<PlayerHealth>().Toxicity(20);
+            {
                 other.GetComponent<PlayerHealth>().toxicEffectActive = true;
+                other.GetComponent<PlayerHealth>().Toxicity(20);
                 PhotonNetwork.Destroy(gameObject);
             }
         }

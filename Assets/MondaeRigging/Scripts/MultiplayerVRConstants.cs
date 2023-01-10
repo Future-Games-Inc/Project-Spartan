@@ -52,4 +52,10 @@ public class MultiplayerVRConstants
     public const string CINTS = "Cints";
 
     public const string BUTTON_ASSIGN = "Button_Assign";
+
+    public const string CYBER_SK_GANG = "CyberSKGang";
+    public const string MUERTE_DE_DIOS = "MuerteDeDios";
+    public const string CHAOS_CARTEL = "ChaosCartel";
+    public const string CINTSIX_CARTEL = "CintsixCartel";
+    public const string FEDZONE_AUTHORITY = "FedzoneAuthority";
 }

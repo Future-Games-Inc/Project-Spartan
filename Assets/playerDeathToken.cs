@@ -2,14 +2,18 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class playerDeathToken : MonoBehaviour
 {
     public int tokenValue;
+    public string faction;
+
+    public bool tokenActivated = false;
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(TokenActivation());
     }
 
     // Update is called once per frame
@@ -20,10 +24,19 @@ public class playerDeathToken : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && tokenActivated == true)
         {
             other.gameObject.GetComponent<PlayerHealth>().UpdateSkills(tokenValue);
-            PhotonNetwork.Destroy(gameObject);
+            if (faction != other.gameObject.GetComponent<PlayerHealth>().characterFaction)
+            {
+                other.GetComponent<PlayerHealth>().FactionDataCard(faction);
+            }
         }
+    }
+
+    private IEnumerator TokenActivation() 
+    {
+        yield return new WaitForSeconds(1.5f);
+        tokenActivated = true;
     }
 }

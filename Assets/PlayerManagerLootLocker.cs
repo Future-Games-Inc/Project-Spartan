@@ -13,15 +13,11 @@ public class PlayerManagerLootLocker : MonoBehaviour
     [System.Obsolete]
     void Start()
     {
-        StartCoroutine(SetupRoutine());
+        StartCoroutine(LoginRoutine());
     }
 
+
     [System.Obsolete]
-    IEnumerator SetupRoutine()
-    {
-        yield return LoginRoutine();
-        yield return leaderboard.FetchTopHighScores();
-    }
     IEnumerator LoginRoutine()
     {
         bool done = false;
@@ -60,14 +56,6 @@ public class PlayerManagerLootLocker : MonoBehaviour
                 }
             });
         }
-        StartCoroutine(GetFriendsList());
-    }
-    // Update is called once per frame
-    public IEnumerator GetFriendsList()
-    {
-        yield return new WaitForSeconds(2f);
-        string playerID = PlayerPrefs.GetString("PlayerID");
-        AuthenticationValues authValues = new AuthenticationValues(playerID);
-
+        yield return leaderboard.FetchTopHighScores();
     }
 }

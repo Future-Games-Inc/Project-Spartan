@@ -1796,6 +1796,7 @@ GameObject:
   - component: {fileID: 3941197441095112582}
   - component: {fileID: 3941197441095112580}
   - component: {fileID: 3941197441095112583}
+  - component: {fileID: 5021176762393187573}
   - component: {fileID: 8298710489907778388}
   - component: {fileID: 8298710489907778389}
   - component: {fileID: 8298710489907778390}
@@ -1883,6 +1884,19 @@ MonoBehaviour:
   wanderTimer: 50
   agent: {fileID: 0}
   timer: 0
+--- !u!135 &5021176762393187573
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3941197441095112601}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!135 &8298710489907778388
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7455,7 +7469,7 @@ MonoBehaviour:
   securityDrone: {fileID: 3941197441095112601}
   detectedPlayer: {fileID: 0}
   beamMaterial: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
-  beamColor: {r: 0, g: 0, b: 0, a: 0}
+  beamColor: {r: 0, g: 0.78039217, b: 1, a: 0}
   lost: 1
 --- !u!1001 &8003896152875078879
 PrefabInstance:

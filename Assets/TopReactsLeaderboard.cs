@@ -7,8 +7,20 @@ using TMPro;
 public class TopReactsLeaderboard : MonoBehaviour
 {
     public int leaderboardID = 9820;
+    public int leaderboardID2 = 10220;
+    public int cyberCints;
+    public int muerteCints;
+    public int chaosCints;
+    public int cintCints;
+    public int fedCints;
+
+    public bool updater = true;
+
     public TextMeshProUGUI playerNames;
     public TextMeshProUGUI playerScores;
+
+    public TextMeshProUGUI factionNames;
+    public TextMeshProUGUI factionScores;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +31,7 @@ public class TopReactsLeaderboard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     [System.Obsolete]
@@ -29,7 +41,7 @@ public class TopReactsLeaderboard : MonoBehaviour
         string playerID = PlayerPrefs.GetString("PlayerID");
         LootLockerSDKManager.SubmitScore(playerID, scoreToUpload, leaderboardID, (response) =>
         {
-            if(response.success)
+            if (response.success)
             {
                 Debug.Log("Successfully uploaded score");
                 done = true;
@@ -81,5 +93,50 @@ public class TopReactsLeaderboard : MonoBehaviour
             }
         });
         yield return new WaitWhile(() => done == false);
+        StartCoroutine(FetchFactionScores());
+    }
+
+    [System.Obsolete]
+    public IEnumerator FetchFactionScores()
+    {
+        while (updater)
+        {
+            bool done = false;
+            LootLockerSDKManager.GetScoreListMain(leaderboardID2, 5, 0, (response) =>
+            {
+                if (response.success)
+                {
+                    string tempPlayerNames = "Names\n";
+                    string TempPlayerScores = "Scores\n";
+
+                    LootLockerLeaderboardMember[] members = response.items;
+
+                    for (int i = 0; i < members.Length; i++)
+                    {
+                        tempPlayerNames += members[i].rank + ". ";
+                        if (members[i].member_id != "")
+                        {
+                            tempPlayerNames += members[i].member_id;
+                        }
+                        else
+                        {
+                            tempPlayerNames += "";
+                        }
+                        TempPlayerScores += members[i].score + "\n";
+                        tempPlayerNames += "\n";
+                    }
+                    done = true;
+                    factionNames.text = tempPlayerNames;
+                    factionScores.text = TempPlayerScores;
+                }
+                else
+                {
+                    Debug.Log("Failed" + response.Error);
+                    done = true;
+                }
+            });
+            yield return new WaitWhile(() => done == false);
+            yield return new WaitForSeconds(20);
+        }
     }
 }

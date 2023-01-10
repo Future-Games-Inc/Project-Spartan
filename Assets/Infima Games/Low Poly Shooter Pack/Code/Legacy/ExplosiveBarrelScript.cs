@@ -30,9 +30,9 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         [Header("Explosion Options")]
         //How far the explosion will reach
-        public float explosionRadius = 5f;
+        public float explosionRadius = 10f;
         //How powerful the explosion is
-        public float explosionForce = 700f;
+        public float explosionForce = 150f;
 
         public float Health = 100;
 
@@ -52,7 +52,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
                 }
             }
 
-            if(Health <= 0)
+            if (Health <= 0)
             {
                 explode = true;
             }
@@ -94,19 +94,23 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
                         if (enemyHealth != null)
                             enemyHealth.TakeDamage(25);
                     }
+                }
+
+                if (hit.gameObject.CompareTag("Security"))
+                {
                     DroneHealth droneEnemyHealth = hit.gameObject.GetComponent<DroneHealth>();
                     {
                         if (droneEnemyHealth != null)
-                            droneEnemyHealth.TakeDamage(25);
+                            droneEnemyHealth.TakeDamage(30);
                     }
                 }
 
                 if (hit.gameObject.CompareTag("Player"))
                 {
-                    PlayerHealth playerhealth = hit.gameObject.GetComponent<PlayerHealth>();
+                    PlayerHealth playerhealth = hit.gameObject.GetComponentInChildren<PlayerHealth>();
                     {
                         if (playerhealth != null)
-                            playerhealth.TakeDamage(25);
+                            playerhealth.TakeDamage(15);
                     }
                 }
 
@@ -134,7 +138,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void OnTriggerEnter(Collider other)
         {
-            if(other.CompareTag("Bullet"))
+            if (other.CompareTag("EnemyBullet"))
             {
                 PhotonNetwork.Destroy(other.gameObject);
                 Health -= 25;

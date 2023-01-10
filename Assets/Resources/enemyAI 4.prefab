@@ -1810,13 +1810,13 @@ GameObject:
   - component: {fileID: 1132709364}
   - component: {fileID: 1132709372}
   - component: {fileID: 1132709373}
+  - component: {fileID: 8477443036030664059}
   - component: {fileID: 4942940328236149714}
   - component: {fileID: 1132709376}
   - component: {fileID: 1132709368}
   - component: {fileID: 1132709375}
   - component: {fileID: 1680891953128894037}
   - component: {fileID: 7794985527292991259}
-  - component: {fileID: 8477443036030664059}
   m_Layer: 9
   m_Name: enemyAI 4
   m_TagString: Enemy
@@ -1999,6 +1999,20 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!136 &8477443036030664059
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4942940328236149714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2193,20 +2207,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!136 &8477443036030664059
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.1
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1847022287218958
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,6 +23,7 @@ public class Bullet : MonoBehaviour
         PhotonNetwork.Destroy(gameObject);
     }
 
+    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)
@@ -33,11 +34,6 @@ public class Bullet : MonoBehaviour
         {
             playerHealth = null;
         }
-
-        //if (bulletModifier == 0)
-        //{
-        //    bulletModifier = 1;
-        //}
 
         if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
         {

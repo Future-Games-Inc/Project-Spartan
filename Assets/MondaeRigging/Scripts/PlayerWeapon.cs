@@ -11,6 +11,7 @@ public class PlayerWeapon : MonoBehaviour
     public Transform[] spawnPoint;
     public float fireSpeed = 20;
     public GameObject bullet;
+    public Rotator rotatorScript;
 
     public int maxAmmo;
     public int ammoLeft;
@@ -25,9 +26,12 @@ public class PlayerWeapon : MonoBehaviour
     public AudioClip weaponReload;
     public AudioClip weaponBreak;
 
+    public bool reloadingWeapon = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        rotatorScript = GetComponent<Rotator>();
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -65,8 +69,9 @@ public class PlayerWeapon : MonoBehaviour
             }
         }
 
-        if (ammoLeft <= 0)
+        if (ammoLeft <= 0 && reloadingWeapon == false)
         {
+            reloadingWeapon = true;
             StartCoroutine(ReloadWeapon());
         }
     }
@@ -76,10 +81,11 @@ public class PlayerWeapon : MonoBehaviour
         yield return new WaitForSeconds(0);
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
+        durability--;
         yield return new WaitForSeconds(2);
         ammoLeft = maxAmmo;
-        durability --;
         reloadingScreen.SetActive(false);
+        reloadingWeapon = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -87,7 +93,10 @@ public class PlayerWeapon : MonoBehaviour
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.parent.gameObject;
-            maxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo;
+            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            maxAmmo = newMaxAmmo;
+            GetComponent<Rigidbody>().isKinematic = false;
+            rotatorScript.enabled = false;
         }
     }
 

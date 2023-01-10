@@ -8,6 +8,8 @@ public class ToxicEffect : MonoBehaviour
     public PlayerHealth player;
     public Collider playerCollider;
     public float effectRadius = 2.5f;
+    public GameObject playerCharacter;
+
     // Start is called before the first frame update
     private void OnEnable()
     {
@@ -15,16 +17,17 @@ public class ToxicEffect : MonoBehaviour
             StartCoroutine(ToxicHealth());
         else
             StartCoroutine(Leech());
+        transform.position = playerCharacter.transform.position;
     }
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        transform.position = playerCharacter.transform.position;
     }
 
     IEnumerator ToxicHealth()
@@ -36,7 +39,7 @@ public class ToxicEffect : MonoBehaviour
             Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
             foreach (Collider nearbyObjects in colliders)
             {
-                if (nearbyObjects.CompareTag("Enemy"))
+                if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy"))
                 {
                     FollowAI enemyDamage = nearbyObjects.GetComponent<FollowAI>();
                     {
@@ -75,14 +78,14 @@ public class ToxicEffect : MonoBehaviour
                         {
                             object storedToxicDamage;
                             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.TOXICITY_DAMAGE, out storedToxicDamage) && (int)storedToxicDamage >= 1)
-                                playerDamage.TakeDamage(2 + (int)storedToxicDamage);
+                                playerDamage.TakeDamage(5 + (int)storedToxicDamage);
                             else
-                                playerDamage.TakeDamage(2);
+                                playerDamage.TakeDamage(5);
                         }
                     }
                 }
             }
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(2);
         }
     }
 
@@ -95,7 +98,7 @@ public class ToxicEffect : MonoBehaviour
             Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
             foreach (Collider nearbyObjects in colliders)
             {
-                if (nearbyObjects.CompareTag("Enemy"))
+                if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy"))
                 {
                     FollowAI enemyDamage = nearbyObjects.GetComponent<FollowAI>();
                     {
@@ -111,7 +114,7 @@ public class ToxicEffect : MonoBehaviour
                             if (droneDamage != null)
                             {
                                 droneDamage.TakeDamage(10);
-                                player.Health += (10);
+                                player.AddHealth(10);
 
                             }
                         }
@@ -125,13 +128,13 @@ public class ToxicEffect : MonoBehaviour
                         PlayerHealth playerDamage = nearbyObjects.GetComponent<PlayerHealth>();
                         if (playerDamage != null)
                         {
-                            playerDamage.TakeDamage(5);
-                            player.Health += (5);
+                            playerDamage.TakeDamage(15);
+                            player.AddHealth(15);
                         }
                     }
                 }
             }
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(2);
         }
     }
 }

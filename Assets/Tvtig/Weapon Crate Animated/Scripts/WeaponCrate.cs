@@ -21,6 +21,8 @@ public class WeaponCrate : MonoBehaviour
     public bool cacheActive;
     public GameObject cacheBase;
 
+    public Transform spawnPosition;
+
 
     void Start()
     {
@@ -57,14 +59,15 @@ public class WeaponCrate : MonoBehaviour
         PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation);
         PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation);
         PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation);
-        cacheBase.SetActive(false);
+        PhotonNetwork.Destroy(cacheBase);
         StartCoroutine(CacheRespawn());
     }
 
     IEnumerator CacheRespawn()
     {
         yield return new WaitForSeconds(30);
-        cacheBase.SetActive(true);
+        cacheBase = PhotonNetwork.Instantiate("Base", spawnPosition.position, Quaternion.identity);
+        cacheBase.gameObject.transform.parent = this.gameObject.transform;
         _animator.SetBool("Open", false);
         cacheActive = true;
     }

@@ -12,6 +12,8 @@ using ExitGames.Client.Photon.StructWrapping;
 using Unity.VisualScripting;
 using Pixelplacement.TweenSystem;
 using Invector.vCharacterController.AI;
+using LootLocker.Requests;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -36,10 +38,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject decoySpawner;
     public GameObject primaryActive;
     public GameObject secondaryActive;
+    public Transform tokenDropLocation;
 
     public int Health = 100;
     public int reactorExtraction;
+    public int factionExtractionCount;
     public float reactorTimer = 0;
+    public float factionTimer = 0;
     public float toxicTimer = 0;
     public float upgradeTimer = 0;
     public float shieldTimer = 0;
@@ -89,6 +94,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool male;
     public bool primaryPowerupTimer;
     public bool secondaryPowerupTimer;
+    public bool CyberGangDatacard = false;
+    public bool MuerteDeDatacard = false;
+    public bool ChaosDatacard = false;
+    public bool CintSixDatacard = false;
+    public bool FedZoneDatacard = false;
+    public bool factionExtraction = false;
 
     [SerializeField] private bool primaryButtonPressed;
     [SerializeField] private bool secondaryButtonPressed;
@@ -99,6 +110,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public int bulletModifier;
     public int bulletXPModifier;
     public int maxAmmo;
+    public int factionScore;
 
     public GameObject winCanvas;
     public TextMeshProUGUI messageText;
@@ -108,9 +120,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip xpClip;
     public AudioClip[] winClipsMale;
     public AudioClip[] winClipsFemale;
-    public AudioClip roundOverClip;
+    public AudioClip roundWonClip;
 
     public TextMeshProUGUI reactorText;
+    public TextMeshProUGUI factionText;
 
     public MultiplayerHealth multiplayerHealth;
     public ReactorUI reactorUI;
@@ -120,15 +133,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public SkinnedMeshRenderer[] characterSkins;
 
+    public string characterFaction;
+
     [Header("Left Controller ButtonSource")]
     public XRNode left_HandButtonSource;
 
     public static readonly byte ExtractionGameMode = 1;
     public static readonly byte PlayerGameMode = 2;
     public static readonly byte EnemyGameMode = 3;
+
+    public int leaderboardID = 10220;
     // Start is called before the first frame update
     void Start()
-    {        
+    {
         object storedPlayerHealth;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out storedPlayerHealth) && (int)storedPlayerHealth >= 1)
             Health = 100 + ((int)storedPlayerHealth * 10);
@@ -183,11 +200,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         object storedAmmoOverload;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AMMO_OVERLOAD, out storedAmmoOverload) && (int)storedAmmoOverload >= 1)
         {
-            maxAmmo = (25 + ((int)storedBulletModifier * 25));
+            maxAmmo = ((int)storedBulletModifier * 5);
         }
         else
         {
-            maxAmmo = 25;
+            maxAmmo = 0;
         }
 
         object storedHealthRegen;
@@ -227,10 +244,31 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     // Update is called once per frame
+    [System.Obsolete]
     void Update()
     {
-        primaryActive.SetActive(primaryPowerupTimer);
-        secondaryActive.SetActive(secondaryPowerupTimer);
+        object faction;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
+            characterFaction = "Cyber SK Gang".ToString();
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
+            characterFaction = "Muerte De Dios".ToString();
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
+            characterFaction = "Chaos Cartel".ToString();
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
+            characterFaction = "CintSix Cartel".ToString();
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
+            characterFaction = "Federation Zone Authority".ToString();
+
+        object assignment;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out assignment) && (int)assignment >= 1)
+            primaryActive.SetActive(primaryPowerupTimer);
+        else
+            primaryActive.SetActive(false);
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out assignment) && (int)assignment >= 2)
+            secondaryActive.SetActive(secondaryPowerupTimer);
+        else
+            secondaryActive.SetActive(false);
 
         if (Health <= 0 && playerLives > 1 && alive == true)
         {
@@ -265,16 +303,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             spawnManager.winnerPlayer = this.gameObject;
             StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
             UpdateSkills(200);
+            StartCoroutine(SubmitScoreRoutine(characterFaction, 200));
             ExtractionGame();
         }
 
-        if (playersKilled >= 10 && spawnManager.gameOver == false)
+        if (playersKilled >= 15 && spawnManager.gameOver == false)
         {
             playerWinner = true;
             spawnManager.gameOver = true;
             spawnManager.winnerPlayer = this.gameObject;
             StartCoroutine(WinMessage("250 skill points awarded for winning the round"));
             UpdateSkills(250);
+            StartCoroutine(SubmitScoreRoutine(characterFaction, 250));
             PlayerGame();
         }
 
@@ -285,6 +325,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             spawnManager.winnerPlayer = this.gameObject;
             StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
             UpdateSkills(150);
+            StartCoroutine(SubmitScoreRoutine(characterFaction, 150));
             EnemyGame();
         }
 
@@ -409,6 +450,22 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         else
             decoySpawner.SetActive(false);
 
+        if (factionExtraction == true)
+        {
+            factionText.enabled = true;
+            factionTimer += Time.deltaTime;
+            if (factionTimer > 3f)
+            {
+                StartCoroutine(FactionExtraction());
+            }
+        }
+        else
+        {
+            factionText.enabled = false;
+        }
+
+        factionText.text = "Faction Bank Extraction: " + factionExtractionCount + "%";
+
         InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         primaryImplant.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
 
@@ -419,7 +476,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("XP") || other.CompareTag("Health") || other.CompareTag("ExtraXP") || other.CompareTag("MinorHealth") || other.CompareTag("toxicDropNormal") || other.CompareTag("toxicDropExtra") || other.CompareTag("bulletModifierNormal")
-            || other.CompareTag("bulletModifierExtra") || other.CompareTag("MPShield"))
+            || other.CompareTag("bulletModifierExtra") || other.CompareTag("MPShield") || other.CompareTag("deathToken"))
         {
             audioSource.PlayOneShot(xpClip);
         }
@@ -458,28 +515,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(0);
         sceneFader.ScreenFade();
-        var playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, transform.position, Quaternion.identity);
+        GameObject playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, tokenDropLocation.position, Quaternion.identity);
+        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 4);
+        playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction;
 
-        object primaryImplant;
-        object primaryNode;
+        object implant;
+        object node;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
         {
-            PhotonNetwork.Instantiate(bombDeath.name, transform.position, Quaternion.identity);
+            PhotonNetwork.Instantiate(bombDeath.name, tokenDropLocation.position, Quaternion.identity);
         }
-
-        object secondaryImplant;
-        object secondaryNode;
-
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-        {
-            PhotonNetwork.Instantiate(bombDeath.name, transform.position, Quaternion.identity);
-        }
-
-        yield return new WaitForSeconds(2);
-        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = playerCints / 4;
+        yield return new WaitForSeconds(.75f);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 
@@ -533,10 +581,17 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         reactorUI.UpdateReactorUI();
         reactorTimer = 0;
-
-        int playAudio = Random.Range(0, 100);
     }
 
+    IEnumerator FactionExtraction()
+    {
+        yield return new WaitForSeconds(0);
+        factionExtractionCount += 5;
+
+        factionTimer = 0;
+    }
+
+    [System.Obsolete]
     public void EnemyKilled()
     {
         enemiesKilled++;
@@ -558,8 +613,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
         }
 
+        StartCoroutine(SubmitScoreRoutine(characterFaction, 20));
     }
 
+    [System.Obsolete]
     public void PlayersKilled()
     {
         playersKilled++;
@@ -580,6 +637,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             else
                 audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
         }
+
+        StartCoroutine(SubmitScoreRoutine(characterFaction, 50));
     }
 
     void ExtractionGame()
@@ -618,6 +677,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator WinMessage(string message)
     {
         yield return new WaitForSeconds(0);
+        audioSource.PlayOneShot(roundWonClip);
         winCanvas.SetActive(true);
         messageText.text = message;
     }
@@ -966,5 +1026,51 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             bulletModifier = startingBulletModifier;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
+    }
+
+    public void FactionDataCard(string faction)
+    {
+        if (faction == "Cyber SK Gang" && characterFaction != faction)
+            CyberGangDatacard = true;
+        if (faction == "Muerte De Dios" && characterFaction != faction)
+            MuerteDeDatacard = true;
+        if (faction == "Chaos Cartel" && characterFaction != faction)
+            ChaosDatacard = true;
+        if (faction == "CintSix Cartel" && characterFaction != faction)
+            CintSixDatacard = true;
+        if (faction == "Federation Zone Authority" && characterFaction != faction)
+            FedZoneDatacard = true;
+    }
+
+    [System.Obsolete]
+    public IEnumerator SubmitScoreRoutine(string faction, int scoreToUpload)
+    {
+        LootLockerSDKManager.GetMemberRank("faction_leaderboard", faction, (response) =>
+        {
+            if (response.statusCode == 200)
+            {
+                factionScore = response.score;
+            }
+            else
+            {
+                Debug.Log("failed: " + response.Error);
+            }
+        });
+
+        bool done = false;
+        LootLockerSDKManager.SubmitScore(characterFaction, (factionScore + scoreToUpload), leaderboardID, (response) =>
+        {
+            if (response.success)
+            {
+                Debug.Log("Successfully uploaded score");
+                done = true;
+            }
+            else
+            {
+                Debug.Log("Failed" + response.Error);
+                done = true;
+            }
+        });
+        yield return new WaitWhile(() => done == false);
     }
 }

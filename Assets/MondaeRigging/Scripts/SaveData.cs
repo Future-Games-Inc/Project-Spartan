@@ -19,7 +19,7 @@ public class SaveData : MonoBehaviour
             SkillPoints = (int)savedCints;
         }
         else
-            SkillPoints = 30;
+            SkillPoints = ES3.Load<int>("SkillPoints", 50);
 
         ExitGames.Client.Photon.Hashtable cints = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, SkillPoints } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(cints);
@@ -44,14 +44,14 @@ public class SaveData : MonoBehaviour
     [System.Obsolete]
     public void Save()
     {
-        ES3AutoSaveMgr.Current.Save();
+        ES3.Save("SkillPoints", SkillPoints);
         StartCoroutine(SubmitScore());
     }
 
     [System.Obsolete]
     IEnumerator SubmitScore()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(0f);
         yield return leaderboard.SubmitScoreRoutine(SkillPoints);
     }
 }

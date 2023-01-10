@@ -16,7 +16,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public int currentMatchTime;
     public GameObject spawnManager;
     public GameObject[] weaponCaches;
-    public Canvas uiCanvas;
+    public GameObject uiCanvas;
 
     public TextMeshProUGUI countdownText;
 
@@ -114,7 +114,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             spawnManager.SetActive(true);
             foreach (GameObject weapon in weaponCaches)
                 weapon.SetActive(true);
-            uiCanvas.enabled = false;
+            PhotonNetwork.Destroy(uiCanvas);
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
         }

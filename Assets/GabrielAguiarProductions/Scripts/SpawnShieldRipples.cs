@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,17 @@ public class SpawnShieldRipples : MonoBehaviour
 
     private VisualEffect shieldRipplesVFX;
 
+    public GameObject player;
+    
+    void OnEnable()
+    {
+        transform.position = player.transform.position;
+    }
+
+    private void Update()
+    {
+        transform.position = player.transform.position;
+    }
     private void OnCollisionEnter(Collision co)
     {
         if (co.gameObject.tag == "Bullet")

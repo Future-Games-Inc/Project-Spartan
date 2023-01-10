@@ -2434,6 +2434,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4795955159597824}
+  - component: {fileID: 4284290529011656384}
   - component: {fileID: 95041060471394524}
   - component: {fileID: 26474372960577008}
   - component: {fileID: 8484980518805742075}
@@ -2444,7 +2445,6 @@ GameObject:
   - component: {fileID: 1799011468459518908}
   - component: {fileID: 5884015577742174949}
   - component: {fileID: 2198194677634263502}
-  - component: {fileID: 4284290529011656384}
   m_Layer: 9
   m_Name: Armor9_mat4 3
   m_TagString: BossEnemy
@@ -2485,6 +2485,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4284290529011656384
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.2
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &95041060471394524
 Animator:
   serializedVersion: 4
@@ -2807,20 +2821,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!136 &4284290529011656384
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.2
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1827996949366762
 GameObject:
   m_ObjectHideFlags: 0

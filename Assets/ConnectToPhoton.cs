@@ -24,6 +24,6 @@ public class ConnectToPhoton : MonoBehaviourPunCallbacks
     }
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Conencted to Master Server with player name: " + PhotonNetwork.LocalPlayer.NickName);
+        Debug.Log("Connected to Master Server with player name: " + PhotonNetwork.LocalPlayer.NickName);
     }
 }

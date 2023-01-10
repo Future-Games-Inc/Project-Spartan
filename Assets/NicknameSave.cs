@@ -26,8 +26,6 @@ public class NicknameSave : MonoBehaviour
     /// </summary>
     void Start()
     {
-
-
         string defaultName = string.Empty;
         InputField _inputField = this.GetComponent<InputField>();
         if (_inputField != null)
@@ -38,9 +36,7 @@ public class NicknameSave : MonoBehaviour
                 _inputField.text = defaultName;
             }
         }
-
-
-        PhotonNetwork.NickName = defaultName;
+        PhotonNetwork.LocalPlayer.NickName = defaultName;
     }
 
 
@@ -62,9 +58,7 @@ public class NicknameSave : MonoBehaviour
             Debug.LogError("Player Name is null or empty");
             return;
         }
-        PhotonNetwork.NickName = value;
-
-
+        PhotonNetwork.LocalPlayer.NickName = value;
         PlayerPrefs.SetString(playerNamePrefKey, value);
     }
 }

@@ -8,12 +8,15 @@ public class PlayerNetworkSetup : MonoBehaviour
     public GameObject localXRRigGameObject;
     public VRIK localVRIK;
     public Camera myCamera;
+    public PlayerMovement playerMovement;
+    public AbilityDash dash;
 
     public GameObject[] AvatarModelPrefabs;
 
     public TextMeshProUGUI[] playerNameText;
     PhotonView photonView;
 
+    const string playerNamePrefKey = "PlayerName";
     // Start is called before the first frame update
 
     void Start()
@@ -24,6 +27,8 @@ public class PlayerNetworkSetup : MonoBehaviour
             myCamera.enabled = false;
             localXRRigGameObject.SetActive(false);
             localVRIK.enabled = false;
+            playerMovement.enabled = false;
+            dash.enabled = false;
         }
 
         else if (photonView.IsMine)
@@ -31,6 +36,8 @@ public class PlayerNetworkSetup : MonoBehaviour
             myCamera.enabled = true;
             localXRRigGameObject.SetActive(true);
             localVRIK.enabled = true;
+            playerMovement.enabled = true;
+            dash.enabled = true;
 
             object avatarSelectionNumber;
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
@@ -39,11 +46,11 @@ public class PlayerNetworkSetup : MonoBehaviour
             }
         }
 
-        if (PhotonNetwork.LocalPlayer.NickName != null)
+        if (PlayerPrefs.HasKey(playerNamePrefKey))
         {
             foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                playerText.text = PhotonNetwork.NickName;
+                playerText.text = PlayerPrefs.GetString(playerNamePrefKey);
             }
 
         }
