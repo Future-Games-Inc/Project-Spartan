@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using LootLocker.Requests;
 using TMPro;
+using UnityEngine.UI;
 
 public class TopReactsLeaderboard : MonoBehaviour
 {
     public int leaderboardID = 9820;
     public int leaderboardID2 = 10220;
-    public int cyberCints;
-    public int muerteCints;
-    public int chaosCints;
-    public int cintCints;
-    public int fedCints;
 
     public bool updater = true;
 
@@ -22,10 +19,15 @@ public class TopReactsLeaderboard : MonoBehaviour
     public TextMeshProUGUI factionNames;
     public TextMeshProUGUI factionScores;
 
+    public Slider levelSlider;
+    public TextMeshProUGUI currentLevel;
+    public TextMeshProUGUI nextLevel;
+    public TextMeshProUGUI currentXPText;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        CheckLevel();
     }
 
     // Update is called once per frame
@@ -138,5 +140,25 @@ public class TopReactsLeaderboard : MonoBehaviour
             yield return new WaitWhile(() => done == false);
             yield return new WaitForSeconds(20);
         }
+    }
+
+    public void CheckLevel()
+    {
+        LootLockerSDKManager.GetPlayerInfo((response) =>
+        {
+            currentLevel.text = response.level.ToString();
+            nextLevel.text = (response.level + 1).ToString();
+            currentXPText.text = response.xp.ToString() + " / " + response.level_thresholds.next.ToString();
+
+            if (levelSlider.value == levelSlider.maxValue)
+            {
+                levelSlider.maxValue = (float)(response.level_thresholds.next - response.xp);
+                levelSlider.value = 0;
+            }
+            else
+            {
+                levelSlider.value = (float)response.xp - response.level_thresholds.current;
+            }
+        });
     }
 }

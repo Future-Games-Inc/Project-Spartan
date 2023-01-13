@@ -13,6 +13,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI occupancyMultiplayer1;
     public TextMeshProUGUI occupancyMultiplayer2;
     public TextMeshProUGUI occupancyMultiplayer3;
+    public TextMeshProUGUI occupancyMultiplayer4;
+    public TextMeshProUGUI occupancyMultiplayer5;
 
     // Start is called before the first frame update
     void Start()
@@ -82,6 +84,36 @@ public class RoomManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
     }
 
+    public void OnEnterButtonClicked_Multiplayer4()
+    {
+        //if (!PhotonNetwork.IsConnectedAndReady)
+        //{
+        //    PhotonNetwork.ConnectUsingSettings();
+        //}
+        //else
+        //{
+        //    PhotonNetwork.JoinLobby();
+        //}
+        mapType = MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4;
+        ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
+        PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+    }
+
+    public void OnEnterButtonClicked_Multiplayer5()
+    {
+        //if (!PhotonNetwork.IsConnectedAndReady)
+        //{
+        //    PhotonNetwork.ConnectUsingSettings();
+        //}
+        //else
+        //{
+        //    PhotonNetwork.JoinLobby();
+        //}
+        mapType = MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5;
+        ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
+        PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+    }
+
     #endregion
 
     #region Photon Callback Methods
@@ -118,6 +150,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 {
                     PhotonNetwork.LoadLevel("3Multiplayer");
                 }
+                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4)
+                {
+                    PhotonNetwork.LoadLevel("4Multiplayer");
+                }
+                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5)
+                {
+                    PhotonNetwork.LoadLevel("5Multiplayer");
+                }
             }
         }
     }
@@ -134,6 +174,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             occupancyMultiplayer1.text = 0 + "/" + 20 + " Reacts Currently In This Session";
             occupancyMultiplayer2.text = 0 + "/" + 20 + " Reacts Currently In This Session";
             occupancyMultiplayer3.text = 0 + "/" + 20 + " Reacts Currently In This Session";
+            occupancyMultiplayer4.text = 0 + "/" + 20 + " Reacts Currently In This Session";
+            occupancyMultiplayer5.text = 0 + "/" + 20 + " Reacts Currently In This Session";
         }
 
         foreach (RoomInfo room in roomList)
@@ -152,6 +194,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
             if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
             {
                 occupancyMultiplayer3.text = room.PlayerCount + "/" + 20 + " Reacts Currently In This Session";
+            }
+
+            if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+            {
+                occupancyMultiplayer4.text = room.PlayerCount + "/" + 20 + " Reacts Currently In This Session";
+            }
+
+            if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+            {
+                occupancyMultiplayer5.text = room.PlayerCount + "/" + 20 + " Reacts Currently In This Session";
             }
         }
     }

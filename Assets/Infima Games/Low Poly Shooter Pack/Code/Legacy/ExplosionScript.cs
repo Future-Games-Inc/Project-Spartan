@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Photon.Pun;
 
 namespace InfimaGames.LowPolyShooterPack.Legacy
 {
@@ -43,7 +44,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
     	private IEnumerator DestroyTimer () {
     		//Destroy the explosion prefab after set amount of seconds
     		yield return new WaitForSeconds (despawnTime);
-    		Destroy (gameObject);
+    		PhotonNetwork.Destroy (gameObject);
     	}
     }
 }

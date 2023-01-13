@@ -18,9 +18,9 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         [Header("Prefabs")]
         //The explosion prefab
-        public Transform explosionPrefab;
+        public GameObject explosionPrefab;
         //The destroyed barrel prefab
-        public Transform destroyedBarrelPrefab;
+        public GameObject destroyedBarrelPrefab;
 
         [Header("Customizable Options")]
         //Minimum time before the barrel explodes

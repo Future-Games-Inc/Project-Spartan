@@ -42,14 +42,20 @@ public class FollowAI : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
+        agent = GetComponent<NavMeshAgent>();
+
+        NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
+        int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
+        NavMeshHit Hit;
+        if (NavMesh.SamplePosition(Triangulation.vertices[VertexIndex], out Hit, 2f, 1))
+        {
+            agent.Warp(Hit.position);
+            agent.enabled = true;
+        }
+
         InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
         GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
         waypoints = waypointObject.GetComponentsInChildren<Transform>();
-
-        if (agent == null)
-        {
-            agent = GetComponent<NavMeshAgent>();
-        }
 
         currentWaypoint = Random.Range(1, 9);
 
@@ -113,7 +119,7 @@ public class FollowAI : MonoBehaviour
     private void Patrol()
     {
         attackWeapon.fireWeaponBool = false;
-        if (agent.destination != waypoints[currentWaypoint].position)
+        if (agent.destination != waypoints[currentWaypoint].position && agent.enabled == true)
         {
             agent.destination = waypoints[currentWaypoint].position;
         }
@@ -140,12 +146,12 @@ public class FollowAI : MonoBehaviour
 
         else
         {
-            if (targetTransform != null)
+            if (targetTransform != null && agent.enabled == true)
             {
                 agent.SetDestination(targetTransform.position);
             }
 
-            if (directionToTarget.magnitude > maxFollowDistance)
+            if (directionToTarget.magnitude > maxFollowDistance && agent.enabled == true)
             {
                 currentState = States.Patrol;
             }

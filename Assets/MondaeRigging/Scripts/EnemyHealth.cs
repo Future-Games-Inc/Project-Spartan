@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Unity.Services.Analytics.Internal;
+using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class EnemyHealth : MonoBehaviour
 
     public Animator animator;
     public GameObject deathElectric;
+    public NavMeshAgent agent;
 
     public Transform[] lootSpawn;
     public float xpDropRate;
@@ -72,7 +75,9 @@ public class EnemyHealth : MonoBehaviour
 
     IEnumerator Destroy()
     {
-        yield return new WaitForSeconds(4f); 
+        yield return new WaitForSeconds(4f);
+        agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
         PhotonNetwork.Destroy(gameObject);
     }
 }

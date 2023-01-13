@@ -17,6 +17,15 @@ public class WanderingAI : MonoBehaviour
     void OnEnable()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
+        int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
+        NavMeshHit Hit;
+        if (NavMesh.SamplePosition(Triangulation.vertices[VertexIndex], out Hit, 2f, 1))
+        {
+            agent.Warp(Hit.position);
+            agent.enabled = true;
+        }
         timer = wanderTimer;
     }
 
@@ -25,7 +34,7 @@ public class WanderingAI : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (timer >= wanderTimer)
+        if (timer >= wanderTimer && agent.enabled == true)
         {
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
             agent.SetDestination(newPos);

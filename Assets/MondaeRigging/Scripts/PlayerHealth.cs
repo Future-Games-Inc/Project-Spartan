@@ -614,6 +614,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         StartCoroutine(SubmitScoreRoutine(characterFaction, 20));
+        StartCoroutine(GetXP(2));
     }
 
     [System.Obsolete]
@@ -639,10 +640,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         StartCoroutine(SubmitScoreRoutine(characterFaction, 50));
+        StartCoroutine(GetXP(5));
     }
 
     void ExtractionGame()
     {
+        StartCoroutine(GetXP(50));
+
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(ExtractionGameMode, null, raiseEventOptions, sendOptions);
@@ -650,6 +654,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void PlayerGame()
     {
+        StartCoroutine(GetXP(30));
+
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(PlayerGameMode, null, raiseEventOptions, sendOptions);
@@ -657,6 +663,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void EnemyGame()
     {
+        StartCoroutine(GetXP(10));
+
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         SendOptions sendOptions = new SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(EnemyGameMode, null, raiseEventOptions, sendOptions);
@@ -1072,5 +1080,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         });
         yield return new WaitWhile(() => done == false);
+    }
+
+    public IEnumerator GetXP(int XP)
+    {
+        yield return new WaitForSeconds(0);
+        LootLockerSDKManager.SubmitXp((XP), (response) =>
+        {
+            if (response.success)
+            {
+                Debug.Log("Successfully uploaded score");
+            }
+            else
+            {
+                Debug.Log("Failed" + response.Error);
+            }
+        });
     }
 }

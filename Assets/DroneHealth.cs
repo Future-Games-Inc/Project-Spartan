@@ -2,7 +2,9 @@ using PathologicalGames;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Analytics.Internal;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DroneHealth : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class DroneHealth : MonoBehaviour
     public GameObject explosionEffect;
     public EnemyHealthBar healthBar;
     public AudioClip[] audioClip;
+    public NavMeshAgent agent;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -72,6 +75,8 @@ public class DroneHealth : MonoBehaviour
                 PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
         }
         PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
+        agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
 
         yield return new WaitForSeconds(.75f);
         PhotonNetwork.Destroy(gameObject);

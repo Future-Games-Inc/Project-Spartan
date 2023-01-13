@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3154788370429041605}
   - component: {fileID: 5630679793478265115}
   - component: {fileID: 5590537631276304182}
+  - component: {fileID: 4453620496952565056}
   m_Layer: 0
   m_Name: P_LPSP_DMG_Barrel
   m_TagString: ExplosiveBarrel
@@ -132,9 +133,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explode: 0
-  explosionPrefab: {fileID: 4296680985399300, guid: ca26d7307564ff848b29e32bbe6279ef,
+  explosionPrefab: {fileID: 1126181125208960, guid: ca26d7307564ff848b29e32bbe6279ef,
     type: 3}
-  destroyedBarrelPrefab: {fileID: 483574, guid: 69583eba87a3a60449692cb2c09f4706,
+  destroyedBarrelPrefab: {fileID: 138970, guid: 69583eba87a3a60449692cb2c09f4706,
     type: 3}
   minTime: 0.05
   maxTime: 0.25
@@ -193,3 +194,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.7, y: 0.7, z: 1.0853376}
   m_Center: {x: 0.0001733005, y: -0.00017593805, z: 0.003936262}
+--- !u!208 &4453620496952565056
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97913759966657524}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.321, y: 0.321, z: 0.54300004}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.004}
+  m_TimeToStationary: 0.5

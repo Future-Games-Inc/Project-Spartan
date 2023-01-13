@@ -131,6 +131,7 @@ public class FactionExtraction : MonoBehaviour
             playerHealth.FedZoneDatacard = false;
             singleExtraction = false;
         }
+        playerHealth.GetXP(20);
 
         yield return new WaitForSeconds(2);
         inUse = false;

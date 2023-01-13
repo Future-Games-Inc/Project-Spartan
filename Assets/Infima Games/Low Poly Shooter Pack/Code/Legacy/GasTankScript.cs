@@ -2,6 +2,8 @@
 
 using UnityEngine;
 using System.Collections;
+using Photon.Pun;
+using Unity.VisualScripting;
 
 namespace InfimaGames.LowPolyShooterPack.Legacy
 {
@@ -19,10 +21,10 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
 		[Header("Prefabs")]
 		//Explosion prefab
-		public Transform explosionPrefab;
+		public GameObject explosionPrefab;
 
 		//The destroyed gas tank prefab
-		public Transform destroyedGasTankPrefab;
+		public GameObject destroyedGasTankPrefab;
 
 		[Header("Customizable Options")]
 		//Time before the gas tank explodes, 
@@ -47,7 +49,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 		public float explosionRadius = 12.5f;
 
 		//How powerful the explosion is
-		public float explosionForce = 4000.0f;
+		public float explosionForce = 250f;
 
 		[Header("Light")]
 		public Light lightObject;
@@ -62,6 +64,8 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
 		public AudioSource impactSound;
 
+		public int Health = 50;
+
 		//Used to check if the audio has played
 		bool audioHasPlayed = false;
 
@@ -73,10 +77,23 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 			randomValue = Random.Range(-50, 50);
 		}
 
-		private void Update()
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("EnemyBullet"))
+            {
+                PhotonNetwork.Destroy(other.gameObject);
+                Health -= 25;
+            }
+        }
+
+        private void Update()
 		{
-			//If the gas tank is hit
-			if (isHit == true)
+            if (Health <= 0)
+			{
+                isHit = true;
+            }
+            //If the gas tank is hit
+            if (isHit == true)
 			{
 				//Start increasing the rotation speed over time
 				randomRotationValue += 1.0f * Time.deltaTime;
@@ -163,14 +180,43 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 					//Toggle explode bool on explosive barrel object
 					hit.transform.gameObject.GetComponent<ExplosiveBarrelScript>().explode = true;
 				}
-			}
+
+                //If the explosion hit the tag "Target"
+                //Toggle the isHit bool on the target object
+                if (hit.gameObject.CompareTag("Enemy") || hit.gameObject.CompareTag("BossEnemy"))
+                {
+                    FollowAI enemyHealth = hit.gameObject.GetComponent<FollowAI>();
+                    {
+                        if (enemyHealth != null)
+                            enemyHealth.TakeDamage(25);
+                    }
+                }
+
+                if (hit.gameObject.CompareTag("Security"))
+                {
+                    DroneHealth droneEnemyHealth = hit.gameObject.GetComponent<DroneHealth>();
+                    {
+                        if (droneEnemyHealth != null)
+                            droneEnemyHealth.TakeDamage(30);
+                    }
+                }
+
+                if (hit.gameObject.CompareTag("Player"))
+                {
+                    PlayerHealth playerhealth = hit.gameObject.GetComponentInChildren<PlayerHealth>();
+                    {
+                        if (playerhealth != null)
+                            playerhealth.TakeDamage(15);
+                    }
+                }
+            }
 
 			//Spawn the explosion prefab
-			Instantiate(explosionPrefab, transform.position,
+			PhotonNetwork.Instantiate(explosionPrefab.name, transform.position,
 				transform.rotation);
 
 			//Destroy the current gas tank object
-			Destroy(gameObject);
+			PhotonNetwork.Destroy(gameObject);
 		}
 	}
 }
