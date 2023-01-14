@@ -39,6 +39,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject primaryActive;
     public GameObject secondaryActive;
     public Transform tokenDropLocation;
+    public Supercharge superCharge;
+    public GameObject fedIcon;
+    public GameObject cyberIcon;
+    public GameObject cintIcon;
+    public GameObject muerteIcon;
+    public GameObject chaosIcon;
+    public GameObject reactorIcon;
+    public GameObject factionIcon;
+    public GameObject[] cyberEmblem;
+    public GameObject[] cintEmblem;
+    public GameObject[] fedEmblem;
+    public GameObject[] chaosEmblem;
+    public GameObject[] muerteEmblem;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -234,6 +247,38 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         startingBulletModifier = bulletModifier;
+
+        object faction;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
+        {
+            characterFaction = "Cyber SK Gang".ToString();
+            foreach (GameObject emblem in cyberEmblem)
+                emblem.SetActive(true);
+        }
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
+        {
+            characterFaction = "Muerte De Dios".ToString();
+            foreach (GameObject emblem in muerteEmblem)
+                emblem.SetActive(true);
+        }
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
+        {
+            characterFaction = "Chaos Cartel".ToString();
+            foreach (GameObject emblem in chaosEmblem)
+                emblem.SetActive(true);
+        }
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
+        {
+            characterFaction = "CintSix Cartel".ToString();
+            foreach (GameObject emblem in cintEmblem)
+                emblem.SetActive(true);
+        }
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
+        {
+            characterFaction = "Federation Zone Authority".ToString();
+            foreach (GameObject emblem in fedEmblem)
+                emblem.SetActive(true);
+        }
     }
 
     private int SetMaxHealthFromHealthLevel()
@@ -247,18 +292,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [System.Obsolete]
     void Update()
     {
-        object faction;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
-            characterFaction = "Cyber SK Gang".ToString();
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
-            characterFaction = "Muerte De Dios".ToString();
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
-            characterFaction = "Chaos Cartel".ToString();
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
-            characterFaction = "CintSix Cartel".ToString();
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
-            characterFaction = "Federation Zone Authority".ToString();
-
         object assignment;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out assignment) && (int)assignment >= 1)
             primaryActive.SetActive(primaryPowerupTimer);
@@ -459,9 +492,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 StartCoroutine(FactionExtraction());
             }
         }
-        else
+        
         {
             factionText.enabled = false;
+            
         }
 
         factionText.text = "Faction Bank Extraction: " + factionExtractionCount + "%";
@@ -471,6 +505,16 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
+
+        cyberIcon.SetActive(CyberGangDatacard);
+        fedIcon.SetActive(FedZoneDatacard);
+        muerteIcon.SetActive(MuerteDeDatacard);
+        chaosIcon.SetActive(ChaosDatacard);
+        cintIcon.SetActive(CintSixDatacard);
+
+        photonView.RPC("ReactorExtracted", RpcTarget.All, reactorHeld);
+        photonView.RPC("FactionExtracted", RpcTarget.All, factionExtraction);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -613,6 +657,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
         }
 
+        superCharge.currentKills++;
+
         StartCoroutine(SubmitScoreRoutine(characterFaction, 20));
         StartCoroutine(GetXP(2));
     }
@@ -638,6 +684,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             else
                 audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
         }
+        superCharge.currentKills++;
 
         StartCoroutine(SubmitScoreRoutine(characterFaction, 50));
         StartCoroutine(GetXP(5));
@@ -1096,5 +1143,17 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 Debug.Log("Failed" + response.Error);
             }
         });
+    }
+
+    [PunRPC]
+    private void ReactorExtracted(bool active)
+    {
+        reactorIcon.SetActive(active);
+    }
+
+    [PunRPC]
+    private void FactionExtracted(bool active)
+    {
+        factionIcon.SetActive(active);
     }
 }

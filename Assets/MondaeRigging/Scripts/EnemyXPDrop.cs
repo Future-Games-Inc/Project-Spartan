@@ -111,8 +111,8 @@ public class EnemyXPDrop : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().bulletImproved = true;
                 other.GetComponent<PlayerHealth>().BulletImprove(15, 4);
+                other.GetComponent<PlayerHealth>().bulletImproved = true;
                 PhotonNetwork.Destroy(gameObject);
             }
         }

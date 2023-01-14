@@ -1,8 +1,10 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class FactionExtraction : MonoBehaviour
 {
@@ -136,4 +138,6 @@ public class FactionExtraction : MonoBehaviour
         yield return new WaitForSeconds(2);
         inUse = false;
     }
+
+
 }

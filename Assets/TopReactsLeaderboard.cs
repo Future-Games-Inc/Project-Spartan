@@ -24,10 +24,12 @@ public class TopReactsLeaderboard : MonoBehaviour
     public TextMeshProUGUI nextLevel;
     public TextMeshProUGUI currentXPText;
 
+    public RoomManager roomManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        CheckLevel();
+        StartCoroutine(CheckLevel());
     }
 
     // Update is called once per frame
@@ -142,8 +144,9 @@ public class TopReactsLeaderboard : MonoBehaviour
         }
     }
 
-    public void CheckLevel()
+    public IEnumerator CheckLevel()
     {
+        yield return new WaitForSeconds(2);
         LootLockerSDKManager.GetPlayerInfo((response) =>
         {
             currentLevel.text = response.level.ToString();
@@ -159,6 +162,7 @@ public class TopReactsLeaderboard : MonoBehaviour
             {
                 levelSlider.value = (float)response.xp - response.level_thresholds.current;
             }
+            roomManager.mapLevel = (int)response.level;
         });
     }
 }
