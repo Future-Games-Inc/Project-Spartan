@@ -893,8 +893,8 @@ GameObject:
   - component: {fileID: 7869864437231194638}
   - component: {fileID: 8926316275878840149}
   - component: {fileID: 2301635853908155656}
-  - component: {fileID: 3853765388326615884}
   - component: {fileID: 6010084053575086844}
+  - component: {fileID: 6075852828701680159}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -957,7 +957,18 @@ MonoBehaviour:
   observableSearch: 0
   ObservedComponents:
   - {fileID: 102891439601835676}
-  - {fileID: 3853765388326615884}
+  - {fileID: 6075852828701680159}
+  - {fileID: 5851421273722465994}
+  - {fileID: 2985901059004518938}
+  - {fileID: 490410184151020827}
+  - {fileID: 9024847783841874689}
+  - {fileID: 1705936224556903158}
+  - {fileID: 4179490873471963460}
+  - {fileID: 5010746357270971870}
+  - {fileID: 3621081563949817794}
+  - {fileID: 5263022518394976530}
+  - {fileID: 3671604150010183382}
+  - {fileID: 7259557046958280135}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1420,22 +1431,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &3853765388326615884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102891439601835649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
 --- !u!114 &6010084053575086844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1455,6 +1450,22 @@ MonoBehaviour:
   timeRemainingSlider: {fileID: 5445603132771085561}
   currentKills: 0
   player: {fileID: 8099416573255293924}
+--- !u!114 &6075852828701680159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102891439601835649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &106865389392273702
 GameObject:
   m_ObjectHideFlags: 0
@@ -3350,6 +3361,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4862691116716673609}
+  - component: {fileID: 3621081563949817794}
   m_Layer: 12
   m_Name: Bomber_Alt_pf Variant (1)
   m_TagString: Player
@@ -3373,6 +3385,24 @@ Transform:
   m_Father: {fileID: 8497919151659092878}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3621081563949817794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432493265600266412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 3538111981272299633}
+  headTransform: {fileID: 5493536312286617112}
+  bodyTransform: {fileID: 4945826721015330036}
+  leftHandTransform: {fileID: 7420730942118681277}
+  rightHandTransform: {fileID: 8393006024449137046}
 --- !u!1 &438805114581155525
 GameObject:
   m_ObjectHideFlags: 0
@@ -5079,13 +5109,14 @@ GameObject:
   - component: {fileID: 89048584914712615}
   - component: {fileID: 1156815846295498183}
   - component: {fileID: 8631816682613413844}
+  - component: {fileID: 5851421273722465994}
   m_Layer: 12
   m_Name: SK_CPStreetBoy_MergedA
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &89048584914712615
 Transform:
   m_ObjectHideFlags: 0
@@ -5149,9 +5180,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfac4fa329d1f4f23814af71a247c14b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fixTransforms: 1
+  fixTransforms: 0
   references:
-    root: {fileID: 89048584914712615}
+    root: {fileID: 4210963527903271188}
     pelvis: {fileID: 49833678842748100}
     spine: {fileID: 6814125415630169628}
     chest: {fileID: 1923653438095789520}
@@ -5393,6 +5424,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &5851421273722465994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669297524624725867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 89048584914712615}
+  headTransform: {fileID: 4456561769483938979}
+  bodyTransform: {fileID: 6814125415630169628}
+  leftHandTransform: {fileID: 3217145875740516314}
+  rightHandTransform: {fileID: 259085261428015673}
 --- !u!1 &673226079077995932
 GameObject:
   m_ObjectHideFlags: 0
@@ -7024,13 +7073,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5881717057519797759}
+  - component: {fileID: 5263022518394976530}
   m_Layer: 12
   m_Name: Pilot_pf (1)
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5881717057519797759
 Transform:
   m_ObjectHideFlags: 0
@@ -7047,6 +7097,24 @@ Transform:
   m_Father: {fileID: 8497919151659092878}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5263022518394976530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804845898273920980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 2481341166810741291}
+  headTransform: {fileID: 7658142604892905874}
+  bodyTransform: {fileID: 1258737880269600128}
+  leftHandTransform: {fileID: 5632653081698541602}
+  rightHandTransform: {fileID: 4166324798125082974}
 --- !u!1 &808739037984927682
 GameObject:
   m_ObjectHideFlags: 0
@@ -13004,6 +13072,7 @@ GameObject:
   - component: {fileID: 617913810354817457}
   - component: {fileID: 4182929973456364261}
   - component: {fileID: 475178964787798499}
+  - component: {fileID: 490410184151020827}
   m_Layer: 12
   m_Name: SK_CyberpunkSamurai_MergedA
   m_TagString: Player
@@ -13314,6 +13383,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &490410184151020827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225947352551920678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 617913810354817457}
+  headTransform: {fileID: 8817830232766592408}
+  bodyTransform: {fileID: 372842975459875106}
+  leftHandTransform: {fileID: 2661871044018466960}
+  rightHandTransform: {fileID: 8400515550442756466}
 --- !u!1 &1226970023975610039
 GameObject:
   m_ObjectHideFlags: 0
@@ -15273,6 +15360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3236850953751221561}
+  - component: {fileID: 7259557046958280135}
   m_Layer: 12
   m_Name: Spider_Alt_pf Variant (1)
   m_TagString: Player
@@ -15296,6 +15384,24 @@ Transform:
   m_Father: {fileID: 8497919151659092878}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7259557046958280135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451462848688504006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 9047095258737426337}
+  headTransform: {fileID: 0}
+  bodyTransform: {fileID: 4542356397290541264}
+  leftHandTransform: {fileID: 7572127076571839983}
+  rightHandTransform: {fileID: 6071185440622257442}
 --- !u!1 &1457464757610756258
 GameObject:
   m_ObjectHideFlags: 0
@@ -29874,6 +29980,7 @@ GameObject:
   - component: {fileID: 6708586125987070845}
   - component: {fileID: 2606685859913887944}
   - component: {fileID: 128036480581976814}
+  - component: {fileID: 2985901059004518938}
   m_Layer: 12
   m_Name: SK_CyberpunkMerc_MergedA
   m_TagString: Player
@@ -30180,6 +30287,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &2985901059004518938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2785283601949730983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 6708586125987070845}
+  headTransform: {fileID: 2498361790853282783}
+  bodyTransform: {fileID: 8276589407887490771}
+  leftHandTransform: {fileID: 280725815186534634}
+  rightHandTransform: {fileID: 7929230457625975704}
 --- !u!1 &2787493369059935320
 GameObject:
   m_ObjectHideFlags: 0
@@ -35643,6 +35768,7 @@ GameObject:
   - component: {fileID: 7462595816674394386}
   - component: {fileID: 8691965491786313497}
   - component: {fileID: 8443942336429874807}
+  - component: {fileID: 1705936224556903158}
   m_Layer: 12
   m_Name: SK_ScifiSoldier_Masked
   m_TagString: Player
@@ -35947,6 +36073,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &1705936224556903158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3418383050694945108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 7462595816674394386}
+  headTransform: {fileID: 168260473081154155}
+  bodyTransform: {fileID: 6603232331592070699}
+  leftHandTransform: {fileID: 8711859721883582195}
+  rightHandTransform: {fileID: 950320368549580200}
 --- !u!1 &3419031704930830282
 GameObject:
   m_ObjectHideFlags: 0
@@ -39152,6 +39296,7 @@ GameObject:
   - component: {fileID: 6711352868937540307}
   - component: {fileID: 1518932793487684744}
   - component: {fileID: 4106109524126809517}
+  - component: {fileID: 5010746357270971870}
   m_Layer: 12
   m_Name: SK_CPStreetGirl_MergedA
   m_TagString: Player
@@ -39465,6 +39610,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &5010746357270971870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3759458426973289764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 6711352868937540307}
+  headTransform: {fileID: 5148869660712039168}
+  bodyTransform: {fileID: 7568085644855044543}
+  leftHandTransform: {fileID: 3843920224993901057}
+  rightHandTransform: {fileID: 8278170721431882389}
 --- !u!1 &3762341091569432900
 GameObject:
   m_ObjectHideFlags: 0
@@ -45067,6 +45230,7 @@ GameObject:
   - component: {fileID: 2223586841316502218}
   - component: {fileID: 644015051955854239}
   - component: {fileID: 5903653458168130567}
+  - component: {fileID: 4179490873471963460}
   m_Layer: 12
   m_Name: SK_CyberpunkGirl_Masked (1)
   m_TagString: Player
@@ -45370,6 +45534,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &4179490873471963460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4425281071902975648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 2223586841316502218}
+  headTransform: {fileID: 5023875423835808646}
+  bodyTransform: {fileID: 3582135965040127462}
+  leftHandTransform: {fileID: 1209320122403827157}
+  rightHandTransform: {fileID: 1872742079724890773}
 --- !u!1 &4431751489765700107
 GameObject:
   m_ObjectHideFlags: 0
@@ -70494,6 +70676,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2334830288962264007}
+  - component: {fileID: 3671604150010183382}
   m_Layer: 12
   m_Name: Scout_pf (1)
   m_TagString: Player
@@ -70517,6 +70700,24 @@ Transform:
   m_Father: {fileID: 8497919151659092878}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3671604150010183382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6458582843277861896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 2922629267179360288}
+  headTransform: {fileID: 5001065857955786383}
+  bodyTransform: {fileID: 5164895053747881074}
+  leftHandTransform: {fileID: 3326097743184435943}
+  rightHandTransform: {fileID: 7677044844528548836}
 --- !u!1 &6465819917351116348
 GameObject:
   m_ObjectHideFlags: 0
@@ -93353,6 +93554,7 @@ GameObject:
   - component: {fileID: 1970308104618646277}
   - component: {fileID: 6104078909939618343}
   - component: {fileID: 2851591257406690023}
+  - component: {fileID: 9024847783841874689}
   m_Layer: 12
   m_Name: SK_FuturisticTribalWarrior_AllMergedA
   m_TagString: Player
@@ -93664,6 +93866,24 @@ MonoBehaviour:
       onRightFootstep:
         m_PersistentCalls:
           m_Calls: []
+--- !u!114 &9024847783841874689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8886688142668352857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalVRPlayerTransform: {fileID: 4659574470039001009}
+  mainAvatarTransform: {fileID: 1970308104618646277}
+  headTransform: {fileID: 216983821462092246}
+  bodyTransform: {fileID: 4836091647748870034}
+  leftHandTransform: {fileID: 8045375443478558174}
+  rightHandTransform: {fileID: 1981863894111016070}
 --- !u!1 &8887627191513739713
 GameObject:
   m_ObjectHideFlags: 0
@@ -96296,6 +96516,11 @@ PrefabInstance:
       propertyPath: m_text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3865315968298766401, guid: 58c3d383d9b68a94db181fa479149975,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 4119570900827321770, guid: 58c3d383d9b68a94db181fa479149975,
         type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -97165,6 +97390,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865315968298766401, guid: 58c3d383d9b68a94db181fa479149975,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4119570900827321770, guid: 58c3d383d9b68a94db181fa479149975,
         type: 3}

@@ -656,7 +656,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
         }
 
-        superCharge.currentKills++;
+        superCharge.IncreaseKillCount();
 
         StartCoroutine(SubmitScoreRoutine(characterFaction, 20));
         StartCoroutine(GetXP(2));
@@ -683,7 +683,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             else
                 audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsFemale.Length)]);
         }
-        superCharge.currentKills++;
+        superCharge.IncreaseKillCount();
 
         StartCoroutine(SubmitScoreRoutine(characterFaction, 50));
         StartCoroutine(GetXP(5));
