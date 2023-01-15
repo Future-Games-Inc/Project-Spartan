@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,10 +17,14 @@ public class FactionExtraction : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip bankExtracted;
+    public AudioClip uploadChirp;
+
+    public static readonly byte FactionExtractionTrue = 1;
+    public static readonly byte FactionExtractionFalse = 2;
     // Start is called before the first frame update
     void Start()
     {
-
+        InvokeRepeating("Uploading", 0f, 5f);
     }
 
     // Update is called once per frame
@@ -49,6 +54,10 @@ public class FactionExtraction : MonoBehaviour
                     playerHealth.factionExtraction = true;
                     factionExtraction = "Cyber SK Gang";
                     singleExtraction = true;
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+                    PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
                 }
 
                 else if (playerHealth.MuerteDeDatacard == true && singleExtraction == false)
@@ -57,6 +66,10 @@ public class FactionExtraction : MonoBehaviour
                     playerHealth.factionExtraction = true;
                     factionExtraction = "Muerte De Dios";
                     singleExtraction = true;
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+                    PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
                 }
 
                 else if (playerHealth.ChaosDatacard == true && singleExtraction == false)
@@ -65,6 +78,10 @@ public class FactionExtraction : MonoBehaviour
                     playerHealth.factionExtraction = true;
                     factionExtraction = "Chaos Cartel";
                     singleExtraction = true;
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+                    PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
                 }
 
                 else if (playerHealth.CintSixDatacard == true && singleExtraction == false)
@@ -73,6 +90,10 @@ public class FactionExtraction : MonoBehaviour
                     playerHealth.factionExtraction = true;
                     factionExtraction = "CintSix Cartel";
                     singleExtraction = true;
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+                    PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
                 }
 
                 else if (playerHealth.FedZoneDatacard == true && singleExtraction == false)
@@ -81,6 +102,10 @@ public class FactionExtraction : MonoBehaviour
                     playerHealth.factionExtraction = true;
                     factionExtraction = "Federation Zone Authority";
                     singleExtraction = true;
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+                    PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
                 }
             }
         }
@@ -94,6 +119,10 @@ public class FactionExtraction : MonoBehaviour
             playerHealth.factionExtraction = false;
         }
         inUse = false;
+
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(FactionExtractionFalse, null, raiseEventOptions, sendOptions);
     }
 
     [System.Obsolete]
@@ -138,6 +167,12 @@ public class FactionExtraction : MonoBehaviour
         yield return new WaitForSeconds(2);
         inUse = false;
     }
-
+     public void Uploading()
+    {
+        if(inUse == true && !audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(uploadChirp);
+        }
+    }
 
 }

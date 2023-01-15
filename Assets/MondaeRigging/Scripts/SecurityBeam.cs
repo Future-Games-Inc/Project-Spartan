@@ -24,16 +24,12 @@ public class SecurityBeam : MonoBehaviour
         beamColor = beamMaterial.color;
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         detectedPlayer = null;
+        InvokeRepeating("AlarmSound", 0f, 3f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (lost == false)
-        {
-            NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
-            droneAgent.SetDestination(detectedPlayer.transform.position);
-        }
 
     }
 
@@ -43,10 +39,7 @@ public class SecurityBeam : MonoBehaviour
         {
             detectedPlayer = other.gameObject;
             lost = false;
-        }
 
-        if (lost == false)
-        {
             beamMaterial.color = Color.red;
             WanderingAI wander = securityDrone.GetComponent<WanderingAI>();
             wander.enabled = false;
@@ -54,16 +47,15 @@ public class SecurityBeam : MonoBehaviour
             droneCamera.enabled = false;
             NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
             droneAgent.speed = 2;
-            droneAgent.SetDestination(other.transform.position);
+            droneAgent.SetDestination(detectedPlayer.transform.position);
             foreach (GameObject enemy in enemyAI)
             {
                 FollowAI followAI = enemy.GetComponent<FollowAI>();
-                followAI.targetTransform = other.gameObject.transform;
+                followAI.targetTransform = detectedPlayer.gameObject.transform;
                 followAI.maxFollowDistance = 500;
                 followAI.agent.speed = 3;
                 followAI.agent.SetDestination(followAI.targetTransform.position);
             }
-
         }
 
     }
@@ -94,24 +86,28 @@ public class SecurityBeam : MonoBehaviour
         yield return new WaitForSeconds(10);
         lost = true;
 
-        if (lost == true)
+        beamMaterial.color = beamColor;
+        WanderingAI wander = securityDrone.GetComponent<WanderingAI>();
+        wander.enabled = true;
+        SecuityCamera droneCamera = securityDrone.GetComponent<SecuityCamera>();
+        droneCamera.enabled = true;
+        NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
+        droneAgent.speed = 0.5f;
+        foreach (GameObject enemy in enemyAI)
         {
-            beamMaterial.color = beamColor;
-            WanderingAI wander = securityDrone.GetComponent<WanderingAI>();
-            wander.enabled = true;
-            SecuityCamera droneCamera = securityDrone.GetComponent<SecuityCamera>();
-            droneCamera.enabled = true;
-            NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
-            droneAgent.speed = 0.5f;
-            foreach (GameObject enemy in enemyAI)
-            {
-                FollowAI followAI = enemy.GetComponent<FollowAI>();
-                followAI.maxFollowDistance = 5;
-                followAI.agent.speed = 1;
-                followAI.currentWaypoint = (0 + Random.Range(0, 6)) % followAI.waypoints.Length;
-                followAI.agent.SetDestination(followAI.waypoints[followAI.currentWaypoint].position);
-            }
+            FollowAI followAI = enemy.GetComponent<FollowAI>();
+            followAI.maxFollowDistance = 5;
+            followAI.agent.speed = 1;
+            followAI.currentWaypoint = (0 + Random.Range(0, 6)) % followAI.waypoints.Length;
+            followAI.agent.SetDestination(followAI.waypoints[followAI.currentWaypoint].position);
         }
 
     }
+
+    public void AlarmSound()
+    {
+        if (!alarmSource.isPlaying && lost == false)
+            alarmSource.PlayOneShot(alarmClip);
+    }
+
 }

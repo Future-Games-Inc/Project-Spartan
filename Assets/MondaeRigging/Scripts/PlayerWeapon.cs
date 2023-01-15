@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
+using JetBrains.Annotations;
 
 public class PlayerWeapon : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerWeapon : MonoBehaviour
     public float fireSpeed = 20;
     public GameObject bullet;
     public Rotator rotatorScript;
+    public GameObject explosionObject;
 
     public int maxAmmo;
     public int ammoLeft;
@@ -102,7 +104,9 @@ public class PlayerWeapon : MonoBehaviour
 
     IEnumerator DestroyWeapon()
     {
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.5f);
+        explosionObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
         PhotonNetwork.Destroy(gameObject);
     }
 }

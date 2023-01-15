@@ -154,6 +154,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public static readonly byte ExtractionGameMode = 1;
     public static readonly byte PlayerGameMode = 2;
     public static readonly byte EnemyGameMode = 3;
+    public static readonly byte ReactorExtractionTrue = 4;
+    public static readonly byte FactionExtractionTrue = 5;
+    public static readonly byte ReactorExtractionFalse = 6;
+    public static readonly byte FactionExtractionFalse = 7;
 
     public int leaderboardID = 10220;
     // Start is called before the first frame update
@@ -492,10 +496,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 StartCoroutine(FactionExtraction());
             }
         }
-        
+        else
         {
             factionText.enabled = false;
-            
         }
 
         factionText.text = "Faction Bank Extraction: " + factionExtractionCount + "%";
@@ -511,10 +514,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         muerteIcon.SetActive(MuerteDeDatacard);
         chaosIcon.SetActive(ChaosDatacard);
         cintIcon.SetActive(CintSixDatacard);
-
-        photonView.RPC("ReactorExtracted", RpcTarget.All, reactorHeld);
-        photonView.RPC("FactionExtracted", RpcTarget.All, factionExtraction);
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -755,6 +754,23 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
             StartCoroutine(DisplayMessage($"{name} has defeated {enemiesKilled} enemies and won the territory. Returning to Faction Base."));
+        }
+
+        if(photonEvent.Code == ReactorExtractionTrue)
+        {
+            reactorIcon.SetActive(true);
+        }
+        if (photonEvent.Code == FactionExtractionTrue)
+        {
+            factionIcon.SetActive(true);
+        }
+        if (photonEvent.Code == ReactorExtractionFalse)
+        {
+            reactorIcon.SetActive(false);
+        }
+        if (photonEvent.Code == FactionExtractionFalse)
+        {
+            factionIcon.SetActive(true);
         }
     }
 
@@ -1143,17 +1159,5 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 Debug.Log("Failed" + response.Error);
             }
         });
-    }
-
-    [PunRPC]
-    private void ReactorExtracted(bool active)
-    {
-        reactorIcon.SetActive(active);
-    }
-
-    [PunRPC]
-    private void FactionExtracted(bool active)
-    {
-        factionIcon.SetActive(active);
     }
 }

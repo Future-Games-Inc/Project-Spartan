@@ -20,6 +20,10 @@ public class SpawnManager1 : MonoBehaviour
     public int securityCount;
     public int reactorCount;
     public int healthCount;
+    public int enemyCountMax;
+    public int securityCountMax;
+    public int reactorCountMax;
+    public int healthCountMax;
     public int enemiesKilled;
 
     public bool spawnEnemy = true;
@@ -41,11 +45,11 @@ public class SpawnManager1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (spawnEnemy == true && enemyCount < 5)
+        if (spawnEnemy == true && enemyCount < enemyCountMax)
         {
             StartCoroutine(EnemySpawn());
         }
-        if (spawnSecurity == true && securityCount < 3)
+        if (spawnSecurity == true && securityCount < securityCountMax)
         {
             StartCoroutine(SecuritySpawn());
         }
@@ -53,7 +57,7 @@ public class SpawnManager1 : MonoBehaviour
         {
             StartCoroutine(ReactorSpawn());
         }
-        if (spawnHealth == true && healthCount < 4)
+        if (spawnHealth == true && healthCount < healthCountMax)
         {
             StartCoroutine(HealthSpawn());
         }
@@ -66,7 +70,7 @@ public class SpawnManager1 : MonoBehaviour
 
     IEnumerator EnemySpawn()
     {
-        while (enemyCount < 5)
+        while (enemyCount < enemyCountMax)
         {
             spawnEnemy = false;
             GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)].gameObject;
@@ -80,7 +84,7 @@ public class SpawnManager1 : MonoBehaviour
 
     IEnumerator SecuritySpawn()
     {
-        while (securityCount < 3)
+        while (securityCount < securityCountMax)
         {
             spawnSecurity = false;
             PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
@@ -93,7 +97,7 @@ public class SpawnManager1 : MonoBehaviour
 
     IEnumerator ReactorSpawn()
     {
-        while (reactorCount < 1)
+        while (reactorCount < reactorCountMax)
         {
             spawnReactor = false;
             PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity);
@@ -105,7 +109,7 @@ public class SpawnManager1 : MonoBehaviour
 
     IEnumerator HealthSpawn()
     {
-        while (healthCount < 4)
+        while (healthCount < healthCountMax)
         {
             spawnHealth = false;
             PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity);

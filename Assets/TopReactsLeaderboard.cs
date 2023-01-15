@@ -62,41 +62,44 @@ public class TopReactsLeaderboard : MonoBehaviour
     [System.Obsolete]
     public IEnumerator FetchTopHighScores()
     {
-        bool done = false;
-        LootLockerSDKManager.GetScoreListMain(leaderboardID, 5, 0, (response) =>
+        while (updater)
         {
-            if (response.success)
+            bool done = false;
+            LootLockerSDKManager.GetScoreListMain(leaderboardID, 5, 0, (response) =>
             {
-                string tempPlayerNames = "Names\n";
-                string TempPlayerScores = "Scores\n";
-
-                LootLockerLeaderboardMember[] members = response.items;
-
-                for (int i = 0; i < members.Length; i++)
+                if (response.success)
                 {
-                    tempPlayerNames += members[i].rank + ". ";
-                    if (members[i].player.name != "")
+                    string tempPlayerNames = "Names\n";
+                    string TempPlayerScores = "Scores\n";
+
+                    LootLockerLeaderboardMember[] members = response.items;
+
+                    for (int i = 0; i < members.Length; i++)
                     {
-                        tempPlayerNames += members[i].player.name;
+                        tempPlayerNames += members[i].rank + ". ";
+                        if (members[i].player.name != "")
+                        {
+                            tempPlayerNames += members[i].player.name;
+                        }
+                        else
+                        {
+                            tempPlayerNames += members[i].player.id;
+                        }
+                        TempPlayerScores += members[i].score + "\n";
+                        tempPlayerNames += "\n";
                     }
-                    else
-                    {
-                        tempPlayerNames += members[i].player.id;
-                    }
-                    TempPlayerScores += members[i].score + "\n";
-                    tempPlayerNames += "\n";
+                    done = true;
+                    playerNames.text = tempPlayerNames;
+                    playerScores.text = TempPlayerScores;
                 }
-                done = true;
-                playerNames.text = tempPlayerNames;
-                playerScores.text = TempPlayerScores;
-            }
-            else
-            {
-                Debug.Log("Failed" + response.Error);
-                done = true;
-            }
-        });
-        yield return new WaitWhile(() => done == false);
+                else
+                {
+                    Debug.Log("Failed" + response.Error);
+                    done = true;
+                }
+            });
+            yield return new WaitWhile(() => done == false);
+        }
         StartCoroutine(FetchFactionScores());
     }
 
