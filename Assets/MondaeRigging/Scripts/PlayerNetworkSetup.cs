@@ -44,21 +44,21 @@ public class PlayerNetworkSetup : MonoBehaviour
             {
                 photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
             }
+        }
 
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
+        if (PlayerPrefs.HasKey(playerNamePrefKey))
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                foreach (TextMeshProUGUI playerText in playerNameText)
-                {
-                    playerText.text = PlayerPrefs.GetString(playerNamePrefKey);
-                }
-
+                playerText.text = PhotonNetwork.NickName;
             }
-            else
+
+        }
+        else
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                foreach (TextMeshProUGUI playerText in playerNameText)
-                {
-                    playerText.text = "Unknown React";
-                }
+                playerText.text = "Unknown React";
             }
         }
     }

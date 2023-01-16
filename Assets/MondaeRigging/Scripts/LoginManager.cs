@@ -15,16 +15,22 @@ public class LoginManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        //if (!PhotonNetwork.IsConnectedAndReady)
-        //{
-        //    PhotonNetwork.ConnectUsingSettings();
-        //}
+        string defaultName = string.Empty;
+        if (playerNameInput != null)
+        {
+            if (PlayerPrefs.HasKey(playerNamePrefKey))
+            {
+                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+                playerNameInput.text = defaultName;
+            }
+        }
+        connectButton.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     #endregion
 
@@ -40,7 +46,12 @@ public class LoginManager : MonoBehaviourPunCallbacks
                 playerNameInput.text = defaultName;
             }
         }
-        PhotonNetwork.NickName = defaultName;
+        PhotonNetwork.NickName = playerNameInput.text;
+        PhotonNetwork.ConnectUsingSettings();
+    }
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Connected to Master Server with player name: " + PhotonNetwork.LocalPlayer.NickName);
         PhotonNetwork.JoinLobby();
     }
 
@@ -49,7 +60,7 @@ public class LoginManager : MonoBehaviourPunCallbacks
     #region Photon Callback Methods
     public override void OnJoinedLobby()
     {
-        connectButton.SetActive(true);
+        EnterRoom1();
     }
 
     public void EnterRoom1()

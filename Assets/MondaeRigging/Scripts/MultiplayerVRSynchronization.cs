@@ -7,7 +7,7 @@ using Photon.Pun;
 public class MultiplayerVRSynchronization : MonoBehaviour, IPunObservable
 {
 
-    private PhotonView m_PhotonView;
+    public PhotonView m_PhotonView;
 
 
     //Main VRPlayer Transform Synch
@@ -96,8 +96,6 @@ public class MultiplayerVRSynchronization : MonoBehaviour, IPunObservable
 
     public void Awake()
     {
-        m_PhotonView = GetComponent<PhotonView>();
-
         //Main VRPlayer Synch Init
         m_StoredPosition_GeneralVRPlayer = generalVRPlayerTransform.position;
         m_NetworkPosition_GeneralVRPlayer = Vector3.zero;

@@ -60,7 +60,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(countdownBegan);
         spawnManager.SetActive(false);
         foreach (GameObject weapon in weaponCaches)
-            weapon.SetActive(false);
+            weapon.layer = 10;
     }
 
     private void RefreshTimerUI()
@@ -113,7 +113,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             timerCoroutine = null;
             spawnManager.SetActive(true);
             foreach (GameObject weapon in weaponCaches)
-                weapon.SetActive(true);
+                weapon.layer = 0;
             PhotonNetwork.Destroy(uiCanvas);
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
