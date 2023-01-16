@@ -99,15 +99,14 @@ public class TopReactsLeaderboard : MonoBehaviour
                 }
             });
             yield return new WaitWhile(() => done == false);
+            StartCoroutine(FetchFactionScores());
+            yield return new WaitForSeconds(20);
         }
-        StartCoroutine(FetchFactionScores());
     }
 
     [System.Obsolete]
     public IEnumerator FetchFactionScores()
     {
-        while (updater)
-        {
             bool done = false;
             LootLockerSDKManager.GetScoreListMain(leaderboardID2, 5, 0, (response) =>
             {
@@ -144,7 +143,6 @@ public class TopReactsLeaderboard : MonoBehaviour
             });
             yield return new WaitWhile(() => done == false);
             yield return new WaitForSeconds(20);
-        }
     }
 
     public IEnumerator CheckLevel()
