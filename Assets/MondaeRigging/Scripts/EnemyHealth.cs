@@ -19,6 +19,7 @@ public class EnemyHealth : MonoBehaviour
 
     public Transform[] lootSpawn;
     public float xpDropRate;
+    public PhotonView photonView;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -32,16 +33,14 @@ public class EnemyHealth : MonoBehaviour
     {
         if (aiScript.Health <= 0 && alive == true)
         {
-            alive = false;
             KillEnemy();
         }
     }
 
     public void KillEnemy()
     {
-        enemyCounter.enemyCount -= 1;
-        enemyCounter.enemiesKilled += 1;
-        DestroyEnemy();
+        photonView.RPC("RPC_KillEnemy", RpcTarget.All);
+        //DestroyEnemy();
     }
 
     public void DestroyEnemy()
@@ -64,10 +63,10 @@ public class EnemyHealth : MonoBehaviour
 
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                PhotonNetwork.Instantiate(xpDropExtra.name, transform.position, Quaternion.identity);
+                PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, transform.position, Quaternion.identity);
             }
             else
-                PhotonNetwork.Instantiate(xpDrop.name, transform.position, Quaternion.identity);
+                PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
         }
 
         StartCoroutine(Destroy());
@@ -79,5 +78,18 @@ public class EnemyHealth : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.enabled = false;
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    void RPC_KillEnemy()
+    {
+        if (!photonView.IsMine)
+        { return; }
+
+        alive = false;
+
+        enemyCounter.enemyCount -= 1;
+        enemyCounter.enemiesKilled += 1;
+        DestroyEnemy();
     }
 }

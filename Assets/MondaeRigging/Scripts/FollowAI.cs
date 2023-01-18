@@ -6,7 +6,7 @@ using Photon.Pun;
 using CSCore;
 using Invector.vCharacterController.AI;
 
-public class FollowAI : MonoBehaviour
+public class FollowAI : MonoBehaviourPunCallbacks
 {
     public enum States
     {
@@ -38,11 +38,13 @@ public class FollowAI : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip bulletHit;
     public AudioClip[] audioClip;
+    public PhotonView photonView;
 
     // Start is called before the first frame update
     void OnEnable()
     {
         agent = GetComponent<NavMeshAgent>();
+        photonView = GetComponent<PhotonView>();
 
         NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
         int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
@@ -185,13 +187,30 @@ public class FollowAI : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        photonView.RPC("RPC_TakeDamage", RpcTarget.All);
+    }
+
+    public void RandomSFX()
+    {
+        photonView.RPC("RPC_PlayAudio", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RPC_TakeDamage(int damage)
+    {
+        if (!photonView.IsMine)
+        { return; }
+
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
         healthBar.SetCurrentHealth(Health);
     }
 
-    public void RandomSFX()
+    [PunRPC]
+    void RPC_PlayAudio()
     {
+        if (!photonView.IsMine) { return; }
+
         int playAudio = Random.Range(0, 70);
         if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);

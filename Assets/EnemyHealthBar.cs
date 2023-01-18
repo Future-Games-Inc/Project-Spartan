@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class EnemyHealthBar : MonoBehaviour
+public class EnemyHealthBar : MonoBehaviourPunCallbacks
 {
     public Slider slider;
+
+    [PunRPC]
     public void SetMaxHealth(int maxHealth)
     {
         slider.maxValue = maxHealth;

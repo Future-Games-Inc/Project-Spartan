@@ -61,8 +61,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         InitializeTimer();
         photonView.RPC("AudioEnter", RpcTarget.All);
-        spawnManager.SetActive(false);
-        startMatchBool = false;
     }
 
     private void RefreshTimerUI()
@@ -112,12 +110,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         if (currentMatchTime <= 0)
         {
             photonView.RPC("AudioStart", RpcTarget.All);
-            timerCoroutine = null;
-            spawnManager.SetActive(true);
-            PhotonNetwork.Destroy(uiCanvas);
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
-            startMatchBool = true;
         }
         else
         {
@@ -195,12 +187,20 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void AudioStart()
     {
         audioSource.PlayOneShot(matchBegan);
+        timerCoroutine = null;
+        spawnManager.SetActive(true);
+        PhotonNetwork.Destroy(uiCanvas);
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        startMatchBool = true;
     }
 
     [PunRPC]
     void AudioEnter()
     {
         audioSource.PlayOneShot(countdownBegan);
+        spawnManager.SetActive(false);
+        startMatchBool = false;
     }
 }
 

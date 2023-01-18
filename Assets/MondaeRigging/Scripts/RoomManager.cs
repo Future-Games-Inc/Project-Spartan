@@ -199,9 +199,105 @@ public class RoomManager : MonoBehaviourPunCallbacks
             room.CustomProperties.TryGetValue("PlayerLevelForRoom", out roomLevelSet);
             int roomLevel = (int)roomLevelSet;
             roomName.Add(randomRoomName);
-            if (mapLevel >= 0 && mapLevel < 5)
+            if (mapLevel >= 0 && mapLevel <= 2)
+            {
+                if (room.Name.Contains("beginnerRoom"))
+                {
+                    Debug.Log(room.Name);
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
+                    {
+                        occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                    {
+                        occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                    {
+                        occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                    {
+                        occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                    {
+                        occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+                }
+            }
+
+            if (mapLevel > 2 && mapLevel <= 5)
             {
                 if (room.Name.Contains("easyRoom"))
+                {
+                    Debug.Log(room.Name);
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
+                    {
+                        occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                    {
+                        occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                    {
+                        occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                    {
+                        occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                    {
+                        occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+                }
+            }
+
+            else if (mapLevel >5 && mapLevel <= 8)
+            {
+                if (room.Name.Contains("mediumRoom"))
+                {
+                    Debug.Log(room.Name);
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
+                    {
+                        occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                    {
+                        occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                    {
+                        occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                    {
+                        occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+
+                    if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                    {
+                        occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    }
+                }
+            }
+
+            else if (mapLevel > 8 && mapLevel <= 10)
+            {
+                if (room.Name.Contains("hardRoom"))
                 {
                     Debug.Log(room.Name);
                     if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
