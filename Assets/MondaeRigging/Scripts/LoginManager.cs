@@ -15,16 +15,16 @@ public class LoginManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        string defaultName = string.Empty;
-        if (playerNameInput != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                playerNameInput.text = defaultName;
-            }
-        }
-        connectButton.SetActive(true);
+        //string defaultName = string.Empty;
+        //if (playerNameInput != null)
+        //{
+        //    if (PlayerPrefs.HasKey(playerNamePrefKey))
+        //    {
+        //        defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+        //        playerNameInput.text = defaultName;
+        //    }
+        //}
+        //connectButton.SetActive(true);
     }
 
     // Update is called once per frame
@@ -35,20 +35,20 @@ public class LoginManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region UI Callback Methods
-    public void ConnectToPhotonServer()
-    {
-        string defaultName = string.Empty;
-        if (playerNameInput != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                playerNameInput.text = defaultName;
-            }
-        }
-        PhotonNetwork.NickName = playerNameInput.text;
-        PhotonNetwork.ConnectUsingSettings();
-    }
+    //public void ConnectToPhotonServer()
+    //{
+    //    string defaultName = string.Empty;
+    //    if (playerNameInput != null)
+    //    {
+    //        if (PlayerPrefs.HasKey(playerNamePrefKey))
+    //        {
+    //            defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+    //            playerNameInput.text = defaultName;
+    //        }
+    //    }
+    //    PhotonNetwork.NickName = playerNameInput.text;
+    //    PhotonNetwork.ConnectUsingSettings();
+    //}
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Master Server with player name: " + PhotonNetwork.LocalPlayer.NickName);
@@ -58,10 +58,6 @@ public class LoginManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region Photon Callback Methods
-    public override void OnJoinedLobby()
-    {
-        EnterRoom1();
-    }
 
     public void EnterRoom1()
     {

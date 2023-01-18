@@ -23,17 +23,24 @@ public class WeaponCrate : MonoBehaviour
 
     public Transform spawnPosition;
 
+    public MatchEffects matchProps;
+
 
     void Start()
     {
-        cacheActive = true;
         _animator = GetComponent<Animator>();
         _collider = GetComponent<BoxCollider>();
+        cacheActive = true;
+    }
+
+    private void Update()
+    {
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player") && cacheActive == true)
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
             _collider.enabled = false;
             _animator.SetBool("Open", true);

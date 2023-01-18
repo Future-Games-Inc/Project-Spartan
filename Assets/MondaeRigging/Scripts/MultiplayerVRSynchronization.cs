@@ -96,6 +96,8 @@ public class MultiplayerVRSynchronization : MonoBehaviour, IPunObservable
 
     public void Awake()
     {
+        //m_PhotonView = GetComponent<PhotonView>();
+
         //Main VRPlayer Synch Init
         m_StoredPosition_GeneralVRPlayer = generalVRPlayerTransform.position;
         m_NetworkPosition_GeneralVRPlayer = Vector3.zero;
@@ -140,7 +142,7 @@ public class MultiplayerVRSynchronization : MonoBehaviour, IPunObservable
             mainAvatarTransform.localRotation = Quaternion.RotateTowards(mainAvatarTransform.localRotation, this.m_NetworkRotation_MainAvatar, this.m_Angle_MainAvatar * (1.0f / PhotonNetwork.SerializationRate));
 
 
-          
+
             headTransform.localRotation = Quaternion.RotateTowards(headTransform.localRotation, this.m_NetworkRotation_Head, this.m_Angle_Head * (1.0f / PhotonNetwork.SerializationRate));
 
             bodyTransform.localRotation = Quaternion.RotateTowards(bodyTransform.localRotation, this.m_NetworkRotation_Body, this.m_Angle_Body * (1.0f / PhotonNetwork.SerializationRate));

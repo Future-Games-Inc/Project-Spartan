@@ -15,16 +15,16 @@ public class LoginManager4 : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        string defaultName = string.Empty;
-        if (playerNameInput != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                playerNameInput.text = defaultName;
-            }
-        }
-        connectButton.SetActive(true);
+        //string defaultName = string.Empty;
+        //if (playerNameInput != null)
+        //{
+        //    if (PlayerPrefs.HasKey(playerNamePrefKey))
+        //    {
+        //        defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+        //        playerNameInput.text = defaultName;
+        //    }
+        //}
+        //connectButton.SetActive(true);
     }
 
     // Update is called once per frame
@@ -37,17 +37,17 @@ public class LoginManager4 : MonoBehaviourPunCallbacks
     #region UI Callback Methods
     public void ConnectToPhotonServer()
     {
-        string defaultName = string.Empty;
-        if (playerNameInput != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                playerNameInput.text = defaultName;
-            }
-        }
-        PhotonNetwork.NickName = playerNameInput.text;
-        PhotonNetwork.ConnectUsingSettings();
+        //string defaultName = string.Empty;
+        //if (playerNameInput != null)
+        //{
+        //    if (PlayerPrefs.HasKey(playerNamePrefKey))
+        //    {
+        //        defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+        //        playerNameInput.text = defaultName;
+        //    }
+        //}
+        //PhotonNetwork.NickName = playerNameInput.text;
+        //PhotonNetwork.ConnectUsingSettings();
     }
     public override void OnConnectedToMaster()
     {
@@ -56,18 +56,8 @@ public class LoginManager4 : MonoBehaviourPunCallbacks
     }
 
     #endregion
-
-    #region Photon Callback Methods
-    public override void OnJoinedLobby()
-    {
-        EnterRoom1();
-    }
-
     public void EnterRoom1()
     {
         roomManager.OnEnterButtonClicked_Multiplayer5();
     }
-
-
-    #endregion
 }

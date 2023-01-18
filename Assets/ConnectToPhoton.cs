@@ -4,17 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using LootLocker.Requests;
 using Photon.Realtime;
+using TMPro;
 
 public class ConnectToPhoton : MonoBehaviourPunCallbacks
 {
+    public TMP_InputField playerNameInput;
+
+    const string playerNamePrefKey = "PlayerName";
     // Start is called before the first frame update
     void Start()
     {
-        if (!PhotonNetwork.IsConnectedAndReady)
+        string defaultName = string.Empty;
+        if (playerNameInput != null)
         {
-            PhotonNetwork.ConnectUsingSettings();
+            if (PlayerPrefs.HasKey(playerNamePrefKey))
+            {
+                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+                playerNameInput.text = defaultName;
+            }
         }
+    }
 
+    public void ConnectPlayer()
+    {
+        string defaultName = string.Empty;
+        if (playerNameInput != null)
+        {
+            if (PlayerPrefs.HasKey(playerNamePrefKey))
+            {
+                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+                playerNameInput.text = defaultName;
+            }
+        }
+        PhotonNetwork.NickName = playerNameInput.text;
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     // Update is called once per frame

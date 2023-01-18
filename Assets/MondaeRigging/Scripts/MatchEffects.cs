@@ -8,6 +8,7 @@ using TMPro;
 using System.Threading;
 using UnityEditor.XR;
 using Unity.VisualScripting;
+using static UnityEngine.UI.CanvasScaler;
 
 public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -31,6 +32,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip countdownThree;
     public AudioClip countdownFour;
     public AudioClip countdownBegan;
+
+    public bool startMatchBool = false;
 
     public enum EventCodes : byte
     {
@@ -57,10 +60,9 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         InitializeTimer();
-        audioSource.PlayOneShot(countdownBegan);
+        photonView.RPC("AudioEnter", RpcTarget.All);
         spawnManager.SetActive(false);
-        foreach (GameObject weapon in weaponCaches)
-            weapon.layer = 10;
+        startMatchBool = false;
     }
 
     private void RefreshTimerUI()
@@ -88,35 +90,34 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         
         if(currentMatchTime == 5)
         {
-            audioSource.PlayOneShot(countdownFive);
+            photonView.RPC("Audio5", RpcTarget.All);
         }
         if (currentMatchTime == 4)
         {
-            audioSource.PlayOneShot(countdownFour);
+            photonView.RPC("Audio4", RpcTarget.All);
         }
         if (currentMatchTime == 3)
         {
-            audioSource.PlayOneShot(countdownThree);
+            photonView.RPC("Audio3", RpcTarget.All);
         }
         if (currentMatchTime == 2)
         {
-            audioSource.PlayOneShot(countdownTwo);
+            photonView.RPC("Audio2", RpcTarget.All);
         }
         if (currentMatchTime == 1)
         {
-            audioSource.PlayOneShot(countdownOne);
+            photonView.RPC("Audio1", RpcTarget.All);
         }
 
         if (currentMatchTime <= 0)
         {
-            audioSource.PlayOneShot(matchBegan);
+            photonView.RPC("AudioStart", RpcTarget.All);
             timerCoroutine = null;
             spawnManager.SetActive(true);
-            foreach (GameObject weapon in weaponCaches)
-                weapon.layer = 0;
             PhotonNetwork.Destroy(uiCanvas);
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
+            startMatchBool = true;
         }
         else
         {
@@ -158,6 +159,48 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             audioSource.PlayOneShot(newPlayerEntered);
         }
+    }
+
+    [PunRPC]
+    void Audio5()
+    {
+        audioSource.PlayOneShot(countdownFive);
+    }
+
+    [PunRPC]
+    void PlayAudio()
+    {
+        audioSource.PlayOneShot(countdownFour);
+    }
+
+    [PunRPC]
+    void Audio4()
+    {
+        audioSource.PlayOneShot(countdownThree);
+    }
+
+    [PunRPC]
+    void Audio3()
+    {
+        audioSource.PlayOneShot(countdownTwo);
+    }
+
+    [PunRPC]
+    void Audio2()
+    {
+        audioSource.PlayOneShot(countdownOne);
+    }
+
+    [PunRPC]
+    void AudioStart()
+    {
+        audioSource.PlayOneShot(matchBegan);
+    }
+
+    [PunRPC]
+    void AudioEnter()
+    {
+        audioSource.PlayOneShot(countdownBegan);
     }
 }
 

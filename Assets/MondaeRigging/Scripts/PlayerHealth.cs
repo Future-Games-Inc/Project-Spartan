@@ -52,6 +52,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject[] fedEmblem;
     public GameObject[] chaosEmblem;
     public GameObject[] muerteEmblem;
+    public PhotonView photonView;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -143,6 +144,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public RespawnUI respawnUI;
     public EnemyKillUI enemyKillUI;
     public PlayerKillUI playerKillUI;
+    public PlayerHealthBar healthBar;
 
     public SkinnedMeshRenderer[] characterSkins;
 
@@ -251,37 +253,41 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         startingBulletModifier = bulletModifier;
+        healthBar.SetMaxHealth(maxHealth);
 
-        object faction;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
+        if(photonView.IsMine)
         {
-            characterFaction = "Cyber SK Gang".ToString();
-            foreach (GameObject emblem in cyberEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Muerte De Dios".ToString();
-            foreach (GameObject emblem in muerteEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Chaos Cartel".ToString();
-            foreach (GameObject emblem in chaosEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "CintSix Cartel".ToString();
-            foreach (GameObject emblem in cintEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Federation Zone Authority".ToString();
-            foreach (GameObject emblem in fedEmblem)
-                emblem.SetActive(true);
+            object faction;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
+            {
+                characterFaction = "Cyber SK Gang".ToString();
+                foreach (GameObject emblem in cyberEmblem)
+                    emblem.SetActive(true);
+            }
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
+            {
+                characterFaction = "Muerte De Dios".ToString();
+                foreach (GameObject emblem in muerteEmblem)
+                    emblem.SetActive(true);
+            }
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
+            {
+                characterFaction = "Chaos Cartel".ToString();
+                foreach (GameObject emblem in chaosEmblem)
+                    emblem.SetActive(true);
+            }
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
+            {
+                characterFaction = "CintSix Cartel".ToString();
+                foreach (GameObject emblem in cintEmblem)
+                    emblem.SetActive(true);
+            }
+            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
+            {
+                characterFaction = "Federation Zone Authority".ToString();
+                foreach (GameObject emblem in fedEmblem)
+                    emblem.SetActive(true);
+            }
         }
     }
 
@@ -514,7 +520,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         muerteIcon.SetActive(MuerteDeDatacard);
         chaosIcon.SetActive(ChaosDatacard);
         cintIcon.SetActive(CintSixDatacard);
-    }
+;    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -535,6 +541,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         else
             Health -= damage;
         CheckHealthStatus();
+        healthBar.SetCurrentHealth(Health);
     }
 
     public void AddHealth(int health)
@@ -547,6 +554,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         else
             Health += health;
         CheckHealthStatus();
+        healthBar.SetCurrentHealth(Health);
     }
 
     public void CheckHealthStatus()
@@ -558,7 +566,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(0);
         sceneFader.ScreenFade();
-        GameObject playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, tokenDropLocation.position, Quaternion.identity);
+        GameObject playerDeathTokenObject = PhotonNetwork.InstantiateRoomObject(deathToken.name, tokenDropLocation.position, Quaternion.identity);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 4);
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction;
 
@@ -568,7 +576,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
                 PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
         {
-            PhotonNetwork.Instantiate(bombDeath.name, tokenDropLocation.position, Quaternion.identity);
+            PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity);
         }
         yield return new WaitForSeconds(.75f);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
@@ -604,6 +612,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         respawnUI.UpdateRespawnUI();
         Health = 125;
+        healthBar.SetMaxHealth(Health);
         CheckHealthStatus();
         alive = true;
     }
@@ -756,7 +765,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             StartCoroutine(DisplayMessage($"{name} has defeated {enemiesKilled} enemies and won the territory. Returning to Faction Base."));
         }
 
-        if(photonEvent.Code == ReactorExtractionTrue)
+        if (photonEvent.Code == ReactorExtractionTrue)
         {
             reactorIcon.SetActive(true);
         }
@@ -1160,4 +1169,40 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         });
     }
+
+    //[PunRPC]
+    //public void SetPlayerFaction()
+    //{
+    //    object faction;
+    //    if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
+    //    {
+    //        characterFaction = "Cyber SK Gang".ToString();
+    //        foreach (GameObject emblem in cyberEmblem)
+    //            emblem.SetActive(true);
+    //    }
+    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
+    //    {
+    //        characterFaction = "Muerte De Dios".ToString();
+    //        foreach (GameObject emblem in muerteEmblem)
+    //            emblem.SetActive(true);
+    //    }
+    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
+    //    {
+    //        characterFaction = "Chaos Cartel".ToString();
+    //        foreach (GameObject emblem in chaosEmblem)
+    //            emblem.SetActive(true);
+    //    }
+    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
+    //    {
+    //        characterFaction = "CintSix Cartel".ToString();
+    //        foreach (GameObject emblem in cintEmblem)
+    //            emblem.SetActive(true);
+    //    }
+    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
+    //    {
+    //        characterFaction = "Federation Zone Authority".ToString();
+    //        foreach (GameObject emblem in fedEmblem)
+    //            emblem.SetActive(true);
+    //    }
+    //}
 }
