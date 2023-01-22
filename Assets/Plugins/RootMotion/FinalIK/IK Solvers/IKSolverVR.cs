@@ -47,7 +47,7 @@ namespace RootMotion.FinalIK {
 		/// </summary>
 		public void GuessHandOrientations(VRIK.References references, bool onlyIfZero) {
 			if (!references.isFilled) {
-				Debug.LogWarning("VRIK References are not filled in, can not guess hand orientations. Right-click on VRIK header and slect 'Guess Hand Orientations' when you have filled in the References.", references.root);
+				Debug.LogError("VRIK References are not filled in, can not guess hand orientations. Right-click on VRIK header and slect 'Guess Hand Orientations' when you have filled in the References.", references.root);
 				return;
 			}
 			
@@ -412,7 +412,7 @@ namespace RootMotion.FinalIK {
                 return;
             }
 
-            if (lastLocomotionWeight <= 0f && locomotion.weight > 0f) locomotion.Reset(readPositions, readRotations);
+            if (hasLegs && lastLocomotionWeight <= 0f && locomotion.weight > 0f) locomotion.Reset(readPositions, readRotations);
 
             spine.SetLOD(LOD);
             if (hasArms) foreach (Arm arm in arms) arm.SetLOD(LOD);

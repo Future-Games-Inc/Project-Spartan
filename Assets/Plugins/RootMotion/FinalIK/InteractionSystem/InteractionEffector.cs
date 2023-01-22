@@ -24,8 +24,8 @@ namespace RootMotion.FinalIK {
 		// Internal values
 		private Poser poser;
 		private IKEffector effector;
-		private float timer, length, weight, fadeInSpeed, defaultPositionWeight, defaultRotationWeight, defaultPull, defaultReach, defaultPush, defaultPushParent, defaultBendGoalWeight, resetTimer;
-		private bool positionWeightUsed, rotationWeightUsed, pullUsed, reachUsed, pushUsed, pushParentUsed, bendGoalWeightUsed;
+		private float timer, length, weight, fadeInSpeed, defaultPositionWeight, defaultRotationWeight, defaultPull, defaultReach, defaultPush, defaultPushParent, defaultBendGoalWeight, defaultPoserWeight, resetTimer;
+		private bool positionWeightUsed, rotationWeightUsed, pullUsed, reachUsed, pushUsed, pushParentUsed, bendGoalWeightUsed, poserUsed;
 		private bool pickedUp, defaults, pickUpOnPostFBBIK;
 		private Vector3 pickUpPosition, pausePositionRelative;
 		private Quaternion pickUpRotation, pauseRotationRelative;
@@ -51,10 +51,15 @@ namespace RootMotion.FinalIK {
 			StoreDefaults();
 		}
 
-		private void StoreDefaults() {
+        /// <summary>
+        /// Store the default values to which the effector will be reset to after an interaction has ended.
+        /// </summary>
+		public void StoreDefaults() {
+            if (interactionSystem == null) return;
+
 			defaultPositionWeight = interactionSystem.ik.solver.GetEffector(effectorType).positionWeight;
 			defaultRotationWeight = interactionSystem.ik.solver.GetEffector(effectorType).rotationWeight;
-			//defaultPoserWeight = poser != null? poser.weight: 0f;
+			defaultPoserWeight = poser != null? poser.weight: 0f;
 			defaultPull = interactionSystem.ik.solver.GetChain(effectorType).pull;
 			defaultReach = interactionSystem.ik.solver.GetChain(effectorType).reach;
 			defaultPush = interactionSystem.ik.solver.GetChain(effectorType).push;
@@ -91,7 +96,7 @@ namespace RootMotion.FinalIK {
 				positionWeightUsed = false;
 				rotationWeightUsed = false;
                 bendGoalWeightUsed = false;
-				//poserUsed = false;
+				poserUsed = false;
 
 				defaults = true;
 			}
@@ -128,9 +133,9 @@ namespace RootMotion.FinalIK {
         public bool Start(InteractionObject interactionObject, string tag, float fadeInTime, bool interrupt)
         {
             // Get the InteractionTarget
+            InteractionTarget interactionTarget = null;
             target = interactionObject.GetTarget(effectorType, tag);
-            if (target == null) return false;
-            interactionTarget = target.GetComponent<InteractionTarget>();
+            if (target != null) interactionTarget = target.GetComponent<InteractionTarget>();
             
             return Start(interactionObject, interactionTarget, fadeInTime, interrupt);
         }
@@ -151,8 +156,7 @@ namespace RootMotion.FinalIK {
                 else defaults = false;
             }
             
-            if (interactionTarget == null) return false;
-            target = interactionTarget.transform;
+            target = interactionTarget != null? interactionTarget.transform: interactionObject.transform;
 
             // Start the interaction
             this.interactionObject = interactionObject;
@@ -167,17 +171,6 @@ namespace RootMotion.FinalIK {
                 triggered.Add(false);
             }
 
-            // Posing the hand/foot
-            if (poser != null)
-            {
-                if (poser.poseRoot == null) poser.weight = 0f;
-
-                if (interactionTarget != null) poser.poseRoot = target.transform;
-                else poser.poseRoot = null;
-
-                poser.AutoMapping();
-            }
-
             // See which InteractionObject.WeightCurve.Types are used
             positionWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PositionWeight);
             rotationWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.RotationWeight);
@@ -186,7 +179,27 @@ namespace RootMotion.FinalIK {
             pushUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Push);
             pushParentUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PushParent);
             bendGoalWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.BendGoalWeight);
-            //poserUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PoserWeight);
+            poserUsed = poser != null && interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PoserWeight);
+
+            // Posing the hand/foot
+            if (poser != null && poserUsed)
+            {
+                if (poser.poseRoot == null) poser.weight = 0f;
+
+                if (interactionTarget != null)
+                {
+                    if (interactionTarget.usePoser) poser.poseRoot = target.transform;
+                } else
+                {
+                    poser.poseRoot = null;
+                }
+
+                //if (interactionTarget != null) poser.poseRoot = target.transform;
+                //else poser.poseRoot = null;
+
+                poser.AutoMapping();
+            }
+
             if (defaults) StoreDefaults();
 
             // Reset internal values
@@ -231,7 +244,7 @@ namespace RootMotion.FinalIK {
                     effector.rotation = target.rotation * pauseRotationRelative;
                 }
 				// Apply the current interaction state to the solver
-				interactionObject.Apply(interactionSystem.ik.solver, effectorType, interactionTarget, timer, weight);
+				interactionObject.Apply(interactionSystem.ik.solver, effectorType, interactionTarget, timer, weight, true);
 
 				return;
 			}
@@ -254,7 +267,7 @@ namespace RootMotion.FinalIK {
 			effector.rotation = Quaternion.Lerp(effector.bone.rotation, targetRotation, weight);
 
 			// Apply the current interaction state to the solver
-			interactionObject.Apply(interactionSystem.ik.solver, effectorType, interactionTarget, timer, weight);
+			interactionObject.Apply(interactionSystem.ik.solver, effectorType, interactionTarget, timer, weight, false);
 
             if (pickUp) PickUp(root);
             if (pause) Pause();
@@ -262,7 +275,7 @@ namespace RootMotion.FinalIK {
             // Hand poser weight
             float poserWeight = interactionObject.GetValue (InteractionObject.WeightCurve.Type.PoserWeight, interactionTarget, timer);
 
-			if (poser != null) {
+			if (poser != null && poserUsed) {
 				poser.weight = Mathf.Lerp (poser.weight, poserWeight, weight);
 			} else {
 				if (poserWeight > 0f) {

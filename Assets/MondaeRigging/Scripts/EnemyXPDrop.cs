@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class EnemyXPDrop : MonoBehaviour
+public class EnemyXPDrop : MonoBehaviourPunCallbacks
 {
     public SpawnManager1 spawnManager;
     // Start is called before the first frame update
@@ -43,7 +43,7 @@ public class EnemyXPDrop : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                spawnManager.healthCount -= 1;
+                photonView.RPC("RPC_UpdateHealthCount", RpcTarget.AllBuffered);
                 other.GetComponent<PlayerHealth>().AddHealth(10);
                 PhotonNetwork.Destroy(gameObject);
             }           

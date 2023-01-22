@@ -48,17 +48,20 @@ public class AIWeapon : MonoBehaviour
             {
                 audioSource.PlayOneShot(weaponFire);
             }
-            GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity);
-            if (this.transform.parent.gameObject.tag == "Enemy")
+            if (PhotonNetwork.IsMasterClient)
             {
-                spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(0, 3);
+                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity);
+                if (this.transform.parent.gameObject.tag == "Enemy")
+                {
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(0, 3);
+                }
+                else if (this.transform.parent.gameObject.tag == "BossEnemy")
+                {
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(2, 5);
+                }
+                shootForce = (int)Random.Range(40, 75);
+                spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.right * shootForce;
             }
-            else if (this.transform.parent.gameObject.tag == "BossEnemy")
-            {
-                spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(2, 5);
-            }
-            shootForce = (int)Random.Range(40, 75);
-            spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.right * shootForce;
             ammoLeft--;
         }
 

@@ -474,7 +474,7 @@ namespace RootMotion
                     AnimationMode.BeginSampling();
                     AnimationMode.SampleAnimationClip(gameObject, animationClips[currentClipIndex], currentClipTime);
                     AnimationMode.EndSampling();
-                    if (OnUpdateClip != null) OnUpdateClip(animationClips[currentClipIndex], currentClipTime);
+                    if (OnUpdateClip != null) OnUpdateClip(animationClips[currentClipIndex], currentClipTime / animationClips[currentClipIndex].length);
                     currentClipTime += clipFrameInterval;
                     break;
                 case Mode.AnimationStates:

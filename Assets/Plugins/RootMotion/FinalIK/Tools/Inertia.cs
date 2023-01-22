@@ -55,7 +55,7 @@ namespace RootMotion.FinalIK {
 			// Update this body, apply the offset to the effector
 			public void Update(IKSolverFullBodyBiped solver, float weight, float deltaTime) {
 				if (transform == null) return;
-
+				
 				// If first update, set this body to Transform
 				if (firstUpdate) {
 					Reset();
@@ -74,9 +74,10 @@ namespace RootMotion.FinalIK {
 				
 				// Gravity
 				lazyPoint.y += gravity * deltaTime;
-
+				
 				// Apply position offset to the effector
 				foreach (EffectorLink effectorLink in effectorLinks) {
+					
 					solver.GetEffector(effectorLink.effector).positionOffset += (lazyPoint - transform.position) * effectorLink.weight * weight;
 				}
 

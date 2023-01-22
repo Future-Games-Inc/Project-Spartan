@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Supercharge : MonoBehaviour
 {
-    public int targetKills = 10;
+    public int targetKills = 5;
     public float timePeriod = 60f;
     public float superchargeDuration = 30f;
     public Slider killSlider;

@@ -231,16 +231,16 @@ namespace RootMotion.Demos {
                         Quaternion rotation = Quaternion.FromToRotation(transform.up, normal);
                         velocity = Quaternion.Lerp(Quaternion.identity, rotation, velocityToGroundTangentWeight) * velocity;
                     }
-                }
+				}
                 else
                 {
                     // Air move
                     //Vector3 airMove = new Vector3 (userControl.state.move.x * airSpeed, 0f, userControl.state.move.z * airSpeed);
                     Vector3 airMove = V3Tools.ExtractHorizontal(userControl.state.move * airSpeed, gravity, 1f);
                     velocity = Vector3.Lerp(r.velocity, airMove, Time.deltaTime * airControl);
-                }
+                }				
 
-                if (onGround && Time.time > jumpEndTime)
+				if (onGround && Time.time > jumpEndTime)
                 {
                     r.velocity = r.velocity - transform.up * stickyForce * Time.deltaTime;
                 }

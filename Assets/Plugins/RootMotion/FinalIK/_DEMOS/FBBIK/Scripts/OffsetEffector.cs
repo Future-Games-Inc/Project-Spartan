@@ -42,7 +42,7 @@ namespace RootMotion.Demos {
 		}
 
 		protected override void OnModifyOffset() {
-			// Update the effectors
+            // Update the effectors
 			foreach (EffectorLink e in effectorLinks) {
 				// Using effector positionOffset
 				Vector3 positionTarget = transform.TransformPoint(e.localPosition);

@@ -21,6 +21,5 @@ public class WeaponBase : MonoBehaviour
     IEnumerator SetPosition()
     {
         yield return new WaitForSeconds(1);
-        transform.position = weaponCrate.spawnPosition.position;
     }
 }

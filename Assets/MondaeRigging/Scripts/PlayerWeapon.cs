@@ -30,10 +30,53 @@ public class PlayerWeapon : MonoBehaviour
 
     public bool reloadingWeapon = false;
 
+    PhotonView pV;
+
     // Start is called before the first frame update
     void Start()
     {
+        pV = GetComponent<PhotonView>();
         rotatorScript = GetComponent<Rotator>();
+        pV.RPC("RPC_Start", RpcTarget.AllBuffered);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        pV.RPC("RPC_Update", RpcTarget.AllBuffered);
+    }
+
+    public void FireBullet(ActivateEventArgs arg)
+    {
+        pV.RPC("RPC_Fire", RpcTarget.AllBuffered, arg);
+    }
+
+    IEnumerator ReloadWeapon()
+    {
+        pV.RPC("RPC_Reload",RpcTarget.AllBuffered);
+        yield return new WaitForSeconds(2);
+        pV.RPC("RPC_Reload2", RpcTarget.AllBuffered);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        pV.RPC("RPC_Trigger", RpcTarget.AllBuffered, other);
+    }
+
+    IEnumerator DestroyWeapon()
+    {
+        yield return new WaitForSeconds(0.5f);
+        pV.RPC("RPC_Destroy", RpcTarget.AllBuffered);
+        yield return new WaitForSeconds(0.5f);
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    void RPC_Start()
+    {
+        if (!pV.IsMine)
+        { return; }
+
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -41,13 +84,16 @@ public class PlayerWeapon : MonoBehaviour
         grabbable.activated.AddListener(FireBullet);
     }
 
-    // Update is called once per frame
-    void Update()
+    [PunRPC]
+    void RPC_Update()
     {
+        if (!pV.IsMine)
+        { return; }
+
         ammoText.text = ammoLeft.ToString();
-        durabilityText.text = durability.ToString();  
-        
-        if(durability <= 0)
+        durabilityText.text = durability.ToString();
+
+        if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
             GetComponent<XRGrabNetworkInteractable>().enabled = false;
@@ -55,8 +101,12 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    public void FireBullet(ActivateEventArgs arg)
+    [PunRPC]
+    void RPC_Fire(ActivateEventArgs args)
     {
+        if (!pV.IsMine)
+        { return; }
+
         if (ammoLeft >= 1)
         {
             foreach (Transform t in spawnPoint)
@@ -78,20 +128,34 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    IEnumerator ReloadWeapon()
+    [PunRPC]
+    void RPC_Reload()
     {
-        yield return new WaitForSeconds(0);
+        if (!pV.IsMine)
+        { return; }
+
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
         durability--;
-        yield return new WaitForSeconds(2);
+    }
+
+    [PunRPC]
+    void RPC_Reload2()
+    {
+        if (!pV.IsMine)
+        { return; }
+
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    [PunRPC]
+    void RPC_Trigger(Collider other)
     {
+        if (!pV.IsMine)
+        { return; }
+
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.parent.gameObject;
@@ -102,11 +166,12 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    IEnumerator DestroyWeapon()
+    [PunRPC]
+    void RPC_Destroy(Collider other)
     {
-        yield return new WaitForSeconds(0.5f);
+        if (!pV.IsMine)
+        { return; }
+
         explosionObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
-        PhotonNetwork.Destroy(gameObject);
     }
 }

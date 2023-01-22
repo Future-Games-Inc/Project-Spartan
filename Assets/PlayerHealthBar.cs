@@ -8,7 +8,6 @@ public class PlayerHealthBar : MonoBehaviourPunCallbacks
 {
     public Slider slider;
 
-    [PunRPC]
     public void SetMaxHealth(int maxHealth)
     {
         slider.maxValue = maxHealth;

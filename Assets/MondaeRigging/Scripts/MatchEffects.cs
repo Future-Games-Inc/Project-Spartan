@@ -16,7 +16,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public int matchCountdown;
     public int currentMatchTime;
     public GameObject spawnManager;
-    public GameObject[] weaponCaches;
     public GameObject uiCanvas;
 
     public TextMeshProUGUI countdownText;
@@ -32,6 +31,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip countdownThree;
     public AudioClip countdownFour;
     public AudioClip countdownBegan;
+    public PhotonView photonView;
 
     public bool startMatchBool = false;
 
@@ -60,6 +60,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         InitializeTimer();
+        photonView = GetComponent<PhotonView>();
         photonView.RPC("AudioEnter", RpcTarget.All);
     }
 
@@ -110,6 +111,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         if (currentMatchTime <= 0)
         {
             photonView.RPC("AudioStart", RpcTarget.All);
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
         }
         else
         {
@@ -160,25 +163,25 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void PlayAudio()
+    void Audio4()
     {
         audioSource.PlayOneShot(countdownFour);
     }
 
     [PunRPC]
-    void Audio4()
+    void Audio3()
     {
         audioSource.PlayOneShot(countdownThree);
     }
 
     [PunRPC]
-    void Audio3()
+    void Audio2()
     {
         audioSource.PlayOneShot(countdownTwo);
     }
 
     [PunRPC]
-    void Audio2()
+    void Audio1()
     {
         audioSource.PlayOneShot(countdownOne);
     }
@@ -187,11 +190,9 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void AudioStart()
     {
         audioSource.PlayOneShot(matchBegan);
-        timerCoroutine = null;
+        uiCanvas.SetActive(false);
         spawnManager.SetActive(true);
-        PhotonNetwork.Destroy(uiCanvas);
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
+        timerCoroutine = null;
         startMatchBool = true;
     }
 

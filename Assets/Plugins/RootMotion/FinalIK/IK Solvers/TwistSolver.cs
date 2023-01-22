@@ -42,6 +42,13 @@ namespace RootMotion.FinalIK
             parentChildCrossfade = 0.5f;
         }
 
+        public TwistSolver(Transform t)
+        {
+            transform = t;
+            weight = 1f;
+            parentChildCrossfade = 0.5f;
+        }
+
         /// <summary>
         /// Initiate this TwistSolver
         /// </summary>
@@ -133,6 +140,9 @@ namespace RootMotion.FinalIK
 
             // Find the world space relaxed axes of the parent and child
             Vector3 relaxedAxisParent = twistOffset * parent.rotation * axisRelativeToParentDefault;
+            Quaternion f = Quaternion.FromToRotation(transform.position - parent.position, children[0].position - transform.position);
+            relaxedAxisParent = f * relaxedAxisParent;
+
             Vector3 relaxedAxisChild = twistOffset * children[0].rotation * axisRelativeToChildDefault;
 
             // Cross-fade between the parent and child

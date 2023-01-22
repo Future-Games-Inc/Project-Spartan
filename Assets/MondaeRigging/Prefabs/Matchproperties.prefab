@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9174612772775526962}
-  - component: {fileID: 3108965389485131519}
+  - component: {fileID: 5408563156871758725}
+  - component: {fileID: 2062915919648097074}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -33,7 +34,23 @@ Transform:
   m_Father: {fileID: 5565748254418293312}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3108965389485131519
+--- !u!114 &5408563156871758725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5039081004088420939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &2062915919648097074
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,7 +68,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 5408563156871758725}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -380,6 +398,7 @@ GameObject:
   - component: {fileID: 5565748254418293312}
   - component: {fileID: 5565748254418293313}
   - component: {fileID: 5565748254418293326}
+  - component: {fileID: 421489584668575722}
   m_Layer: 0
   m_Name: Matchproperties
   m_TagString: Untagged
@@ -418,16 +437,6 @@ MonoBehaviour:
   matchCountdown: 30
   currentMatchTime: 0
   spawnManager: {fileID: 0}
-  weaponCaches:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   uiCanvas: {fileID: 5039081004088420939}
   countdownText: {fileID: 5565748253971990805}
   audioSource: {fileID: 5565748254418293326}
@@ -439,6 +448,8 @@ MonoBehaviour:
   countdownThree: {fileID: 8300000, guid: d9e7d4e8aa7b27b4ba427ca2254dca96, type: 3}
   countdownFour: {fileID: 8300000, guid: 073c025e6babcb84f9192ea478632b99, type: 3}
   countdownBegan: {fileID: 8300000, guid: 2f2984bdf9cfecb4299ae8a5ca721cf8, type: 3}
+  photonView: {fileID: 0}
+  startMatchBool: 0
 --- !u!82 &5565748254418293326
 AudioSource:
   m_ObjectHideFlags: 0
@@ -535,3 +546,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &421489584668575722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5565748254418293327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

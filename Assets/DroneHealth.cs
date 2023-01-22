@@ -29,22 +29,25 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void OnEnable()
     {
-        InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
-        explosionEffect.SetActive(false);
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        alive = true;
-        healthBar.SetMaxHealth(Health);
+        photonView = GetComponent<PhotonView>();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
+            photonView.RPC("RPC_OnEnable", RpcTarget.All);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Health <= 0 && alive == true)
-        //{
-        //    alive = false;
-        //    StartCoroutine(KillDrone());
-        //}
-
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (Health <= 0 && alive == true)
+            {
+                StartCoroutine(DestroyEnemy());
+            }
+        }
     }
 
     public void TakeDamage(int damage)
@@ -55,18 +58,17 @@ public class DroneHealth : MonoBehaviourPunCallbacks
         //healthBar.SetCurrentHealth(Health);
     }
 
-    IEnumerator KillDrone()
-    {
-        yield return new WaitForSeconds(.25f);
-        enemyCounter.securityCount -= 1;
-        StartCoroutine(DestroyEnemy());
-    }
+    //IEnumerator KillDrone()
+    //{
+    //    yield return new WaitForSeconds(.25f);
+    //    enemyCounter.securityCount -= 1;
+    //    StartCoroutine(DestroyEnemy());
+    //}
 
     IEnumerator DestroyEnemy()
     {
         yield return new WaitForSeconds(0);
-        explosionEffect.SetActive(true);
-
+        //explosionEffect.SetActive(true);
         foreach (Transform t in lootSpawn)
         {
             xpDropRate = 10f;
@@ -78,8 +80,8 @@ public class DroneHealth : MonoBehaviourPunCallbacks
                 PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
         }
         PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
-        agent = GetComponent<NavMeshAgent>();
-        agent.enabled = false;
+        //agent = GetComponent<NavMeshAgent>();
+        //agent.enabled = false;
 
         yield return new WaitForSeconds(.75f);
         PhotonNetwork.Destroy(gameObject);
@@ -88,17 +90,23 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     public void RandomSFX()
     {
         //int playAudio = Random.Range(0, 70);
-        photonView.RPC("PlayAudio", RpcTarget.All);
+        photonView.RPC("RPC_PlayAudio", RpcTarget.All);
         //if (!audioSource.isPlaying && playAudio <= 70)
         //    audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
     [PunRPC]
+
+    void RPC_OnEnable()
+    {
+        explosionEffect.SetActive(false);
+        alive = true;
+        healthBar.SetMaxHealth(Health);
+    }
+
+    [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        if (!photonView.IsMine)
-        { return; }
-
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
         healthBar.SetCurrentHealth(Health);
@@ -106,16 +114,20 @@ public class DroneHealth : MonoBehaviourPunCallbacks
         if (Health <= 0 && alive == true)
         {
             alive = false;
-            StartCoroutine(KillDrone());
+            photonView.RPC("RPC_UpdateSecurity", RpcTarget.AllBuffered);
+
+            explosionEffect.SetActive(true);
+
+            agent = GetComponent<NavMeshAgent>();
+            agent.enabled = false;
+
+            StartCoroutine(DestroyEnemy());
         }
     }
 
     [PunRPC]
     void RPC_PlayAudio()
     {
-        if (!photonView.IsMine)
-        { return; }
-
         int playAudio = Random.Range(0, 70);
         if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);

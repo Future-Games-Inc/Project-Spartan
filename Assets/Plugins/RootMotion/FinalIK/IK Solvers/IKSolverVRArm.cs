@@ -231,7 +231,7 @@ namespace RootMotion.FinalIK
                     upperArmBendAxis = Vector3.Cross(Quaternion.Inverse(upperArmRotation) * (forearmPosition - upperArmPosition), upperArmForwardAxis);
                     if (upperArmBendAxis == Vector3.zero)
                     {
-                        Debug.LogWarning("VRIK can not calculate which way to bend the arms because the arms are perfectly straight. Please rotate the elbow bones slightly in their natural bending direction in the Editor.");
+                        Debug.LogError("VRIK can not calculate which way to bend the arms because the arms are perfectly straight. Please rotate the elbow bones slightly in their natural bending direction in the Editor.");
                     }
                 }
 

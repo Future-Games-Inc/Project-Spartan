@@ -398,15 +398,29 @@ namespace RootMotion.FinalIK {
 		}
 
 		// Applies the weight curves and multipliers to the FBBIK solver
-		public void Apply(IKSolverFullBodyBiped solver, FullBodyBipedEffector effector, InteractionTarget target, float timer, float weight) {
+		public void Apply(IKSolverFullBodyBiped solver, FullBodyBipedEffector effector, InteractionTarget target, float timer, float weight, bool isPaused) {
 
 			for (int i = 0; i < weightCurves.Length; i++) {
+				if (isPaused)
+                {
+					if (weightCurves[i].type == WeightCurve.Type.PositionOffsetX) continue;
+					if (weightCurves[i].type == WeightCurve.Type.PositionOffsetY) continue;
+					if (weightCurves[i].type == WeightCurve.Type.PositionOffsetZ) continue;
+				}
+
 				float mlp = target == null? 1f: target.GetValue(weightCurves[i].type);
 
 				Apply(solver, effector, weightCurves[i].type, weightCurves[i].GetValue(timer), weight * mlp);
 			}
 
 			for (int i = 0; i < multipliers.Length; i++) {
+				if (isPaused)
+				{
+					if (multipliers[i].result == WeightCurve.Type.PositionOffsetX) continue;
+					if (multipliers[i].result == WeightCurve.Type.PositionOffsetY) continue;
+					if (multipliers[i].result == WeightCurve.Type.PositionOffsetZ) continue;
+				}
+
 				if (multipliers[i].curve == multipliers[i].result) {
 					if (!Warning.logged) Warning.Log("InteractionObject Multiplier 'Curve' " + multipliers[i].curve.ToString() + "and 'Result' are the same.", transform);
 				}

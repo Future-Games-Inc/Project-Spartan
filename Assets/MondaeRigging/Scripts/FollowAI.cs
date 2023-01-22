@@ -18,6 +18,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public NavMeshAgent agent;
     public Transform targetTransform;
     public EnemyHealthBar healthBar;
+    public EnemyHealth enemyHealth;
 
     public Transform[] waypoints;
     public GameObject[] players;
@@ -29,6 +30,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public int Health;
 
     public bool inSight;
+    public bool alive;
     private Vector3 directionToTarget;
 
     public States currentState;
@@ -46,23 +48,26 @@ public class FollowAI : MonoBehaviourPunCallbacks
         agent = GetComponent<NavMeshAgent>();
         photonView = GetComponent<PhotonView>();
 
-        NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
-        int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
-        NavMeshHit Hit;
-        if (NavMesh.SamplePosition(Triangulation.vertices[VertexIndex], out Hit, 2f, 1))
+        if (PhotonNetwork.IsMasterClient)
         {
-            agent.Warp(Hit.position);
-            agent.enabled = true;
+            NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
+            int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
+            NavMeshHit Hit;
+            if (NavMesh.SamplePosition(Triangulation.vertices[VertexIndex], out Hit, 2f, 1))
+            {
+                agent.Warp(Hit.position);
+                agent.enabled = true;
+            }
+
+            InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
+            GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
+            waypoints = waypointObject.GetComponentsInChildren<Transform>();
+
+            currentWaypoint = Random.Range(1, 9);
+
+            FindClosestEnemy();
+            photonView.RPC("RPC_EnemyHealthMax", RpcTarget.AllBuffered);
         }
-
-        InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
-        GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
-        waypoints = waypointObject.GetComponentsInChildren<Transform>();
-
-        currentWaypoint = Random.Range(1, 9);
-
-        FindClosestEnemy();
-        healthBar.SetMaxHealth(Health);
     }
 
     public void FindClosestEnemy()
@@ -87,9 +92,12 @@ public class FollowAI : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        FindClosestEnemy();
-        CheckForPlayer();
-        UpdateStates();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            FindClosestEnemy();
+            CheckForPlayer();
+            UpdateStates();
+        }
 
     }
 
@@ -187,30 +195,39 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("RPC_TakeDamage", RpcTarget.All);
+        photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.AllBuffered);
     }
 
     public void RandomSFX()
     {
-        photonView.RPC("RPC_PlayAudio", RpcTarget.All);
+        photonView.RPC("RPC_PlayAudioEnemy", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
-    void RPC_TakeDamage(int damage)
+    void RPC_EnemyHealthMax()
     {
-        if (!photonView.IsMine)
-        { return; }
+        if(!photonView.IsMine) { return; }
 
+        healthBar.SetMaxHealth(Health);
+    }
+
+    [PunRPC]
+    void RPC_TakeDamageEnemy(int damage)
+    {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
         healthBar.SetCurrentHealth(Health);
+
+        if (Health <= 0 && alive == true)
+        {
+            alive = false;
+            enemyHealth.KillEnemy();
+        }
     }
 
     [PunRPC]
-    void RPC_PlayAudio()
+    void RPC_PlayAudioEnemy()
     {
-        if (!photonView.IsMine) { return; }
-
         int playAudio = Random.Range(0, 70);
         if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);

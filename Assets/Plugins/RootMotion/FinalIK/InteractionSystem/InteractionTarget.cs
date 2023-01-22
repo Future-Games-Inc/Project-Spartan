@@ -135,6 +135,11 @@ namespace RootMotion.FinalIK {
 		/// </summary>
 		[Tooltip("If true, will twist/swing around the pivot only once at the start of the interaction. If false, will continue rotating throuout the whole interaction.")]
 		public bool rotateOnce = true;
+        /// <summary>
+        /// Will not set HandPoser's pose target and allows you to use a pose target from a previous interaction if disabled.
+        /// </summary>
+        [Tooltip("Will not set HandPoser's pose target and allows you to use a pose target from a previous interaction if disabled.")]
+        public bool usePoser = true;
 
         private Quaternion defaultLocalRotation;
 		private Transform lastPivot;

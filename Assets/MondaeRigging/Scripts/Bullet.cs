@@ -20,7 +20,8 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void OnCollisionEnter(Collision collision)
     {
-        PhotonNetwork.Destroy(gameObject);
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.Destroy(gameObject);
     }
 
     [System.Obsolete]
@@ -44,33 +45,33 @@ public class Bullet : MonoBehaviour
             {
                 //critical hit here
                 FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-                EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
-                if (enemyDamageCrit.Health <= (40 * bulletModifier) && enemyHealth.alive == true && playerHealth != null)
+                if (enemyDamageCrit.Health <= (40 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled();
                     enemyDamageCrit.TakeDamage((40 * bulletModifier));
                 }
-                else if (enemyDamageCrit.Health > (40 * bulletModifier) && enemyHealth.alive == true && playerHealth != null)
+                else if (enemyDamageCrit.Health > (40 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
                     enemyDamageCrit.TakeDamage((40 * bulletModifier));
-                }               
-                PhotonNetwork.Destroy(gameObject);
+                }
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.Destroy(gameObject);
             }
 
             else
             {
                 FollowAI enemyDamage = other.GetComponent<FollowAI>();
-                EnemyHealth enemyHealth2 = other.GetComponent<EnemyHealth>();
-                if (enemyDamage.Health <= (20 * bulletModifier) && enemyHealth2.alive == true && playerHealth != null)
+                if (enemyDamage.Health <= (20 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled();
                     enemyDamage.TakeDamage((20 * bulletModifier));
                 }
-                else if (enemyDamage.Health > (20 * bulletModifier) && enemyHealth2.alive == true && playerHealth != null)
+                else if (enemyDamage.Health > (20 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                 {
                     enemyDamage.TakeDamage((20 * bulletModifier));
-                }               
-                PhotonNetwork.Destroy(gameObject);
+                }
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.Destroy(gameObject);
             }
         }
 
@@ -84,14 +85,16 @@ public class Bullet : MonoBehaviour
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
                 enemyDamageCrit.TakeDamage((50 * bulletModifier));
-                PhotonNetwork.Destroy(gameObject);
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.Destroy(gameObject);
             }
 
             else
             {
                 DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
                 enemyDamage.TakeDamage((5 * bulletModifier));
-                PhotonNetwork.Destroy(gameObject);
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.Destroy(gameObject);
             }
         }
 
@@ -109,7 +112,8 @@ public class Bullet : MonoBehaviour
                     playerHealth.PlayersKilled();
                 }
                 playerDamageCrit.TakeDamage((2 * bulletModifier));
-                PhotonNetwork.Destroy(gameObject);
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -120,7 +124,8 @@ public class Bullet : MonoBehaviour
                     playerHealth.PlayersKilled();
                 }
                 playerDamage.TakeDamage((1 * bulletModifier));
-                PhotonNetwork.Destroy(gameObject);
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.Destroy(gameObject);
             }
         }
 
@@ -129,6 +134,7 @@ public class Bullet : MonoBehaviour
     IEnumerator DestroyBullet()
     {
         yield return new WaitForSeconds(5);
-        PhotonNetwork.Destroy(gameObject);
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.Destroy(gameObject);
     }
 }

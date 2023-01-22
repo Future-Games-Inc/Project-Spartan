@@ -7,7 +7,7 @@ namespace RootMotion.Demos {
 
 	// Demonstrating 360-degree aiming system built with 6 static aiming poses and AimIK.
 	public class SimpleAimingSystem : MonoBehaviour {
-		
+
 		[Tooltip("AimPoser is a tool that returns an animation name based on direction.")]
 		public AimPoser aimPoser;
 		

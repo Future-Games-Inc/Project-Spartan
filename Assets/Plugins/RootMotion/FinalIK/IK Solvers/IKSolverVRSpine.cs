@@ -441,7 +441,7 @@ namespace RootMotion.FinalIK {
                     if (animator != null && animator.enabled)
                     {
                         // Rotate root around animator.pivotPosition
-                        Vector3 pivot = animator.pivotPosition;
+                        Vector3 pivot = animator.applyRootMotion? animator.pivotPosition: animator.transform.position;
                         Vector3 dir = rootBone.solverPosition - pivot;
                         rootBone.solverPosition = pivot + fix * dir;
                     }

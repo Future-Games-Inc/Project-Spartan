@@ -5,7 +5,7 @@ using Photon.Pun;
 using Unity.Services.Analytics.Internal;
 using UnityEngine.AI;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviourPunCallbacks
 {
     public FollowAI aiScript;
     public GameObject xpDrop;
@@ -19,77 +19,86 @@ public class EnemyHealth : MonoBehaviour
 
     public Transform[] lootSpawn;
     public float xpDropRate;
-    public PhotonView photonView;
 
     // Start is called before the first frame update
     void OnEnable()
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        alive = true;
+        photonView.RPC("RPC_EnemyHealthEnable", RpcTarget.AllBuffered);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (aiScript.Health <= 0 && alive == true)
-        {
-            KillEnemy();
-        }
+
     }
 
     public void KillEnemy()
     {
-        photonView.RPC("RPC_KillEnemy", RpcTarget.All);
-        //DestroyEnemy();
+        photonView.RPC("RPC_KillEnemy", RpcTarget.AllBuffered);
     }
 
     public void DestroyEnemy()
     {
-        this.aiScript.enabled = false;
-        animator.SetTrigger("Death");
-        deathElectric.SetActive(true);
-
-        foreach (Transform t in lootSpawn)
+        photonView.RPC("RPC_DestroyEnemy", RpcTarget.AllBuffered);
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (tag == "Enemy")
+            foreach (Transform t in lootSpawn)
             {
-                xpDropRate = 5f;
+                if (tag == "Enemy")
+                {
+                    xpDropRate = 5f;
+                }
+
+                else if (tag == "BossEnemy")
+                {
+                    xpDropRate = 15f;
+                }
+
+                if (Random.Range(0, 100f) < xpDropRate)
+                {
+                    if (PhotonNetwork.IsMasterClient)
+                        PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, transform.position, Quaternion.identity);
+                }
+                else
+                    if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
             }
 
-            else if (tag == "BossEnemy")
-            {
-                xpDropRate = 15f;
-            }
-
-            if (Random.Range(0, 100f) < xpDropRate)
-            {
-                PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, transform.position, Quaternion.identity);
-            }
-            else
-                PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
+            StartCoroutine(Destroy());
         }
-
-        StartCoroutine(Destroy());
     }
 
     IEnumerator Destroy()
     {
         yield return new WaitForSeconds(4f);
-        agent = GetComponent<NavMeshAgent>();
-        agent.enabled = false;
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    void RPC_EnemyHealthEnable()
+    {
+        alive = true;
     }
 
     [PunRPC]
     void RPC_KillEnemy()
     {
-        if (!photonView.IsMine)
-        { return; }
-
         alive = false;
 
-        enemyCounter.enemyCount -= 1;
-        enemyCounter.enemiesKilled += 1;
+        photonView.RPC("RPC_UpdateEnemy()", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_UpdateEnemyCount()", RpcTarget.AllBuffered);
         DestroyEnemy();
+    }
+
+    [PunRPC]
+    void RPC_DestroyEnemy()
+    {
+        this.aiScript.enabled = false;
+        animator.SetTrigger("Death");
+        deathElectric.SetActive(true);
+
+        agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
     }
 }

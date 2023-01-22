@@ -9,9 +9,12 @@ public class playerDeathToken : MonoBehaviour
     public string faction;
 
     public bool tokenActivated = false;
+
+    PhotonView pV;
     // Start is called before the first frame update
     void Start()
     {
+        pV = GetComponent<PhotonView>();
         StartCoroutine(TokenActivation());
     }
 
@@ -23,19 +26,40 @@ public class playerDeathToken : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        pV.RPC("RPC_Trigger", RpcTarget.AllBuffered, other);
+    }
+
+    private IEnumerator TokenActivation()
+    {
+        yield return new WaitForSeconds(1f);
+        pV.RPC("RPC_TokenActivated", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    void RPC_TokenActivated()
+    {
+        if (!pV.IsMine) { return; }
+        tokenActivated = true;
+    }
+
+    [PunRPC]
+    void RPC_Trigger(Collider other)
+    {
+        if(!pV.IsMine) { return; }
+
         if (other.CompareTag("Player") && tokenActivated == true)
         {
             other.gameObject.GetComponent<PlayerHealth>().UpdateSkills(tokenValue);
-            if (faction != other.gameObject.GetComponent<PlayerHealth>().characterFaction)
+            tokenValue = 0;
+
+            if (faction.ToString() != other.gameObject.GetComponent<PlayerHealth>().characterFaction.ToString())
             {
                 other.GetComponent<PlayerHealth>().FactionDataCard(faction);
+                PhotonNetwork.Destroy(gameObject);
             }
-        }
-    }
 
-    private IEnumerator TokenActivation() 
-    {
-        yield return new WaitForSeconds(1.5f);
-        tokenActivated = true;
+            PhotonNetwork.Destroy(gameObject);
+        }
+
     }
 }

@@ -188,7 +188,7 @@ namespace RootMotion.FinalIK {
 
 			if (interactionObject == null) return false;
 
-			for (int i = 0; i < interactionEffectors.Length; i++) {
+            for (int i = 0; i < interactionEffectors.Length; i++) {
 				if (interactionEffectors[i].effectorType == effectorType) {
 					return interactionEffectors[i].Start(interactionObject, targetTag, fadeInTime, interrupt);
 				}
@@ -196,6 +196,47 @@ namespace RootMotion.FinalIK {
 
 			return false;
 		}
+
+        /// <summary>
+		/// Starts the interaction between an effector and an interaction object, choosing InteractionTarget that is closest to current rotation of the effector.
+		/// </summary>
+        public bool StartInteractionWithClosestTarget(FullBodyBipedEffector effectorType, InteractionObject interactionObject, bool interrupt)
+        {
+            if (!IsValid(true)) return false;
+
+            if (interactionObject == null) return false;
+
+            for (int i = 0; i < interactionEffectors.Length; i++)
+            {
+                if (interactionEffectors[i].effectorType == effectorType)
+                {
+                    int closestTargetIndex = GetClosestTargetIndex(effectorType, interactionObject);
+                    if (closestTargetIndex == -1) continue;
+
+                    return interactionEffectors[i].Start(interactionObject, interactionObject.GetTargets()[i], fadeInTime, interrupt);
+                }
+            }
+
+            return false;
+        }
+
+        private int GetClosestTargetIndex(FullBodyBipedEffector effectorType, InteractionObject obj)
+        {
+            int index = -1;
+            float closestAngle = Mathf.Infinity;
+            Quaternion handRot = ik.solver.GetEffector(effectorType).bone.rotation;
+            for (int i = 0; i < obj.GetTargets().Length; i++)
+            {
+                float angle = Quaternion.Angle(handRot, obj.GetTargets()[i].transform.rotation);
+                if (angle < closestAngle)
+                {
+                    closestAngle = angle;
+                    index = i;
+                }
+            }
+            return index;
+        }
+
 
         /// <summary>
 		/// Starts the interaction between an effector and a specific interaction target.
@@ -538,6 +579,17 @@ namespace RootMotion.FinalIK {
 
 			return closest;
 		}
+
+        /// <summary>
+        /// Store the default values to which the interaction effectors will be reset to after interactions have ended.
+        /// </summary>
+        public void StoreDefaults()
+        {
+            for (int i = 0; i < interactionEffectors.Length; i++)
+            {
+                interactionEffectors[i].StoreDefaults();
+            }
+        }
 
 		/// <summary>
 		/// Gets the FullBodyBipedIK component.

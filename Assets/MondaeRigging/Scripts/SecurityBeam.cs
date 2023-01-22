@@ -21,7 +21,7 @@ public class SecurityBeam : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        beamColor = beamMaterial.color;
+        beamMaterial.color = beamColor;
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         detectedPlayer = null;
         InvokeRepeating("AlarmSound", 0f, 3f);
@@ -30,7 +30,11 @@ public class SecurityBeam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(lost == false)
+        {
+            NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
+            droneAgent.SetDestination(detectedPlayer.transform.position);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
