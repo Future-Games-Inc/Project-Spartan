@@ -31,7 +31,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip countdownThree;
     public AudioClip countdownFour;
     public AudioClip countdownBegan;
-    public PhotonView photonView;
 
     public bool startMatchBool = false;
 
@@ -60,7 +59,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         InitializeTimer();
-        photonView = GetComponent<PhotonView>();
         photonView.RPC("AudioEnter", RpcTarget.All);
     }
 

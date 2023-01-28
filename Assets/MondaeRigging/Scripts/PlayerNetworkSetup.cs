@@ -2,18 +2,21 @@ using UnityEngine;
 using Photon.Pun;
 using RootMotion.FinalIK;
 using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
+using Unity.XR.CoreUtils;
+using RootMotion.Demos;
 
 public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
 {
-    public GameObject localXRRigGameObject;
+    public XROrigin localXRRigGameObject;
     public Camera myCamera;
     public PlayerMovement playerMovement;
     public AbilityDash dash;
+    public VRIK_PUN_Player[] punPlayers;
 
     public GameObject[] AvatarModelPrefabs;
 
     public TextMeshProUGUI[] playerNameText;
-    PhotonView photonView;
 
     public string characterFaction;
 
@@ -28,11 +31,10 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
         if (!photonView.IsMine)
         {
             myCamera.enabled = false;
-            localXRRigGameObject.SetActive(false);
+            localXRRigGameObject.enabled = false;
             playerMovement.enabled = false;
             dash.enabled = false;
 
@@ -58,7 +60,7 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
         else if (photonView.IsMine)
         {
             myCamera.enabled = true;
-            localXRRigGameObject.SetActive(true);
+            localXRRigGameObject.enabled = true;
             playerMovement.enabled = true;
             dash.enabled = true;
 
@@ -132,10 +134,12 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
             if (AvatarModelPrefabs[avatarSelectionNumber] == AvatarModelPrefabs[i])
             {
                 AvatarModelPrefabs[i].SetActive(true);
+                punPlayers[i].enabled = true;
             }
             else
             {
                 AvatarModelPrefabs[i].SetActive(false);
+                punPlayers[i].enabled = false;
             }
         }
     }

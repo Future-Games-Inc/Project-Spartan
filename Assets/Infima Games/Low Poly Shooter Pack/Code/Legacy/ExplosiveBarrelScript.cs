@@ -6,7 +6,7 @@ using Photon.Pun;
 
 namespace InfimaGames.LowPolyShooterPack.Legacy
 {
-    public class ExplosiveBarrelScript : MonoBehaviour
+    public class ExplosiveBarrelScript : MonoBehaviourPunCallbacks
     {
 
         float randomTime;
@@ -38,23 +38,21 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void Update()
         {
-            //Generate random time based on min and max time values
-            randomTime = Random.Range(minTime, maxTime);
-
-            //If the barrel is hit
-            if (explode == true)
+            if (PhotonNetwork.IsMasterClient)
             {
-                if (routineStarted == false)
+                //Generate random time based on min and max time values
+                randomTime = Random.Range(minTime, maxTime);
+
+                //If the barrel is hit
+                if (explode == true)
                 {
-                    //Start the explode coroutine
-                    StartCoroutine(Explode());
-                    routineStarted = true;
+                    if (routineStarted == false)
+                    {
+                        //Start the explode coroutine
+                        StartCoroutine(Explode());
+                        routineStarted = true;
+                    }
                 }
-            }
-
-            if (Health <= 0)
-            {
-                explode = true;
             }
         }
 
@@ -141,7 +139,18 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
             if (other.CompareTag("EnemyBullet"))
             {
                 PhotonNetwork.Destroy(other.gameObject);
-                Health -= 25;
+                photonView.RPC("RPC_takeDamage", RpcTarget.AllBuffered);
+            }
+        }
+
+        [PunRPC]
+        void RPC_TakeDamage()
+        {
+            Health -= 25;
+
+            if (Health <= 0)
+            {
+                explode = true;
             }
         }
     }

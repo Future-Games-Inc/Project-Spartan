@@ -21,7 +21,7 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     public float xpDropRate;
 
     // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         photonView.RPC("RPC_EnemyHealthEnable", RpcTarget.AllBuffered);
@@ -57,14 +57,11 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
 
                 if (Random.Range(0, 100f) < xpDropRate)
                 {
-                    if (PhotonNetwork.IsMasterClient)
-                        PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, transform.position, Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, transform.position, Quaternion.identity);
                 }
                 else
-                    if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
             }
-
             StartCoroutine(Destroy());
         }
     }
@@ -85,9 +82,10 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     void RPC_KillEnemy()
     {
         alive = false;
+        aiScript.alive = false;
 
-        photonView.RPC("RPC_UpdateEnemy()", RpcTarget.AllBuffered);
-        photonView.RPC("RPC_UpdateEnemyCount()", RpcTarget.AllBuffered);
+        enemyCounter.photonView.RPC("RPC_UpdateEnemy()", RpcTarget.AllBuffered);
+        enemyCounter.photonView.RPC("RPC_UpdateEnemyCount()", RpcTarget.AllBuffered);
         DestroyEnemy();
     }
 

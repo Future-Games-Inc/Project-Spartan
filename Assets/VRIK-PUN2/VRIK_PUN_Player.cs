@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.FinalIK;
 using Photon.Pun;
+using UnityEngine.XR.Interaction.Toolkit;
+using Unity.XR.CoreUtils;
 
 namespace RootMotion.Demos
 {
@@ -14,7 +16,7 @@ namespace RootMotion.Demos
 
         #region All
 
-        [Tooltip("Root of the VR camera rig")] public GameObject vrRig;
+        [Tooltip("Root of the VR camera rig")] public XROrigin vrRig;
         [Tooltip("The VRIK component.")] public VRIK ik;
 
         // NetworkTransforms are network snapshots of Transform position, rotation, velocity and angular velocity
@@ -104,7 +106,7 @@ namespace RootMotion.Demos
 
         private void InitiateLocal()
         {
-            vrRig.SetActive(true);
+            vrRig.enabled = true;
 
             // Calibrate the character
             data = VRIKCalibrator.Calibrate(ik, centerEyeAnchor, leftHandAnchor, rightHandAnchor, headAnchorPositionOffset, headAnchorRotationOffset, handAnchorPositionOffset, handAnchorRotationOffset, scaleMlp);
@@ -152,7 +154,7 @@ namespace RootMotion.Demos
         private void InitiateRemote()
         {
             // Remote instance does not have a VR rig, so we use proxies for them. Positions and rotations of proxies are synced via NetworkTransforms
-            vrRig.SetActive(false);
+            vrRig.enabled = false;
 
             // Ceate IK target proxies
             var proxyRoot = new GameObject("IK Proxies").transform;

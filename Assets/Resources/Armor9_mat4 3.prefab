@@ -2445,6 +2445,8 @@ GameObject:
   - component: {fileID: 1799011468459518908}
   - component: {fileID: 5884015577742174949}
   - component: {fileID: 2198194677634263502}
+  - component: {fileID: -2758200988698885085}
+  - component: {fileID: -5439716245742507453}
   m_Layer: 9
   m_Name: Armor9_mat4 3
   m_TagString: BossEnemy
@@ -2559,14 +2561,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 1799011468459518908}
   targetTransform: {fileID: 0}
-  healthBar: {fileID: 2421944768032593798}
+  healthBar: {fileID: -5439716245742507453}
+  enemyHealth: {fileID: 26474372960577008}
   waypoints: []
   players: []
   maxFollowDistance: 50
   shootDistance: 20
-  attackWeapon: {fileID: 7832601272065871580}
+  attackWeapon: {fileID: -2758200988698885085}
   Health: 200
   inSight: 0
+  alive: 0
   currentState: 0
   currentWaypoint: 0
   audioSource: {fileID: 2198194677634263502}
@@ -2668,7 +2672,7 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Death
   m_SynchronizeLayers:
   - SynchronizeType: 2
@@ -2822,6 +2826,42 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2758200988698885085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
+  bulletTransform: {fileID: 7832601273512770184}
+  shootForce: 100
+  ammoLeft: 0
+  maxAmmo: 0
+  audioSource: {fileID: 146280007043229878}
+  audioSource2: {fileID: 5539952340051686709}
+  weaponFire: {fileID: 8300000, guid: 2a60d8d2e4715ab44af8212f1a286db0, type: 3}
+  weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
+  fireWeaponBool: 0
+  canShoot: 1
+--- !u!114 &-5439716245742507453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bb188bf3b8a0f47a1693c9c577068f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 8610496298859032055}
 --- !u!1 &1827996949366762
 GameObject:
   m_ObjectHideFlags: 0
@@ -3682,7 +3722,6 @@ GameObject:
   - component: {fileID: 3950385754355205550}
   - component: {fileID: 5333194524346351939}
   - component: {fileID: 8610496298859032055}
-  - component: {fileID: 2421944768032593798}
   m_Layer: 5
   m_Name: Health Bar
   m_TagString: Untagged
@@ -3772,19 +3811,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2421944768032593798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5987802365704521047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96bb188bf3b8a0f47a1693c9c577068f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 8610496298859032055}
 --- !u!1 &7987594984157178924
 GameObject:
   m_ObjectHideFlags: 0
@@ -4299,7 +4325,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 557148516056721407, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006, type: 3}
 --- !u!1 &2636905730684021103 stripped
 GameObject:
@@ -4505,15 +4532,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7712870402345675043}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7832601272065871580 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 557148516056721407, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,
+--- !u!4 &7832601273512770184 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 557148516908012459, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,
     type: 3}
   m_PrefabInstance: {fileID: 7712870402345675043}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2636905730684021103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

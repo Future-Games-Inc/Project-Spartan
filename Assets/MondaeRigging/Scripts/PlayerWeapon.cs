@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
 using JetBrains.Annotations;
 
-public class PlayerWeapon : MonoBehaviour
+public class PlayerWeapon : MonoBehaviourPunCallbacks
 {
     public GameObject player;
     public Transform[] spawnPoint;
@@ -30,43 +30,44 @@ public class PlayerWeapon : MonoBehaviour
 
     public bool reloadingWeapon = false;
 
-    PhotonView pV;
-
     // Start is called before the first frame update
     void Start()
     {
-        pV = GetComponent<PhotonView>();
         rotatorScript = GetComponent<Rotator>();
-        pV.RPC("RPC_Start", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
     }
 
     // Update is called once per frame
     void Update()
     {
-        pV.RPC("RPC_Update", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Update", RpcTarget.AllBuffered);
     }
 
     public void FireBullet(ActivateEventArgs arg)
     {
-        pV.RPC("RPC_Fire", RpcTarget.AllBuffered, arg);
+        photonView.RPC("RPC_Fire", RpcTarget.AllBuffered);
     }
 
     IEnumerator ReloadWeapon()
     {
-        pV.RPC("RPC_Reload",RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Reload", RpcTarget.AllBuffered);
         yield return new WaitForSeconds(2);
-        pV.RPC("RPC_Reload2", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Reload2", RpcTarget.AllBuffered);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        pV.RPC("RPC_Trigger", RpcTarget.AllBuffered, other);
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        {
+            player = other.transform.root.parent.gameObject;
+            photonView.RPC("RPC_Trigger", RpcTarget.AllBuffered);
+        }
     }
 
     IEnumerator DestroyWeapon()
     {
         yield return new WaitForSeconds(0.5f);
-        pV.RPC("RPC_Destroy", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Destroy", RpcTarget.AllBuffered);
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.Destroy(gameObject);
     }
@@ -74,9 +75,6 @@ public class PlayerWeapon : MonoBehaviour
     [PunRPC]
     void RPC_Start()
     {
-        if (!pV.IsMine)
-        { return; }
-
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -87,33 +85,20 @@ public class PlayerWeapon : MonoBehaviour
     [PunRPC]
     void RPC_Update()
     {
-        if (!pV.IsMine)
-        { return; }
-
         ammoText.text = ammoLeft.ToString();
         durabilityText.text = durability.ToString();
-
-        if (durability <= 0)
-        {
-            audioSource.PlayOneShot(weaponBreak);
-            GetComponent<XRGrabNetworkInteractable>().enabled = false;
-            StartCoroutine(DestroyWeapon());
-        }
     }
 
     [PunRPC]
-    void RPC_Fire(ActivateEventArgs args)
+    void RPC_Fire()
     {
-        if (!pV.IsMine)
-        { return; }
-
-        if (ammoLeft >= 1)
+        if (ammoLeft >= 1 && reloadingWeapon == false)
         {
             foreach (Transform t in spawnPoint)
             {
                 audioSource.PlayOneShot(weaponFire);
                 GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity);
-                spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
+                spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                 spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                 spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                 spawnedBullet.GetComponent<Rigidbody>().velocity = t.right * fireSpeed;
@@ -131,47 +116,38 @@ public class PlayerWeapon : MonoBehaviour
     [PunRPC]
     void RPC_Reload()
     {
-        if (!pV.IsMine)
-        { return; }
-
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
         durability--;
+
+        if (durability <= 0)
+        {
+            audioSource.PlayOneShot(weaponBreak);
+            GetComponent<XRGrabNetworkInteractable>().enabled = false;
+            StartCoroutine(DestroyWeapon());
+        }
     }
 
     [PunRPC]
     void RPC_Reload2()
     {
-        if (!pV.IsMine)
-        { return; }
-
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
     }
 
     [PunRPC]
-    void RPC_Trigger(Collider other)
+    void RPC_Trigger()
     {
-        if (!pV.IsMine)
-        { return; }
-
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
-        {
-            player = other.transform.parent.gameObject;
-            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
-            maxAmmo = newMaxAmmo;
-            GetComponent<Rigidbody>().isKinematic = false;
-            rotatorScript.enabled = false;
-        }
+        var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+        maxAmmo = newMaxAmmo;
+        GetComponent<Rigidbody>().isKinematic = false;
+        rotatorScript.enabled = false;
     }
 
     [PunRPC]
     void RPC_Destroy(Collider other)
     {
-        if (!pV.IsMine)
-        { return; }
-
         explosionObject.SetActive(true);
     }
 }

@@ -9,12 +9,11 @@ public class WanderingAI : MonoBehaviour
     public float wanderRadius;
     public float wanderTimer;
 
-    private Transform target;
     public NavMeshAgent agent;
     public float timer;
 
     // Use this for initialization
-    void OnEnable()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 

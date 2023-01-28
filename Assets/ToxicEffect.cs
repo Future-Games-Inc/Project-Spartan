@@ -71,7 +71,7 @@ public class ToxicEffect : MonoBehaviour
 
                 if (nearbyObjects.CompareTag("Player"))
                 {
-                    if (nearbyObjects.transform.parent.gameObject != this.gameObject.transform.parent.gameObject)
+                    if (nearbyObjects.gameObject.transform.root.parent.gameObject != this.gameObject.transform.root.parent.gameObject)
                     {
                         PlayerHealth playerDamage = nearbyObjects.GetComponent<PlayerHealth>();
                         if (playerDamage != null)
@@ -123,7 +123,7 @@ public class ToxicEffect : MonoBehaviour
 
                 if (nearbyObjects.CompareTag("Player"))
                 {
-                    if (nearbyObjects.transform.parent.gameObject != this.gameObject.transform.parent.gameObject)
+                    if (nearbyObjects.gameObject.transform.root.parent.gameObject != this.gameObject.transform.root.parent.gameObject)
                     {
                         PlayerHealth playerDamage = nearbyObjects.GetComponent<PlayerHealth>();
                         if (playerDamage != null)

@@ -6,14 +6,8 @@ using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using ExitGames.Client.Photon;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEditor.Rendering.Universal;
 using UnityEngine.XR;
-using ExitGames.Client.Photon.StructWrapping;
-using Unity.VisualScripting;
-using Pixelplacement.TweenSystem;
-using Invector.vCharacterController.AI;
 using LootLocker.Requests;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -52,7 +46,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject[] fedEmblem;
     public GameObject[] chaosEmblem;
     public GameObject[] muerteEmblem;
-    public PhotonView photonView;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -146,7 +139,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public RespawnUI respawnUI;
     public EnemyKillUI enemyKillUI;
     public PlayerKillUI playerKillUI;
-    public PlayerHealthBar[] healthBar;
+    public PlayerHealthBar healthBar;
 
     public SkinnedMeshRenderer[] characterSkins;
 
@@ -167,7 +160,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
         object storedPlayerHealth;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out storedPlayerHealth) && (int)storedPlayerHealth >= 1)
             Health = 100 + ((int)storedPlayerHealth * 10);
@@ -206,7 +198,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         stealth = false;
         doubleAgent = false;
         winCanvas.SetActive(false);
-        photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, Health);
+        photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, Health);
         //maxHealth = SetMaxHealthFromHealthLevel();
         //multiplayerHealth.SetMaxHealth(maxHealth);
 
@@ -233,7 +225,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         object storedHealthRegen;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_REGEN, out storedHealthRegen) && (int)storedHealthRegen >= 1)
             photonView.RPC("RPC_HealthRegen", RpcTarget.All);
-            //InvokeRepeating("HealthRegen", 10, 5);
+        //InvokeRepeating("HealthRegen", 10, 5);
 
         object cints;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out cints))
@@ -379,8 +371,72 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             EnemyGame();
         }
 
+        if (toxicTimer <= toxicEffectTimer && toxicEffectActive == true)
+        {
+            photonView.RPC("RPC_Abilities1True", RpcTarget.AllBuffered);
+        }
+        else if (toxicTimer > toxicEffectTimer && toxicEffectActive == true)
+        {
+            photonView.RPC("RPC_Abilities1False", RpcTarget.AllBuffered);
+        }
 
-        photonView.RPC("RPC_Abilities", RpcTarget.AllBuffered);
+        if (shieldTimer <= shieldEffectTimer && shieldActive == true)
+        {
+            photonView.RPC("RPC_Abilities2True", RpcTarget.AllBuffered);
+        }
+        else if (shieldTimer > shieldEffectTimer && shieldActive == true)
+        {
+            photonView.RPC("RPC_Abilities2False", RpcTarget.AllBuffered);
+        }
+
+        if (bulletImproved == true)
+        {
+            photonView.RPC("RPC_Abilities3True", RpcTarget.AllBuffered);
+        }
+        else if (upgradeTimer > bulletXPTimer && bulletImproved == true)
+        {
+            photonView.RPC("RPC_Abilities3False", RpcTarget.AllBuffered);
+        }
+
+        if (leechEffect == true && leechEffectTimer <= leechEffectDuration)
+        {
+            photonView.RPC("RPC_Abilities4True", RpcTarget.AllBuffered);
+        }
+        else if (leechEffectTimer > leechEffectDuration || leechEffect == false)
+        {
+            photonView.RPC("RPC_Abilities4False", RpcTarget.AllBuffered);
+        }
+
+        if (activeCamo == true && activeCamoTimer <= activeCamoDuration)
+        {
+            photonView.RPC("RPC_Abilities5True", RpcTarget.AllBuffered);
+        }
+        else if (activeCamoTimer > activeCamoDuration || activeCamo == false)
+        {
+            photonView.RPC("RPC_Abilities5False", RpcTarget.AllBuffered);
+        }
+
+        if (stealth == true && stealthTimer <= stealthDuration)
+        {
+            photonView.RPC("RPC_Abilities6True", RpcTarget.AllBuffered);
+        }
+        else if (stealthTimer > stealthDuration || stealth == false)
+        {
+            photonView.RPC("RPC_Abilities6False", RpcTarget.AllBuffered);
+        }
+
+        if (doubleAgent == true && doubleAgentTimer <= doubleAgentDuration)
+        {
+            photonView.RPC("RPC_Abilities7True", RpcTarget.AllBuffered);
+        }
+        else if (doubleAgentTimer > doubleAgentDuration || doubleAgent == false)
+        {
+            photonView.RPC("RPC_Abilities7False", RpcTarget.AllBuffered);
+        }
+
+        photonView.RPC("RPC_Abilities8", RpcTarget.AllBuffered);
+
+        photonView.RPC("RPC_Abilities9", RpcTarget.AllBuffered);
 
         if (factionExtraction == true)
         {
@@ -636,19 +692,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (photonEvent.Code == ExtractionGameMode)
         {
-            string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
+            string name = spawnManager.winnerPlayer.GetComponent<PhotonView>().Owner.NickName;
             StartCoroutine(DisplayMessage($"{name} has extracted the reactor for their faction. Returning to Faction Base."));
         }
 
         if (photonEvent.Code == PlayerGameMode)
         {
-            string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
+            string name = spawnManager.winnerPlayer.GetComponent<PhotonView>().Owner.NickName;
             StartCoroutine(DisplayMessage($"{name} has defeated {playersKilled} players and won the territory. Returning to Faction Base."));
         }
 
         if (photonEvent.Code == EnemyGameMode)
         {
-            string name = spawnManager.winnerPlayer.GetComponentInParent<PhotonView>().Owner.NickName;
+            string name = spawnManager.winnerPlayer.GetComponent<PhotonView>().Owner.NickName;
             StartCoroutine(DisplayMessage($"{name} has defeated {enemiesKilled} enemies and won the territory. Returning to Faction Base."));
         }
 
@@ -1067,14 +1123,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         Health -= damage;
-        foreach (PlayerHealthBar health in healthBar)
-            health.SetCurrentHealth(Health);
+        healthBar.SetCurrentHealth(Health);
 
         if (Health <= 0 && playerLives > 1 && alive == true)
         {
             alive = false;
             StartCoroutine(PlayerRespawn());
         }
+
         else if (Health <= 0 && playerLives == 1 && alive == true)
         {
             alive = false;
@@ -1091,8 +1147,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         Health += health;
-        foreach (PlayerHealthBar healthAdd in healthBar)
-            healthAdd.SetCurrentHealth(Health);
+        healthBar.SetCurrentHealth(Health);
     }
 
     [PunRPC]
@@ -1106,8 +1161,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         player.transform.position = spawnManager.spawnPosition;
         playerLives -= 1;
         Health = 125;
-        foreach (PlayerHealthBar health in healthBar)
-            health.SetMaxHealth(Health);
+        healthBar.SetMaxHealth(Health);
         CheckHealthStatus();
         alive = true;
     }
@@ -1120,10 +1174,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             return;
         }
 
-        maxHealth = SetMaxHealthFromHealthLevel();
+        maxHealth = Health;
         multiplayerHealth.SetMaxHealth(maxHealth);
-        foreach (PlayerHealthBar health in healthBar)
-            health.SetMaxHealth(maxHealth);
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     [PunRPC]
@@ -1134,138 +1187,159 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_Abilities()
+    void RPC_Abilities1True()
     {
-        if(!photonView.IsMine)
-        { return; }
+        toxicEffect.SetActive(true);
+        toxicTimer += Time.deltaTime;
+    }
 
-        if (toxicTimer <= toxicEffectTimer && toxicEffectActive == true)
-        {
-            toxicEffect.SetActive(true);
-            toxicTimer += Time.deltaTime;
-        }
-        if (toxicTimer > toxicEffectTimer && toxicEffectActive == true)
-        {
-            toxicEffect.SetActive(false);
-            toxicEffectActive = false;
-        }
+    [PunRPC]
+    void RPC_Abilities1False()
+    {
+        toxicEffect.SetActive(false);
+        toxicEffectActive = false;
+    }
 
-        if (shieldTimer <= shieldEffectTimer && shieldActive == true)
-        {
-            bubbleShield.SetActive(true);
-            shieldTimer += Time.deltaTime;
-        }
-        if (shieldTimer > shieldEffectTimer && shieldActive == true)
-        {
-            bubbleShield.SetActive(false);
-            shieldActive = false;
-        }
+    [PunRPC]
+    void RPC_Abilities2True()
+    {
+        bubbleShield.SetActive(true);
+        shieldTimer += Time.deltaTime;
+    }
 
-        if (bulletImproved == true)
-        {
-            bulletModifier = startingBulletModifier + bulletXPModifier;
-            upgradeTimer += Time.deltaTime;
-        }
-        if (upgradeTimer > bulletXPTimer && bulletImproved == true)
-        {
-            bulletModifier = startingBulletModifier;
-            bulletImproved = false;
-        }
+    [PunRPC]
+    void RPC_Abilities2False()
+    {
+        bubbleShield.SetActive(false);
+        shieldActive = false;
+    }
 
-        if (leechEffect == true && leechEffectTimer <= leechEffectDuration)
-        {
-            leechEffectTimer += Time.deltaTime;
-            leechBubble.SetActive(true);
-        }
-        if (leechEffectTimer > leechEffectDuration || leechEffect == false)
-        {
-            leechBubble.SetActive(false);
-            leechEffect = false;
-        }
+    [PunRPC]
+    void RPC_Abilities3True()
+    {
+        bulletModifier = startingBulletModifier + bulletXPModifier;
+        upgradeTimer += Time.deltaTime;
+    }
 
-        if (activeCamo == true && activeCamoTimer <= activeCamoDuration)
+    [PunRPC]
+    void RPC_Abilities3False()
+    {
+        bulletModifier = startingBulletModifier;
+        bulletImproved = false;
+    }
+
+    [PunRPC]
+    void RPC_Abilities4True()
+    {
+        leechEffectTimer += Time.deltaTime;
+        leechBubble.SetActive(true);
+    }
+
+    [PunRPC]
+    void RPC_Abilities4False()
+    {
+        leechBubble.SetActive(false);
+        leechEffect = false;
+    }
+
+    [PunRPC]
+    void RPC_Abilities5True()
+    {
+        activeCamoTimer += Time.deltaTime;
+        if (!photonView.IsMine)
         {
-            activeCamoTimer += Time.deltaTime;
-            if (!photonView.IsMine)
+            foreach (SkinnedMeshRenderer skin in characterSkins)
             {
-                foreach (SkinnedMeshRenderer skin in characterSkins)
-                {
-                    skin.enabled = false;
-                }
+                skin.enabled = false;
             }
         }
-        if (activeCamoTimer > activeCamoDuration || activeCamo == false)
-        {
-            if (!photonView.IsMine || photonView.IsMine)
-            {
-                foreach (SkinnedMeshRenderer skin in characterSkins)
-                {
-                    skin.enabled = true;
-                }
-            }
-            activeCamo = false;
-        }
+    }
 
-        if (stealth == true && stealthTimer <= stealthDuration)
+    [PunRPC]
+    void RPC_Abilities5False()
+    {
+        activeCamo = false;
+        if (!photonView.IsMine || photonView.IsMine)
         {
-            stealthTimer += Time.deltaTime;
-            if (!photonView.IsMine)
+            foreach (SkinnedMeshRenderer skin in characterSkins)
             {
-                foreach (GameObject minimap in minimapSymbol)
-                {
-                    minimap.SetActive(false);
-                }
+                skin.enabled = true;
             }
         }
-        if (stealthTimer > stealthDuration || stealth == false)
+    }
+
+    [PunRPC]
+    void RPC_Abilities6True()
+    {
+        stealthTimer += Time.deltaTime;
+        if (!photonView.IsMine)
         {
             foreach (GameObject minimap in minimapSymbol)
             {
-                minimap.SetActive(true);
+                minimap.SetActive(false);
             }
-            stealth = false;
         }
+    }
 
-        if (doubleAgent == true && doubleAgentTimer <= doubleAgentDuration)
+    [PunRPC]
+    void RPC_Abilities6False()
+    {
+        stealth = false;
+        foreach (GameObject minimap in minimapSymbol)
         {
-            doubleAgentTimer += Time.deltaTime;
-            if (!photonView.IsMine)
-            {
-                foreach (GameObject minimap in minimapSymbol)
-                {
-                    minimap.GetComponent<SpriteRenderer>().color = minimapStealth;
-                }
-            }
+            minimap.SetActive(true);
         }
-        if (doubleAgentTimer > doubleAgentDuration || doubleAgent == false)
+    }
+
+    [PunRPC]
+    void RPC_Abilities7True()
+    {
+        doubleAgentTimer += Time.deltaTime;
+        if (!photonView.IsMine)
         {
             foreach (GameObject minimap in minimapSymbol)
             {
-                minimap.GetComponent<SpriteRenderer>().color = minimapStart;
+                minimap.GetComponent<SpriteRenderer>().color = minimapStealth;
             }
-            doubleAgent = false;
         }
+    }
 
+    [PunRPC]
+    void RPC_Abilities7False()
+    {
+        foreach (GameObject minimap in minimapSymbol)
+        {
+            minimap.GetComponent<SpriteRenderer>().color = minimapStart;
+        }
+        doubleAgent = false;
+    }
+
+    [PunRPC]
+    void RPC_Abilities8()
+    {
         if (aiCompanion == true)
         {
             aiCompanionDrone.SetActive(true);
         }
         else
             aiCompanionDrone.SetActive(false);
+    }
 
+    [PunRPC]
+    void RPC_Abilities9()
+    {
         if (decoyDeploy == true)
         {
             decoySpawner.SetActive(true);
         }
         else
             decoySpawner.SetActive(false);
-
     }
 
     [PunRPC]
     void RPC_HealthRegen()
     {
-        if(!photonView.IsMine)
+        if (!photonView.IsMine)
         { return; }
 
         InvokeRepeating("HealthRegen", 0f, 3f);

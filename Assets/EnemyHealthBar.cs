@@ -10,11 +10,23 @@ public class EnemyHealthBar : MonoBehaviourPunCallbacks
 
     public void SetMaxHealth(int maxHealth)
     {
+        photonView.RPC("RPC_SetMax", RpcTarget.AllBuffered, maxHealth);
+    }
+
+    public void SetCurrentHealth(int currentHealth)
+    {
+        photonView.RPC("RPC_SetCurrent", RpcTarget.AllBuffered, currentHealth);
+    }
+
+    [PunRPC]
+    void RPC_SetMax(int maxHealth)
+    {
         slider.maxValue = maxHealth;
         slider.value = maxHealth;
     }
 
-    public void SetCurrentHealth(int currentHealth)
+    [PunRPC]
+    void RPC_SetCurrent(int currentHealth)
     {
         slider.value = currentHealth;
     }

@@ -1817,6 +1817,8 @@ GameObject:
   - component: {fileID: 1132709375}
   - component: {fileID: 1680891953128894037}
   - component: {fileID: 7794985527292991259}
+  - component: {fileID: -3583159218163145941}
+  - component: {fileID: 4805049756606791974}
   m_Layer: 9
   m_Name: enemyAI 2
   m_TagString: Enemy
@@ -1883,14 +1885,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 1132709368}
   targetTransform: {fileID: 0}
-  healthBar: {fileID: 8267432284895704612}
+  healthBar: {fileID: 4805049756606791974}
+  enemyHealth: {fileID: 1132709375}
   waypoints: []
   players: []
   maxFollowDistance: 40
   shootDistance: 15
-  attackWeapon: {fileID: 1433567382}
+  attackWeapon: {fileID: -3583159218163145941}
   Health: 100
   inSight: 0
+  alive: 0
   currentState: 0
   currentWaypoint: 0
   audioSource: {fileID: 7794985527292991259}
@@ -2015,7 +2019,7 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Death
   m_SynchronizeLayers:
   - SynchronizeType: 2
@@ -2208,6 +2212,42 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3583159218163145941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
+  bulletTransform: {fileID: 45151426}
+  shootForce: 100
+  ammoLeft: 0
+  maxAmmo: 0
+  audioSource: {fileID: 3405541761694821276}
+  audioSource2: {fileID: 3641989027815078854}
+  weaponFire: {fileID: 8300000, guid: 2a60d8d2e4715ab44af8212f1a286db0, type: 3}
+  weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
+  fireWeaponBool: 0
+  canShoot: 1
+--- !u!114 &4805049756606791974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bb188bf3b8a0f47a1693c9c577068f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 8625776344707074388}
 --- !u!1 &1847022287218958
 GameObject:
   m_ObjectHideFlags: 0
@@ -2800,7 +2840,6 @@ GameObject:
   - component: {fileID: 4136794426976939148}
   - component: {fileID: 501548501959140435}
   - component: {fileID: 8625776344707074388}
-  - component: {fileID: 8267432284895704612}
   m_Layer: 5
   m_Name: Health Bar
   m_TagString: Untagged
@@ -2890,19 +2929,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8267432284895704612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3073303747439686426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96bb188bf3b8a0f47a1693c9c577068f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 8625776344707074388}
 --- !u!1 &5681051210509833845
 GameObject:
   m_ObjectHideFlags: 0
@@ -3545,20 +3571,15 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 557148516056721407, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006, type: 3}
---- !u!114 &1433567382 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 557148516056721407, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,
+--- !u!4 &45151426 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 557148516908012459, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,
     type: 3}
   m_PrefabInstance: {fileID: 557148516946863977}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5200204640060974885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5467523400129128 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 551707658316430593, guid: 6ff7f382d1d9ae44c8a7cd0bb8879006,

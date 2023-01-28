@@ -40,13 +40,11 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public AudioClip bulletHit;
     public AudioClip[] audioClip;
-    public PhotonView photonView;
 
     // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        photonView = GetComponent<PhotonView>();
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -170,12 +168,12 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     private void Attack()
     {
+        attackWeapon.fireWeaponBool = true;
         if (!inSight || directionToTarget.magnitude > shootDistance)
         {
             currentState = States.Follow;
         }
         LookAtTarget();
-        attackWeapon.Fire();
     }
 
     private void LookAtTarget()
@@ -195,7 +193,8 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.AllBuffered);
+        if (alive == true)
+            photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.AllBuffered, damage);
     }
 
     public void RandomSFX()
@@ -206,8 +205,6 @@ public class FollowAI : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EnemyHealthMax()
     {
-        if(!photonView.IsMine) { return; }
-
         healthBar.SetMaxHealth(Health);
     }
 

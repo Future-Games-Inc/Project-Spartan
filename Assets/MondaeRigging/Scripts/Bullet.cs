@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UIElements;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviourPunCallbacks
 {
     public GameObject bulletOwner;
     public PlayerHealth playerHealth;
@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
     public int bulletModifier;
 
     // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
         StartCoroutine(DestroyBullet());
     }
@@ -20,8 +20,7 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void OnCollisionEnter(Collision collision)
     {
-        if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.Destroy(gameObject);
+        StartCoroutine(DestroyBulletCollision());
     }
 
     [System.Obsolete]
@@ -29,7 +28,7 @@ public class Bullet : MonoBehaviour
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
         }
         else
         {
@@ -54,7 +53,6 @@ public class Bullet : MonoBehaviour
                 {
                     enemyDamageCrit.TakeDamage((40 * bulletModifier));
                 }
-                if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.Destroy(gameObject);
             }
 
@@ -70,7 +68,6 @@ public class Bullet : MonoBehaviour
                 {
                     enemyDamage.TakeDamage((20 * bulletModifier));
                 }
-                if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -85,7 +82,6 @@ public class Bullet : MonoBehaviour
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
                 enemyDamageCrit.TakeDamage((50 * bulletModifier));
-                if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.Destroy(gameObject);
             }
 
@@ -93,7 +89,6 @@ public class Bullet : MonoBehaviour
             {
                 DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
                 enemyDamage.TakeDamage((5 * bulletModifier));
-                if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -112,7 +107,6 @@ public class Bullet : MonoBehaviour
                     playerHealth.PlayersKilled();
                 }
                 playerDamageCrit.TakeDamage((2 * bulletModifier));
-                if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.Destroy(gameObject);
             }
 
@@ -124,7 +118,6 @@ public class Bullet : MonoBehaviour
                     playerHealth.PlayersKilled();
                 }
                 playerDamage.TakeDamage((1 * bulletModifier));
-                if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -134,7 +127,11 @@ public class Bullet : MonoBehaviour
     IEnumerator DestroyBullet()
     {
         yield return new WaitForSeconds(5);
-        if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
+    }
+    IEnumerator DestroyBulletCollision()
+    {
+        yield return new WaitForSeconds(0.75f);
+        PhotonNetwork.Destroy(gameObject);
     }
 }

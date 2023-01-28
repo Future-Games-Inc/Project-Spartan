@@ -268,9 +268,7 @@ GameObject:
   - component: {fileID: 2116886079164345532}
   - component: {fileID: 2116886079164345534}
   - component: {fileID: 2116886079164345533}
-  - component: {fileID: 2463417326141554626}
   - component: {fileID: 2539974011208384431}
-  - component: {fileID: 4050950407201205893}
   - component: {fileID: 654888798906182132}
   - component: {fileID: 5082329255842974299}
   - component: {fileID: 6753258051581179236}
@@ -370,27 +368,11 @@ MonoBehaviour:
   spawn2: {fileID: 7466674238944524864}
   spawn3: {fileID: 7466674239025026002}
   cacheActive: 0
-  cacheBase: {fileID: 1686083294855711062, guid: 635ff30e42c55174c94cf8bf24d62c8e,
-    type: 3}
+  cacheBase: {fileID: 5650217146286884700}
   spawnPosition: {fileID: 2116886079164345531}
   matchProps: {fileID: 0}
-  photonView: {fileID: 0}
---- !u!114 &2463417326141554626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597476049174607361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  cacheAudio: {fileID: 5082329255842974299}
+  cacheClip: {fileID: 8300000, guid: f5a70a3f334525e4bb12666da1ebe1ab, type: 3}
 --- !u!114 &2539974011208384431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,34 +390,11 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 0
-  ObservedComponents:
-  - {fileID: 2463417326141554626}
-  - {fileID: 4050950407201205893}
+  observableSearch: 2
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &4050950407201205893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597476049174607361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 2
-    Name: Open
-  m_SynchronizeLayers:
-  - SynchronizeType: 2
-    LayerIndex: 0
 --- !u!54 &654888798906182132
 Rigidbody:
   m_ObjectHideFlags: 0

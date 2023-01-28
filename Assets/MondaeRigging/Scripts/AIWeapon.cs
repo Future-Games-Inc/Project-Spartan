@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class AIWeapon : MonoBehaviour
+public class AIWeapon : MonoBehaviourPunCallbacks
 {
     public GameObject bullet;
     public Transform bulletTransform;
@@ -17,20 +17,12 @@ public class AIWeapon : MonoBehaviour
     public AudioClip weaponFire;
     public AudioClip weaponReload;
 
-    public bool fireWeaponBool;
+    public bool fireWeaponBool = false;
+    public bool canShoot = true;
     // Start is called before the first frame update
     void Start()
     {
-        fireWeaponBool = true;
-        if (this.transform.parent.gameObject.tag == "Enemy")
-        {
-            maxAmmo = 10;
-        }
-        else if (this.transform.parent.gameObject.tag == "BossEnemy")
-        {
-            maxAmmo = 15;
-        }
-        ammoLeft = maxAmmo;
+        photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
     }
 
     // Update is called once per frame
@@ -39,36 +31,39 @@ public class AIWeapon : MonoBehaviour
 
     }
 
-    public void Fire()
-    {     
-        if (ammoLeft >= 1)
+    IEnumerator Fire()
+    {
+        while (true)
         {
-            fireWeaponBool = true;
-            if (!audioSource.isPlaying)
+            if (ammoLeft >= 1 && fireWeaponBool == true && canShoot == true)
             {
-                audioSource.PlayOneShot(weaponFire);
-            }
-            if (PhotonNetwork.IsMasterClient)
-            {
+                if (!audioSource.isPlaying)
+                {
+                    photonView.RPC("RPC_ShootAudio", RpcTarget.AllBuffered);
+                }
                 GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity);
-                if (this.transform.parent.gameObject.tag == "Enemy")
+                if (this.gameObject.tag == "Enemy")
                 {
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(0, 3);
                 }
-                else if (this.transform.parent.gameObject.tag == "BossEnemy")
+                else if (this.gameObject.tag == "BossEnemy")
                 {
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(2, 5);
                 }
                 shootForce = (int)Random.Range(40, 75);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.right * shootForce;
-            }
-            ammoLeft--;
-        }
 
-        else if(ammoLeft >= 0)
-        {
-            fireWeaponBool = false;
-            StartCoroutine(ReloadWeapon());
+                ammoLeft--;
+                yield return new WaitForSeconds(Random.Range(0.1f, 0.54f));
+            }
+
+            else if (ammoLeft >= 0)
+            {
+                canShoot = false;
+                StartCoroutine(ReloadWeapon());
+            }
+
+            yield return null;
         }
     }
 
@@ -77,11 +72,45 @@ public class AIWeapon : MonoBehaviour
         yield return new WaitForSeconds(0);
         if (!audioSource2.isPlaying)
         {
-            audioSource2.PlayOneShot(weaponReload);
+            photonView.RPC("RPC_Reload1", RpcTarget.AllBuffered);
         }
         yield return new WaitForSeconds(2);
-        ammoLeft = maxAmmo;
-        fireWeaponBool = true;
+        photonView.RPC("RPC_Reload2", RpcTarget.AllBuffered);
     }
+
+    [PunRPC]
+    void RPC_Start()
+    {
+        if (gameObject.tag == "Enemy")
+        {
+            maxAmmo = 10;
+        }
+        else if (gameObject.tag == "BossEnemy")
+        {
+            maxAmmo = 15;
+        }
+        ammoLeft = maxAmmo;
+        StartCoroutine(Fire());
+    }
+
+    [PunRPC]
+    void RPC_ShootAudio()
+    {
+        audioSource.PlayOneShot(weaponFire);
+    }
+
+    [PunRPC]
+    void RPC_Reload1()
+    {
+        audioSource2.PlayOneShot(weaponReload);
+    }
+
+    [PunRPC]
+    void RPC_Reload2()
+    {
+        ammoLeft = maxAmmo;
+        canShoot = true;
+    }
+
 
 }

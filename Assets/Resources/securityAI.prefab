@@ -1803,6 +1803,8 @@ GameObject:
   - component: {fileID: 3999304296534623308}
   - component: {fileID: 2584860748200865684}
   - component: {fileID: 932198695158471982}
+  - component: {fileID: 7761508669064446960}
+  - component: {fileID: 2641715861135947261}
   m_Layer: 9
   m_Name: securityAI
   m_TagString: Security
@@ -1974,7 +1976,7 @@ MonoBehaviour:
   audioSource: {fileID: 932198695158471982}
   bulletHit: {fileID: 8300000, guid: bef3e5c3d3a13f5468e1aaacbe181e22, type: 3}
   explosionEffect: {fileID: 1959557837182592902}
-  healthBar: {fileID: 9005800890101338604}
+  healthBar: {fileID: 2641715861135947261}
   audioClip:
   - {fileID: 8300000, guid: c1aab5187857fef49a141537717f66d5, type: 3}
   - {fileID: 8300000, guid: 523d453c6aa986b4aa30d7f0c3e52267, type: 3}
@@ -1989,7 +1991,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8d4851574d898e3489aeed0ae257a80f, type: 3}
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
   agent: {fileID: 0}
-  photonView: {fileID: 8298710489907778390}
 --- !u!54 &2584860748200865684
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2103,6 +2104,40 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7761508669064446960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3941197441095112601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e9e2262e05e1884082e0044932123b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyAI: []
+  alarmSource: {fileID: 5015605944075072760}
+  alarmClip: {fileID: 8300000, guid: bf387dbe6b242b44caf2efe279be38c8, type: 3}
+  securityDrone: {fileID: 3941197441095112601}
+  detectedPlayer: {fileID: 0}
+  beamMaterial: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
+  beamColor: {r: 0, g: 0.78039217, b: 1, a: 0}
+  lost: 1
+  lostTimer: 0
+--- !u!114 &2641715861135947261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3941197441095112601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bb188bf3b8a0f47a1693c9c577068f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 7410791071603449856}
 --- !u!1 &4935353737761465564
 GameObject:
   m_ObjectHideFlags: 0
@@ -2114,7 +2149,6 @@ GameObject:
   - component: {fileID: 2721068179967291893}
   - component: {fileID: 8032057829694070524}
   - component: {fileID: 7410791071603449856}
-  - component: {fileID: 9005800890101338604}
   m_Layer: 5
   m_Name: Health Bar
   m_TagString: Untagged
@@ -2204,19 +2238,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &9005800890101338604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4935353737761465564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96bb188bf3b8a0f47a1693c9c577068f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 7410791071603449856}
 --- !u!1 &5015605943548918868
 GameObject:
   m_ObjectHideFlags: 0
@@ -7453,7 +7474,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5015605944075072761
+--- !u!114 &6471531943108693586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7462,17 +7483,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5285654596892484075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e9e2262e05e1884082e0044932123b4, type: 3}
+  m_Script: {fileID: 11500000, guid: dc59c645be0fce34784fdac1bcd6fe2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyAI: []
-  alarmSource: {fileID: 5015605944075072760}
-  alarmClip: {fileID: 8300000, guid: bf387dbe6b242b44caf2efe279be38c8, type: 3}
-  securityDrone: {fileID: 3941197441095112601}
-  detectedPlayer: {fileID: 0}
-  beamMaterial: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
-  beamColor: {r: 0, g: 0.78039217, b: 1, a: 0}
-  lost: 1
+  securityBeam: {fileID: 7761508669064446960}
 --- !u!1001 &8003896152875078879
 PrefabInstance:
   m_ObjectHideFlags: 0

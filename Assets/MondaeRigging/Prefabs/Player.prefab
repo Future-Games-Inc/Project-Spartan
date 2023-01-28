@@ -4414,8 +4414,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localXRRigGameObject: {fileID: 3552992301284597843}
-  localVRIK: {fileID: 788016450680650530}
   myCamera: {fileID: 0}
+  playerMovement: {fileID: 0}
+  dash: {fileID: 0}
+  punPlayers: []
   AvatarModelPrefabs:
   - {fileID: 2456553943162227375}
   - {fileID: 0}
@@ -4445,6 +4447,12 @@ MonoBehaviour:
   - {fileID: 0}
   playerNameText:
   - {fileID: 0}
+  characterFaction: 
+  cyberEmblem: []
+  cintEmblem: []
+  fedEmblem: []
+  chaosEmblem: []
+  muerteEmblem: []
 --- !u!114 &8109130112198650235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4457,6 +4465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8570384d9f6a6f142842e20f0346718e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PhotonView: {fileID: 0}
   generalVRPlayerTransform: {fileID: 3552992301284597846}
   mainAvatarTransform: {fileID: 5446181138759397107}
   headTransform: {fileID: 1519343566460192498}

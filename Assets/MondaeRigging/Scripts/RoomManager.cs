@@ -22,7 +22,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI joinAsInfo;
 
     public int mapLevel;
-    public int levelDifference = 2;
 
     public string randomRoomName;
 
@@ -42,7 +41,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        joinAsInfo.text = "Joining as React: " + PhotonNetwork.NickName;
+        joinAsInfo.text = "Joining Room with Alias " + PhotonNetwork.NickName;
     }
 
     #region UI Callback Methods
@@ -161,19 +160,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 {
                     PhotonNetwork.LoadLevel("1Multiplayer");
                 }
-                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2)
+                else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2)
                 {
                     PhotonNetwork.LoadLevel("2Multiplayer");
                 }
-                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3)
+                else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3)
                 {
                     PhotonNetwork.LoadLevel("3Multiplayer");
                 }
-                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4)
+                else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4)
                 {
                     PhotonNetwork.LoadLevel("4Multiplayer");
                 }
-                if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5)
+                else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5)
                 {
                     PhotonNetwork.LoadLevel("5Multiplayer");
                 }
@@ -207,22 +206,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
                     occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
                     occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
                     occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
                     occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
@@ -237,22 +236,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
                     occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
                     occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
                     occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
                     occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
@@ -267,22 +266,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
                     occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
                     occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
                     occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
                     occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
@@ -297,22 +296,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
                     occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
                     occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
                     occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }
 
-                if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
+                else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
                     occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
                 }

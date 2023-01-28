@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class SpawnManager1 : MonoBehaviour
+public class SpawnManager1 : MonoBehaviourPunCallbacks
 {
     public GameObject[] enemyAI;
     public GameObject[] enemyBoss;
@@ -15,8 +15,6 @@ public class SpawnManager1 : MonoBehaviour
     public Transform[] enemyDrop;
     public Transform[] reactorDrop;
     public Transform[] healthDrop;
-
-    PhotonView pV;
 
     public int enemyCount;
     public int securityCount;
@@ -36,7 +34,7 @@ public class SpawnManager1 : MonoBehaviour
 
     void Start()
     {
-        pV = GetComponent<PhotonView>();
+        
     }
 
     private void Awake()
