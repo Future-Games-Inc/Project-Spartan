@@ -77,7 +77,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         {
             spawnEnemy = false;
             GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)].gameObject;
-            PhotonNetwork.InstantiateRoomObject(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             enemyCount += 1;
             yield return new WaitForSeconds(10f);
             spawnEnemy = true;
@@ -90,7 +90,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         while (securityCount < securityCountMax)
         {
             spawnSecurity = false;
-            PhotonNetwork.InstantiateRoomObject(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             securityCount += 1;
             yield return new WaitForSeconds(15f);
             spawnSecurity = true;
@@ -103,7 +103,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         while (reactorCount < reactorCountMax)
         {
             spawnReactor = false;
-            PhotonNetwork.InstantiateRoomObject(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity);
             reactorCount += 1;
             yield return new WaitForSeconds(30f);
             spawnReactor = true;
@@ -115,7 +115,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         while (healthCount < healthCountMax)
         {
             spawnHealth = false;
-            PhotonNetwork.InstantiateRoomObject(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity);
             healthCount += 1;
             yield return new WaitForSeconds(35f);
             spawnHealth = true;
@@ -127,7 +127,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         {
             spawnBoss = false;
             GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)].gameObject;
-            PhotonNetwork.InstantiateRoomObject(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
             enemiesKilled = 2;
             yield return new WaitForSeconds(45f);
             spawnBoss = true;
