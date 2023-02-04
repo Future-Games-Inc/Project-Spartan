@@ -6315,3 +6315,50 @@ Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM
 Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "FiringRange_LM0_final_HDR.lz4" "FiringRange_LM0_final_Dir.lz4
 Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/FiringRange_LM0_final.hdr" 1024
 Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/FiringRange_LM0_dir.tga" 
+2023-2-4
+Rendering UV GBuffer for Cinematic_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_Cinematic_LM0.lz4" 2 0 0 0
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_0_6" 68 0 0 batchpointlight_0_0_6.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_575205629_0" 68 0 0 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_266848939_0" 68 0 0 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_diffuse" 4 16 0 "gi_Cinematic_LM00.bin" "Cinematic_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_diffuse" 4 16 0 "gi_Cinematic_LM01.bin" "Cinematic_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_diffuse" 4 16 0 "gi_Cinematic_LM02.bin" "Cinematic_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_diffuse" 4 16 0 "gi_Cinematic_LM03.bin" "Cinematic_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_final" 84 16 0 "gi_Cinematic_LM04.bin" "Cinematic_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_final_HDR.lz4" 4 0 0 comp_indirect0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "Cinematic_LM0_final_Dir.lz4" 64 0 0 dircomp_indirect0.bin
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/Cinematic_LM0_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/Cinematic_LM0_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/Cinematic_LM0_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/Cinematic_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "Cinematic_LM0_final_HDR.lz4" "Cinematic_LM0_final_Dir.lz4
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/Cinematic_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/Cinematic_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/Cinematic_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/Cinematic_LM0_dir.tga" 
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
