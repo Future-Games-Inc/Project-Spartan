@@ -1,11 +1,9 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
-public class ReactorGrab : MonoBehaviour
+public class ReactorGrab : MonoBehaviourPunCallbacks
 {
     public PlayerHealth playerHealth;
     public Material normalMaterial;
@@ -15,14 +13,12 @@ public class ReactorGrab : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip extractionClip;
 
-    public static readonly byte ReactorExtractionTrue = 1;
-    public static readonly byte ReactorExtractionFalse = 2;
-    PhotonView pV;
+    public static readonly byte ReactorExtractionTrue = 20;
+    public static readonly byte ReactorExtractionFalse = 21;
 
     // Start is called before the first frame update
     void Start()
     {
-        pV = GetComponent<PhotonView>();
         this.GetComponent<Renderer>().material = normalMaterial;
         InvokeRepeating("ExtractionChirp", 0f, 5f);
     }
@@ -35,24 +31,30 @@ public class ReactorGrab : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        pV.RPC("RPC_TriggerEnter", RpcTarget.AllBuffered, other);
+        if (other.CompareTag("ReactorInteractor"))
+        {
+            playerHealth = other.GetComponentInParent<PlayerHealth>();
+            photonView.RPC("RPC_TriggerEnter", RpcTarget.AllBuffered);
+            photonView.RPC("RaiseEvent1", RpcTarget.All, ReactorGrab.ReactorExtractionTrue, null);
+        }
     }
-
     private void OnTriggerExit(Collider other)
     {
-        pV.RPC("RPC_TriggerExit", RpcTarget.AllBuffered, other);
+        if (other.CompareTag("ReactorInteractor"))
+        {
+            playerHealth = other.GetComponentInParent<PlayerHealth>();
+            photonView.RPC("RPC_TriggerExit", RpcTarget.AllBuffered);
+        }
     }
 
     public void ExtractionChirp()
     {
-        pV.RPC("RPC_Chirp", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Chirp", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
     void RPC_Chirp()
     {
-        if (!pV.IsMine) { return; }
-
         if (playerHealth != null && playerHealth.reactorHeld == true && !audioSource.isPlaying)
         {
             audioSource.PlayOneShot(extractionClip);
@@ -60,51 +62,43 @@ public class ReactorGrab : MonoBehaviour
     }
 
     [PunRPC]
-    void RPC_TriggerExit(Collider other)
+    void RPC_TriggerExit()
     {
-        if (!pV.IsMine) { return; }
-
-        if (other.CompareTag("ReactorInteractor"))
-        {
-            playerHealth = other.GetComponentInParent<PlayerHealth>();
-            playerHealth.reactorHeld = false;
-            this.GetComponent<Renderer>().material = normalMaterial;
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                PhotonNetwork.RaiseEvent(ReactorExtractionFalse, null, raiseEventOptions, sendOptions);
-            }
-        }
+        playerHealth.reactorHeld = false;
+        this.GetComponent<Renderer>().material = normalMaterial;
+        photonView.RPC("RaiseEvent2", RpcTarget.All, ReactorGrab.ReactorExtractionFalse, null);
     }
 
     [PunRPC]
-    void RPC_TriggerEnter(Collider other)
+    void RPC_TriggerEnter()
     {
-        if (!pV.IsMine) { return; }
+        playerHealth.reactorHeld = true;
 
-        if (other.CompareTag("ReactorInteractor"))
+        if (playerHealth.reactorExtraction < 50)
         {
-            playerHealth = other.GetComponentInParent<PlayerHealth>();
-            playerHealth.reactorHeld = true;
-
-            if (playerHealth.reactorExtraction < 50)
-            {
-                this.GetComponent<Renderer>().material = mediumMaterial;
-            }
-
-            if (playerHealth.reactorExtraction >= 50)
-            {
-                this.GetComponent<Renderer>().material = criticalMaterial;
-            }
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                PhotonNetwork.RaiseEvent(ReactorExtractionTrue, null, raiseEventOptions, sendOptions);
-            }
+            this.GetComponent<Renderer>().material = mediumMaterial;
         }
+
+        if (playerHealth.reactorExtraction >= 50)
+        {
+            this.GetComponent<Renderer>().material = criticalMaterial;
+        }
+    }
+
+
+    [PunRPC]
+    void RaiseEvent1(byte eventCode, object content, PhotonMessageInfo info)
+    {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
+    }
+
+    [PunRPC]
+    void RaiseEvent2(byte eventCode, object content, PhotonMessageInfo info)
+    {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
     }
 }

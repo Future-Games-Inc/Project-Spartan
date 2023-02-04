@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
-using JetBrains.Annotations;
 
 public class PlayerWeapon : MonoBehaviourPunCallbacks
 {
@@ -59,7 +57,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            player = other.transform.root.parent.gameObject;
+            player = other.transform.root.gameObject;
             photonView.RPC("RPC_Trigger", RpcTarget.AllBuffered);
         }
     }
@@ -97,11 +95,12 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
             foreach (Transform t in spawnPoint)
             {
                 audioSource.PlayOneShot(weaponFire);
-                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity);
+                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0);
+                spawnedBullet.GetComponent<Rigidbody>().velocity = transform.right * fireSpeed;
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                 spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                 spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
-                spawnedBullet.GetComponent<Rigidbody>().velocity = t.right * fireSpeed;
+
                 ammoLeft -= 1;
             }
         }
@@ -146,7 +145,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_Destroy(Collider other)
+    void RPC_Destroy()
     {
         explosionObject.SetActive(true);
     }

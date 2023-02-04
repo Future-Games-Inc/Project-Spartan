@@ -1,13 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
-using UnityEngine.UI;
 using LootLocker.Requests;
-using ExitGames.Client.Photon.StructWrapping;
-using Photon.Pun.Demo.Asteroids;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -41,7 +37,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        joinAsInfo.text = "Joining Room with Alias " + PhotonNetwork.NickName;
+        joinAsInfo.text = "Joining Room With Alias: " + PhotonNetwork.NickName;
     }
 
     #region UI Callback Methods
@@ -198,122 +194,122 @@ public class RoomManager : MonoBehaviourPunCallbacks
             room.CustomProperties.TryGetValue("PlayerLevelForRoom", out roomLevelSet);
             int roomLevel = (int)roomLevelSet;
             roomName.Add(randomRoomName);
-            if (mapLevel >= 0 && mapLevel <= 2)
+            if (roomLevel >= 0 && roomLevel <= 2)
             {
                 Debug.Log(room.Name);
                 if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
                 {
-                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
-                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
-                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
-                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
-                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
             }
 
-            else if (mapLevel > 2 && mapLevel <= 5)
+            else if (roomLevel > 2 && roomLevel <= 5)
             {
                 Debug.Log(room.Name);
                 if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
                 {
-                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
-                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
-                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
-                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
-                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
             }
 
-            else if (mapLevel > 5 && mapLevel <= 8)
+            else if (roomLevel > 5 && roomLevel <= 8)
             {
                 Debug.Log(room.Name);
                 if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
                 {
-                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
-                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
-                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
-                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
-                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
             }
 
-            else if (mapLevel > 8 && mapLevel <= 10)
+            else if (roomLevel > 8 && roomLevel <= 10)
             {
                 Debug.Log(room.Name);
                 if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER1))
                 {
-                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer1.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER2))
                 {
-                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer2.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER3))
                 {
-                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer3.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4))
                 {
-                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer4.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
 
                 else if (room.Name.Contains(MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5))
                 {
-                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World level: " + roomLevel;
+                    occupancyMultiplayer5.text = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
                 }
             }
 

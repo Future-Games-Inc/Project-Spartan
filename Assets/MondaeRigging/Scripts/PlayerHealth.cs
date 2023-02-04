@@ -1,13 +1,14 @@
-using System.Collections;
-using UnityEngine;
-using TMPro;
+using CSCore;
+using ExitGames.Client.Photon;
+using LootLocker.Requests;
 using Photon.Pun;
 using Photon.Realtime;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-using ExitGames.Client.Photon;
-using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections;
+using TMPro;
+using UnityEngine;
 using UnityEngine.XR;
-using LootLocker.Requests;
+using UnityEngine.XR.Interaction.Toolkit;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -41,11 +42,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject chaosIcon;
     public GameObject reactorIcon;
     public GameObject factionIcon;
+    public GameObject shipIcon;
     public GameObject[] cyberEmblem;
     public GameObject[] cintEmblem;
     public GameObject[] fedEmblem;
     public GameObject[] chaosEmblem;
     public GameObject[] muerteEmblem;
+    public GameObject[] playerObjects;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -130,6 +133,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip[] winClipsMale;
     public AudioClip[] winClipsFemale;
     public AudioClip roundWonClip;
+    public AudioClip reactorTaken;
+    public AudioClip downloading;
 
     public TextMeshProUGUI reactorText;
     public TextMeshProUGUI factionText;
@@ -148,13 +153,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Left Controller ButtonSource")]
     public XRNode left_HandButtonSource;
 
-    public static readonly byte ExtractionGameMode = 1;
+    public static readonly byte ExtractionGameMode  = 1;
     public static readonly byte PlayerGameMode = 2;
     public static readonly byte EnemyGameMode = 3;
-    public static readonly byte ReactorExtractionTrue = 4;
-    public static readonly byte FactionExtractionTrue = 5;
-    public static readonly byte ReactorExtractionFalse = 6;
-    public static readonly byte FactionExtractionFalse = 7;
 
     public int leaderboardID = 10220;
     // Start is called before the first frame update
@@ -198,6 +199,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         stealth = false;
         doubleAgent = false;
         winCanvas.SetActive(false);
+        shipIcon.SetActive(false);
         photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, Health);
         //maxHealth = SetMaxHealthFromHealthLevel();
         //multiplayerHealth.SetMaxHealth(maxHealth);
@@ -298,6 +300,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [System.Obsolete]
     void Update()
     {
+
+        foreach (GameObject playerObject in playerObjects)
+        {
+            if (!photonView.IsMine)
+                playerObject.SetActive(false);
+        }
         object assignment;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out assignment) && (int)assignment >= 1)
             primaryActive.SetActive(primaryPowerupTimer);
@@ -308,18 +316,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             secondaryActive.SetActive(secondaryPowerupTimer);
         else
             secondaryActive.SetActive(false);
-
-        //if (Health <= 0 && playerLives > 1 && alive == true)
-        //{
-        //    alive = false;
-        //    StartCoroutine(PlayerRespawn());
-        //}
-
-        //if (Health <= 0 && playerLives == 1 && alive == true)
-        //{
-        //    alive = false;
-        //    StartCoroutine(PlayerDeath());
-        //}
 
         if (reactorHeld == true)
         {
@@ -444,7 +440,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             factionTimer += Time.deltaTime;
             if (factionTimer > 3f)
             {
-                StartCoroutine(FactionExtraction());
+                StartCoroutine(FactionExtractionRoutine());
             }
         }
         else
@@ -498,7 +494,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             healthAdded = (health + (int)storedHealthPowerup);
         else
             healthAdded = health;
-        photonView.RPC("RPC_AddHealth", RpcTarget.AllBuffered, healthAdded);
+        photonView.RPC("RPC_GainHealth", RpcTarget.AllBuffered, healthAdded);
         CheckHealthStatus();
     }
 
@@ -511,9 +507,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(0);
         sceneFader.ScreenFade();
-        GameObject playerDeathTokenObject = PhotonNetwork.InstantiateRoomObject(deathToken.name, tokenDropLocation.position, Quaternion.identity);
+        GameObject playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 4);
-        playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction;
+        playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
         object implant;
         object node;
@@ -521,7 +517,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
                 PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
         {
-            PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity);
+            PhotonNetwork.Instantiate(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0);
         }
         yield return new WaitForSeconds(.75f);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
@@ -578,7 +574,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         reactorTimer = 0;
     }
 
-    IEnumerator FactionExtraction()
+    IEnumerator FactionExtractionRoutine()
     {
         yield return new WaitForSeconds(0);
         factionExtractionCount += 5;
@@ -708,21 +704,37 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             StartCoroutine(DisplayMessage($"{name} has defeated {enemiesKilled} enemies and won the territory. Returning to Faction Base."));
         }
 
-        if (photonEvent.Code == ReactorExtractionTrue)
+        if (photonEvent.Code == ReactorGrab.ReactorExtractionTrue)
         {
             reactorIcon.SetActive(true);
+            audioSource.PlayOneShot(reactorTaken);
         }
-        if (photonEvent.Code == FactionExtractionTrue)
+
+        if (photonEvent.Code == FactionExtraction.FactionExtractionTrue)
         {
             factionIcon.SetActive(true);
+            audioSource.PlayOneShot(downloading);
         }
-        if (photonEvent.Code == ReactorExtractionFalse)
+
+        if (photonEvent.Code == ReactorGrab.ReactorExtractionFalse)
         {
             reactorIcon.SetActive(false);
+            
         }
-        if (photonEvent.Code == FactionExtractionFalse)
+
+        if (photonEvent.Code == FactionExtraction.FactionExtractionFalse)
         {
-            factionIcon.SetActive(true);
+            factionIcon.SetActive(false);
+        }
+
+        if (photonEvent.Code == SupplyDropShip.SupplyShipArrive)
+        {
+            shipIcon.SetActive(true);
+        }
+
+        if (photonEvent.Code == SupplyDropShip.SupplyShipDestroy)
+        {
+            shipIcon.SetActive(false);
         }
     }
 
@@ -846,7 +858,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         proxBombCount--;
                     if (proxBombCount == 1)
                         proxBombCount = 3;
-                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity, 0);
                 }
                 StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
             }
@@ -860,7 +872,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         smokeBombCount--;
                     if (smokeBombCount == 1)
                         smokeBombCount = 3;
-                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity, 0);
                 }
                 StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
             }
@@ -950,7 +962,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         proxBombCount--;
                     if (proxBombCount == 1)
                         proxBombCount = 3;
-                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity, 0);
                 }
                 StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
             }
@@ -964,7 +976,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                         smokeBombCount--;
                     if (smokeBombCount == 1)
                         smokeBombCount = 3;
-                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity, 0);
                 }
                 StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
             }
@@ -1117,11 +1129,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
         Health -= damage;
         healthBar.SetCurrentHealth(Health);
 
@@ -1141,11 +1148,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_GainHealth(int health)
     {
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
         Health += health;
         healthBar.SetCurrentHealth(Health);
     }
@@ -1153,11 +1155,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Respawn()
     {
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
         player.transform.position = spawnManager.spawnPosition;
         playerLives -= 1;
         Health = 125;
@@ -1169,11 +1166,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_SetMaxHealth(int Health)
     {
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
         maxHealth = Health;
         multiplayerHealth.SetMaxHealth(maxHealth);
         healthBar.SetMaxHealth(maxHealth);
@@ -1339,9 +1331,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_HealthRegen()
     {
-        if (!photonView.IsMine)
-        { return; }
-
         InvokeRepeating("HealthRegen", 0f, 3f);
     }
 }

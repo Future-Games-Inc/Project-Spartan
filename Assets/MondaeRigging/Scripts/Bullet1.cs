@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet1 : MonoBehaviour
@@ -10,27 +9,11 @@ public class Bullet1 : MonoBehaviour
         StartCoroutine(DestroyBullet());
     }
 
-    // Update is called once per frame
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    Destroy(gameObject);
-    //}
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") || other.CompareTag("Security"))
+        if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
         {
-            float criticalChance = 30f;
-
-            //cal it at random probability
-            if (Random.Range(0, 100f) < criticalChance)
-            {
-                //critical hit here
-                Enemigo enemyDamageCrit = other.GetComponent<Enemigo>();
-                enemyDamageCrit.TakeDamage(50);
-                Destroy(gameObject);
-            }
-            Enemigo enemyDamageReg = other.GetComponent<Enemigo>();
+            FiringRangeAI enemyDamageReg = other.GetComponent<FiringRangeAI>();
             enemyDamageReg.TakeDamage(25);
             Destroy(gameObject);
         }
@@ -41,4 +24,10 @@ public class Bullet1 : MonoBehaviour
         yield return new WaitForSeconds(5);
         Destroy(gameObject);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(gameObject);
+    }
+
 }

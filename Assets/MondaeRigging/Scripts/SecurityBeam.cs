@@ -1,6 +1,5 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,12 +16,13 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     public Color beamColor;
 
     public bool lost = true;
+    public bool neverFound = true;
     public float lostTimer;
 
     // Start is called before the first frame update
     void Start()
     {
-        photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Start", RpcTarget.All);
         StartCoroutine(Lost());
     }
 
@@ -70,16 +70,15 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
 
     IEnumerator Lost()
     {
-        while(true)
+        while (true)
         {
             if (lost == false)
             {
                 NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
                 droneAgent.SetDestination(detectedPlayer.transform.position);
-                beamMaterial.color = Color.red;
             }
             lostTimer += Time.deltaTime;
-            if (lostTimer >= 10)
+            if (lostTimer >= 10 && neverFound == false)
                 StartCoroutine(LostPlayer());
             yield return null;
         }
@@ -103,18 +102,17 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     {
         lostTimer = 0;
         lost = false;
+        neverFound = false;
 
-        WanderingAI wander = securityDrone.GetComponent<WanderingAI>();
-        wander.enabled = false;
-        SecuityCamera droneCamera = securityDrone.GetComponent<SecuityCamera>();
-        droneCamera.enabled = false;
-        NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
-        droneAgent.speed = 2;
+        beamMaterial.color = Color.red;
+        securityDrone.GetComponent<WanderingAI>().enabled = false;
+        securityDrone.GetComponent<SecuityCamera>().enabled = false;
+        securityDrone.GetComponent<NavMeshAgent>().speed = 2;
         //droneAgent.SetDestination(detectedPlayer.transform.position);
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
-            FollowAI followAI = enemy.GetComponent<FollowAI>();
+            enemy.TryGetComponent<FollowAI>(out var followAI);
             followAI.targetTransform = detectedPlayer.gameObject.transform;
             followAI.maxFollowDistance = 500;
             followAI.agent.speed = 3;
@@ -126,19 +124,17 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     void RPC_LostPlayer()
     {
         lost = true;
+        neverFound = true;
 
         beamMaterial.color = beamColor;
         detectedPlayer = null;
-        WanderingAI wander = securityDrone.GetComponent<WanderingAI>();
-        wander.enabled = true;
-        SecuityCamera droneCamera = securityDrone.GetComponent<SecuityCamera>();
-        droneCamera.enabled = true;
-        NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
-        droneAgent.speed = 0.5f;
+        securityDrone.GetComponent<WanderingAI>().enabled = true;
+        securityDrone.GetComponent<SecuityCamera>().enabled = true;
+        securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f;
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
-            FollowAI followAI = enemy.GetComponent<FollowAI>();
+            enemy.TryGetComponent<FollowAI>(out var followAI);
             followAI.maxFollowDistance = 5f;
             followAI.agent.speed = 1f;
             followAI.currentWaypoint = (0 + Random.Range(0, 6)) % followAI.waypoints.Length;

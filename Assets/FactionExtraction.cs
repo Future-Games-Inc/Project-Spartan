@@ -1,13 +1,11 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
-public class FactionExtraction : MonoBehaviour
+public class FactionExtraction : MonoBehaviourPunCallbacks
 {
     public PlayerHealth playerHealth;
     public string factionExtraction;
@@ -19,151 +17,117 @@ public class FactionExtraction : MonoBehaviour
     public AudioClip bankExtracted;
     public AudioClip uploadChirp;
 
-    public static readonly byte FactionExtractionTrue = 1;
-    public static readonly byte FactionExtractionFalse = 2;
-
-    PhotonView pV;
+    public static readonly byte FactionExtractionTrue = 10;
+    public static readonly byte FactionExtractionFalse = 11;
     // Start is called before the first frame update
     void Start()
     {
-        pV = GetComponent<PhotonView>();
         InvokeRepeating("Uploading", 0f, 5f);
     }
 
-    // Update is called once per frame
-    [Obsolete]
     void Update()
     {
-        pV.RPC("RPC_FactionExtracted", RpcTarget.AllBuffered);
+        if (playerHealth != null)
+        {
+            photonView.RPC("RPC_FactionExtracted", RpcTarget.AllBuffered);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
-    {
-        pV.RPC("RPC_TriggerEnter", RpcTarget.AllBuffered, other);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        pV.RPC("RPC_TriggerExit", RpcTarget.AllBuffered, other);
-    }
-
-    [System.Obsolete]
-    public IEnumerator FactionExtracted()
-    {
-        yield return new WaitForSeconds(0);
-        pV.RPC("RPC_FactionExtraction", RpcTarget.AllBuffered);
-        yield return new WaitForSeconds(2);
-        pV.RPC("RPC_Use", RpcTarget.AllBuffered);
-    }
-    public void Uploading()
-    {
-        pV.RPC("RPC_Uploading", RpcTarget.AllBuffered);
-    }
-
-    [PunRPC]
-    void RPC_TriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             if (inUse == false && singleExtraction == false)
             {
                 playerHealth = other.GetComponent<PlayerHealth>();
-
-                if (playerHealth.CyberGangDatacard == true && singleExtraction == false)
-                {
-                    inUse = true;
-                    playerHealth.factionExtraction = true;
-                    factionExtraction = "Cyber SK Gang";
-                    singleExtraction = true;
-
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                        PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
-                    }
-                }
-
-                else if (playerHealth.MuerteDeDatacard == true && singleExtraction == false)
-                {
-                    inUse = true;
-                    playerHealth.factionExtraction = true;
-                    factionExtraction = "Muerte De Dios";
-                    singleExtraction = true;
-
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                        PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
-                    }
-                }
-
-                else if (playerHealth.ChaosDatacard == true && singleExtraction == false)
-                {
-                    inUse = true;
-                    playerHealth.factionExtraction = true;
-                    factionExtraction = "Chaos Cartel";
-                    singleExtraction = true;
-
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                        PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
-                    }
-                }
-
-                else if (playerHealth.CintSixDatacard == true && singleExtraction == false)
-                {
-                    inUse = true;
-                    playerHealth.factionExtraction = true;
-                    factionExtraction = "CintSix Cartel";
-                    singleExtraction = true;
-
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                        PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
-                    }
-                }
-
-                else if (playerHealth.FedZoneDatacard == true && singleExtraction == false)
-                {
-                    inUse = true;
-                    playerHealth.factionExtraction = true;
-                    factionExtraction = "Federation Zone Authority";
-                    singleExtraction = true;
-
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-                        PhotonNetwork.RaiseEvent(FactionExtractionTrue, null, raiseEventOptions, sendOptions);
-                    }
-                }
+                photonView.RPC("RPC_TriggerEnter", RpcTarget.AllBuffered);
             }
         }
-
     }
 
-    [PunRPC]
-    void RPC_TriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerHealth = other.GetComponent<PlayerHealth>();
-            playerHealth.factionExtraction = false;
+            photonView.RPC("RPC_TriggerExit", RpcTarget.AllBuffered);
         }
+    }
+
+    [System.Obsolete]
+    public IEnumerator FactionExtracted()
+    {
+        yield return new WaitForSeconds(0);
+        photonView.RPC("RPC_FactionExtraction", RpcTarget.AllBuffered);
+        yield return new WaitForSeconds(2);
+        photonView.RPC("RPC_Use", RpcTarget.AllBuffered);
+    }
+    public void Uploading()
+    {
+        photonView.RPC("RPC_Uploading", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    void RPC_TriggerEnter()
+    {
+        if (playerHealth.CyberGangDatacard == true && singleExtraction == false)
+        {
+            inUse = true;
+            playerHealth.factionExtraction = true;
+            factionExtraction = "Cyber SK Gang";
+            singleExtraction = true;
+
+            photonView.RPC("RaiseEvent1", RpcTarget.All, FactionExtraction.FactionExtractionTrue, null);
+        }
+
+        else if (playerHealth.MuerteDeDatacard == true && singleExtraction == false)
+        {
+            inUse = true;
+            playerHealth.factionExtraction = true;
+            factionExtraction = "Muerte De Dios";
+            singleExtraction = true;
+
+            photonView.RPC("RaiseEvent1", RpcTarget.All, FactionExtraction.FactionExtractionTrue, null);
+        }
+
+        else if (playerHealth.ChaosDatacard == true && singleExtraction == false)
+        {
+            inUse = true;
+            playerHealth.factionExtraction = true;
+            factionExtraction = "Chaos Cartel";
+            singleExtraction = true;
+
+            photonView.RPC("RaiseEvent1", RpcTarget.All, FactionExtraction.FactionExtractionTrue, null);
+        }
+
+        else if (playerHealth.CintSixDatacard == true && singleExtraction == false)
+        {
+            inUse = true;
+            playerHealth.factionExtraction = true;
+            factionExtraction = "CintSix Cartel";
+            singleExtraction = true;
+
+            photonView.RPC("RaiseEvent1", RpcTarget.All, FactionExtraction.FactionExtractionTrue, null);
+        }
+
+        else if (playerHealth.FedZoneDatacard == true && singleExtraction == false)
+        {
+            inUse = true;
+            playerHealth.factionExtraction = true;
+            factionExtraction = "Federation Zone Authority";
+            singleExtraction = true;
+
+            photonView.RPC("RaiseEvent1", RpcTarget.All, FactionExtraction.FactionExtractionTrue, null);
+        }
+    }
+
+    [PunRPC]
+    void RPC_TriggerExit()
+    {
+        playerHealth.factionExtraction = false;
         inUse = false;
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-            PhotonNetwork.RaiseEvent(FactionExtractionFalse, null, raiseEventOptions, sendOptions);
-        }
+        photonView.RPC("RaiseEvent2", RpcTarget.All, FactionExtraction.FactionExtractionFalse, null);
     }
 
     [PunRPC]
@@ -225,13 +189,25 @@ public class FactionExtraction : MonoBehaviour
     [Obsolete]
     void RPC_FactionExtracted()
     {
-        if (playerHealth != null)
+        if (playerHealth.factionExtractionCount >= 100 && playerHealth.factionExtraction == true)
         {
-            if (playerHealth.factionExtractionCount >= 100 && playerHealth.factionExtraction == true)
-            {
-                StartCoroutine(FactionExtracted());
-            }
+            StartCoroutine(FactionExtracted());
         }
     }
 
+    [PunRPC]
+    void RaiseEvent1(byte eventCode, object content, PhotonMessageInfo info)
+    {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
+    }
+
+    [PunRPC]
+    void RaiseEvent2(byte eventCode, object content, PhotonMessageInfo info)
+    {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
+    }
 }

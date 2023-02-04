@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class securitybeamdetection : MonoBehaviour
@@ -21,7 +19,7 @@ public class securitybeamdetection : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            securityBeam.detectedPlayer = other.gameObject;
+            securityBeam.detectedPlayer = other.gameObject.transform.root.gameObject;
             StartCoroutine(securityBeam.FoundPlayer());
         }
     }

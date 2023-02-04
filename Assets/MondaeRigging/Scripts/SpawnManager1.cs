@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -34,7 +33,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        
+
     }
 
     private void Awake()
@@ -45,30 +44,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (spawnEnemy == true && enemyCount < enemyCountMax)
-            {
-                StartCoroutine(EnemySpawn());
-            }
-            if (spawnSecurity == true && securityCount < securityCountMax)
-            {
-                StartCoroutine(SecuritySpawn());
-            }
-            if (spawnReactor == true && reactorCount < 1)
-            {
-                StartCoroutine(ReactorSpawn());
-            }
-            if (spawnHealth == true && healthCount < healthCountMax)
-            {
-                StartCoroutine(HealthSpawn());
-            }
-
-            if (spawnBoss == true && enemiesKilled > 5)
-            {
-                StartCoroutine(SpawnBoss());
-            }
-        }
+        photonView.RPC("RPC_Instantiate", RpcTarget.All);
     }
 
     IEnumerator EnemySpawn()
@@ -77,7 +53,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         {
             spawnEnemy = false;
             GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)].gameObject;
-            PhotonNetwork.Instantiate(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
             enemyCount += 1;
             yield return new WaitForSeconds(10f);
             spawnEnemy = true;
@@ -90,7 +66,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         while (securityCount < securityCountMax)
         {
             spawnSecurity = false;
-            PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
             securityCount += 1;
             yield return new WaitForSeconds(15f);
             spawnSecurity = true;
@@ -103,7 +79,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         while (reactorCount < reactorCountMax)
         {
             spawnReactor = false;
-            PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity, 0);
             reactorCount += 1;
             yield return new WaitForSeconds(30f);
             spawnReactor = true;
@@ -115,7 +91,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         while (healthCount < healthCountMax)
         {
             spawnHealth = false;
-            PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity, 0);
             healthCount += 1;
             yield return new WaitForSeconds(35f);
             spawnHealth = true;
@@ -127,7 +103,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         {
             spawnBoss = false;
             GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)].gameObject;
-            PhotonNetwork.Instantiate(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity);
+            PhotonNetwork.Instantiate(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
             enemiesKilled = 2;
             yield return new WaitForSeconds(45f);
             spawnBoss = true;
@@ -156,5 +132,31 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     public void RPC_UpdateEnemyCount()
     {
         enemiesKilled++;
+    }
+
+    [PunRPC]
+    void RPC_Instantiate()
+    {
+        if (spawnEnemy == true && enemyCount < enemyCountMax)
+        {
+            StartCoroutine(EnemySpawn());
+        }
+        if (spawnSecurity == true && securityCount < securityCountMax)
+        {
+            StartCoroutine(SecuritySpawn());
+        }
+        if (spawnReactor == true && reactorCount < 1)
+        {
+            StartCoroutine(ReactorSpawn());
+        }
+        if (spawnHealth == true && healthCount < healthCountMax)
+        {
+            StartCoroutine(HealthSpawn());
+        }
+
+        if (spawnBoss == true && enemiesKilled > 5)
+        {
+            StartCoroutine(SpawnBoss());
+        }
     }
 }

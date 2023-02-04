@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +18,6 @@ public class PowerUpBuy : MonoBehaviour
     private void Start()
     {
         powerUpBought = false;
-        powerupButtonAssign = 0;
         UpdatePowerups();
     }
 
@@ -39,15 +36,13 @@ public class PowerUpBuy : MonoBehaviour
         skillTree.saveData.UpdateSkills(-cost);
         powerUpBought = true;
         skillTree.powerUpCount++;
+        skillTree.powerupButtonAssign++;
 
-        if (powerupButtonAssign == 0)
-        {
-            powerupButtonAssign = 1;
-        }
-        else if (powerupButtonAssign == 1)
-        {
+        if(powerupButtonAssign == 1)
             powerupButtonAssign = 2;
-        }
+        if (powerupButtonAssign == 0)
+            powerupButtonAssign = 1;
+
         UpdatePowerups();
     }
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -41,7 +40,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 {
                     photonView.RPC("RPC_ShootAudio", RpcTarget.AllBuffered);
                 }
-                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity);
+                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity, 0);
                 if (this.gameObject.tag == "Enemy")
                 {
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(0, 3);

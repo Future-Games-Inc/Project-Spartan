@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using TMPro;
+using Photon.Pun;
 
 public class SkillTree : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class SkillTree : MonoBehaviour
 
     public int[] SkillLevels;
     public int[] SkillCaps;
+    public int powerupButtonAssign;
     //public string[] SkillNames;
     //public string[] SkillDescriptions;
 
@@ -44,6 +44,7 @@ public class SkillTree : MonoBehaviour
     {
         initialLoad = true;
         powerUpCount = 0f;
+        powerupButtonAssign = 0;
 
         SkillLevels = new int[6];
         SkillCaps = new[] { 7, 5, 5, 3, 3, 1, };
@@ -76,5 +77,11 @@ public class SkillTree : MonoBehaviour
         if (!audioSource.isPlaying && playAudio <= 70 && initialLoad == false)
             audioSource.PlayOneShot(audioClip[(int)Random.Range(0, audioClip.Length)]);
         initialLoad = false;
+    }
+
+    public void SetPowerUp()
+    {
+        ExitGames.Client.Photon.Hashtable buttonAssign = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BUTTON_ASSIGN, powerupButtonAssign } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(buttonAssign);
     }
 }

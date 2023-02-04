@@ -44,14 +44,14 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 //critical hit here
                 FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-                if (enemyDamageCrit.Health <= (40 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled();
-                    enemyDamageCrit.TakeDamage((40 * bulletModifier));
+                    enemyDamageCrit.TakeDamage((20 * bulletModifier));
                 }
-                else if (enemyDamageCrit.Health > (40 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
-                    enemyDamageCrit.TakeDamage((40 * bulletModifier));
+                    enemyDamageCrit.TakeDamage((20 * bulletModifier));
                 }
                     PhotonNetwork.Destroy(gameObject);
             }
@@ -59,14 +59,14 @@ public class Bullet : MonoBehaviourPunCallbacks
             else
             {
                 FollowAI enemyDamage = other.GetComponent<FollowAI>();
-                if (enemyDamage.Health <= (20 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+                if (enemyDamage.Health <= (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled();
-                    enemyDamage.TakeDamage((20 * bulletModifier));
+                    enemyDamage.TakeDamage((10 * bulletModifier));
                 }
-                else if (enemyDamage.Health > (20 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+                else if (enemyDamage.Health > (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                 {
-                    enemyDamage.TakeDamage((20 * bulletModifier));
+                    enemyDamage.TakeDamage((10 * bulletModifier));
                 }
                     PhotonNetwork.Destroy(gameObject);
             }
@@ -81,14 +81,14 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
-                enemyDamageCrit.TakeDamage((50 * bulletModifier));
+                enemyDamageCrit.TakeDamage((30 * bulletModifier));
                     PhotonNetwork.Destroy(gameObject);
             }
 
             else
             {
                 DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
-                enemyDamage.TakeDamage((5 * bulletModifier));
+                enemyDamage.TakeDamage((20 * bulletModifier));
                     PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -102,22 +102,22 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 //critical hit here
                 PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
-                if (playerDamageCrit.Health <= (2 * bulletModifier) && playerDamageCrit.alive == true && playerHealth != null)
+                if (playerDamageCrit.Health <= (10 * bulletModifier) && playerDamageCrit.alive == true && playerHealth != null)
                 {
                     playerHealth.PlayersKilled();
                 }
-                playerDamageCrit.TakeDamage((2 * bulletModifier));
+                playerDamageCrit.TakeDamage((10 * bulletModifier));
                     PhotonNetwork.Destroy(gameObject);
             }
 
             else
             {
                 PlayerHealth playerDamage = other.GetComponent<PlayerHealth>();
-                if (playerDamage.Health <= (1 * bulletModifier) && playerDamage.alive == true && playerHealth != null)
+                if (playerDamage.Health <= (5 * bulletModifier) && playerDamage.alive == true && playerHealth != null)
                 {
                     playerHealth.PlayersKilled();
                 }
-                playerDamage.TakeDamage((1 * bulletModifier));
+                playerDamage.TakeDamage((5 * bulletModifier));
                     PhotonNetwork.Destroy(gameObject);
             }
         }

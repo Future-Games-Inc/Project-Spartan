@@ -49,4 +49,9 @@ public class ConnectToPhoton : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to Master Server with player name: " + PhotonNetwork.NickName);
     }
+
+    public void DisconnectPlayer()
+    {
+        PhotonNetwork.Disconnect();
+    }
 }

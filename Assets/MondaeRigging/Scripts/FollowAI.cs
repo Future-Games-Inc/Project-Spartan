@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
-using CSCore;
-using Invector.vCharacterController.AI;
 
 public class FollowAI : MonoBehaviourPunCallbacks
 {
@@ -30,7 +26,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public int Health;
 
     public bool inSight;
-    public bool alive;
+    public bool alive = true;
     private Vector3 directionToTarget;
 
     public States currentState;
@@ -46,134 +42,60 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         agent = GetComponent<NavMeshAgent>();
 
-        if (PhotonNetwork.IsMasterClient)
+        alive = true;
+        NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
+        int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
+        NavMeshHit Hit;
+        if (NavMesh.SamplePosition(Triangulation.vertices[VertexIndex], out Hit, 2f, 1))
         {
-            NavMeshTriangulation Triangulation = NavMesh.CalculateTriangulation();
-            int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
-            NavMeshHit Hit;
-            if (NavMesh.SamplePosition(Triangulation.vertices[VertexIndex], out Hit, 2f, 1))
-            {
-                agent.Warp(Hit.position);
-                agent.enabled = true;
-            }
-
-            InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
-            GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
-            waypoints = waypointObject.GetComponentsInChildren<Transform>();
-
-            currentWaypoint = Random.Range(1, 9);
-
-            FindClosestEnemy();
-            photonView.RPC("RPC_EnemyHealthMax", RpcTarget.AllBuffered);
+            agent.Warp(Hit.position);
+            agent.enabled = true;
         }
+
+        InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
+        GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
+        waypoints = waypointObject.GetComponentsInChildren<Transform>();
+
+        currentWaypoint = Random.Range(1, 9);
+
+        photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
+        FindClosestEnemy();
     }
 
     public void FindClosestEnemy()
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        GameObject closest = null;
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (GameObject go in players)
-        {
-            Vector3 diff = go.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
-            {
-                closest = go;
-                distance = curDistance;
-            }
-        }
-        targetTransform = closest.transform;
+        photonView.RPC("RPC_FindClosestEnemy", RpcTarget.All);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            FindClosestEnemy();
-            CheckForPlayer();
-            UpdateStates();
-        }
-
+        FindClosestEnemy();
+        CheckForPlayer();
+        UpdateStates();
     }
 
     private void UpdateStates()
     {
-        switch (currentState)
-        {
-            case States.Patrol:
-                Patrol();
-                break;
-            case States.Follow:
-                Follow();
-                break;
-            case States.Attack:
-                Attack();
-                break;
-        }
+        photonView.RPC("RPC_UpdateStates", RpcTarget.All);
     }
     private void CheckForPlayer()
     {
-        directionToTarget = targetTransform.position - transform.position;
-
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, directionToTarget.normalized, out hitInfo))
-        {
-            inSight = hitInfo.transform.CompareTag("Player");
-        }
+        photonView.RPC("RPC_CheckForPlayer", RpcTarget.All);
     }
     private void Patrol()
     {
-        attackWeapon.fireWeaponBool = false;
-        if (agent.destination != waypoints[currentWaypoint].position && agent.enabled == true)
-        {
-            agent.destination = waypoints[currentWaypoint].position;
-        }
-
-        if (HasReached())
-        {
-            currentWaypoint = (currentWaypoint + Random.Range(1, 6)) % waypoints.Length;
-        }
-
-        if (inSight && directionToTarget.magnitude <= maxFollowDistance)
-        {
-            currentState = States.Follow;
-        }
+        photonView.RPC("RPC_Patrol", RpcTarget.All);
     }
 
     private void Follow()
     {
-        attackWeapon.fireWeaponBool = false;
-        if (directionToTarget.magnitude <= shootDistance && inSight)
-        {
-            agent.ResetPath();
-            currentState = States.Attack;
-        }
-
-        else
-        {
-            if (targetTransform != null && agent.enabled == true)
-            {
-                agent.SetDestination(targetTransform.position);
-            }
-
-            if (directionToTarget.magnitude > maxFollowDistance && agent.enabled == true)
-            {
-                currentState = States.Patrol;
-            }
-        }
+        photonView.RPC("RPC_Follow", RpcTarget.All);
     }
 
     private void Attack()
     {
-        attackWeapon.fireWeaponBool = true;
-        if (!inSight || directionToTarget.magnitude > shootDistance)
-        {
-            currentState = States.Follow;
-        }
-        LookAtTarget();
+        photonView.RPC("RPC_Attack", RpcTarget.All);
     }
 
     private void LookAtTarget()
@@ -194,12 +116,12 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public void TakeDamage(int damage)
     {
         if (alive == true)
-            photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.AllBuffered, damage);
+            photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
     }
 
     public void RandomSFX()
     {
-        photonView.RPC("RPC_PlayAudioEnemy", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_PlayAudioEnemy", RpcTarget.All);
     }
 
     [PunRPC]
@@ -229,4 +151,109 @@ public class FollowAI : MonoBehaviourPunCallbacks
         if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
+
+    [PunRPC]
+    void RPC_UpdateStates()
+    {
+        switch (currentState)
+        {
+            case States.Patrol:
+                Patrol();
+                break;
+            case States.Follow:
+                Follow();
+                break;
+            case States.Attack:
+                Attack();
+                break;
+        }
+    }
+
+    [PunRPC]
+    void RPC_CheckForPlayer()
+    {
+        directionToTarget = targetTransform.position - transform.position;
+
+        RaycastHit hitInfo;
+        if (Physics.Raycast(transform.position, directionToTarget.normalized, out hitInfo))
+        {
+            inSight = hitInfo.transform.CompareTag("Player");
+        }
+    }
+
+    [PunRPC]
+    void RPC_Patrol()
+    {
+        attackWeapon.fireWeaponBool = false;
+        if (agent.destination != waypoints[currentWaypoint].position && agent.enabled == true)
+        {
+            agent.destination = waypoints[currentWaypoint].position;
+        }
+
+        if (HasReached())
+        {
+            currentWaypoint = (currentWaypoint + Random.Range(1, 6)) % waypoints.Length;
+        }
+
+        if (inSight && directionToTarget.magnitude <= maxFollowDistance)
+        {
+            currentState = States.Follow;
+        }
+    }
+
+    [PunRPC]
+    void RPC_Follow()
+    {
+        attackWeapon.fireWeaponBool = false;
+        if (directionToTarget.magnitude <= shootDistance && inSight)
+        {
+            agent.ResetPath();
+            currentState = States.Attack;
+        }
+
+        else
+        {
+            if (targetTransform != null && agent.enabled == true)
+            {
+                agent.SetDestination(targetTransform.position);
+            }
+
+            if (directionToTarget.magnitude > maxFollowDistance && agent.enabled == true)
+            {
+                currentState = States.Patrol;
+            }
+        }
+    }
+
+    [PunRPC]
+    void RPC_Attack()
+    {
+        attackWeapon.fireWeaponBool = true;
+        if (!inSight || directionToTarget.magnitude > shootDistance)
+        {
+            currentState = States.Follow;
+        }
+        LookAtTarget();
+    }
+
+    [PunRPC]
+    void RPC_FindClosestEnemy()
+    {
+        players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject go in players)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        targetTransform = closest.transform;
+    }
 }
+

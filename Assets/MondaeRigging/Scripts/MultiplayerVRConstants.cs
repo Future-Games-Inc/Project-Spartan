@@ -1,6 +1,4 @@
 
-using RootMotion.FinalIK;
-
 public class MultiplayerVRConstants
 {
     public const string MAP_TYPE_KEY = "map";

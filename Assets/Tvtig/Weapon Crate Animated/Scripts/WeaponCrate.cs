@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Photon.Pun;
@@ -47,7 +46,7 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
+        if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
             photonView.RPC("RPC_Opened", RpcTarget.AllBuffered);
         }
@@ -61,12 +60,9 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     IEnumerator WeaponCache()
     {
         yield return new WaitForSeconds(1);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation);
-            PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation);
-            PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation);
-        }
+        PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation, 0);
+        PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation, 0);
+        PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation, 0);
         StartCoroutine(CacheRespawn());
     }
 

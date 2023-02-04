@@ -38,20 +38,17 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void Update()
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                //Generate random time based on min and max time values
-                randomTime = Random.Range(minTime, maxTime);
+            //Generate random time based on min and max time values
+            randomTime = Random.Range(minTime, maxTime);
 
-                //If the barrel is hit
-                if (explode == true)
+            //If the barrel is hit
+            if (explode == true)
+            {
+                if (routineStarted == false)
                 {
-                    if (routineStarted == false)
-                    {
-                        //Start the explode coroutine
-                        StartCoroutine(Explode());
-                        routineStarted = true;
-                    }
+                    //Start the explode coroutine
+                    StartCoroutine(Explode());
+                    routineStarted = true;
                 }
             }
         }
@@ -139,7 +136,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
             if (other.CompareTag("EnemyBullet"))
             {
                 PhotonNetwork.Destroy(other.gameObject);
-                photonView.RPC("RPC_takeDamage", RpcTarget.AllBuffered);
+                photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered);
             }
         }
 

@@ -85,53 +85,50 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void Update()
         {
-            if (PhotonNetwork.IsMasterClient)
+            //If the gas tank is hit
+            if (isHit == true)
             {
-                //If the gas tank is hit
-                if (isHit == true)
+                //Start increasing the rotation speed over time
+                randomRotationValue += 1.0f * Time.deltaTime;
+
+                //If the random rotation is higher than the maximum rotation, 
+                //set it to the max rotation value
+                if (randomRotationValue > maxRotationSpeed)
                 {
-                    //Start increasing the rotation speed over time
-                    randomRotationValue += 1.0f * Time.deltaTime;
+                    randomRotationValue = maxRotationSpeed;
+                }
 
-                    //If the random rotation is higher than the maximum rotation, 
-                    //set it to the max rotation value
-                    if (randomRotationValue > maxRotationSpeed)
-                    {
-                        randomRotationValue = maxRotationSpeed;
-                    }
+                //Add force to the gas tank 
+                gameObject.GetComponent<Rigidbody>().AddRelativeForce
+                    (Vector3.down * moveSpeed * 50 * Time.deltaTime);
 
-                    //Add force to the gas tank 
-                    gameObject.GetComponent<Rigidbody>().AddRelativeForce
-                        (Vector3.down * moveSpeed * 50 * Time.deltaTime);
+                //Rotate the gas tank, based on the random rotation values
+                transform.Rotate(randomRotationValue, 0, randomValue *
+                                                         rotationSpeed * Time.deltaTime);
 
-                    //Rotate the gas tank, based on the random rotation values
-                    transform.Rotate(randomRotationValue, 0, randomValue *
-                                                             rotationSpeed * Time.deltaTime);
+                //Play the flame particles
+                flameParticles.Play();
+                //Play the smoke particles
+                smokeParticles.Play();
 
-                    //Play the flame particles
-                    flameParticles.Play();
-                    //Play the smoke particles
-                    smokeParticles.Play();
+                //Increase the flame sound pitch over time
+                flameSound.pitch += audioPitchIncrease * Time.deltaTime;
 
-                    //Increase the flame sound pitch over time
-                    flameSound.pitch += audioPitchIncrease * Time.deltaTime;
+                //If the audio has not played, play it
+                if (!audioHasPlayed)
+                {
+                    flameSound.Play();
+                    //Audio has played
+                    audioHasPlayed = true;
+                }
 
-                    //If the audio has not played, play it
-                    if (!audioHasPlayed)
-                    {
-                        flameSound.Play();
-                        //Audio has played
-                        audioHasPlayed = true;
-                    }
-
-                    if (routineStarted == false)
-                    {
-                        //Start the explode coroutine
-                        StartCoroutine(Explode());
-                        routineStarted = true;
-                        //Set the light intensity to 3
-                        lightObject.intensity = 3;
-                    }
+                if (routineStarted == false)
+                {
+                    //Start the explode coroutine
+                    StartCoroutine(Explode());
+                    routineStarted = true;
+                    //Set the light intensity to 3
+                    lightObject.intensity = 3;
                 }
             }
         }

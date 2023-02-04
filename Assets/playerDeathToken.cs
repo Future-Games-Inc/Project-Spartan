@@ -1,6 +1,5 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class playerDeathToken : MonoBehaviourPunCallbacks
@@ -27,8 +26,8 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("Player") && tokenActivated == true)
         {
-            player = other.gameObject.GetComponent<PlayerHealth>();
-            photonView.RPC("RPC_Trigger", RpcTarget.AllBuffered, other);
+            player = other.GetComponent<PlayerHealth>();
+            photonView.RPC("RPC_Trigger", RpcTarget.AllBuffered);
         }
     }
 
@@ -41,7 +40,7 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_TokenActivated()
     {
-        tokenActivated = true;
+        tokenActivated = true;       
     }
 
     [PunRPC]

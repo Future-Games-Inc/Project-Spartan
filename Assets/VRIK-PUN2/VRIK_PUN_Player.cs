@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using RootMotion.FinalIK;
 using Photon.Pun;
-using UnityEngine.XR.Interaction.Toolkit;
 using Unity.XR.CoreUtils;
 
 namespace RootMotion.Demos

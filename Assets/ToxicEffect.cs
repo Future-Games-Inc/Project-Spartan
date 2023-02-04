@@ -1,27 +1,26 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ToxicEffect : MonoBehaviour
 {
     public PlayerHealth player;
     public Collider playerCollider;
-    public float effectRadius = 2.5f;
+    public float effectRadius;
     public GameObject playerCharacter;
 
     // Start is called before the first frame update
     private void OnEnable()
     {
-        if (tag == "toxicRadius")
+        if (this.CompareTag("toxicRadius"))
             StartCoroutine(ToxicHealth());
         else
             StartCoroutine(Leech());
-        transform.position = playerCharacter.transform.position;
     }
-    void Start()
+
+    private void OnDisable()
     {
-        
+        StopAllCoroutines();
     }
 
     // Update is called once per frame
@@ -33,108 +32,98 @@ public class ToxicEffect : MonoBehaviour
     IEnumerator ToxicHealth()
     {
         yield return new WaitForSeconds(0);
-        while (player.toxicEffectActive == true)
+        while (true)
         {
-            yield return new WaitForSeconds(0);
-            Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
-            foreach (Collider nearbyObjects in colliders)
+            if (player.toxicEffectActive == true)
             {
-                if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy"))
+                yield return new WaitForSeconds(0);
+                Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
+                foreach (Collider nearbyObjects in colliders)
                 {
-                    FollowAI enemyDamage = nearbyObjects.GetComponent<FollowAI>();
+                    if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy") || nearbyObjects.CompareTag("Security"))
                     {
-                        if (enemyDamage != null)
+                        if (nearbyObjects.TryGetComponent<FollowAI>(out var enemyDamage))
                         {
                             object storedToxicDamage;
                             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.TOXICITY_DAMAGE, out storedToxicDamage) && (int)storedToxicDamage >= 1)
                                 enemyDamage.TakeDamage(10 + (int)storedToxicDamage);
                             else
                                 enemyDamage.TakeDamage(10);
-
                         }
 
-                        else if (enemyDamage == null)
+                        if (nearbyObjects.TryGetComponent<DroneHealth>(out var droneDamage))
                         {
-                            DroneHealth droneDamage = nearbyObjects.GetComponent<DroneHealth>();
-                            if (droneDamage != null)
+                            object storedToxicDamage;
+                            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.TOXICITY_DAMAGE, out storedToxicDamage) && (int)storedToxicDamage >= 1)
+                                droneDamage.TakeDamage(10 + (int)storedToxicDamage);
+
+                            else
+                                droneDamage.TakeDamage(10);
+                        }
+                    }
+
+                    if (nearbyObjects.CompareTag("Player"))
+                    {
+                        if (nearbyObjects.gameObject != playerCharacter)
+                        {
+                            if (nearbyObjects.TryGetComponent<PlayerHealth>(out var playerDamage))
                             {
                                 object storedToxicDamage;
                                 if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.TOXICITY_DAMAGE, out storedToxicDamage) && (int)storedToxicDamage >= 1)
-                                    droneDamage.TakeDamage(10 + (int)storedToxicDamage);
-
+                                    playerDamage.TakeDamage(5 + (int)storedToxicDamage);
                                 else
-                                    droneDamage.TakeDamage(10);
+                                    playerDamage.TakeDamage(5);
                             }
                         }
                     }
                 }
-
-                if (nearbyObjects.CompareTag("Player"))
-                {
-                    if (nearbyObjects.gameObject.transform.root.parent.gameObject != this.gameObject.transform.root.parent.gameObject)
-                    {
-                        PlayerHealth playerDamage = nearbyObjects.GetComponent<PlayerHealth>();
-                        if (playerDamage != null)
-                        {
-                            object storedToxicDamage;
-                            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.TOXICITY_DAMAGE, out storedToxicDamage) && (int)storedToxicDamage >= 1)
-                                playerDamage.TakeDamage(5 + (int)storedToxicDamage);
-                            else
-                                playerDamage.TakeDamage(5);
-                        }
-                    }
-                }
+                yield return new WaitForSeconds(2);
             }
-            yield return new WaitForSeconds(2);
+            yield return null;
         }
     }
 
     IEnumerator Leech()
     {
         yield return new WaitForSeconds(0);
-        while (player.leechEffect == true)
+        while (true)
         {
-            yield return new WaitForSeconds(0);
-            Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
-            foreach (Collider nearbyObjects in colliders)
+            if (player.leechEffect == true)
             {
-                if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy"))
+                yield return new WaitForSeconds(0);
+                Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
+                foreach (Collider nearbyObjects in colliders)
                 {
-                    FollowAI enemyDamage = nearbyObjects.GetComponent<FollowAI>();
+                    if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy") || nearbyObjects.CompareTag("Security"))
                     {
-                        if (enemyDamage != null)
+                        if (nearbyObjects.TryGetComponent<FollowAI>(out var enemyDamage))
                         {
                             enemyDamage.TakeDamage(10);
-                            player.Health += (10);
+                            player.AddHealth(10);
                         }
 
-                        else if (enemyDamage == null)
+                        if (nearbyObjects.TryGetComponent<DroneHealth>(out var droneDamage))
                         {
-                            DroneHealth droneDamage = nearbyObjects.GetComponent<DroneHealth>();
-                            if (droneDamage != null)
-                            {
-                                droneDamage.TakeDamage(10);
-                                player.AddHealth(10);
+                            droneDamage.TakeDamage(10);
+                            player.AddHealth(10);
+                        }
+                    }
 
+                    if (nearbyObjects.CompareTag("Player"))
+                    {
+                        if (nearbyObjects.gameObject != playerCharacter)
+                        {
+                            if (nearbyObjects.TryGetComponent<PlayerHealth>(out var playerDamage))
+                            {
+                                playerDamage.TakeDamage(15);
+                                player.AddHealth(15);
                             }
                         }
                     }
                 }
-
-                if (nearbyObjects.CompareTag("Player"))
-                {
-                    if (nearbyObjects.gameObject.transform.root.parent.gameObject != this.gameObject.transform.root.parent.gameObject)
-                    {
-                        PlayerHealth playerDamage = nearbyObjects.GetComponent<PlayerHealth>();
-                        if (playerDamage != null)
-                        {
-                            playerDamage.TakeDamage(15);
-                            player.AddHealth(15);
-                        }
-                    }
-                }
+                yield return new WaitForSeconds(2);
             }
-            yield return new WaitForSeconds(2);
+            yield return null;
         }
     }
 }

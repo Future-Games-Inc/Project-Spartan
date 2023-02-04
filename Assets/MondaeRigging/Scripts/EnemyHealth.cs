@@ -41,29 +41,26 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     public void DestroyEnemy()
     {
         photonView.RPC("RPC_DestroyEnemy", RpcTarget.AllBuffered);
-        if (PhotonNetwork.IsMasterClient)
+        foreach (Transform t in lootSpawn)
         {
-            foreach (Transform t in lootSpawn)
+            if (gameObject.CompareTag("Enemy"))
             {
-                if (tag == "Enemy")
-                {
-                    xpDropRate = 5f;
-                }
-
-                else if (tag == "BossEnemy")
-                {
-                    xpDropRate = 15f;
-                }
-
-                if (Random.Range(0, 100f) < xpDropRate)
-                {
-                    PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, transform.position, Quaternion.identity);
-                }
-                else
-                    PhotonNetwork.InstantiateRoomObject(xpDrop.name, transform.position, Quaternion.identity);
+                xpDropRate = 5f;
             }
-            StartCoroutine(Destroy());
+
+            else if (gameObject.CompareTag("BossEnemy"))
+            {
+                xpDropRate = 15f;
+            }
+
+            if (Random.Range(0, 100f) < xpDropRate)
+            {
+                PhotonNetwork.Instantiate(xpDropExtra.name, t.position, Quaternion.identity, 0);
+            }
+            else
+                PhotonNetwork.Instantiate(xpDrop.name, t.position, Quaternion.identity, 0);
         }
+        StartCoroutine(Destroy());
     }
 
     IEnumerator Destroy()
@@ -84,8 +81,8 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
         alive = false;
         aiScript.alive = false;
 
-        enemyCounter.photonView.RPC("RPC_UpdateEnemy()", RpcTarget.AllBuffered);
-        enemyCounter.photonView.RPC("RPC_UpdateEnemyCount()", RpcTarget.AllBuffered);
+        enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.AllBuffered);
+        enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.AllBuffered);
         DestroyEnemy();
     }
 

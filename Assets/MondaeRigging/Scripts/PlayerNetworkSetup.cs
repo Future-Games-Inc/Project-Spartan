@@ -1,8 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
-using RootMotion.FinalIK;
 using TMPro;
-using UnityEngine.XR.Interaction.Toolkit;
 using Unity.XR.CoreUtils;
 using RootMotion.Demos;
 
@@ -17,6 +15,7 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
     public GameObject[] AvatarModelPrefabs;
 
     public TextMeshProUGUI[] playerNameText;
+    public GameObject[] playerInformation;
 
     public string characterFaction;
 
@@ -63,6 +62,11 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
             localXRRigGameObject.enabled = true;
             playerMovement.enabled = true;
             dash.enabled = true;
+
+            foreach(GameObject information in playerInformation)
+            {
+                information.SetActive(false);
+            }
 
             object avatarSelectionNumber;
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))

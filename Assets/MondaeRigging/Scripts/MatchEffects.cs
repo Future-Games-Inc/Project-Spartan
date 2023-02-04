@@ -1,14 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using TMPro;
-using System.Threading;
-using UnityEditor.XR;
-using Unity.VisualScripting;
-using static UnityEngine.UI.CanvasScaler;
 
 public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -31,8 +26,16 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip countdownThree;
     public AudioClip countdownFour;
     public AudioClip countdownBegan;
+    public AudioClip supplyShip1;
+    public AudioClip supplyShip2;
+
+    public GameObject supplyDropShipPrefab;
+    public float spawnInterval = 330f; // 5 minutes in seconds
+    public float lastSpawnTime;
+    public Transform spawnLocation;
 
     public bool startMatchBool = false;
+    public bool spawned = false;
 
     public enum EventCodes : byte
     {
@@ -60,6 +63,29 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         InitializeTimer();
         photonView.RPC("AudioEnter", RpcTarget.All);
+        spawnInterval = 180f;
+    }
+
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (Time.time > lastSpawnTime + spawnInterval && spawned == false)
+            {
+                lastSpawnTime = Time.time;
+                PhotonNetwork.Instantiate(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0);
+                StartCoroutine(SupplyShipAudio());
+                spawned = true;
+            }
+        }
+    }
+
+    IEnumerator SupplyShipAudio()
+    {
+        yield return new WaitForSeconds(0);
+        photonView.RPC("SupplyAudio1", RpcTarget.All);
+        yield return new WaitForSeconds(supplyShip1.length);
+        photonView.RPC("SupplyAudio2", RpcTarget.All);
     }
 
     private void RefreshTimerUI()
@@ -84,8 +110,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         yield return new WaitForSeconds(1f);
 
         currentMatchTime -= 1;
-        
-        if(currentMatchTime == 5)
+
+        if (currentMatchTime == 5)
         {
             photonView.RPC("Audio5", RpcTarget.All);
         }
@@ -200,6 +226,19 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(countdownBegan);
         spawnManager.SetActive(false);
         startMatchBool = false;
+    }
+
+
+    [PunRPC]
+    void SupplyAudio1()
+    {
+        audioSource.PlayOneShot(supplyShip1);
+    }
+
+    [PunRPC]
+    void SupplyAudio2()
+    {
+        audioSource.PlayOneShot(supplyShip2);
     }
 }
 

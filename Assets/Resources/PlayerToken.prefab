@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 8476463373774161089}
   - component: {fileID: 8890590685807438216}
   - component: {fileID: 4086191946352025893}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerToken
   m_TagString: ExtraXP
   m_Icon: {fileID: 0}
@@ -218,6 +218,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tokenValue: 0
+  faction: 
+  player: {fileID: 0}
+  tokenActivated: 0
 --- !u!1001 &2925037911926956513
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -225,9 +228,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6746985497026244680}
     m_Modifications:
+    - target: {fileID: 1165327704009262, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1171611907214908, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414974731765640, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1419287599744486, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1845240806346120, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
       propertyPath: m_Name
       value: CFX4 Magic Hit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1845240806346120, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4733340085621846, guid: b395d5d6eb4b4b846acc021ee036b744, type: 3}
       propertyPath: m_RootOrder

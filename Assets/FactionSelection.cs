@@ -1,11 +1,6 @@
 using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Realtime;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-using ExitGames.Client.Photon;
 
 public class FactionSelection : MonoBehaviourPunCallbacks
 {

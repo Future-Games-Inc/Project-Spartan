@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -20,7 +18,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter(Collider other)
     {
-        if (this.tag == "XP")
+        if (this.CompareTag("XP"))
         {
             if (other.CompareTag("Player"))
             {
@@ -39,17 +37,17 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }           
         }
 
-        else if (this.tag == "Health")
+        else if (this.CompareTag("Health"))
         {
             if (other.CompareTag("Player"))
             {
-                photonView.RPC("RPC_UpdateHealthCount", RpcTarget.AllBuffered);
+                spawnManager.photonView.RPC("RPC_UpdateHealthCount", RpcTarget.AllBuffered);
                 other.GetComponent<PlayerHealth>().AddHealth(10);
                 PhotonNetwork.Destroy(gameObject);
             }           
         }
 
-        else if (this.tag == "MinorHealth")
+        else if (this.CompareTag("MinorHealth"))
         {
             if (other.CompareTag("Player"))
             {
@@ -58,7 +56,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }
         }
 
-        else if(this.tag == "ExtraXP")
+        else if(this.CompareTag("ExtraXP"))
         {
             if (other.CompareTag("Player"))
             {
@@ -77,7 +75,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (this.tag == "toxicDropNormal")
+        else if (this.CompareTag("toxicDropNormal"))
         {
             if (other.CompareTag("Player"))
             {
@@ -87,7 +85,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (this.tag == "toxicDropExtra")
+        else if (this.CompareTag("toxicDropExtra"))
         {
             if (other.CompareTag("Player"))
             {
@@ -97,7 +95,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (this.tag == "bulletModifierNormal")
+        else if (this.CompareTag("bulletModifierNormal"))
         {
             if (other.CompareTag("Player"))
             {                
@@ -107,7 +105,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (this.tag == "bulletModifierExtra")
+        else if (this.CompareTag("bulletModifierExtra"))
         {
             if (other.CompareTag("Player"))
             {
@@ -117,7 +115,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (this.tag == "MPShield")
+        else if (this.CompareTag("MPShield"))
         {
             if (other.CompareTag("Player"))
             {
