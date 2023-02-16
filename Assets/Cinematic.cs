@@ -44,25 +44,16 @@ public class Cinematic : MonoBehaviour
         {
             if (leftmenu.action.ReadValue<float>() >= .78f && activatedExtraction == false)
             {
-                StartCoroutine(Extraction());
+                isHolding = true;
+                activatedExtraction = true;
             }
         }
 
-        if (!hasLeftRoom && holdTime >= 3f)
+        if (!hasLeftRoom && holdTime >= 1f)
         {
             // Leave the room
             SceneManager.LoadScene(7);
             hasLeftRoom = true;
-        }
-    }
-
-    IEnumerator Extraction()
-    {
-        yield return new WaitForSeconds(3);
-        if (leftmenu.action.ReadValue<float>() >= .78f && activatedExtraction == false)
-        {
-            isHolding = true;
-            activatedExtraction = true;
         }
     }
 

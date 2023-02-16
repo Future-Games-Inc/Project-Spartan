@@ -10,22 +10,22 @@ public class Supercharge : MonoBehaviour
     public Slider timeRemainingSlider;
 
     public int currentKills;
-    private float timePeriodTimer;
-    private float superchargeTimer;
+    public float timePeriodTimer;
+    public float superchargeTimer;
 
     public PlayerHealth player;
 
     public void Start()
     {
-        timeRemainingSlider.enabled = false;
+        timeRemainingSlider.gameObject.SetActive(false);
     }
 
     private void Update()
     {
         if (timePeriodTimer > 0)
         {
-            killSlider.enabled = true;
-            timeRemainingSlider.enabled = false;
+            killSlider.gameObject.SetActive(true);
+            timeRemainingSlider.gameObject.SetActive(false);
             timePeriodTimer -= Time.deltaTime;
             killSlider.value = (float)currentKills / targetKills;
 
@@ -38,16 +38,16 @@ public class Supercharge : MonoBehaviour
         }
         else if (superchargeTimer > 0)
         {
-            killSlider.enabled = false;
-            timeRemainingSlider.enabled = true;
+            killSlider.gameObject.SetActive(false);
+            timeRemainingSlider.gameObject.SetActive(true);
             superchargeTimer -= Time.deltaTime;
-            player.bulletXPModifier = 10;
+            player.BulletImprove(superchargeTimer, (player.bulletModifier + 10));
             timeRemainingSlider.value = superchargeTimer / superchargeDuration;
         }
         else
         {
-            killSlider.enabled = true;
-            timeRemainingSlider.enabled = false;
+            killSlider.gameObject.SetActive(true);
+            timeRemainingSlider.gameObject.SetActive(false);
             timePeriodTimer = timePeriod;
             currentKills = 0;
         }

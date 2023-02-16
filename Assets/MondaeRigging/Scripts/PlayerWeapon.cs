@@ -27,10 +27,12 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     public AudioClip weaponBreak;
 
     public bool reloadingWeapon = false;
+    public bool isFiring = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        durability = 5;
         rotatorScript = GetComponent<Rotator>();
         photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
     }
@@ -41,9 +43,25 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_Update", RpcTarget.AllBuffered);
     }
 
-    public void FireBullet(ActivateEventArgs arg)
+    public void StartFireBullet(ActivateEventArgs arg)
     {
-        photonView.RPC("RPC_Fire", RpcTarget.AllBuffered);
+        isFiring = true;
+        StartCoroutine(FireBullet());
+    }
+
+    public void StopFireBullet(DeactivateEventArgs arg)
+    {
+        isFiring = false;
+        StopCoroutine(FireBullet());
+    }
+
+    IEnumerator FireBullet()
+    {
+        while (isFiring)
+        {
+            photonView.RPC("RPC_Fire", RpcTarget.AllBuffered);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     IEnumerator ReloadWeapon()
@@ -77,7 +95,8 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
         XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
-        grabbable.activated.AddListener(FireBullet);
+        grabbable.activated.AddListener(StartFireBullet);
+        grabbable.deactivated.AddListener(StopFireBullet);
     }
 
     [PunRPC]
@@ -96,16 +115,16 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
             {
                 audioSource.PlayOneShot(weaponFire);
                 GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0);
-                spawnedBullet.GetComponent<Rigidbody>().velocity = transform.right * fireSpeed;
+                spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                 spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                 spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
 
-                ammoLeft -= 1;
+                ammoLeft --;
             }
         }
 
-        if (ammoLeft <= 0 && reloadingWeapon == false)
+        if (ammoLeft == 0 && reloadingWeapon == false)
         {
             reloadingWeapon = true;
             StartCoroutine(ReloadWeapon());
@@ -115,6 +134,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Reload()
     {
+        StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
         durability--;

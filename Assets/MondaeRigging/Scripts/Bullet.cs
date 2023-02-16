@@ -20,7 +20,8 @@ public class Bullet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void OnCollisionEnter(Collision collision)
     {
-        StartCoroutine(DestroyBulletCollision());
+        if (!collision.gameObject.CompareTag("EnemyBullet"))
+            StartCoroutine(DestroyBulletCollision());
     }
 
     [System.Obsolete]
@@ -53,7 +54,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     enemyDamageCrit.TakeDamage((20 * bulletModifier));
                 }
-                    PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -68,7 +69,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     enemyDamage.TakeDamage((10 * bulletModifier));
                 }
-                    PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
         }
 
@@ -82,14 +83,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
                 enemyDamageCrit.TakeDamage((30 * bulletModifier));
-                    PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
 
             else
             {
                 DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
                 enemyDamage.TakeDamage((20 * bulletModifier));
-                    PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
         }
 
@@ -107,7 +108,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerHealth.PlayersKilled();
                 }
                 playerDamageCrit.TakeDamage((10 * bulletModifier));
-                    PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -118,7 +119,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerHealth.PlayersKilled();
                 }
                 playerDamage.TakeDamage((5 * bulletModifier));
-                    PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
         }
 

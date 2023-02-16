@@ -12,6 +12,7 @@ public class TopReactsLeaderboard : MonoBehaviour
     public int leaderboardID2 = 10220;
 
     public bool updater = true;
+    public bool rewardGiven = false;
 
     public TextMeshProUGUI playerNames;
     public TextMeshProUGUI playerScores;
@@ -25,17 +26,74 @@ public class TopReactsLeaderboard : MonoBehaviour
     public TextMeshProUGUI currentXPText;
 
     public RoomManager roomManager;
+    public TimeTracker timeTracker;
+    public RawImage rewardIcon;
+
+    public String isLocalPlayer;
+    public String firstPlayerID;
 
     // Start is called before the first frame update
+    [Obsolete]
     void Start()
     {
         StartCoroutine(CheckLevel());
+        StartCoroutine(GiveRewards());
+        StartCoroutine(RewardsGiven());
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public IEnumerator RewardsGiven()
+    {
+        while (true)
+        {
+            if (timeTracker.rewarded == false)
+            {
+                rewardIcon.color = Color.black;
+                rewardGiven = false;
+            }
+            yield return null;
+        }
+    }
+
+    [Obsolete]
+    public IEnumerator GiveRewards()
+    {
+        while (true)
+        {
+            if (timeTracker.rewarded == true && rewardGiven == false)
+            {
+                rewardGiven = true;
+                bool done = false;
+                LootLockerSDKManager.GetScoreListMain(leaderboardID, 1, 0, (response) =>
+                {
+                    if (response.success)
+                    {
+                        LootLockerLeaderboardMember[] members = response.items;
+
+                        for (int i = 0; i < members.Length; i++)
+                        {
+                            firstPlayerID = members[i].player.name.ToString();
+                            LootLockerSDKManager.GetPlayerName((response) =>
+                            {
+                                isLocalPlayer = response.name.ToString();
+                                done = true;
+                            });
+                        }
+                    }
+                });
+                yield return new WaitWhile(() => done == false);
+                if (firstPlayerID.ToString() == isLocalPlayer.ToString())
+                {
+                    rewardIcon.color = Color.white;
+                }
+            }
+            yield return null;
+        }
     }
 
     [System.Obsolete]
@@ -107,42 +165,42 @@ public class TopReactsLeaderboard : MonoBehaviour
     [System.Obsolete]
     public IEnumerator FetchFactionScores()
     {
-            bool done = false;
-            LootLockerSDKManager.GetScoreListMain(leaderboardID2, 5, 0, (response) =>
+        bool done = false;
+        LootLockerSDKManager.GetScoreListMain(leaderboardID2, 5, 0, (response) =>
+        {
+            if (response.success)
             {
-                if (response.success)
+                string tempPlayerNames = "Names\n";
+                string TempPlayerScores = "Scores\n";
+
+                LootLockerLeaderboardMember[] members = response.items;
+
+                for (int i = 0; i < members.Length; i++)
                 {
-                    string tempPlayerNames = "Names\n";
-                    string TempPlayerScores = "Scores\n";
-
-                    LootLockerLeaderboardMember[] members = response.items;
-
-                    for (int i = 0; i < members.Length; i++)
+                    tempPlayerNames += members[i].rank + ". ";
+                    if (members[i].member_id != "")
                     {
-                        tempPlayerNames += members[i].rank + ". ";
-                        if (members[i].member_id != "")
-                        {
-                            tempPlayerNames += members[i].member_id;
-                        }
-                        else
-                        {
-                            tempPlayerNames += "";
-                        }
-                        TempPlayerScores += members[i].score + "\n";
-                        tempPlayerNames += "\n";
+                        tempPlayerNames += members[i].member_id;
                     }
-                    done = true;
-                    factionNames.text = tempPlayerNames;
-                    factionScores.text = TempPlayerScores;
+                    else
+                    {
+                        tempPlayerNames += "";
+                    }
+                    TempPlayerScores += members[i].score + "\n";
+                    tempPlayerNames += "\n";
                 }
-                else
-                {
-                    Debug.Log("Failed" + response.Error);
-                    done = true;
-                }
-            });
-            yield return new WaitWhile(() => done == false);
-            yield return new WaitForSeconds(20);
+                done = true;
+                factionNames.text = tempPlayerNames;
+                factionScores.text = TempPlayerScores;
+            }
+            else
+            {
+                Debug.Log("Failed" + response.Error);
+                done = true;
+            }
+        });
+        yield return new WaitWhile(() => done == false);
+        yield return new WaitForSeconds(20);
     }
 
     public IEnumerator CheckLevel()

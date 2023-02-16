@@ -60,8 +60,6 @@ public class SupplyDropShip : MonoBehaviourPunCallbacks
         targetPosition.y = transform.position.y;
 
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime);
-        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position, Vector3.up), timeCount * speed); //Calculate and insert back in here
-        //timeCount = timeCount + Time.deltaTime;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position, Vector3.up), Time.deltaTime);
         if (Vector3.Distance(transform.position, targetPosition) < 1f)
         {

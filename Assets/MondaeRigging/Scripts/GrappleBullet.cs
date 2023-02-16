@@ -13,22 +13,23 @@ public class GrappleBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "GrapplePoint" && grappleGun.grappled)
+        if (collision.gameObject.CompareTag("GrapplePoint") && grappleGun.grappled)
         {
             hitPoint = collision.contacts[0].point;
             collisionObject = collision.gameObject;
-            fixedJoint = gameObject.AddComponent<FixedJoint>();
+            if (gameObject.GetComponent<FixedJoint>() == null)
+                fixedJoint = gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = collisionObject.GetComponent<Rigidbody>();
 
             grappleGun.Swing();
@@ -37,6 +38,10 @@ public class GrappleBullet : MonoBehaviour
 
     public void DestroyJoint()
     {
-        Destroy(fixedJoint);
+        FixedJoint[] fixedJointList = gameObject.GetComponents<FixedJoint>();
+        foreach (FixedJoint fixedJoint in fixedJointList)
+        {
+            Destroy(fixedJoint);
+        }
     }
 }

@@ -56,7 +56,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 yield return new WaitForSeconds(Random.Range(0.1f, 0.54f));
             }
 
-            else if (ammoLeft >= 0)
+            else if (ammoLeft <= 0)
             {
                 canShoot = false;
                 StartCoroutine(ReloadWeapon());

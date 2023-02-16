@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class GrappleGun : MonoBehaviour
 {
@@ -12,77 +12,129 @@ public class GrappleGun : MonoBehaviour
     public Rigidbody bulletRb;
     public float bulletSpeed;
     public GrappleBullet bulletScript;
+    private Material originalMaterial;
 
     [Header("Gun Info")]
     public Transform barrelTransform;
-    private string m_grappleButton;
-    private Handness m_hand2 = Handness.Left;
+    public InputActionProperty rightThumbstickPress;
     public bool grappled;
+    public bool targetHit;
+    private GameObject lastHit;
 
     [Header("Player Info")]
     SpringJoint springJoint;
     public GameObject playerGameObject;
     Transform playerTransform;
     public CharacterController characterController;
-    public TrailRenderer trailRenderer;
+    public Material hitMaterial;
+    public PlayerMovement movement;
 
     // Start is called before the first frame update
     void Start()
     {
         bulletTransform = bulletPrefab.transform;
-        m_grappleButton = "XRI_" + m_hand2 + "_SecondaryButton";
         playerTransform = playerGameObject.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(grappled)
+        if (grappled)
         {
             characterController.enabled = false;
+            movement.enabled = false;
         }
 
-        if(!grappled)
+        if (!grappled)
         {
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
             characterController.enabled = true;
+            movement.enabled = true;
         }
 
-        if (Input.GetButtonDown(m_grappleButton))
+        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && !grappled)
         {
             FireRaycastIntoScene();
         }
 
-        if (Input.GetButtonUp(m_grappleButton))
+        if (rightThumbstickPress.action.ReadValue<float>() < .77f && grappled)
         {
+            grappled = false;
             CancelGrapple();
+        }
+
+
+        RaycastHit hit;
+        targetHit = false;
+
+        if (Physics.Raycast(barrelTransform.position, barrelTransform.forward, out hit, Mathf.Infinity, targetLayer))
+        {
+            Debug.Log("Always");
+            Debug.DrawRay(barrelTransform.position, barrelTransform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            if (hit.collider.gameObject.CompareTag("GrapplePoint"))
+            {
+                targetHit = true;
+                if (lastHit != hit.collider.gameObject)
+                {
+                    if (lastHit != null)
+                    {
+                        MeshRenderer rendererOld = lastHit.GetComponent<MeshRenderer>();
+                        rendererOld.material = originalMaterial;
+                    }
+
+                    Debug.Log("Hit");
+                    MeshRenderer renderer = hit.collider.gameObject.GetComponent<MeshRenderer>();
+                    if (renderer != null)
+                    {
+                        originalMaterial = renderer.material;
+                        renderer.material = hitMaterial;
+                        lastHit = hit.collider.gameObject;
+                    }
+                }
+            }
+        }
+
+        if (lastHit != null && !targetHit)
+        {
+            MeshRenderer rendererOld = lastHit.GetComponent<MeshRenderer>();
+            rendererOld.material = originalMaterial;
+            lastHit = null;
         }
     }
 
     void FireRaycastIntoScene()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(bulletTransform.position, bulletTransform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetLayer))
+        if (targetHit)
         {
-            trailRenderer.enabled = true;
-            bulletTransform.position = barrelTransform.position;
-            bulletRb.velocity = bulletTransform.forward * bulletSpeed;
+            Debug.Log("Fired");
             grappled = true;
+            bulletTransform.position = barrelTransform.position;
+            bulletRb.velocity = barrelTransform.forward * bulletSpeed;
+        }
+        else
+        {
+            CancelGrapple();
         }
     }
 
     public void CancelGrapple()
     {
         grappled = false;
-        Destroy(springJoint);
+        SpringJoint[] springJointList = playerGameObject.GetComponents<SpringJoint>();
+        foreach (SpringJoint springJoint in springJointList)
+        {
+            Destroy(springJoint);
+        }
         bulletScript.DestroyJoint();
     }
 
     public void Swing()
     {
-        springJoint = playerGameObject.AddComponent<SpringJoint>();
+        characterController.enabled = false;
+        movement.enabled = false;
+        if (playerGameObject.GetComponent<SpringJoint>() == null)
+            springJoint = playerGameObject.AddComponent<SpringJoint>();
         springJoint.connectedBody = bulletScript.collisionObject.GetComponent<Rigidbody>();
         springJoint.autoConfigureConnectedAnchor = false;
         springJoint.connectedAnchor = bulletScript.collisionObject.transform.InverseTransformPoint(bulletScript.hitPoint);
@@ -90,10 +142,10 @@ public class GrappleGun : MonoBehaviour
 
         float disJointToPlayer = Vector3.Distance(playerTransform.position, bulletTransform.position);
 
-        springJoint.maxDistance = disJointToPlayer * .6f;
+        springJoint.maxDistance = disJointToPlayer * .4f;
         springJoint.minDistance = disJointToPlayer * .1f;
 
-        springJoint.damper = 100f;
+        springJoint.damper = 300f;
         springJoint.spring = 700f;
     }
 

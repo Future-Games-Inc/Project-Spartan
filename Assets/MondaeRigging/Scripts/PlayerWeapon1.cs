@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -16,52 +15,83 @@ public class PlayerWeapon1 : MonoBehaviour
     public int durability;
 
     public GameObject playerBullet;
+    public Rotator rotatorScript;
+
+    public bool active = true;
+    public bool isFiring = false;
 
     // Start is called before the first frame update
     void Start()
     {
         maxAmmo = 20;
-        durability = 3;
+        durability = 10;
         ammoLeft = maxAmmo;
         XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
-        grabbable.activated.AddListener(FireBullet);
+        grabbable.activated.AddListener(StartFireBullet);
+        grabbable.deactivated.AddListener(StopFireBullet);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(durability == 0)
+        if (durability == 0)
         {
             Destroy(gameObject);
         }
     }
 
-    public void FireBullet(ActivateEventArgs arg)
+    public void StartFireBullet(ActivateEventArgs arg)
     {
-        if (ammoLeft >= 0)
+        isFiring = true;
+        StartCoroutine(FireBullet());
+    }
+
+    public void StopFireBullet(DeactivateEventArgs arg)
+    {
+        isFiring = false;
+        StopCoroutine(FireBullet());
+    }
+
+    IEnumerator FireBullet()
+    {
+        while (isFiring)
         {
-            audioSource.PlayOneShot(shootSFX);
-            foreach (Transform t in spawnPoint)
+            if (ammoLeft >= 1 && active == true)
             {
-                GameObject spawnedBullet = Instantiate(playerBullet, t.position, Quaternion.identity);
-                spawnedBullet.GetComponent<Rigidbody>().velocity = transform.right * fireSpeed;
-                ammoLeft --;
+                audioSource.PlayOneShot(shootSFX);
+                foreach (Transform t in spawnPoint)
+                {
+                    GameObject spawnedBullet = Instantiate(playerBullet, t.position, Quaternion.identity);
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+                    ammoLeft--;
+                }
             }
-        }
-        else if(ammoLeft < 0)
-        {
-            StartCoroutine(Reload());
+
+            if (ammoLeft == 0 && active == true)
+            {
+                active = false;
+                StartCoroutine(Reload());
+            }
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
     IEnumerator Reload()
     {
         yield return new WaitForSeconds(0);
+        StopCoroutine(FireBullet());
         audioSource.PlayOneShot(reloadSFX);
         yield return new WaitForSeconds(3);
         ammoLeft = maxAmmo;
         durability--;
+        active = true;
     }
-    
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        {
+            rotatorScript.enabled = false;
+        }
+    }
 }

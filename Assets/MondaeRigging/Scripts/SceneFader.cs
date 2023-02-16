@@ -35,6 +35,21 @@ public class SceneFader : MonoBehaviour
         }
     }
 
+    public IEnumerator Respawn()
+    {
+        float t = 2f;
+
+        while (t > 0f)
+        {
+            t -= Time.deltaTime;
+
+            float a = curve.Evaluate(t);
+            img.color = new Color(106f, 0f, 0f, a);
+
+            yield return 0; // wait a frame and then continue...
+        }
+    }
+
     public IEnumerator FadeOut(string scene)
     {
         float t = 2f;

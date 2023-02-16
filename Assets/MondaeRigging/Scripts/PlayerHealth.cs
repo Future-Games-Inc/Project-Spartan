@@ -1,5 +1,6 @@
 using CSCore;
 using ExitGames.Client.Photon;
+using ExitGames.Client.Photon.StructWrapping;
 using LootLocker.Requests;
 using Photon.Pun;
 using Photon.Realtime;
@@ -49,6 +50,22 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject[] chaosEmblem;
     public GameObject[] muerteEmblem;
     public GameObject[] playerObjects;
+    public GameObject Artifact1Obj;
+    public GameObject Artifact2Obj;
+    public GameObject Artifact3Obj;
+    public GameObject Artifact4Obj;
+    public GameObject Artifact5Obj;
+    public GameObject Artifact1Drp;
+    public GameObject Artifact2Drp;
+    public GameObject Artifact3Drp;
+    public GameObject Artifact4Drp;
+    public GameObject Artifact5Drp;
+
+    public Transform artifactDrop1;
+    public Transform artifactDrop2;
+    public Transform artifactDrop3;
+    public Transform artifactDrop4;
+    public Transform artifactDrop5;
 
     public int Health = 100;
     public int reactorExtraction;
@@ -112,6 +129,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool CintSixDatacard = false;
     public bool FedZoneDatacard = false;
     public bool factionExtraction = false;
+    public bool Artifact1;
+    public bool Artifact2;
+    public bool Artifact3;
+    public bool Artifact4;
+    public bool Artifact5;
 
     [SerializeField] private bool primaryButtonPressed;
     [SerializeField] private bool secondaryButtonPressed;
@@ -153,7 +175,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Left Controller ButtonSource")]
     public XRNode left_HandButtonSource;
 
-    public static readonly byte ExtractionGameMode  = 1;
+    public static readonly byte ExtractionGameMode = 1;
     public static readonly byte PlayerGameMode = 2;
     public static readonly byte EnemyGameMode = 3;
 
@@ -300,6 +322,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [System.Obsolete]
     void Update()
     {
+        Artifact1Obj.SetActive(Artifact1);
+        Artifact2Obj.SetActive(Artifact2);
+        Artifact3Obj.SetActive(Artifact3);
+        Artifact4Obj.SetActive(Artifact4);
+        Artifact5Obj.SetActive(Artifact5);
 
         foreach (GameObject playerObject in playerObjects)
         {
@@ -506,7 +533,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator PlayerDeath()
     {
         yield return new WaitForSeconds(0);
-        sceneFader.ScreenFade();
+        StartCoroutine(sceneFader.ScreenFade());
         GameObject playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 4);
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
@@ -518,6 +545,32 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
         {
             PhotonNetwork.Instantiate(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0);
+        }
+
+        if (Artifact1)
+        {
+            PhotonNetwork.Instantiate(Artifact1Drp.name, artifactDrop1.position, Quaternion.identity, 0);
+            Artifact1 = false;
+        }
+        if (Artifact2)
+        {
+            PhotonNetwork.Instantiate(Artifact2Drp.name, artifactDrop2.position, Quaternion.identity, 0);
+            Artifact2 = false;
+        }
+        if (Artifact3)
+        {
+            PhotonNetwork.Instantiate(Artifact3Drp.name, artifactDrop3.position, Quaternion.identity, 0);
+            Artifact3 = false;
+        }
+        if (Artifact4)
+        {
+            PhotonNetwork.Instantiate(Artifact4Drp.name, artifactDrop4.position, Quaternion.identity, 0);
+            Artifact4 = false;
+        }
+        if (Artifact5)
+        {
+            PhotonNetwork.Instantiate(Artifact5Drp.name, artifactDrop5.position, Quaternion.identity, 0);
+            Artifact5 = false;
         }
         yield return new WaitForSeconds(.75f);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
@@ -536,9 +589,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             direct.enabled = false;
         }
 
-        sceneFader.ScreenFade();
+        StartCoroutine(sceneFader.Respawn());
         photonView.RPC("RPC_Respawn", RpcTarget.AllBuffered);
-        sceneFader.ScreenFadeIn();
 
         //player.transform.position = spawnManager.spawnPosition;
         //playerLives -= 1;
@@ -553,7 +605,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         respawnUI.UpdateRespawnUI();
-        CheckHealthStatus();
     }
 
     IEnumerator ReactorExtraction()
@@ -640,6 +691,31 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     void ExtractionGame()
     {
         StartCoroutine(GetXP(50));
+        if (Artifact1 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact1 = false;
+        }
+        if (Artifact2 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact2 = false;
+        }
+        if (Artifact3 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact3 = false;
+        }
+        if (Artifact4 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact4 = false;
+        }
+        if (Artifact5 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact5 = false;
+        }
 
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
@@ -650,6 +726,32 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         StartCoroutine(GetXP(30));
 
+        if (Artifact1 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact1 = false;
+        }
+        if (Artifact2 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact2 = false;
+        }
+        if (Artifact3 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact3 = false;
+        }
+        if (Artifact4 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact4 = false;
+        }
+        if (Artifact5 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact5 = false;
+        }
+
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(PlayerGameMode, null, raiseEventOptions, sendOptions);
@@ -658,6 +760,32 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     void EnemyGame()
     {
         StartCoroutine(GetXP(10));
+
+        if (Artifact1 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact1 = false;
+        }
+        if (Artifact2 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact2 = false;
+        }
+        if (Artifact3 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact3 = false;
+        }
+        if (Artifact4 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact4 = false;
+        }
+        if (Artifact5 == true)
+        {
+            StartCoroutine(GetXP(100));
+            Artifact5 = false;
+        }
 
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         SendOptions sendOptions = new SendOptions { Reliability = true };
@@ -719,7 +847,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonEvent.Code == ReactorGrab.ReactorExtractionFalse)
         {
             reactorIcon.SetActive(false);
-            
+
         }
 
         if (photonEvent.Code == FactionExtraction.FactionExtractionFalse)
@@ -1129,6 +1257,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
+        if (!photonView.IsMine)
+        { return; }
+
         Health -= damage;
         healthBar.SetCurrentHealth(Health);
 
@@ -1148,6 +1279,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_GainHealth(int health)
     {
+        if (!photonView.IsMine)
+        { return; }
+
         Health += health;
         healthBar.SetCurrentHealth(Health);
     }
@@ -1155,6 +1289,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Respawn()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         player.transform.position = spawnManager.spawnPosition;
         playerLives -= 1;
         Health = 125;
@@ -1166,6 +1303,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_SetMaxHealth(int Health)
     {
+        if (!photonView.IsMine)
+        { return; }
+
         maxHealth = Health;
         multiplayerHealth.SetMaxHealth(maxHealth);
         healthBar.SetMaxHealth(maxHealth);
@@ -1331,6 +1471,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_HealthRegen()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         InvokeRepeating("HealthRegen", 0f, 3f);
     }
 }

@@ -4,11 +4,7 @@ using UnityEngine.InputSystem;
 
 public class ActivateWristUI : MonoBehaviour
 {
-    public InputActionProperty pinchAnimationAction;
-    public InputActionProperty gripAnimationAction;
-
-    public float triggerValue;
-    public float pinchValue;
+    public InputActionProperty leftThumbstickPress;
 
     public GameObject uiCanvas;
     public GameObject miniMap;
@@ -22,8 +18,6 @@ public class ActivateWristUI : MonoBehaviour
     {
         timer = 0f;
         activated = false;
-        triggerValue = pinchAnimationAction.action.ReadValue<float>();
-        pinchValue = gripAnimationAction.action.ReadValue<float>();
         uiCanvas.SetActive(false);
         miniMap.SetActive(false);
         scoreboard.SetActive(false);
@@ -32,10 +26,7 @@ public class ActivateWristUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        triggerValue = pinchAnimationAction.action.ReadValue<float>();
-        pinchValue = gripAnimationAction.action.ReadValue<float>();
-
-        if (triggerValue >= .98f && pinchValue >= .98f && activated == false)
+        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == false)
         {
             timer += Time.deltaTime;
             if (timer > .75f)
@@ -44,12 +35,12 @@ public class ActivateWristUI : MonoBehaviour
             }
         }
 
-        if (triggerValue < .98f || pinchValue < .98f)
+        if (leftThumbstickPress.action.ReadValue<float>() < .78f)
         {
             timer = 0f;
         }
 
-        if (triggerValue >= .98f && activated == true && timer < .75f || pinchValue >= .98f && activated == true && timer < .75f)
+        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == true && timer < .75f)
         {
             activated = false;
         }

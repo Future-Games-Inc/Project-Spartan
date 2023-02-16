@@ -15,6 +15,7 @@ public class FiringRangeAI : MonoBehaviour
 
     public NavMeshAgent agent;
     public Transform targetTransform;
+    public GameControl gameControl;
 
     public Transform[] waypoints;
     public GameObject[] players;
@@ -35,11 +36,14 @@ public class FiringRangeAI : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip bulletHit;
     public AudioClip[] audioClip;
+    public GameObject deathEffect;
 
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        deathEffect.SetActive(false);
+        gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
 
         alive = true;
 
@@ -79,7 +83,8 @@ public class FiringRangeAI : MonoBehaviour
         if (Health <= 0 && alive == true)
         {
             alive = false;
-            Destroy(gameObject);
+            deathEffect.SetActive(true);
+            StartCoroutine(Death());
         }
     }
 
@@ -186,6 +191,16 @@ public class FiringRangeAI : MonoBehaviour
         int playAudio = Random.Range(0, 70);
         if (!audioSource.isPlaying && playAudio <= 70)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+    }
+
+    IEnumerator Death()
+    {
+        if(gameControl.enabled == true)
+        {
+            gameControl.EnemyKilled();
+        }
+        yield return new WaitForSeconds(0.75f);
+        Destroy(gameObject);
     }
 }
 

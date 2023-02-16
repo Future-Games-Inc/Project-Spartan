@@ -6362,3 +6362,508 @@ Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\
 Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
 Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
 Symbol file LoadedFromMemory doesn't match image C:\Users\monda\Project-Spartan\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+2023-2-13
+Rendering UV GBuffer for FiringRange_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_FiringRange_LM0.lz4" 2 0 0 0
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_0_13" 68 0 0 batchpointlight_0_0_13.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-2053881768_0" 68 0 0 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_985864040_0" 68 0 0 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_diffuse" 4 16 0 "gi_FiringRange_LM00.bin" "FiringRange_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_diffuse" 4 16 0 "gi_FiringRange_LM01.bin" "FiringRange_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_diffuse" 4 16 0 "gi_FiringRange_LM02.bin" "FiringRange_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_diffuse" 4 16 0 "gi_FiringRange_LM03.bin" "FiringRange_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_final" 84 16 0 "gi_FiringRange_LM04.bin" "FiringRange_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_final_HDR.lz4" 4 0 0 comp_indirect0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "FiringRange_LM0_final_Dir.lz4" 64 0 0 dircomp_indirect0.bin
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "FiringRange_LM0_final_HDR.lz4" "FiringRange_LM0_final_Dir.lz4
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/FiringRange_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/FiringRange_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/FiringRange_LM0_dir.tga" 
+2023-2-15
+Rendering UV GBuffer for NewL1MP_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for NewL1MP_LMA1 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for NewL1MP_LMA2 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 256
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_NewL1MP_LM0.lz4" 2 0 0 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_NewL1MP_LMA1.lz4" 2 0 1 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_NewL1MP_LMA2.lz4" 2 0 2 0
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_0_127" 1924 0 3 batchpointlight_3_0_127.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_128_147" 1924 0 3 batchpointlight_3_128_147.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_148_163" 1924 0 3 batchpointlight_3_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_164_164" 4 0 3 batchpointlight_3_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_165_174" 4 0 3 batchpointlight_3_165_174.bin
+Running ftraceRTX skyprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_3" 1924 0 3 sky0.bin
+Running ftraceRTX sunprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_3" 1924 0 3 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "probes" 4 0 3 comp_3.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_0_127" 68 0 0 batchpointlight_0_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_128_147" 68 0 0 batchpointlight_0_128_147.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_148_163" 68 0 0 batchpointlight_0_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_164_164" 4 0 0 batchpointlight_0_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_165_174" 4 0 0 batchpointlight_0_165_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_0" 68 0 0 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_0" 68 0 0 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_0_127" 68 0 1 batchpointlight_1_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_128_147" 68 0 1 batchpointlight_1_128_147.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_148_163" 68 0 1 batchpointlight_1_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_164_164" 4 0 1 batchpointlight_1_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_165_174" 4 0 1 batchpointlight_1_165_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_1" 68 0 1 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_1" 68 0 1 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1" 4 0 1 comp_1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_lights_Dir.lz4" 64 0 1 dircomp_1.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_0_127" 68 0 2 batchpointlight_2_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_128_147" 68 0 2 batchpointlight_2_128_147.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_148_163" 68 0 2 batchpointlight_2_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_164_164" 4 0 2 batchpointlight_2_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_165_174" 4 0 2 batchpointlight_2_165_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_2" 68 0 2 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_2" 68 0 2 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2" 4 0 2 comp_2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_lights_Dir.lz4" 64 0 2 dircomp_2.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM00.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA10.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA20.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM01.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA11.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA21.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM02.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA12.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA22.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM03.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA13.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA23.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgiprobesh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final" 1940 16 3 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_final" 84 16 0 "gi_NewL1MP_LM04.bin" "NewL1MP_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_final" 84 16 1 "gi_NewL1MP_LMA14.bin" "NewL1MP_LMA1_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_final" 84 16 2 "gi_NewL1MP_LMA24.bin" "NewL1MP_LMA2_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_HDR.lz4" 4 0 3 comp_indirect3.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_final_HDR.lz4" 4 0 0 comp_indirect0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_final_Dir.lz4" 64 0 0 dircomp_indirect0.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_final_HDR.lz4" 4 0 1 comp_indirect1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_final_Dir.lz4" 64 0 1 dircomp_indirect1.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_final_HDR.lz4" 4 0 2 comp_indirect2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_final_Dir.lz4" 64 0 2 dircomp_indirect2.bin
+Running ftraceRTX addsh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_" 4 0 3 shcomp_3.bin
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "NewL1MP_LM0_final_HDR.lz4" "NewL1MP_LM0_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "1" "NewL1MP_LMA1_final_HDR.lz4" "NewL1MP_LMA1_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "2" "NewL1MP_LMA2_final_HDR.lz4" "NewL1MP_LMA2_final_Dir.lz4
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LM0_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA1_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA1_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA2_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA2_dir.tga" 
+Done
+Done
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Num alphas of 2048x2048: 5
+Done
+Rendering UV GBuffer for NewL1MP_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for NewL1MP_LMA1 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for NewL1MP_LMA2 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 256
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_NewL1MP_LM0.lz4" 2 0 0 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_NewL1MP_LMA1.lz4" 2 0 1 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_NewL1MP_LMA2.lz4" 2 0 2 0
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_0_127" 1924 0 3 batchpointlight_3_0_127.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_128_147" 1924 0 3 batchpointlight_3_128_147.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_148_163" 1924 0 3 batchpointlight_3_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_164_164" 4 0 3 batchpointlight_3_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_165_174" 4 0 3 batchpointlight_3_165_174.bin
+Running ftraceRTX skyprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_3" 1924 0 3 sky0.bin
+Running ftraceRTX sunprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_3" 1924 0 3 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "probes" 4 0 3 comp_3.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_0_127" 68 0 0 batchpointlight_0_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_128_147" 68 0 0 batchpointlight_0_128_147.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_148_163" 68 0 0 batchpointlight_0_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_164_164" 4 0 0 batchpointlight_0_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_165_174" 4 0 0 batchpointlight_0_165_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_0" 68 0 0 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_0" 68 0 0 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_0_127" 68 0 1 batchpointlight_1_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_128_147" 68 0 1 batchpointlight_1_128_147.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_148_163" 68 0 1 batchpointlight_1_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_164_164" 4 0 1 batchpointlight_1_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_165_174" 4 0 1 batchpointlight_1_165_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_1" 68 0 1 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_1" 68 0 1 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1" 4 0 1 comp_1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_lights_Dir.lz4" 64 0 1 dircomp_1.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_0_127" 68 0 2 batchpointlight_2_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_128_147" 68 0 2 batchpointlight_2_128_147.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_148_163" 68 0 2 batchpointlight_2_148_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_164_164" 4 0 2 batchpointlight_2_164_164.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_165_174" 4 0 2 batchpointlight_2_165_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_2" 68 0 2 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_2" 68 0 2 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2" 4 0 2 comp_2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_lights_Dir.lz4" 64 0 2 dircomp_2.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM00.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA10.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA20.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM01.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA11.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA21.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM02.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA12.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA22.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_diffuse" 4 16 0 "gi_NewL1MP_LM03.bin" "NewL1MP_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_diffuse" 4 16 1 "gi_NewL1MP_LMA13.bin" "NewL1MP_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_diffuse" 4 16 2 "gi_NewL1MP_LMA23.bin" "NewL1MP_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgiprobesh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final" 1940 16 3 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_final" 84 16 0 "gi_NewL1MP_LM04.bin" "NewL1MP_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_final" 84 16 1 "gi_NewL1MP_LMA14.bin" "NewL1MP_LMA1_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_final" 84 16 2 "gi_NewL1MP_LMA24.bin" "NewL1MP_LMA2_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_HDR.lz4" 4 0 3 comp_indirect3.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_final_HDR.lz4" 4 0 0 comp_indirect0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LM0_final_Dir.lz4" 64 0 0 dircomp_indirect0.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_final_HDR.lz4" 4 0 1 comp_indirect1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA1_final_Dir.lz4" 64 0 1 dircomp_indirect1.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_final_HDR.lz4" 4 0 2 comp_indirect2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "NewL1MP_LMA2_final_Dir.lz4" 64 0 2 dircomp_indirect2.bin
+Running ftraceRTX addsh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_" 4 0 3 shcomp_3.bin
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "NewL1MP_LM0_final_HDR.lz4" "NewL1MP_LM0_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "1" "NewL1MP_LMA1_final_HDR.lz4" "NewL1MP_LMA1_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "2" "NewL1MP_LMA2_final_HDR.lz4" "NewL1MP_LMA2_final_Dir.lz4
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LM0_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA1_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA1_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA1_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA2_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/NewL1MP_LMA2_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/NewL1MP_LMA2_dir.tga" 
+Done
+Done
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Num alphas of 2048x2048: 5
+Done
+Rendering UV GBuffer for 6Multiplayer_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for 6Multiplayer_LMA1 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for 6Multiplayer_LMA2 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 256
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_6Multiplayer_LM0.lz4" 2 0 0 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_6Multiplayer_LMA1.lz4" 2 0 1 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_6Multiplayer_LMA2.lz4" 2 0 2 0
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_0_127" 1924 0 3 batchpointlight_3_0_127.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_128_155" 1924 0 3 batchpointlight_3_128_155.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_156_163" 1924 0 3 batchpointlight_3_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_164_165" 4 0 3 batchpointlight_3_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_166_174" 4 0 3 batchpointlight_3_166_174.bin
+Running ftraceRTX skyprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_3" 1924 0 3 sky0.bin
+Running ftraceRTX sunprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_3" 1924 0 3 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "probes" 4 0 3 comp_3.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_0_127" 68 0 0 batchpointlight_0_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_128_155" 68 0 0 batchpointlight_0_128_155.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_156_163" 68 0 0 batchpointlight_0_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_164_165" 4 0 0 batchpointlight_0_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_166_174" 4 0 0 batchpointlight_0_166_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_0" 68 0 0 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_0" 68 0 0 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_0_127" 68 0 1 batchpointlight_1_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_128_155" 68 0 1 batchpointlight_1_128_155.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_156_163" 68 0 1 batchpointlight_1_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_164_165" 4 0 1 batchpointlight_1_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_166_174" 4 0 1 batchpointlight_1_166_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_1" 68 0 1 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_1" 68 0 1 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1" 4 0 1 comp_1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_lights_Dir.lz4" 64 0 1 dircomp_1.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_0_127" 68 0 2 batchpointlight_2_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_128_155" 68 0 2 batchpointlight_2_128_155.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_156_163" 68 0 2 batchpointlight_2_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_164_165" 4 0 2 batchpointlight_2_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_166_174" 4 0 2 batchpointlight_2_166_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_2" 68 0 2 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_2" 68 0 2 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2" 4 0 2 comp_2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_lights_Dir.lz4" 64 0 2 dircomp_2.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM00.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA10.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA20.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM01.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA11.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA21.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM02.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA12.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA22.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM03.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA13.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA23.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgiprobesh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final" 1940 16 3 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_final" 84 16 0 "gi_6Multiplayer_LM04.bin" "6Multiplayer_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_final" 84 16 1 "gi_6Multiplayer_LMA14.bin" "6Multiplayer_LMA1_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_final" 84 16 2 "gi_6Multiplayer_LMA24.bin" "6Multiplayer_LMA2_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_HDR.lz4" 4 0 3 comp_indirect3.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_final_HDR.lz4" 4 0 0 comp_indirect0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_final_Dir.lz4" 64 0 0 dircomp_indirect0.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_final_HDR.lz4" 4 0 1 comp_indirect1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_final_Dir.lz4" 64 0 1 dircomp_indirect1.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_final_HDR.lz4" 4 0 2 comp_indirect2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_final_Dir.lz4" 64 0 2 dircomp_indirect2.bin
+Running ftraceRTX addsh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_" 4 0 3 shcomp_3.bin
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "6Multiplayer_LM0_final_HDR.lz4" "6Multiplayer_LM0_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "1" "6Multiplayer_LMA1_final_HDR.lz4" "6Multiplayer_LMA1_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "2" "6Multiplayer_LMA2_final_HDR.lz4" "6Multiplayer_LMA2_final_Dir.lz4
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LM0_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA1_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA1_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA2_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA2_dir.tga" 
+Done
+Done
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Num alphas of 2048x2048: 5
+Done
+Rendering UV GBuffer for 6Multiplayer_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for 6Multiplayer_LMA1 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for 6Multiplayer_LMA2 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 256
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Done
+Done
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_0_127" 1924 0 3 batchpointlight_3_0_127.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_128_155" 1924 0 3 batchpointlight_3_128_155.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_156_163" 1924 0 3 batchpointlight_3_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_164_165" 4 0 3 batchpointlight_3_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_166_174" 4 0 3 batchpointlight_3_166_174.bin
+Running ftraceRTX skyprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_3" 1924 0 3 sky0.bin
+Running ftraceRTX sunprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_3" 1924 0 3 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "probes" 4 0 3 comp_3.bin
+Running ftraceRTX texgiprobesh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final" 1940 16 3 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_HDR.lz4" 4 0 3 comp_indirect3.bin
+Running ftraceRTX addsh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_" 4 0 3 shcomp_3.bin
+Done
+Done
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Num alphas of 2048x2048: 5
+Done
+Rendering UV GBuffer for 6Multiplayer_LM0 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for 6Multiplayer_LMA1 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for 6Multiplayer_LMA2 51
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 256
+RGBA32F...RGBA8...RGBA8_SRGB...RGBA16F...states...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_6Multiplayer_LM0.lz4" 2 0 0 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_6Multiplayer_LMA1.lz4" 2 0 1 0
+Running ftraceRTX fixpos12 "C:\Users\monda\AppData\Local\Temp\frender" "uvpos_6Multiplayer_LMA2.lz4" 2 0 2 0
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_0_127" 1924 0 3 batchpointlight_3_0_127.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_128_155" 1924 0 3 batchpointlight_3_128_155.bin
+Running ftraceRTX batchpointlightprobesh "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_156_163" 1924 0 3 batchpointlight_3_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_164_165" 4 0 3 batchpointlight_3_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_3_166_174" 4 0 3 batchpointlight_3_166_174.bin
+Running ftraceRTX skyprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_3" 1924 0 3 sky0.bin
+Running ftraceRTX sunprobesh "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_3" 1924 0 3 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "probes" 4 0 3 comp_3.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_0_127" 68 0 0 batchpointlight_0_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_128_155" 68 0 0 batchpointlight_0_128_155.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_156_163" 68 0 0 batchpointlight_0_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_164_165" 4 0 0 batchpointlight_0_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_0_166_174" 4 0 0 batchpointlight_0_166_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_0" 68 0 0 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_0" 68 0 0 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_0_127" 68 0 1 batchpointlight_1_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_128_155" 68 0 1 batchpointlight_1_128_155.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_156_163" 68 0 1 batchpointlight_1_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_164_165" 4 0 1 batchpointlight_1_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_1_166_174" 4 0 1 batchpointlight_1_166_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_1" 68 0 1 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_1" 68 0 1 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1" 4 0 1 comp_1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_lights_Dir.lz4" 64 0 1 dircomp_1.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_0_127" 68 0 2 batchpointlight_2_0_127.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_128_155" 68 0 2 batchpointlight_2_128_155.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_156_163" 68 0 2 batchpointlight_2_156_163.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_164_165" 4 0 2 batchpointlight_2_164_165.bin
+Running ftraceRTX batchpointlight "C:\Users\monda\AppData\Local\Temp\frender" "PointBatch_2_166_174" 4 0 2 batchpointlight_2_166_174.bin
+Running ftraceRTX skydir "C:\Users\monda\AppData\Local\Temp\frender" "light_-360141309_2" 68 0 2 sky0.bin
+Running ftraceRTX sun "C:\Users\monda\AppData\Local\Temp\frender" "light_1926741065_2" 68 0 2 direct0.bin
+Running ftraceRTX addmul "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2" 4 0 2 comp_2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_lights_Dir.lz4" 64 0 2 dircomp_2.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM00.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA10.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA20.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM01.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA11.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA21.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM02.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA12.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA22.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_diffuse" 4 16 0 "gi_6Multiplayer_LM03.bin" "6Multiplayer_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_diffuse" 4 16 1 "gi_6Multiplayer_LMA13.bin" "6Multiplayer_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_diffuse" 4 16 2 "gi_6Multiplayer_LMA23.bin" "6Multiplayer_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgiprobesh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final" 1940 16 3 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_final" 84 16 0 "gi_6Multiplayer_LM04.bin" "6Multiplayer_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_final" 84 16 1 "gi_6Multiplayer_LMA14.bin" "6Multiplayer_LMA1_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_final" 84 16 2 "gi_6Multiplayer_LMA24.bin" "6Multiplayer_LMA2_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_HDR.lz4" 4 0 3 comp_indirect3.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_final_HDR.lz4" 4 0 0 comp_indirect0.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LM0_final_Dir.lz4" 64 0 0 dircomp_indirect0.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_final_HDR.lz4" 4 0 1 comp_indirect1.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA1_final_Dir.lz4" 64 0 1 dircomp_indirect1.bin
+Running ftraceRTX add "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_final_HDR.lz4" 4 0 2 comp_indirect2.bin
+Running ftraceRTX diradd "C:\Users\monda\AppData\Local\Temp\frender" "6Multiplayer_LMA2_final_Dir.lz4" 64 0 2 dircomp_indirect2.bin
+Running ftraceRTX addsh "C:\Users\monda\AppData\Local\Temp\frender" "probes_final_" 4 0 3 shcomp_3.bin
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "0" "6Multiplayer_LM0_final_HDR.lz4" "6Multiplayer_LM0_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "1" "6Multiplayer_LMA1_final_HDR.lz4" "6Multiplayer_LMA1_final_Dir.lz4
+Running denoiserOIDN D "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_Dir.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_Dir.lz4" 2048 0
+Running denoiserOIDN c "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_HDR.lz4" "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\monda\AppData\Local\Temp\frender" "2" "6Multiplayer_LMA2_final_HDR.lz4" "6Multiplayer_LMA2_final_Dir.lz4
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LM0_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LM0_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA1_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA1_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA1_dir.tga" 
+Running halffloat2hdr "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_HDR.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA2_final.hdr" 1024
+Running rgba2tga "C:\Users\monda\AppData\Local\Temp\frender/6Multiplayer_LMA2_final_Dir.lz4" "C:/Users/monda/Project-Spartan/Assets/BakeryLightmaps/6Multiplayer_LMA2_dir.tga" 
+Done
+Done
+Done
+Done
