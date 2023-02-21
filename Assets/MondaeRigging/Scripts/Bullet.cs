@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public PlayerHealth playerHealth;
     public bool playerBullet = false;
     public int bulletModifier;
+    public MeshCollider colliderBullet;
 
     // Start is called before the first frame update
     void Start()

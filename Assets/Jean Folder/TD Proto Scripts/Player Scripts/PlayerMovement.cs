@@ -33,8 +33,11 @@ public class PlayerMovement : MonoBehaviour
 
 
     private CharacterController character;
+    public WallRun wallRun;
 
     [SerializeField] private bool primaryButtonPressed;
+
+    private Camera playerCamera;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
             movementSpeed = 6f;
+        playerCamera = rig.Camera.GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -83,8 +87,6 @@ public class PlayerMovement : MonoBehaviour
             character.Move(Vector3.up * fallingSpeed * Time.fixedDeltaTime);
         }
         handleJumping();
-
-
     }
 
     void CapsuleFollowHeadset()
@@ -111,30 +113,29 @@ public class PlayerMovement : MonoBehaviour
         if (!isJumping && CheckIfGrounded() && primaryButtonPressed)
         {
             isJumping = true;
-            character.Move(Vector3.up * jumpVelocity * Time.fixedDeltaTime);
+            // Calculate the jump direction based on the camera view
+            Quaternion cameraPitchAndRoll = Quaternion.Euler(playerCamera.transform.eulerAngles.x, 0, 0);
+            Quaternion cameraYaw = playerCamera.transform.rotation * Quaternion.Inverse(cameraPitchAndRoll);
+            Vector3 jumpDirection = cameraYaw * Vector3.forward;
+            jumpDirection.y = 1f; // add upward component to the jump direction
+
+            character.Move(jumpDirection.normalized * jumpVelocity * Time.fixedDeltaTime);
 
         }
         else if (!isJumping && CheckIfGrounded() && primaryButtonPressed)
         {
             isJumping = false;
         }
-
     }
 
     public void Boost(float buff)
     {
         Debug.Log("Boost Ability Activated");
         movementSpeed = movementSpeed * buff;
-
     }
-
 
     public void ResetBoost(float buff)
     {
         movementSpeed = movementSpeed / buff;
-
     }
-
-
-
 }

@@ -14918,7 +14918,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 24
-  m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:
@@ -15003,10 +15002,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AttachTransform: {fileID: 8887347442619638635}
-  m_UseDynamicAttach: 0
-  m_MatchAttachPosition: 1
-  m_MatchAttachRotation: 1
-  m_SnapToColliderVolume: 1
   m_AttachEaseInTime: 0.15
   m_MovementType: 2
   m_VelocityDamping: 1
@@ -15074,7 +15069,7 @@ MonoBehaviour:
   - {fileID: 7787028527115353120}
   fireSpeed: 70
   bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
-  rotatorScript: {fileID: 0}
+  rotatorScript: {fileID: 2347775247548608851}
   explosionObject: {fileID: 6540274373427884932}
   maxAmmo: 15
   ammoLeft: 0
@@ -15087,6 +15082,7 @@ MonoBehaviour:
   weaponReload: {fileID: 8300000, guid: 99047677fc7e428418854f0a340622f1, type: 3}
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
+  isFiring: 0
 --- !u!82 &-4731080267092616573
 AudioSource:
   m_ObjectHideFlags: 0
@@ -29694,7 +29690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7750224869278976138}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.208, y: 0.005, z: 0}
+  m_LocalPosition: {x: 0.208, y: 0.0503, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

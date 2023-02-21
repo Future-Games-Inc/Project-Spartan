@@ -21,8 +21,8 @@ public class GameControl : MonoBehaviour
     private bool gameStarted = false;
 
     public GameObject[] enemies1;
-    private GameObject[] enemies2;
-    private GameObject[] minigameEnemies;
+    public GameObject[] enemies2;
+    public GameObject[] minigameEnemies;
     public Transform[] spawnPoint;
 
     public AudioSource audioSource;
@@ -69,21 +69,6 @@ public class GameControl : MonoBehaviour
                 EndGame();
             }
         }
-
-        if(countDown == 5)
-            audioSource.PlayOneShot(countdown5);
-
-        if (countDown == 4)
-            audioSource.PlayOneShot(countdown4);
-
-        if (countDown == 3)
-            audioSource.PlayOneShot(countdown3);
-
-        if (countDown == 2)
-            audioSource.PlayOneShot(countdown2);
-
-        if (countDown == 1)
-            audioSource.PlayOneShot(countdown1);
     }
 
     void SpawnEnemies(int count)
@@ -119,12 +104,15 @@ public class GameControl : MonoBehaviour
         }
 
         audioSource.PlayOneShot(endClip);
+
+        StartCoroutine(Deactivate());
     }
 
     public void StartGame()
     {
         if (gameStarted == false)
         {
+            StartCoroutine(CountDown());
             audioSource.PlayOneShot(startClip);
             // reset score and countdowns
             score = 0;
@@ -160,5 +148,26 @@ public class GameControl : MonoBehaviour
         score++;
         SpawnEnemies(1);
         scoreText.text = "Score: " + score.ToString();
+    }
+
+    IEnumerator CountDown()
+    {
+        yield return new WaitForSeconds(5);
+        audioSource.PlayOneShot(countdown5);
+        yield return new WaitForSeconds(1);
+        audioSource.PlayOneShot(countdown4);
+        yield return new WaitForSeconds(1);
+        audioSource.PlayOneShot(countdown3);
+        yield return new WaitForSeconds(1);
+        audioSource.PlayOneShot(countdown2);
+        yield return new WaitForSeconds(1);
+        audioSource.PlayOneShot(countdown1);
+    }
+
+    IEnumerator Deactivate()
+    {
+        yield return new WaitForSeconds(10);
+        highScoreBanner.SetActive(false);
+        scoreBanner.SetActive(false);
     }
 }

@@ -146,7 +146,7 @@ public class GrappleGun : MonoBehaviour
         springJoint.minDistance = disJointToPlayer * .1f;
 
         springJoint.damper = 300f;
-        springJoint.spring = 700f;
+        springJoint.spring = 1000f;
     }
 
 }

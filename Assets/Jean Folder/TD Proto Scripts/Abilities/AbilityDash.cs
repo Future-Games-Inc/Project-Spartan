@@ -3,27 +3,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.XR;
+using Unity.XR.CoreUtils;
 
 public class AbilityDash : Abilities
 {
-    public InputActionReference rightThumstickPress = null;
+    public XRNode right_HandButtonSource;
+    [SerializeField] private bool secondaryButtonPressed;
 
     [SerializeField] private int boostPercentage;
     [SerializeField] PlayerMovement movement;
 
     private float boostAsPercent;
-
-    private void Awake()
-    {
-        rightThumstickPress.action.performed += RH_ThumbstickPress;
-    }
-
-    private void OnDestroy()
-    {
-        rightThumstickPress.action.performed -= RH_ThumbstickPress;
-    }
-
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +37,10 @@ public class AbilityDash : Abilities
     // Update is called once per frame
     void Update()
     {
-        if(Time.time >= abilityTimer && rightThumstickPress.action.IsPressed())
+        InputDevice dashButton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
+        dashButton.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
+
+        if (Time.time >= abilityTimer && secondaryButtonPressed)
         {
             AbilityEffect();
             abilityTimer = Time.time + coolDown;
@@ -63,11 +57,5 @@ public class AbilityDash : Abilities
     private void ResetAbility()
     {
         movement.ResetBoost(boostAsPercent);   
-    }
-
-    private void RH_ThumbstickPress(InputAction.CallbackContext context)
-    {
-
-
     }
 }

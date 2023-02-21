@@ -45,7 +45,7 @@ public class ArtifactScript : MonoBehaviourPunCallbacks
                 PhotonNetwork.Destroy(gameObject);
             }
 
-            if (gameObject.CompareTag("Artifact6"))
+            if (gameObject.CompareTag("Artifact5"))
             {
                 other.GetComponentInParent<PlayerHealth>().Artifact5 = true;
                 PhotonNetwork.Destroy(gameObject);

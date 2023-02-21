@@ -307,7 +307,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 characterFaction = "Federation Zone Authority".ToString();
                 foreach (GameObject emblem in fedEmblem)
                     emblem.SetActive(true);
-            }
+            }            
         }
     }
 
@@ -1321,6 +1321,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities1True()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         toxicEffect.SetActive(true);
         toxicTimer += Time.deltaTime;
     }
@@ -1328,6 +1331,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities1False()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         toxicEffect.SetActive(false);
         toxicEffectActive = false;
     }
@@ -1335,6 +1341,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities2True()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         bubbleShield.SetActive(true);
         shieldTimer += Time.deltaTime;
     }
@@ -1342,6 +1351,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities2False()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         bubbleShield.SetActive(false);
         shieldActive = false;
     }
@@ -1349,6 +1361,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities3True()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         bulletModifier = startingBulletModifier + bulletXPModifier;
         upgradeTimer += Time.deltaTime;
     }
@@ -1356,6 +1371,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities3False()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         bulletModifier = startingBulletModifier;
         bulletImproved = false;
     }
@@ -1363,6 +1381,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities4True()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         leechEffectTimer += Time.deltaTime;
         leechBubble.SetActive(true);
     }
@@ -1370,6 +1391,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities4False()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         leechBubble.SetActive(false);
         leechEffect = false;
     }
@@ -1439,6 +1463,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities7False()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         foreach (GameObject minimap in minimapSymbol)
         {
             minimap.GetComponent<SpriteRenderer>().color = minimapStart;
@@ -1449,6 +1476,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities8()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         if (aiCompanion == true)
         {
             aiCompanionDrone.SetActive(true);
@@ -1460,6 +1490,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_Abilities9()
     {
+        if (!photonView.IsMine)
+        { return; }
+
         if (decoyDeploy == true)
         {
             decoySpawner.SetActive(true);

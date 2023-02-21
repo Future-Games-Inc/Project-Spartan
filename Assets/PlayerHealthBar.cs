@@ -18,6 +18,9 @@ public class PlayerHealthBar : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_SetMax(int maxHealth)
     {
+        if (!photonView.IsMine)
+        { return; }
+
         foreach (Slider healthBar in slider)
         {
             healthBar.maxValue = maxHealth;
@@ -28,6 +31,9 @@ public class PlayerHealthBar : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_SetCurrent(int currentHealth)
     {
+        if (!photonView.IsMine)
+        { return; }
+
         foreach (Slider healthBar in slider)
         {
             healthBar.value = currentHealth;

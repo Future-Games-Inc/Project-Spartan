@@ -23,8 +23,8 @@ public class PlayerWeapon1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        maxAmmo = 20;
-        durability = 10;
+        maxAmmo = 50;
+        durability = 3;
         ammoLeft = maxAmmo;
         XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
         grabbable.activated.AddListener(StartFireBullet);
