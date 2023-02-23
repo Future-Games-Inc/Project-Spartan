@@ -30,10 +30,10 @@ public class TurnSpeedAdjuster : MonoBehaviour
     public Button stateButton;
     private void Start()
     {
-        turnSpeedSlider.minValue = 75f;
-        turnSpeedSlider.maxValue = 100f;
         turnSpeedSlider.value = PlayerPrefs.GetFloat("TurnSpeed");
-        if(PlayerPrefs.HasKey("SnapTurn"))
+        turnSpeedSlider.minValue = 75f;
+        turnSpeedSlider.maxValue = 500f;
+        if (PlayerPrefs.HasKey("SnapTurn"))
         {
             int snapBool = PlayerPrefs.GetInt("SnapTurn", 0);
             snapTurn = snapBool != 0;
@@ -72,9 +72,9 @@ public class TurnSpeedAdjuster : MonoBehaviour
         sliderValue.text = turnSpeedSlider.value.ToString("F0");
         snapProvider.enabled = snapTurn;
         turnProvider.enabled = contTurn;
-        if(toggleInteract)
+        if (toggleInteract)
         {
-            foreach(XRDirectInteractor interactor in directInteractors)
+            foreach (XRDirectInteractor interactor in directInteractors)
             {
                 interactor.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.Toggle;
             }

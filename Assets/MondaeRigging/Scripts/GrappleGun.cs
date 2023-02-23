@@ -20,6 +20,7 @@ public class GrappleGun : MonoBehaviour
     public bool grappled;
     public bool targetHit;
     private GameObject lastHit;
+    public GameObject sight;
 
     [Header("Player Info")]
     SpringJoint springJoint;
@@ -34,6 +35,7 @@ public class GrappleGun : MonoBehaviour
     {
         bulletTransform = bulletPrefab.transform;
         playerTransform = playerGameObject.transform;
+        sight.SetActive(false);
     }
 
     // Update is called once per frame
@@ -43,6 +45,7 @@ public class GrappleGun : MonoBehaviour
         {
             characterController.enabled = false;
             movement.enabled = false;
+            sight.SetActive(false);
         }
 
         if (!grappled)
@@ -75,6 +78,7 @@ public class GrappleGun : MonoBehaviour
             if (hit.collider.gameObject.CompareTag("GrapplePoint"))
             {
                 targetHit = true;
+                sight.SetActive(true);
                 if (lastHit != hit.collider.gameObject)
                 {
                     if (lastHit != null)
@@ -100,6 +104,7 @@ public class GrappleGun : MonoBehaviour
             MeshRenderer rendererOld = lastHit.GetComponent<MeshRenderer>();
             rendererOld.material = originalMaterial;
             lastHit = null;
+            sight.SetActive(false);
         }
     }
 
@@ -120,6 +125,7 @@ public class GrappleGun : MonoBehaviour
 
     public void CancelGrapple()
     {
+        sight.SetActive(false);
         grappled = false;
         SpringJoint[] springJointList = playerGameObject.GetComponents<SpringJoint>();
         foreach (SpringJoint springJoint in springJointList)
@@ -131,6 +137,7 @@ public class GrappleGun : MonoBehaviour
 
     public void Swing()
     {
+        sight.SetActive(false);
         characterController.enabled = false;
         movement.enabled = false;
         if (playerGameObject.GetComponent<SpringJoint>() == null)
@@ -143,7 +150,7 @@ public class GrappleGun : MonoBehaviour
         float disJointToPlayer = Vector3.Distance(playerTransform.position, bulletTransform.position);
 
         springJoint.maxDistance = disJointToPlayer * .4f;
-        springJoint.minDistance = disJointToPlayer * .1f;
+        springJoint.minDistance = disJointToPlayer * .05f;
 
         springJoint.damper = 300f;
         springJoint.spring = 1000f;

@@ -14,10 +14,13 @@ public class TurnSpeed : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        turnProvider.turnSpeed = PlayerPrefs.GetFloat("TurnSpeed", 75);
-        if(PlayerPrefs.HasKey("SnapTurn"))
+        if (PlayerPrefs.HasKey("TurnSpeed"))
+            turnProvider.turnSpeed = PlayerPrefs.GetFloat("TurnSpeed");
+        else if (!PlayerPrefs.HasKey("TurnSpeed"))
+            turnProvider.turnSpeed = 75;
+        if (PlayerPrefs.HasKey("SnapTurn"))
         {
-            if(PlayerPrefs.GetInt("SnapTurn") >= 1)
+            if (PlayerPrefs.GetInt("SnapTurn") >= 1)
             {
                 snapProvider.enabled = true;
                 turnProvider.enabled = false;
@@ -64,6 +67,6 @@ public class TurnSpeed : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

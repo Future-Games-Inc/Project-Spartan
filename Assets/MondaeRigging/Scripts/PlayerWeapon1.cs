@@ -15,10 +15,10 @@ public class PlayerWeapon1 : MonoBehaviour
     public int durability;
 
     public GameObject playerBullet;
-    public Rotator rotatorScript;
 
     public bool active = true;
     public bool isFiring = false;
+    public bool hasTouched = false;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +29,9 @@ public class PlayerWeapon1 : MonoBehaviour
         XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
         grabbable.activated.AddListener(StartFireBullet);
         grabbable.deactivated.AddListener(StopFireBullet);
+        StartCoroutine(PickedUp());
+        StartCoroutine(DestroyWeapon())
+;
     }
 
     // Update is called once per frame
@@ -91,7 +94,22 @@ public class PlayerWeapon1 : MonoBehaviour
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            rotatorScript.enabled = false;
+            hasTouched = true;
         }
+    }
+
+    IEnumerator PickedUp()
+    {
+        yield return new WaitForSeconds(20);
+        if (!hasTouched)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    IEnumerator DestroyWeapon()
+    {
+        yield return new WaitForSeconds(120);
+        Destroy(gameObject);
     }
 }

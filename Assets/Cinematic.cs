@@ -13,6 +13,7 @@ public class Cinematic : MonoBehaviour
     public GameObject reactor;
     public GameObject authority;
     public GameObject players;
+    public SceneFader fader;
 
     public AudioSource voiceoverSource;
     public AudioClip voiceOver;
@@ -49,10 +50,10 @@ public class Cinematic : MonoBehaviour
             }
         }
 
-        if (!hasLeftRoom && holdTime >= 1f)
+        if (!hasLeftRoom && holdTime >= .75f)
         {
             // Leave the room
-            SceneManager.LoadScene(7);
+            fader.FadeTo("DemoStory");
             hasLeftRoom = true;
         }
     }

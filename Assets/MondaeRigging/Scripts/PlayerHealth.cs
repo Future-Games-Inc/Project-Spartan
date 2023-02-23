@@ -60,6 +60,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject Artifact3Drp;
     public GameObject Artifact4Drp;
     public GameObject Artifact5Drp;
+    public GameObject criticalHealth;
 
     public Transform artifactDrop1;
     public Transform artifactDrop2;
@@ -183,6 +184,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
+        criticalHealth.SetActive(false);
         object storedPlayerHealth;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out storedPlayerHealth) && (int)storedPlayerHealth >= 1)
             Health = 100 + ((int)storedPlayerHealth * 10);
@@ -357,6 +359,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             reactorText.enabled = false;
         }
+
+        if(Health <= 25)
+        {
+            criticalHealth.SetActive(true);
+        }
+        else
+            criticalHealth.SetActive(false);
 
         if (reactorExtraction >= 100 && spawnManager.gameOver == false)
         {

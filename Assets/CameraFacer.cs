@@ -29,8 +29,7 @@ public class CameraFacer : MonoBehaviour
 
             if (angle <= stopRotationThreshold)
             {
-                rotating = false;
-                driver.enabled = true;
+                StartCoroutine(Pause());
                 return;
             }
 
@@ -44,5 +43,12 @@ public class CameraFacer : MonoBehaviour
         driver.enabled = false;
         yield return new WaitForSeconds(3);
         rotating = true;
+    }
+
+    IEnumerator Pause()
+    {
+        yield return new WaitForSeconds(3);
+        rotating = false;
+        driver.enabled = true;
     }
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
+using Invector.vMelee;
+using System.Collections;
 
 public class FollowAI : MonoBehaviourPunCallbacks
 {
@@ -18,6 +20,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     public Transform[] waypoints;
     public GameObject[] players;
+    public GameObject hitEffect;
 
     [Header("AI Properties")]
     public float maxFollowDistance = 20f;
@@ -27,6 +30,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     public bool inSight;
     public bool alive = true;
+    public bool firstHit = false;
     private Vector3 directionToTarget;
 
     public States currentState;
@@ -124,10 +128,23 @@ public class FollowAI : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_PlayAudioEnemy", RpcTarget.All);
     }
 
+    IEnumerator StopHit()
+    {
+        yield return new WaitForSeconds(3f);
+        photonView.RPC("RPC_StopHit", RpcTarget.All);
+    }
+
     [PunRPC]
     void RPC_EnemyHealthMax()
     {
         healthBar.SetMaxHealth(Health);
+    }
+
+    [PunRPC]
+    void RPC_StopHit()
+    {
+        hitEffect.SetActive(false);
+        firstHit = false;
     }
 
     [PunRPC]
@@ -141,6 +158,13 @@ public class FollowAI : MonoBehaviourPunCallbacks
         {
             alive = false;
             enemyHealth.KillEnemy();
+        }
+
+        if (!firstHit)
+        {
+            hitEffect.SetActive(true);
+            firstHit = true;
+            StartCoroutine(StopHit());
         }
     }
 

@@ -18,7 +18,26 @@ public class SceneFader : MonoBehaviour
     {
         StartCoroutine(FadeOut(scene));
     }
+    public void ScreenFadeToBlack()
+    {
+        StartCoroutine(FadeBlack());
+    }
 
+    IEnumerator FadeBlack()
+    {
+        yield return new WaitForSeconds(2);
+        float t = 0f;
+
+        while (t <= 1f)
+        {
+            t += Time.deltaTime;
+
+            float a = curve.Evaluate(t);
+            img.color = new Color(0f, 0f, 0f, a);
+
+            yield return 0; // wait a frame and then continue...
+        }
+    }
 
     public IEnumerator FadeIn()
     {

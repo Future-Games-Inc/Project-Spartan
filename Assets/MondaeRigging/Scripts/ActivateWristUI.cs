@@ -11,12 +11,10 @@ public class ActivateWristUI : MonoBehaviour
     public GameObject scoreboard;
 
     public bool activated;
-    public float timer;
 
     // Start is called before the first frame update
     void Start()
     {
-        timer = 0f;
         activated = false;
         uiCanvas.SetActive(false);
         miniMap.SetActive(false);
@@ -28,19 +26,10 @@ public class ActivateWristUI : MonoBehaviour
     {
         if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == false)
         {
-            timer += Time.deltaTime;
-            if (timer > .75f)
-            {
-                StartCoroutine(WristUI());
-            }
+            StartCoroutine(WristUI());
         }
 
-        if (leftThumbstickPress.action.ReadValue<float>() < .78f)
-        {
-            timer = 0f;
-        }
-
-        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == true && timer < .75f)
+        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == true)
         {
             activated = false;
         }

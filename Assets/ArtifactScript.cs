@@ -5,6 +5,9 @@ using Photon.Pun;
 
 public class ArtifactScript : MonoBehaviourPunCallbacks
 {
+    public AudioSource audioSource;
+    public AudioClip pickupClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,32 +27,43 @@ public class ArtifactScript : MonoBehaviourPunCallbacks
             if (gameObject.CompareTag("Artifact1"))
             {
                 other.GetComponentInParent<PlayerHealth>().Artifact1 = true;
-                PhotonNetwork.Destroy(gameObject);
+                audioSource.PlayOneShot(pickupClip);
+                StartCoroutine(Destroy());
             }
 
             if (gameObject.CompareTag("Artifact2"))
             {
                 other.GetComponentInParent<PlayerHealth>().Artifact2 = true;
-                PhotonNetwork.Destroy(gameObject);
+                audioSource.PlayOneShot(pickupClip);
+                StartCoroutine(Destroy());
             }
 
             if (gameObject.CompareTag("Artifact3"))
             {
                 other.GetComponentInParent<PlayerHealth>().Artifact3 = true;
-                PhotonNetwork.Destroy(gameObject);
+                audioSource.PlayOneShot(pickupClip);
+                StartCoroutine(Destroy());
             }
 
             if (gameObject.CompareTag("Artifact4"))
             {
                 other.GetComponentInParent<PlayerHealth>().Artifact4 = true;
-                PhotonNetwork.Destroy(gameObject);
+                audioSource.PlayOneShot(pickupClip);
+                StartCoroutine(Destroy());
             }
 
             if (gameObject.CompareTag("Artifact5"))
             {
                 other.GetComponentInParent<PlayerHealth>().Artifact5 = true;
-                PhotonNetwork.Destroy(gameObject);
+                audioSource.PlayOneShot(pickupClip);
+                StartCoroutine(Destroy());
             }
         }
+    }
+
+    IEnumerator Destroy()
+   {
+        yield return new WaitForSeconds(.75f);
+        PhotonNetwork.Destroy(gameObject);
     }
 }

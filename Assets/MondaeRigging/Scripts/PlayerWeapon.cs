@@ -28,6 +28,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
 
     public bool reloadingWeapon = false;
     public bool isFiring = false;
+    public bool hasTouched = false;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,8 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
         photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
+        StartCoroutine(PickedUp());
+        StartCoroutine(DestroyWeaponAnyway());
     }
 
     // Update is called once per frame
@@ -86,6 +89,22 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_Destroy", RpcTarget.AllBuffered);
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    IEnumerator PickedUp()
+    {
+        yield return new WaitForSeconds(20);
+        if (!hasTouched)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
+
+
+    IEnumerator DestroyWeaponAnyway()
+    {
+        yield return new WaitForSeconds(300);
+        StartCoroutine(DestroyWeapon());
     }
 
     [PunRPC]
@@ -162,6 +181,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         maxAmmo = newMaxAmmo;
         GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
+        hasTouched = true;
     }
 
     [PunRPC]

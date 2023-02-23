@@ -16,6 +16,9 @@ public class AbilityDash : Abilities
 
     private float boostAsPercent;
 
+    public AudioSource audioSource;
+    public AudioClip dashClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +54,7 @@ public class AbilityDash : Abilities
     private void AbilityEffect()
     {
         movement.Boost(boostAsPercent);
+        audioSource.PlayOneShot(dashClip);
         Invoke("ResetAbility", duration);
     }
 

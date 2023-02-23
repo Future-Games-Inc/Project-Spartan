@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,6 +20,7 @@ public class FiringRangeAI : MonoBehaviour
 
     public Transform[] waypoints;
     public GameObject[] players;
+    public GameObject hitEffect;
 
     [Header("AI Properties")]
     public float maxFollowDistance = 20f;
@@ -38,11 +40,15 @@ public class FiringRangeAI : MonoBehaviour
     public AudioClip[] audioClip;
     public GameObject deathEffect;
 
+    public bool firstHit = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        Health = 100;
         agent = GetComponent<NavMeshAgent>();
         deathEffect.SetActive(false);
+        hitEffect.SetActive(false);
         gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
 
         alive = true;
@@ -181,6 +187,12 @@ public class FiringRangeAI : MonoBehaviour
     {
         if (alive == true)
         {
+            if (!firstHit)
+            {
+                hitEffect.SetActive(true);
+                firstHit = true;
+                StartCoroutine(StopHit());
+            }
             audioSource.PlayOneShot(bulletHit);
             Health -= damage;
         }
@@ -195,12 +207,18 @@ public class FiringRangeAI : MonoBehaviour
 
     IEnumerator Death()
     {
-        if(gameControl.enabled == true)
+        if (gameControl.enabled == true)
         {
             gameControl.EnemyKilled();
         }
         yield return new WaitForSeconds(0.75f);
         Destroy(gameObject);
+    }
+    IEnumerator StopHit()
+    {
+        yield return new WaitForSeconds(3f);
+        hitEffect.SetActive(false);
+        firstHit = false;
     }
 }
 

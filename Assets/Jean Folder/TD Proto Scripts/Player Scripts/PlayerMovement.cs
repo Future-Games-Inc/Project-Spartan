@@ -33,11 +33,13 @@ public class PlayerMovement : MonoBehaviour
 
 
     private CharacterController character;
-    public WallRun wallRun;
 
     [SerializeField] private bool primaryButtonPressed;
 
     private Camera playerCamera;
+
+    public AudioSource audioSource;
+    public AudioClip jumpClip;
 
     // Start is called before the first frame update
     void Start()
@@ -120,6 +122,7 @@ public class PlayerMovement : MonoBehaviour
             jumpDirection.y = 1f; // add upward component to the jump direction
 
             character.Move(jumpDirection.normalized * jumpVelocity * Time.fixedDeltaTime);
+            audioSource.PlayOneShot(jumpClip);
 
         }
         else if (!isJumping && CheckIfGrounded() && primaryButtonPressed)
