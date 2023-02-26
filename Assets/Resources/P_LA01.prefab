@@ -5320,7 +5320,6 @@ MonoBehaviour:
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
   isFiring: 0
-  hasTouched: 0
 --- !u!82 &9003584238506527722
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5342,7 +5341,7 @@ AudioSource:
   Priority: 26
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 200
+  MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -5442,7 +5441,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.2915305, y: 0.40001932, z: 0.03}
+  m_Size: {x: 1.2915305, y: 0.40001932, z: 0.3}
   m_Center: {x: -0.004163475, y: -0.0479676, z: -0.000000003725291}
 --- !u!1 &1420244345670497485
 GameObject:

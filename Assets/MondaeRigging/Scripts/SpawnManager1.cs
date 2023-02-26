@@ -49,6 +49,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     IEnumerator EnemySpawn()
     {
+        yield return new WaitForSeconds(2f);
         while (enemyCount < enemyCountMax)
         {
             spawnEnemy = false;
@@ -63,6 +64,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     IEnumerator SecuritySpawn()
     {
+        yield return new WaitForSeconds(3f);
         while (securityCount < securityCountMax)
         {
             spawnSecurity = false;
@@ -76,6 +78,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     IEnumerator ReactorSpawn()
     {
+        yield return new WaitForSeconds(4f);
         while (reactorCount < reactorCountMax)
         {
             spawnReactor = false;
@@ -88,6 +91,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     IEnumerator HealthSpawn()
     {
+        yield return new WaitForSeconds(5f);
         while (healthCount < healthCountMax)
         {
             spawnHealth = false;
@@ -99,6 +103,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     }
     IEnumerator SpawnBoss()
     {
+        yield return new WaitForSeconds(6f);
         while (enemiesKilled > 5)
         {
             spawnBoss = false;

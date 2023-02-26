@@ -7,11 +7,17 @@ using Photon.Pun;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Speed")]
-    public float movementSpeed = 1f;
+    public float minSpeed = 3f;
+    public float maxSpeed = 10f;
+    public float accelerationTime = 3f; // Time it takes to reach maxSpeed
+    public float currentSpeed;
+    private float velocity;
+
     [Header("Controller Movement")]
     public XRNode inputSource;
-
     public XROrigin rig;
+    private CharacterController characterController;
+    private Vector3 previousPosition;
 
     [Header("Ground Floor & Gravity ")]
     public float gravity = -9.81f;
@@ -49,16 +55,37 @@ public class PlayerMovement : MonoBehaviour
         object storedPlayerSpeed;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_SPEED, out storedPlayerSpeed) && (int)storedPlayerSpeed >= 1)
         {
-            movementSpeed = (6f + ((int)storedPlayerSpeed / 10));
+            maxSpeed = (10f + ((int)storedPlayerSpeed / 10));
         }
         else
-            movementSpeed = 6f;
+            maxSpeed = 10f;
+
+        currentSpeed = minSpeed;
         playerCamera = rig.Camera.GetComponent<Camera>();
+        previousPosition = character.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Check if the player is moving
+        bool isMoving = character.transform.position != previousPosition;
+
+        // Update player speed based on movement
+        if (isMoving)
+        {
+            // Increase speed gradually to maxSpeed
+            currentSpeed = Mathf.SmoothDamp(currentSpeed, maxSpeed, ref velocity, accelerationTime);
+        }
+        else
+        {
+            // Reset speed to minSpeed when the player stops moving
+            currentSpeed = minSpeed;
+        }
+
+        // Update the previous position variable for the next frame
+        previousPosition = character.transform.position;
+
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
 
@@ -74,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         Quaternion headYaw = Quaternion.Euler(0, y: rig.Camera.transform.eulerAngles.y, 0);
 
         Vector3 direction = headYaw * new Vector3(inputAxis.x, 0, inputAxis.y);
-        character.Move(direction * Time.fixedDeltaTime * movementSpeed);
+        character.Move(direction * Time.fixedDeltaTime * currentSpeed);
 
         bool isGrounded = CheckIfGrounded();
         if (isGrounded)
@@ -134,11 +161,13 @@ public class PlayerMovement : MonoBehaviour
     public void Boost(float buff)
     {
         Debug.Log("Boost Ability Activated");
-        movementSpeed = movementSpeed * buff;
+        maxSpeed = maxSpeed * buff;
+        accelerationTime = 0.25f;
     }
 
     public void ResetBoost(float buff)
     {
-        movementSpeed = movementSpeed / buff;
+        maxSpeed = maxSpeed / buff;
+        accelerationTime = 1f;
     }
 }

@@ -20,7 +20,6 @@ public class ScoreboardItem : MonoBehaviourPunCallbacks
         usernametext.text = player.NickName;
         UpdateStats();
         InvokeRepeating("UpdateStats", 3, 5);
-
     }
 
     void UpdateStats()

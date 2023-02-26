@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Unity.Services.Analytics.Internal;
 using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviourPunCallbacks

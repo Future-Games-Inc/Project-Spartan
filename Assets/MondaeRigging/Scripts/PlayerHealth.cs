@@ -1,6 +1,4 @@
-using CSCore;
 using ExitGames.Client.Photon;
-using ExitGames.Client.Photon.StructWrapping;
 using LootLocker.Requests;
 using Photon.Pun;
 using Photon.Realtime;
@@ -61,6 +59,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject Artifact4Drp;
     public GameObject Artifact5Drp;
     public GameObject criticalHealth;
+    public GameObject crackedScreen;
 
     public Transform artifactDrop1;
     public Transform artifactDrop2;
@@ -163,10 +162,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public TextMeshProUGUI factionText;
 
     public MultiplayerHealth multiplayerHealth;
-    public ReactorUI reactorUI;
     public RespawnUI respawnUI;
-    public EnemyKillUI enemyKillUI;
-    public PlayerKillUI playerKillUI;
     public PlayerHealthBar healthBar;
 
     public SkinnedMeshRenderer[] characterSkins;
@@ -309,7 +305,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 characterFaction = "Federation Zone Authority".ToString();
                 foreach (GameObject emblem in fedEmblem)
                     emblem.SetActive(true);
-            }            
+            }
         }
     }
 
@@ -360,7 +356,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             reactorText.enabled = false;
         }
 
-        if(Health <= 25)
+        if (Health <= 25)
         {
             criticalHealth.SetActive(true);
         }
@@ -511,6 +507,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public void TakeDamage(int damage)
     {
         audioSource.PlayOneShot(bulletHit);
+        StartCoroutine(Cracked());
 
         object storedDamageTaken;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DAMAGAE_TAKEN, out storedDamageTaken) && (int)storedDamageTaken >= 1)
@@ -519,6 +516,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             damageTaken = damage;
         photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, damageTaken);
         CheckHealthStatus();
+
     }
 
     public void AddHealth(int health)
@@ -537,6 +535,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public void CheckHealthStatus()
     {
         multiplayerHealth.SetCurrentHealth(Health);
+    }
+
+    IEnumerator Cracked()
+    {
+        yield return new WaitForSeconds(0);
+        crackedScreen.SetActive(true);
+        yield return new WaitForSeconds(.5f);
+        crackedScreen.SetActive(false);
     }
 
     IEnumerator PlayerDeath()
@@ -582,7 +588,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             Artifact5 = false;
         }
         yield return new WaitForSeconds(.75f);
-        VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+        if (photonView.IsMine)
+            // Leave the room
+            VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 
     IEnumerator PlayerRespawn()
@@ -630,7 +638,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         hash.Add("reactorExtraction", reactorExtraction);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
-        reactorUI.UpdateReactorUI();
         reactorTimer = 0;
     }
 
@@ -650,8 +657,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         Hashtable hash = new Hashtable();
         hash.Add("enemyKills", enemiesKilled);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-
-        enemyKillUI.CheckEnemiesKilled();
 
         int playAudio = Random.Range(0, 100);
         if (!audioSource.isPlaying && playAudio <= 50)
@@ -678,8 +683,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         Hashtable hash = new Hashtable();
         hash.Add("playerKills", playersKilled);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-
-        playerKillUI.CheckEnemiesKilled();
 
         int playAudio = Random.Range(0, 100);
         if (!audioSource.isPlaying && playAudio <= 50)
@@ -1019,8 +1022,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, ((int)maxHealth + 100));
 
-                startingSpeed = movement.movementSpeed;
-                movement.movementSpeed += 2;
+                startingSpeed = movement.currentSpeed;
+                movement.currentSpeed += 2;
 
                 startingBulletModifier = bulletModifier;
                 bulletModifier += 4;
@@ -1123,8 +1126,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, ((int)maxHealth + 100));
 
-                startingSpeed = movement.movementSpeed;
-                movement.movementSpeed += 2;
+                startingSpeed = movement.currentSpeed;
+                movement.currentSpeed += 2;
 
                 startingBulletModifier = bulletModifier;
                 bulletModifier += 4;
@@ -1169,7 +1172,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         yield return new WaitForSeconds(time);
         {
             photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, ((int)maxHealth));
-            movement.movementSpeed = startingSpeed;
+            movement.currentSpeed = startingSpeed;
             bulletModifier = startingBulletModifier;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
@@ -1195,7 +1198,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         yield return new WaitForSeconds(time);
         {
             photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, ((int)maxHealth));
-            movement.movementSpeed = startingSpeed;
+            movement.currentSpeed = startingSpeed;
             bulletModifier = startingBulletModifier;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR;
 
 public class WallRun : MonoBehaviour
@@ -17,7 +18,7 @@ public class WallRun : MonoBehaviour
 
     [Header("Input")]
     public XRNode leftHandController; // Left hand controller for input
-    public XRNode right_HandButtonSource;
+    public InputActionProperty rightThumbstickPress;
 
     private CharacterController characterController;
     private PlayerMovement playerMovement;
@@ -25,6 +26,8 @@ public class WallRun : MonoBehaviour
     private Vector3 wallNormal = Vector3.zero;
     private Vector3 wallDirection;
     private float distanceToWall;
+    public AudioSource audioSource;
+    public AudioClip wallRunClip;
 
     [SerializeField] private bool primaryButtonPressed;
 
@@ -37,36 +40,38 @@ public class WallRun : MonoBehaviour
     private void Update()
     {
         // Check if we are on the ground
-        bool isGrounded = CheckGrounded();
+        bool movingFast = FastMoving();
 
-        // If we are wall running and not grounded, apply wall running movement
-        if (isWallRunning && !isGrounded)
+        // If we are wall running and moving fast enough
+        if (isWallRunning && movingFast && rightThumbstickPress.action.ReadValue<float>() >= .78f)
         {
-            ApplyWallRunningMovement();
+            ApplyWallRunningMovement(wallNormal);
         }
-
-        InputDevice jumpbutton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
-        jumpbutton.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Check if we are on the ground
-        bool isGrounded = CheckGrounded();
-        CalculateDistanceToWall(other);
+        // Check if we are moving fast enough
+        bool movingFast = FastMoving();
 
         // If we collide with a wall and are moving fast enough, start wall running
-        if (!isWallRunning && IsWall(other.gameObject) && !isGrounded)
+        if (!isWallRunning && IsWall(other.gameObject) && movingFast)
         {
-            Debug.Log("Wall");
-            Vector3 velocity = characterController.velocity;
-            float speed = velocity.magnitude;
-            Vector3 direction = velocity.normalized;
+            CalculateDistanceToWall(other);
             Vector3 wallNormal = other.transform.up;
+            float angleToWall = Vector3.Angle(transform.forward, wallNormal);
 
-            if (Vector3.Angle(direction, wallNormal) <= maxWallAngle)
+            if (angleToWall <= maxWallAngle)
             {
-                StartWallRunning(wallNormal);
+                // Start wall running
+                isWallRunning = true;
+                this.wallNormal = wallNormal;
+                characterController.enabled = false; // Disable the character controller to avoid getting stuck on the wall
+                playerMovement.enabled = false;
+
+                // Set the player's velocity to the wall normal multiplied by the wall run speed
+                Vector3 wallVelocity = wallNormal * wallRunSpeed;
+                characterController.Move(wallVelocity * Time.deltaTime);
             }
         }
     }
@@ -80,11 +85,11 @@ public class WallRun : MonoBehaviour
         }
     }
 
-    public bool CheckGrounded()
+    public bool FastMoving()
     {
         // Check if we are on the ground by casting a ray downwards
-        bool isGrounded = characterController.isGrounded;
-        return isGrounded;
+        bool movingFast = playerMovement.currentSpeed >= 5;
+        return movingFast;
     }
 
     public bool IsWall(GameObject gameObject)
@@ -125,58 +130,37 @@ public class WallRun : MonoBehaviour
         distanceToWall = Vector3.Distance(transform.position, other.ClosestPoint(transform.position));
     }
 
-    private void ApplyWallRunningMovement()
+    private void ApplyWallRunningMovement(Vector3 wallNormal)
     {
-        Collider other = GetComponent<Collider>();
         // Determine the wall running direction (left or right)
-        float wallDirection = Vector3.Dot(wallNormal, transform.right);
-        if (wallDirection > 0f)
-        {
-            wallDirection = 1f; // Right
-        }
-        else if (wallDirection < 0f)
-        {
-            wallDirection = -1f; // Left
-        }
-        else
-        {
-            wallDirection = 0f;
-        }
+        Vector3 wallTangent = Vector3.Cross(wallNormal, Vector3.up);
+        float wallDirection = Vector3.Dot(transform.forward, wallTangent);
+        wallDirection = Mathf.Sign(wallDirection);
 
         // Calculate the wall running movement
         float xInput = wallDirection;
         float yInput = 0f;
 
-        Vector3 direction = new Vector3(xInput, 0f, yInput).normalized;
-        Vector3 wallTangent = Vector3.Cross(wallNormal, Vector3.up);
-
-        // Calculate the movement vector along the wall
-        Vector3 movement = wallTangent * direction.x + wallNormal * direction.z;
+        // Project the movement vector onto the plane that is perpendicular to the wall normal
+        Vector3 movement = Vector3.ProjectOnPlane(transform.forward, wallNormal).normalized;
 
         // Calculate the vertical component to move in an arc
         float arcHeight = 1f; // Adjust this to control the height of the arc
-        float verticalSpeed = Mathf.Sqrt(2 * wallRunGravity * arcHeight);
-        float timeToPeak = verticalSpeed / -wallRunGravity;
-        float timeToWall = distanceToWall / wallRunSpeed;
-        float totalTime = timeToPeak + timeToWall;
-        float verticalDistance = arcHeight + 0.5f * wallRunGravity * Mathf.Pow(totalTime, 2f);
-        Vector3 verticalMovement = Vector3.up * verticalDistance;
+        float distanceToWallPlane = distanceToWall / Mathf.Cos(Vector3.Angle(transform.forward, wallNormal) * Mathf.Deg2Rad);
+        float verticalDistance = Mathf.Max(distanceToWallPlane - 2f, 0f); // Subtract 2 meters to start the arc above the wall
+        float verticalSpeed = Mathf.Sqrt(-2f * wallRunGravity * arcHeight);
+        float timeToPeak = Mathf.Sqrt(-2f * arcHeight / wallRunGravity) + Mathf.Sqrt(2f * verticalDistance / wallRunGravity);
+        float timeToFall = Mathf.Sqrt(-2f * (arcHeight - verticalDistance) / wallRunGravity);
+        float jumpDuration = timeToPeak + timeToFall;
+        float jumpSpeed = Mathf.Sqrt(2f * wallRunGravity * arcHeight);
+        float gravity = -(2f * arcHeight) / Mathf.Pow(jumpDuration / 2f, 2f);
+        float jumpVelocity = Mathf.Abs(gravity) * (jumpDuration / 2f);
 
         // Apply the wall running movement
-        characterController.Move((movement * wallRunSpeed + verticalMovement) * Time.deltaTime);
-
-        // Apply gravity while wall running
-        characterController.Move(Vector3.down * wallRunGravity * Time.deltaTime);
-
-        if (isWallRunning && primaryButtonPressed)
-        {
-            // Jump off the wall
-            Vector3 jumpDirection = wallTangent.normalized + Vector3.up;
-            characterController.enabled = true; // Enable the character controller again
-            playerMovement.enabled = false;
-            characterController.Move(jumpDirection * wallRunJumpForce);
-            isWallRunning = false; // Stop wall running
-            wallNormal = Vector3.zero;
-        }
+        Vector3 velocity = movement * xInput * wallRunSpeed + Vector3.up * jumpVelocity;
+        velocity += wallNormal * verticalSpeed;
+        characterController.Move(velocity * Time.deltaTime);
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(wallRunClip);
     }
 }

@@ -382,8 +382,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
         roomOptions.IsOpen = true;
         roomOptions.BroadcastPropsChangeToAll = true;
         roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 10;
+        if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6)
+            roomOptions.MaxPlayers = 10;
+        else if((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER5 || (string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER4)
+            roomOptions.MaxPlayers = 8;
+        else
+            roomOptions.MaxPlayers = 5;
 
+        Debug.Log(roomOptions.MaxPlayers);
         string[] roomPropsInLobby = { MultiplayerVRConstants.MAP_TYPE_KEY, "PlayerLevelForRoom" };
 
         ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType }, { "PlayerLevelForRoom", mapLevel } };

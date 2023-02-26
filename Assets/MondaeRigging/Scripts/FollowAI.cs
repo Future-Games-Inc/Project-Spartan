@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
-using Invector.vMelee;
 using System.Collections;
 
 public class FollowAI : MonoBehaviourPunCallbacks

@@ -1,9 +1,5 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using LootLocker.Requests;
-using Photon.Realtime;
 using TMPro;
 
 public class ConnectToPhoton : MonoBehaviourPunCallbacks

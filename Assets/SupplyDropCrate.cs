@@ -1,3 +1,4 @@
+using CSCore;
 using Photon.Pun;
 using System.Collections;
 using TMPro;
@@ -11,32 +12,50 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     public GameObject[] effects;
     public TextMeshProUGUI openText;
     public MatchEffects matchProps;
+    public Image sliderImage;
+    public AudioSource audioSource;
+    public AudioClip audioClip;
 
     private float elapsedTime;
     public float activationTime = 15;
-    public float radius = 2;
+    public float radius = 4;
 
     private bool isActive;
     private bool contact = false;
-
+    public bool playAudio = true;
 
     private void Start()
     {
+        StartCoroutine(PlayAudioLoop());
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         activationSlider.gameObject.SetActive(true);
         StartCoroutine(NoContact());
     }
+    IEnumerator PlayAudioLoop()
+    {
+        while (playAudio)
+        {
+            if (CheckForPlayerWithinRadius() && !isActive)
+            {
+                audioSource.PlayOneShot(audioClip);
+                yield return new WaitForSeconds(audioClip.length);
+            }
+            yield return new WaitForSeconds(.75f);
+        }
+    }
+
     void Update()
     {
-        if (CheckForPlayerWithinRadius())
+        if (CheckForPlayerWithinRadius() == true)
         {
             photonView.RPC("RPC_Update", RpcTarget.All);
         }
-        else if (!CheckForPlayerWithinRadius())
+        else
         {
             photonView.RPC("RPC_Update2", RpcTarget.All);
         }
+        photonView.RPC("RPC_Color", RpcTarget.All);
     }
 
     bool CheckForPlayerWithinRadius()
@@ -93,6 +112,9 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
             Vector3 randomPosition = transform.position + Random.onUnitSphere * radius;
             GameObject weaponPrefab = weaponPrefabs[Random.Range(0, weaponPrefabs.Length)];
             PhotonNetwork.Instantiate(weaponPrefab.name, randomPosition, Quaternion.identity, 0);
+            Rigidbody rb = weaponPrefab.GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.useGravity = true;
         }
     }
 
@@ -110,7 +132,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         if (!isActive)
         {
             elapsedTime += Time.deltaTime;
-            activationSlider.value -= elapsedTime;
+            float remainingTime = activationTime - elapsedTime;
+            activationSlider.value = remainingTime;
             if (elapsedTime >= activationTime)
             {
                 isActive = true;
@@ -132,5 +155,14 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         {
             vfx.SetActive(true);
         }
+    }
+
+    [PunRPC]
+    void RPC_Color()
+    {
+        if (activationSlider.value <= (activationTime * 0.75) && activationSlider.value > (activationTime * 0.25))
+            sliderImage.color = Color.yellow;
+        if (activationSlider.value <= (activationTime * 0.25))
+            sliderImage.color = Color.red;
     }
 }

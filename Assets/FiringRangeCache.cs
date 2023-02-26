@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
-using Photon.Pun;
 
 public class FiringRangeCache : MonoBehaviour
 {

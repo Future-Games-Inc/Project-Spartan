@@ -9980,7 +9980,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4553312914388120844}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.913, y: 0.075, z: 0}
+  m_LocalPosition: {x: 1.126, y: 0.094, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34431,6 +34431,7 @@ GameObject:
   - component: {fileID: 9208127323649543762}
   - component: {fileID: -608487694688277506}
   - component: {fileID: -6084394517609770587}
+  - component: {fileID: 328227283254425799}
   m_Layer: 19
   m_Name: P_LMG01
   m_TagString: Untagged
@@ -34762,7 +34763,7 @@ MeshCollider:
   m_GameObject: {fileID: 8623630459061577176}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -34799,7 +34800,6 @@ MonoBehaviour:
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
   isFiring: 0
-  hasTouched: 0
 --- !u!82 &-608487694688277506
 AudioSource:
   m_ObjectHideFlags: 0
@@ -34821,7 +34821,7 @@ AudioSource:
   Priority: 26
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 200
+  MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -34910,6 +34910,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4393213361700253817, guid: e9748ed71b77ee54db33392d99bfba26, type: 3}
+--- !u!65 &328227283254425799
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8623630459061577176}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1443714, y: 0.26704264, z: 0.3}
+  m_Center: {x: 0.25134212, y: 0.03195357, z: 0.011886809}
 --- !u!1 &8669549079074612031
 GameObject:
   m_ObjectHideFlags: 0

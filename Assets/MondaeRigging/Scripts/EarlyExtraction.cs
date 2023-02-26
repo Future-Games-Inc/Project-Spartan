@@ -9,7 +9,7 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
     public InputActionProperty leftSelectButton;
     public GameObject extractionIcon;
     public TextMeshProUGUI extractionCountdown;
-    PlayerHealth player;
+    public PlayerHealth player;
 
     private float holdTime = 0f;
     private int waitTime = 30;
@@ -24,7 +24,6 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
     void Start()
     {
         StartCoroutine(Countdown());
-        player = GetComponent<PlayerHealth>();
     }
 
     // Update is called once per frame
@@ -32,7 +31,7 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
     {
         if (isHolding)
         {
-            holdTime += Time.deltaTime;        
+            holdTime += Time.deltaTime;
         }
         else
         {
@@ -47,6 +46,7 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
 
         if (!hasLeftRoom && holdTime >= 30f)
         {
+            hasLeftRoom = true;
             if (player.Artifact1 == true)
             {
                 StartCoroutine(player.GetXP(100));
@@ -72,17 +72,18 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
                 StartCoroutine(player.GetXP(100));
                 player.Artifact5 = false;
             }
-            // Leave the room
-            PhotonNetwork.LeaveRoom();
-            hasLeftRoom = true;
+
+            if (photonView.IsMine)
+                // Leave the room
+                VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
         }
     }
 
     IEnumerator Countdown()
     {
-        while(true)
+        while (true)
         {
-            if(isHolding)
+            if (isHolding)
             {
                 extractionCountdown.text = waitTime--.ToString();
             }

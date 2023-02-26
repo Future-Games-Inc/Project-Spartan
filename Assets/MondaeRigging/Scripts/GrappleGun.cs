@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +19,8 @@ public class GrappleGun : MonoBehaviour
     public bool targetHit;
     private GameObject lastHit;
     public GameObject sight;
+    public AudioSource audioSource;
+    public AudioClip grappleClip;
 
     [Header("Player Info")]
     SpringJoint springJoint;
@@ -66,7 +66,6 @@ public class GrappleGun : MonoBehaviour
             grappled = false;
             CancelGrapple();
         }
-
 
         RaycastHit hit;
         targetHit = false;
@@ -138,6 +137,7 @@ public class GrappleGun : MonoBehaviour
     public void Swing()
     {
         sight.SetActive(false);
+        audioSource.PlayOneShot(grappleClip);
         characterController.enabled = false;
         movement.enabled = false;
         if (playerGameObject.GetComponent<SpringJoint>() == null)
@@ -149,11 +149,11 @@ public class GrappleGun : MonoBehaviour
 
         float disJointToPlayer = Vector3.Distance(playerTransform.position, bulletTransform.position);
 
-        springJoint.maxDistance = disJointToPlayer * .4f;
+        springJoint.maxDistance = disJointToPlayer * .1f;
         springJoint.minDistance = disJointToPlayer * .05f;
 
-        springJoint.damper = 300f;
-        springJoint.spring = 1000f;
+        springJoint.damper = 500f;
+        springJoint.spring = 500f;
     }
 
 }

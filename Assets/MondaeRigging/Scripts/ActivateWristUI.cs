@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,12 +8,14 @@ public class ActivateWristUI : MonoBehaviour
     public GameObject uiCanvas;
     public GameObject miniMap;
     public GameObject scoreboard;
+    public float timer;
 
     public bool activated;
 
     // Start is called before the first frame update
     void Start()
     {
+        timer = 0f;
         activated = false;
         uiCanvas.SetActive(false);
         miniMap.SetActive(false);
@@ -24,13 +25,17 @@ public class ActivateWristUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == false)
+        timer += Time.deltaTime;
+
+        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == false && timer >= 1f)
         {
-            StartCoroutine(WristUI());
+            timer = 0f;
+            activated = true;
         }
 
-        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == true)
+        if (leftThumbstickPress.action.ReadValue<float>() >= .78f && activated == true && timer >= 1f)
         {
+            timer = 0f;
             activated = false;
         }
 
@@ -46,11 +51,5 @@ public class ActivateWristUI : MonoBehaviour
             miniMap.SetActive(false);
             scoreboard.SetActive(false);
         }
-    }
-
-    IEnumerator WristUI()
-    {
-        yield return new WaitForSeconds(0);
-        activated = true;
     }
 }

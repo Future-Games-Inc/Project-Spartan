@@ -2,7 +2,6 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
-using ExitGames.Client.Photon;
 
 public class SupplyDropShip : MonoBehaviourPunCallbacks
 {

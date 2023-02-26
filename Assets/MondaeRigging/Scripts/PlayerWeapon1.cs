@@ -61,7 +61,8 @@ public class PlayerWeapon1 : MonoBehaviour
         {
             if (ammoLeft >= 1 && active == true)
             {
-                audioSource.PlayOneShot(shootSFX);
+                if (!audioSource.isPlaying)
+                    audioSource.PlayOneShot(shootSFX);
                 foreach (Transform t in spawnPoint)
                 {
                     GameObject spawnedBullet = Instantiate(playerBullet, t.position, Quaternion.identity);
@@ -70,7 +71,7 @@ public class PlayerWeapon1 : MonoBehaviour
                 }
             }
 
-            if (ammoLeft == 0 && active == true)
+            if (ammoLeft <= 0 && active == true)
             {
                 active = false;
                 StartCoroutine(Reload());

@@ -20,14 +20,12 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     private Coroutine timerCoroutine;
 
     public AudioSource audioSource;
-    public AudioClip newPlayerEntered;
     public AudioClip matchBegan;
     public AudioClip countdownFive;
     public AudioClip countdownOne;
     public AudioClip countdownTwo;
     public AudioClip countdownThree;
     public AudioClip countdownFour;
-    public AudioClip countdownBegan;
     public AudioClip supplyShip1;
     public AudioClip supplyShip2;
 
@@ -187,14 +185,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        if (!audioSource.isPlaying)
-        {
-            audioSource.PlayOneShot(newPlayerEntered);
-        }
-    }
-
     [PunRPC]
     void Audio5()
     {
@@ -238,7 +228,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void AudioEnter()
     {
-        audioSource.PlayOneShot(countdownBegan);
         spawnManager.SetActive(false);
         startMatchBool = false;
     }

@@ -28,7 +28,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
 
     public bool reloadingWeapon = false;
     public bool isFiring = false;
-    public bool hasTouched = false;
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +35,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
         photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
-        StartCoroutine(PickedUp());
-        StartCoroutine(DestroyWeaponAnyway());
     }
 
     // Update is called once per frame
@@ -91,22 +88,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         PhotonNetwork.Destroy(gameObject);
     }
 
-    IEnumerator PickedUp()
-    {
-        yield return new WaitForSeconds(20);
-        if (!hasTouched)
-        {
-            PhotonNetwork.Destroy(gameObject);
-        }
-    }
-
-
-    IEnumerator DestroyWeaponAnyway()
-    {
-        yield return new WaitForSeconds(300);
-        StartCoroutine(DestroyWeapon());
-    }
-
     [PunRPC]
     void RPC_Start()
     {
@@ -132,18 +113,19 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         {
             foreach (Transform t in spawnPoint)
             {
-                audioSource.PlayOneShot(weaponFire);
+                if (!audioSource.isPlaying)
+                    audioSource.PlayOneShot(weaponFire);
                 GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                 spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                 spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
 
-                ammoLeft --;
+                ammoLeft--;
             }
         }
 
-        if (ammoLeft == 0 && reloadingWeapon == false)
+        if (ammoLeft <= 0 && reloadingWeapon == false)
         {
             reloadingWeapon = true;
             StartCoroutine(ReloadWeapon());
@@ -181,7 +163,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         maxAmmo = newMaxAmmo;
         GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
-        hasTouched = true;
     }
 
     [PunRPC]
