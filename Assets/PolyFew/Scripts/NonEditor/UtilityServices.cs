@@ -206,7 +206,7 @@ namespace BrainFailProductions.PolyFew
                             () =>
                             {
                                 var reducedMesh = meshSimplifier.ToMesh();
-
+                                 
                                 AssignReducedMesh(gameObject, meshRendererPair.mesh, reducedMesh, meshRendererPair.attachedToMeshFilter, true);
 
                                 if(meshSimplifier.RecalculateNormals)
@@ -225,7 +225,6 @@ namespace BrainFailProductions.PolyFew
                         try
                         {
 
-
                             if (isToleranceActive)
                             {
                                 meshSimplifier.SimplifyMesh(quality);
@@ -235,7 +234,7 @@ namespace BrainFailProductions.PolyFew
                             {
                                 meshSimplifier.SimplifyMesh(quality);
                             }
-
+                           
 
                             // Create cannot be called from a background thread
                             lock (threadLock1)
@@ -905,7 +904,7 @@ namespace BrainFailProductions.PolyFew
         /// <param name="generateUV2">Should we generate secondary uv set for each mesh that will be combined.</param>
         /// <returns>True if the operation was successful. False otherwise.</returns>
 
-        public static bool GenerateLODS(GameObject forObject, List<ToleranceSphere> toleranceSpheres, List<LODLevelSettings> lodLevelSettings, string saveAssetsPath, Action<string> OnError, bool displayErrorBox, bool generateUV2 = false)
+        public static bool GenerateLODS(GameObject forObject, List<ToleranceSphere> toleranceSpheres, List<LODLevelSettings> lodLevelSettings, string saveAssetsPath, Action<string> OnError, bool displayErrorBox)
         {
 
             #region Pre Checks
@@ -1488,7 +1487,7 @@ namespace BrainFailProductions.PolyFew
 
                                 bool lightMapGenerated = false;
 #if UNITY_EDITOR
-                                if (generateUV2)
+                                if (levelSettings.generateUV2)
                                 {
                                     EditorUtility.DisplayProgressBar("Generating LODs", $"Generating UV2 And Saving Mesh Assets {++meshesHandled}/{totalMeshesToSave}", (float)meshesHandled / totalMeshesToSave);
 
@@ -1540,7 +1539,7 @@ namespace BrainFailProductions.PolyFew
 
                                 bool lightMapGenerated = false;
 #if UNITY_EDITOR
-                                if (generateUV2)
+                                if (levelSettings.generateUV2)
                                 {
                                     EditorUtility.DisplayProgressBar("Generating LODs", $"Generating UV2 And Saving Mesh Assets {++meshesHandled}/{totalMeshesToSave}", (float)meshesHandled / totalMeshesToSave);
 
@@ -1605,7 +1604,7 @@ namespace BrainFailProductions.PolyFew
 
                                 bool lightMapGenerated = false;
 #if UNITY_EDITOR
-                                if (generateUV2)
+                                if (levelSettings.generateUV2)
                                 {
                                     EditorUtility.DisplayProgressBar("Generating LODs", $"Generating UV2 And Saving Mesh Assets {++meshesHandled}/{totalMeshesToSave}", (float)meshesHandled / totalMeshesToSave);
 
@@ -1654,7 +1653,7 @@ namespace BrainFailProductions.PolyFew
 
                                 bool lightMapGenerated = false;
 #if UNITY_EDITOR
-                                if (generateUV2)
+                                if (levelSettings.generateUV2)
                                 {
                                     EditorUtility.DisplayProgressBar("Generating LODs", $"Generating UV2 And Saving Mesh Assets {++meshesHandled}/{totalMeshesToSave}", (float)meshesHandled / totalMeshesToSave);
 
@@ -3061,6 +3060,7 @@ namespace BrainFailProductions.PolyFew
             meshSimplifier.MaxIterationCount = dataContainer.maxIterations;
             meshSimplifier.RegardCurvature = dataContainer.regardCurvature;
             meshSimplifier.UseSortedEdgeMethod = dataContainer.useEdgeSort;
+            meshSimplifier.ClearBlendshapesComplete = dataContainer.clearBlendshapesComplete;
         }
 
 
@@ -3076,6 +3076,7 @@ namespace BrainFailProductions.PolyFew
             meshSimplifier.MaxIterationCount = levelSettings.maxIterations;
             meshSimplifier.RegardCurvature = levelSettings.regardCurvature;
             meshSimplifier.UseSortedEdgeMethod = levelSettings.useEdgeSort;
+            meshSimplifier.ClearBlendshapesComplete = levelSettings.clearBlendshapesComplete;
         }
 
 
@@ -3423,7 +3424,7 @@ namespace BrainFailProductions.PolyFew
 
 
 
-        public static bool SaveAllMeshes(List<Mesh> meshes, string defaultSavePath, bool optimizeMeshes, Action<string> ErrorCallback)
+        public static bool SaveAllMeshes(List<Mesh> meshes, string defaultSavePath, bool optimizeMeshes, bool generateUV2, Action<string> ErrorCallback)
         {
 
             string folderPath = EditorUtility.OpenFolderPanel("Save the mesh assets", defaultSavePath, "");
@@ -3470,20 +3471,37 @@ namespace BrainFailProductions.PolyFew
 
                 if (mesh == null) { continue; }
 
-                EditorUtility.DisplayProgressBar("Saving Object", $"Writing mesh assets to disk {currentIteration}/{meshes.Count}", (float)(currentIteration - 1) / totalIterations);
+                if(generateUV2)
+                {
+                    EditorUtility.DisplayProgressBar("Saving Object", $"Generating UV2 and writing mesh assets to disk {currentIteration}/{meshes.Count}", (float)(currentIteration - 1) / totalIterations);
+                }
+                else
+                {
+                    EditorUtility.DisplayProgressBar("Saving Object", $"Writing mesh assets to disk {currentIteration}/{meshes.Count}", (float)(currentIteration - 1) / totalIterations);
+                }
 
                 try
                 {
                     if (!IsMeshSavedAsAsset(mesh))
                     {
-
                         if (optimizeMeshes) { UnityEditor.MeshUtility.Optimize(mesh); }
-                        //filePath = folderPath + mesh.name + ".asset";  //baw did
+
+                        if (generateUV2)
+                        {
+                            if (UtilityServices.HasUV2(mesh))
+                            {
+                                Debug.LogWarning($"Mesh \"{mesh.name}\" already had a secondary uv set so we didn't generate a new one. For performance reasons you should disable \"Generate UV2\" option for meshes that already contain the secondary uv set.");
+                            }
+                            else
+                            {
+                                UnityEditor.Unwrapping.GenerateSecondaryUVSet(mesh);
+                            }
+                        }
+
                         string meshName = UtilityServices.MakeNameSafe(mesh.name) + ".mesh";
                         filePath = folderPath + meshName;
                         filePath = AssetDatabase.GenerateUniqueAssetPath(filePath);
                         AssetDatabase.CreateAsset(mesh, filePath);
-
                     }
 
                     else { }
@@ -3499,7 +3517,15 @@ namespace BrainFailProductions.PolyFew
 
             }
 
-            EditorUtility.DisplayProgressBar("Saving Object", $"Writing mesh assets to disk {currentIteration}/{meshes.Count}", (float)(currentIteration) / totalIterations);
+            if (generateUV2)
+            {
+                EditorUtility.DisplayProgressBar("Saving Object", $"Generating UV2 and writing mesh assets to disk {currentIteration}/{meshes.Count}", (float)(currentIteration) / totalIterations);
+            }
+            else
+            {
+                EditorUtility.DisplayProgressBar("Saving Object", $"Writing mesh assets to disk {currentIteration}/{meshes.Count}", (float)(currentIteration) / totalIterations);
+            }
+
 
             EditorUtility.ClearProgressBar();
 
@@ -3585,18 +3611,16 @@ namespace BrainFailProductions.PolyFew
                 string toOverwriteName = toOverwrite.name;
                 string overwithName = overwriteWith.name;
                 string guid = GUID.Generate().ToString();
-                string tempPath = Path.GetDirectoryName(toOverwritePath) + Path.DirectorySeparatorChar + guid + Path.DirectorySeparatorChar + "temp.asset";
+                string tempFolderPath = Path.GetDirectoryName(toOverwritePath) + Path.DirectorySeparatorChar + guid + Path.DirectorySeparatorChar;
 
                 AssetDatabase.CreateFolder(Path.GetDirectoryName(toOverwritePath), guid);
-                AssetDatabase.CreateAsset(overwriteWith, tempPath);
+                AssetDatabase.CreateAsset(overwriteWith, tempFolderPath + toOverwriteName + ".mesh");
                 var bytes = File.ReadAllBytes(AssetDatabase.GetAssetPath(overwriteWith));
-                string metaPath = Path.GetDirectoryName(tempPath) + Path.DirectorySeparatorChar + "temp.meta";
-                FileUtil.DeleteFileOrDirectory(Path.GetDirectoryName(tempPath));
+                string metaPath = Path.GetDirectoryName(tempFolderPath) + ".meta";
+                FileUtil.DeleteFileOrDirectory(Path.GetDirectoryName(tempFolderPath));
                 FileUtil.DeleteFileOrDirectory(metaPath);
 
-                if (refreshAssetdb) { AssetDatabase.Refresh(); }
                 File.WriteAllBytes(toOverwritePath, bytes);
-                AssetDatabase.RenameAsset(toOverwritePath, toOverwriteName);
                 if (refreshAssetdb) { AssetDatabase.Refresh(); }
 
                 return true;
@@ -5488,7 +5512,32 @@ namespace BrainFailProductions.PolyFew
         }
 
 
-#region OBJ_EXPORT_IMPORT
+        public static bool HasUV2(Mesh mesh)
+        {
+            bool hasUV2 = false;
+
+            if(mesh == null) { return false; }
+
+#if UNITY_2019_3_OR_NEWER
+            if(mesh.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.TexCoord1))
+            {
+                hasUV2 = true;
+            }
+#else
+            List<Vector2> uv2 = new List<Vector2>();
+            mesh.GetUVs(1, uv2);
+
+            if (uv2 != null && uv2.Count > 0)
+            {
+                hasUV2 = true;
+            }
+#endif
+
+            return hasUV2;
+        }
+
+
+        #region OBJ_EXPORT_IMPORT
 
 
         /*

@@ -86,6 +86,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5121bd75e69862b459d5b337503fb790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTransform: {fileID: 0}
+  droneBulletSpawn: {fileID: 0}
+  enemies: []
+  bosses: []
+  allEnemies: []
+  droneBullet: {fileID: 0}
+  inSight: 0
+  shootDistance: 10
+  shootForce: 0
+  currentState: 0
 --- !u!1 &7757567335582694323
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +196,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7676544785764077877, guid: 8546e2a874627f849ba2f66b9d37fbbc, type: 3}

@@ -159,7 +159,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 24
+    m_Bits: 4294967295
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:
@@ -435,6 +435,39 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &5700997928644170890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 6494681754658501777, guid: 43be8c353cfd86845ab901d15a09c09a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6901423796339045134}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 425439282091629503}
+  m_Layer: 0
+  m_Name: 'R_Electric VFX (Missing Prefab with guid: 43be8c353cfd86845ab901d15a09c09a)'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &425439282091629503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 6494681754658859185, guid: 43be8c353cfd86845ab901d15a09c09a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6901423796339045134}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5700997928644170890}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3506170459178137482}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7816181704549784105
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +549,7 @@ SpriteRenderer:
   m_Size: {x: 6, y: 6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &6901423796339045134
@@ -629,9 +662,3 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6494681754648772977, guid: 43be8c353cfd86845ab901d15a09c09a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 43be8c353cfd86845ab901d15a09c09a, type: 3}
---- !u!4 &425439282091629503 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6494681754658859185, guid: 43be8c353cfd86845ab901d15a09c09a,
-    type: 3}
-  m_PrefabInstance: {fileID: 6901423796339045134}
-  m_PrefabAsset: {fileID: 0}

@@ -1387,12 +1387,13 @@ namespace BrainFailProductions.PolyFew.AsImpL
         public IEnumerator DownloadFile(string url, ReferencedNumeric<float> downloadProgress, Action<byte[]> DownloadComplete, Action<string> OnError)
         {
             //Debug.Log("Into the DownloadFile Coroutine");
-            WWW www = null;
+            UnityWebRequest webrequest = null;
             float oldProgress = downloadProgress.Value;
 
             try
             {
-                www = new WWW(url);
+                webrequest = new UnityWebRequest(url);
+                webrequest.downloadHandler = new DownloadHandlerBuffer();
             }
 
             catch (Exception ex)
@@ -1400,23 +1401,23 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 downloadProgress.Value = oldProgress;
                 OnError(ex.ToString());
             }
+            
 
+            Coroutine progress = StartCoroutine(GetProgress(webrequest, downloadProgress));
 
-            Coroutine progress = StartCoroutine(GetProgress(www, downloadProgress));
+            yield return webrequest.SendWebRequest();
 
-            yield return www;
-
-            if (!string.IsNullOrWhiteSpace(www.error))
+            if (!string.IsNullOrWhiteSpace(webrequest.error))
             {
                 downloadProgress.Value = oldProgress;
-                OnError(www.error);
+                OnError(webrequest.error);
             }
 
             else
             {
-                if (www.bytes == null || www.bytes.Length == 0)
+                if (webrequest.downloadedBytes == 0)
                 {
-                    if (string.IsNullOrWhiteSpace(www.error))
+                    if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
                         downloadProgress.Value = oldProgress;
                         OnError("No bytes downloaded. The file might be empty.");
@@ -1425,23 +1426,23 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     else
                     {
                         downloadProgress.Value = oldProgress;
-                        OnError(www.error);
+                        OnError(webrequest.error);
                     }
                 }
 
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(www.error))
+                    if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
                         //Debug.Log("Calling Download Complete");
 
                         downloadProgress.Value = oldProgress + 1;
-                        DownloadComplete(www.bytes);
+                        DownloadComplete(webrequest.downloadHandler.data);
                     }
                     else
                     {
                         downloadProgress.Value = oldProgress;
-                        OnError(www.error);
+                        OnError(webrequest.error);
                     }
                 }
 
@@ -1450,29 +1451,29 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             StopCoroutine(progress);
 
-            www.Dispose();
+            webrequest.Dispose();
             //Debug.Log("End of File Download Coroutine.");
 
         }
 
 
 
-        private IEnumerator GetProgress(WWW www, ReferencedNumeric<float> downloadProgress)
+        private IEnumerator GetProgress(UnityWebRequest webrequest, ReferencedNumeric<float> downloadProgress)
         {
             float oldProgress = downloadProgress.Value;
 
-            if (www != null && downloadProgress != null)
+            if (webrequest != null && downloadProgress != null)
             {
-                while (!www.isDone && string.IsNullOrWhiteSpace(www.error))
+                while (!webrequest.downloadHandler.isDone && string.IsNullOrWhiteSpace(webrequest.error))
                 {
                     yield return new WaitForSeconds(0.1f);
-                    downloadProgress.Value = oldProgress + www.progress;
+                    downloadProgress.Value = oldProgress + webrequest.downloadProgress;
                 }
 
-                if(www.isDone && string.IsNullOrWhiteSpace(www.error))
+                if(webrequest.downloadHandler.isDone && string.IsNullOrWhiteSpace(webrequest.error))
                 {
-                    downloadProgress.Value = oldProgress + www.progress;
-                    Debug.Log("Progress  " + www.progress);
+                    downloadProgress.Value = oldProgress + webrequest.downloadProgress;
+                    Debug.Log("Progress  " + webrequest.downloadProgress);
                 }
 
             }
@@ -1483,12 +1484,13 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
         public IEnumerator DownloadFileWebGL(string url, ReferencedNumeric<float> downloadProgress, Action<string> DownloadComplete, Action<string> OnError)
         {
-            WWW www = null;
+            UnityWebRequest webrequest = null;
             float oldProgress = downloadProgress.Value;
 
             try
             {
-                www = new WWW(url);
+                webrequest = new UnityWebRequest(url);
+                webrequest.downloadHandler = new DownloadHandlerBuffer();
             }
 
             catch (Exception ex)
@@ -1498,21 +1500,21 @@ namespace BrainFailProductions.PolyFew.AsImpL
             }
 
 
-            Coroutine progress = StartCoroutine(GetProgress(www, downloadProgress));
+            Coroutine progress = StartCoroutine(GetProgress(webrequest, downloadProgress));
 
-            yield return www;
+            yield return webrequest;
 
-            if (!string.IsNullOrWhiteSpace(www.error))
+            if (!string.IsNullOrWhiteSpace(webrequest.error))
             {
                 downloadProgress.Value = oldProgress;
-                OnError(www.error);
+                OnError(webrequest.error);
             }
 
             else
             {
-                if (www.bytes == null || www.bytes.Length == 0)
+                if (webrequest.downloadedBytes == 0)
                 {
-                    if (string.IsNullOrWhiteSpace(www.error))
+                    if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
                         downloadProgress.Value = oldProgress;
                         OnError("No bytes downloaded. The file might be empty.");
@@ -1521,21 +1523,21 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     else
                     {
                         downloadProgress.Value = oldProgress;
-                        OnError(www.error);
+                        OnError(webrequest.error);
                     }
                 }
 
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(www.error))
+                    if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
                         downloadProgress.Value = oldProgress + 1;
-                        DownloadComplete(www.text);
+                        DownloadComplete(webrequest.downloadHandler.text); 
                     }
                     else
                     {
                         downloadProgress.Value = oldProgress;
-                        OnError(www.error);
+                        OnError(webrequest.error);
                     }
                 }
 
@@ -1552,7 +1554,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             }
 
-            www.Dispose();
+            webrequest.Dispose();
 
         }
 
@@ -1560,12 +1562,13 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
         public IEnumerator DownloadTexFileWebGL(string url, ReferencedNumeric<float> downloadProgress, Action<Texture2D> DownloadComplete, Action<string> OnError)
         {
-            WWW www = null;
+            UnityWebRequest webrequest = null;
             float oldProgress = downloadProgress.Value;
 
             try
             {
-                www = new WWW(url);
+                webrequest = new UnityWebRequest(url);
+                webrequest.downloadHandler = new DownloadHandlerBuffer();
             }
 
             catch (Exception ex)
@@ -1575,21 +1578,21 @@ namespace BrainFailProductions.PolyFew.AsImpL
             }
 
 
-            Coroutine progress = StartCoroutine(GetProgress(www, downloadProgress));
+            Coroutine progress = StartCoroutine(GetProgress(webrequest, downloadProgress));
 
-            yield return www;
+            yield return webrequest;
 
-            if (!string.IsNullOrWhiteSpace(www.error))
+            if (!string.IsNullOrWhiteSpace(webrequest.error))
             {
                 downloadProgress.Value = oldProgress;
-                OnError(www.error);
+                OnError(webrequest.error);
             }
 
             else
             {
-                if (www.bytes == null || www.bytes.Length == 0)
+                if (webrequest.downloadedBytes == 0)
                 {
-                    if (string.IsNullOrWhiteSpace(www.error))
+                    if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
                         downloadProgress.Value = oldProgress;
                         OnError("No bytes downloaded. The file might be empty.");
@@ -1598,22 +1601,22 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     else
                     {
                         downloadProgress.Value = oldProgress;
-                        OnError(www.error);
+                        OnError(webrequest.error);
                     }
                 }
 
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(www.error))
+                    if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
 
                         downloadProgress.Value = oldProgress + 1;
-                        DownloadComplete(www.texture);
+                        DownloadComplete(((DownloadHandlerTexture)webrequest.downloadHandler).texture);
                     }
                     else
                     {
                         downloadProgress.Value = oldProgress;
-                        OnError(www.error);
+                        OnError(webrequest.error);
                     }
                 }
 
@@ -1622,7 +1625,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             StopCoroutine(progress);
 
-            www.Dispose();
+            webrequest.Dispose();
         }
 
         

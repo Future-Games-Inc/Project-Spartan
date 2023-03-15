@@ -129,6 +129,7 @@ namespace UnityMeshSimplifier
         private double aggressiveness = 7.0;
         private bool regardCurvature = false;
         private bool useSortedEdgeMethod = false;
+        private bool clearBlendshapesComplete = false;
         private ToleranceSphere[] spheresToSubtract;
 
         #endregion
@@ -258,6 +259,16 @@ namespace UnityMeshSimplifier
         {
             get { return useSortedEdgeMethod; }
             set { useSortedEdgeMethod = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets if the sorted edges should be used for mesh simplification or not
+        /// Default value: false
+        /// </summary>
+        public bool ClearBlendshapesComplete
+        {
+            get { return clearBlendshapesComplete; }
+            set { clearBlendshapesComplete = value; }
         }
         
         /// <summary>
@@ -3106,8 +3117,7 @@ namespace UnityMeshSimplifier
                 SetUVsAuto(channel, uvs);
             }
 
-            var blendShapes = MeshUtils.GetMeshBlendShapes(mesh);
-
+            var blendShapes = clearBlendshapesComplete ? null : MeshUtils.GetMeshBlendShapes(mesh);
 
             if (blendShapes != null && blendShapes.Length > 0)
             {

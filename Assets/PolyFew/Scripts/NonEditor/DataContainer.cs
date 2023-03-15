@@ -31,7 +31,8 @@ namespace BrainFailProductions.PolyFew
 
             private TempGameObjectWrapper(GameObject gameObject)
             {
-                this.gameObject = gameObject ?? throw new ArgumentNullException(nameof(gameObject));
+                if(gameObject == null) { throw new ArgumentNullException(nameof(gameObject)); }
+                this.gameObject = gameObject;
                 uniqueId = gameObject.GetInstanceID();
             }
 
@@ -348,7 +349,6 @@ namespace BrainFailProductions.PolyFew
         [System.Serializable]
         public class LODLevelSettings
         {
-
             public float reductionStrength;
             public float transitionHeight;
             public bool preserveUVFoldover;
@@ -363,10 +363,12 @@ namespace BrainFailProductions.PolyFew
             public bool combineMeshes;
             public bool simplificationOptionsFoldout;
             public bool intensityFoldout;
+            public bool clearBlendshapesComplete;
+            public bool generateUV2;
             public List<float> sphereIntensities;
 
 
-            public LODLevelSettings(float reductionStrength, float transitionHeight, bool preserveUVFoldover, bool preserveUVSeams, bool preserveBorders, bool smartLinking, bool recalculateNormals, float aggressiveness, int maxIterations, bool regardTolerance, bool regardCurvature, bool combineMeshes, List<float> preservationStrengths)
+            public LODLevelSettings(float reductionStrength, float transitionHeight, bool preserveUVFoldover, bool preserveUVSeams, bool preserveBorders, bool smartLinking, bool recalculateNormals, float aggressiveness, int maxIterations, bool regardTolerance, bool regardCurvature, bool combineMeshes, bool clearBlendshapesComplete, bool generateUV2, List<float> sphereIntensities)
             {
                 this.reductionStrength = reductionStrength;
                 this.transitionHeight = transitionHeight;
@@ -380,7 +382,9 @@ namespace BrainFailProductions.PolyFew
                 this.regardTolerance = regardTolerance;
                 this.regardCurvature = regardCurvature;
                 this.combineMeshes = combineMeshes;
-                this.sphereIntensities = preservationStrengths;
+                this.clearBlendshapesComplete = clearBlendshapesComplete;
+                this.generateUV2 = generateUV2;
+                this.sphereIntensities = sphereIntensities;
             }
         }
 
@@ -479,7 +483,7 @@ namespace BrainFailProductions.PolyFew
         public string autoLODSavePath = "";
 
         public bool foldoutAdditionalOpts;
-        public bool generateUV2LODs;
+        public bool generateUV2;
         public bool copyParentStaticFlags;
         public bool copyParentTag;
         public bool copyParentLayer;

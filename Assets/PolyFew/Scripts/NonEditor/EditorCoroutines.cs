@@ -7,6 +7,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using UnityEngine.Networking;
 
 
 
@@ -82,15 +83,17 @@ namespace BrainFailProductions.PolyFew
 			}
 		}
 
-		struct YieldWWW : ICoroutineYield
+		struct YieldWebrequest : ICoroutineYield
 		{
-			public WWW Www;
+            public UnityWebRequest webrequest;
 
-			public bool IsDone(float deltaTime)
+            public bool IsDone(float deltaTime)
 			{
-				return Www.isDone;
-			}
-		}
+                //return Www.isDone;
+                //return (webrequest.downloadProgress == 1);
+                return webrequest.isDone;
+            }
+        }
 
 		struct YieldAsync : ICoroutineYield
 		{
@@ -361,9 +364,9 @@ namespace BrainFailProductions.PolyFew
 				float seconds = float.Parse(GetInstanceField(typeof(WaitForSeconds), current, "m_Seconds").ToString());
 				coroutine.currentYield = new YieldWaitForSeconds() {timeLeft = (float) seconds};
 			}
-			else if (current is WWW)
+			else if (current is UnityWebRequest)
 			{
-				coroutine.currentYield = new YieldWWW {Www = (WWW) current};
+				coroutine.currentYield = new YieldWebrequest { webrequest = (UnityWebRequest) current};
 			}
 			else if (current is WaitForFixedUpdate)
 			{
