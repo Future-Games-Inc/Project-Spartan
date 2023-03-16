@@ -30,13 +30,9 @@ public class SkillTree : MonoBehaviour
 
     private void Update()
     {
-        if (saveData == null)
-        {
-            saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();
-        }
-
         EXPText.text = "CINTS: " + saveData.SkillPoints.ToString();
-        purchasedText.text = $"Purchased: {powerUpCount}/2 Implants";
+        if (purchasedText != null)
+            purchasedText.text = $"Purchased: {powerUpCount}/2 Implants";
 
     }
     // Start is called before the first frame update
@@ -49,19 +45,19 @@ public class SkillTree : MonoBehaviour
         SkillLevels = new int[6];
         SkillCaps = new[] { 7, 5, 5, 3, 3, 1, };
 
-        foreach (var skill in SkillHolder.GetComponentsInChildren<Skill>()) 
+        foreach (var skill in SkillHolder.GetComponentsInChildren<Skill>())
             SkillList.Add(skill);
 
         for (var i = 0; i < SkillList.Count; i++)
             SkillList[i].id = i;
 
         SkillList[0].ConnectedSkills = new[] { 1, 2 };
-        SkillList[1].ConnectedSkills = new[] { 3};
-        SkillList[2].ConnectedSkills = new[] { 4};
+        SkillList[1].ConnectedSkills = new[] { 3 };
+        SkillList[2].ConnectedSkills = new[] { 4 };
         SkillList[3].ConnectedSkills = new[] { 5 };
 
         UpdateAllSkillsUI();
-        if(saveData == null)
+        if (saveData == null)
         {
             saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();
         }
@@ -70,7 +66,7 @@ public class SkillTree : MonoBehaviour
     // Update is called once per frame
     public void UpdateAllSkillsUI()
     {
-        foreach(var skill in SkillList)  
+        foreach (var skill in SkillList)
             skill.UpdateUI();
 
         int playAudio = (int)Random.Range(0, 100);

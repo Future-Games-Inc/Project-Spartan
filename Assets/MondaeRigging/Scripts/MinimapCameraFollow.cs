@@ -1,6 +1,3 @@
-using ProceduralWorlds.SceneOptimizer;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MinimapCameraFollow : MonoBehaviour

@@ -26,35 +26,6 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         StartCoroutine(Lost());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-
-    }
-
-    //public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
-    //{
-    //    Vector3 randDirection = Random.insideUnitSphere * dist;
-
-    //    randDirection += origin;
-
-    //    NavMeshHit navHit;
-
-    //    NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
-
-    //    return navHit.position;
-    //}
-
     IEnumerator LostPlayer()
     {
         yield return new WaitForSeconds(0);

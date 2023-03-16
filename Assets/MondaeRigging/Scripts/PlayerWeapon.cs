@@ -35,12 +35,22 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
         photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
+        StartCoroutine(TextUpdate());
+    }
+
+    IEnumerator TextUpdate()
+    {
+        while(true)
+        {
+            photonView.RPC("RPC_Update", RpcTarget.AllBuffered);
+            yield return new WaitForSeconds(.15f);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        photonView.RPC("RPC_Update", RpcTarget.AllBuffered);
+        
     }
 
     public void StartFireBullet(ActivateEventArgs arg)
@@ -115,7 +125,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
             {
                 if (!audioSource.isPlaying)
                     audioSource.PlayOneShot(weaponFire);
-                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0);
+                GameObject spawnedBullet = Instantiate(bullet, t.position, Quaternion.identity);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                 spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;

@@ -12,8 +12,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public int currentMatchTime;
     public GameObject spawnManager;
     public GameObject uiCanvas;
-    public GameObject[] artifacts;
-    public Transform[] artifactLocations;
+    //public GameObject[] artifacts;
+    //public Transform[] artifactLocations;
 
     public TextMeshProUGUI countdownText;
 
@@ -137,7 +137,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             photonView.RPC("AudioStart", RpcTarget.All);
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
-            StartCoroutine(Artifacts());
+            //StartCoroutine(Artifacts());
         }
         else
         {
@@ -146,17 +146,17 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    IEnumerator Artifacts()
-    {
-        yield return new WaitForSeconds(1f);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            for (int i = 0; i < artifacts.Length; i++)
-            {
-                PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
-            }
-        }
-    }
+    //IEnumerator Artifacts()
+    //{
+    //    yield return new WaitForSeconds(1f);
+    //    if (PhotonNetwork.IsMasterClient)
+    //    {
+    //        for (int i = 0; i < artifacts.Length; i++)
+    //        {
+    //            PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
+    //        }
+    //    }
+    //}
 
     public void RefreshTimer_S()
     {

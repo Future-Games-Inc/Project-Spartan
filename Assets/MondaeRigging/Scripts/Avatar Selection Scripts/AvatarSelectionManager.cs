@@ -44,7 +44,6 @@ public class AvatarSelectionManager : MonoBehaviour
         object storedAvatarSelectionNumber;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out storedAvatarSelectionNumber))
         {
-            Debug.Log("Stored avatar selection number: " + (int)storedAvatarSelectionNumber);
             avatarSelectionNumber = (int)storedAvatarSelectionNumber;
             ActivateAvatarModelAt(avatarSelectionNumber);
             LoadAvatarModelAt(avatarSelectionNumber);
@@ -113,7 +112,6 @@ public class AvatarSelectionManager : MonoBehaviour
         }
 
         selectableAvatarModels[avatarIndex].SetActive(true);
-        Debug.Log(avatarSelectionNumber);
 
         LoadAvatarModelAt(avatarSelectionNumber);
     }

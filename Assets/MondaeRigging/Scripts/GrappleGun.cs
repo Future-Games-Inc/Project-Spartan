@@ -72,8 +72,6 @@ public class GrappleGun : MonoBehaviour
 
         if (Physics.Raycast(barrelTransform.position, barrelTransform.forward, out hit, Mathf.Infinity, targetLayer))
         {
-            Debug.Log("Always");
-            Debug.DrawRay(barrelTransform.position, barrelTransform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             if (hit.collider.gameObject.CompareTag("GrapplePoint"))
             {
                 targetHit = true;
@@ -86,7 +84,6 @@ public class GrappleGun : MonoBehaviour
                         rendererOld.material = originalMaterial;
                     }
 
-                    Debug.Log("Hit");
                     MeshRenderer renderer = hit.collider.gameObject.GetComponent<MeshRenderer>();
                     if (renderer != null)
                     {
@@ -111,7 +108,6 @@ public class GrappleGun : MonoBehaviour
     {
         if (targetHit)
         {
-            Debug.Log("Fired");
             grappled = true;
             bulletTransform.position = barrelTransform.position;
             bulletRb.velocity = barrelTransform.forward * bulletSpeed;

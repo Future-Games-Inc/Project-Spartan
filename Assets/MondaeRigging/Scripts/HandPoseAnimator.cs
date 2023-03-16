@@ -16,11 +16,14 @@ public class HandPoseAnimator : MonoBehaviour
     {
         foreach (Animator animations in handAnimator)
         {
-            float triggerValue = pinchAnimationAction.action.ReadValue<float>();
-            animations.SetFloat("Trigger_" + whichHand, triggerValue);
+            if (animations.enabled == true)
+            {
+                float triggerValue = pinchAnimationAction.action.ReadValue<float>();
+                animations.SetFloat("Trigger_" + whichHand, triggerValue);
 
-            float pinchValue = gripAnimationAction.action.ReadValue<float>();
-            animations.SetFloat("Grip_" + whichHand, pinchValue);
+                float pinchValue = gripAnimationAction.action.ReadValue<float>();
+                animations.SetFloat("Grip_" + whichHand, pinchValue);
+            }
         }
     }
 }

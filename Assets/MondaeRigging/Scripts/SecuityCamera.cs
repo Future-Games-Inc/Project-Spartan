@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SecuityCamera : MonoBehaviour
@@ -11,47 +12,55 @@ public class SecuityCamera : MonoBehaviour
     private bool firstRotation = true;
 
     // Update is called once per frame
+
+    private void Start()
+    {
+        StartCoroutine(RotateCamera());
+    }
     void Update()
     {
-        RotateCamera();
+
     }
-    void RotateCamera()
+    IEnumerator RotateCamera()
     {
-        if (horizontalPivot && maxPan > 0)
+        while (true)
         {
-            if (!panBack)
+            if (horizontalPivot && maxPan > 0)
             {
-                horizontalPivot.Rotate(0, (Time.deltaTime * speed), 0);
-                panSoFar += Time.deltaTime * speed;
-                if (firstRotation)
+                if (!panBack)
                 {
-                    if (panSoFar >= maxPan)
+                    horizontalPivot.Rotate(0, (Time.deltaTime * speed), 0);
+                    panSoFar += Time.deltaTime * speed;
+                    if (firstRotation)
                     {
-                        panSoFar = 0;
-                        panBack = true;
-                        firstRotation = false;
+                        if (panSoFar >= maxPan)
+                        {
+                            panSoFar = 0;
+                            panBack = true;
+                            firstRotation = false;
+                        }
                     }
-                    return;
+                    else
+                    {
+                        if (panSoFar >= maxPan * 2)
+                        {
+                            panSoFar = 0;
+                            panBack = true;
+                        }
+                    }
                 }
                 else
                 {
+                    horizontalPivot.Rotate(0, -(Time.deltaTime * speed), 0);
+                    panSoFar += Time.deltaTime * speed;
                     if (panSoFar >= maxPan * 2)
                     {
                         panSoFar = 0;
-                        panBack = true;
+                        panBack = false;
                     }
                 }
             }
-            else
-            {
-                horizontalPivot.Rotate(0, -(Time.deltaTime * speed), 0);
-                panSoFar += Time.deltaTime * speed;
-                if (panSoFar >= maxPan * 2)
-                {
-                    panSoFar = 0;
-                    panBack = false;
-                }
-            }
+            yield return new WaitForSeconds(0.15f);
         }
     }
 }

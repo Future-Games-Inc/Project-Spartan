@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -15,7 +14,10 @@ public class SpawnManager : MonoBehaviour
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            StartCoroutine(SpawnPlayer());
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartCoroutine(SpawnPlayer());
+            }
         }
         gameOver = false;
         winnerPlayer = null;
@@ -29,10 +31,10 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPlayer()
     {
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(10);
         if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition, Quaternion.identity);
+            PhotonNetwork.InstantiateRoomObject(playerPrefab.name, spawnPosition, Quaternion.identity);
         }
     }
 }

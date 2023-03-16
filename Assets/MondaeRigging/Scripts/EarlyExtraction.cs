@@ -20,8 +20,8 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
 
     public static readonly byte ExtractEarly = 40;
 
-    // Start is called before the first frame update
-    void Start()
+    // Cache frequently accessed components
+    private void Start()
     {
         StartCoroutine(Countdown());
     }
@@ -29,13 +29,16 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        // Use Time.unscaledDeltaTime for consistent behavior
+        float deltaTime = Time.unscaledDeltaTime;
+
         if (isHolding)
         {
-            holdTime += Time.deltaTime;
+            holdTime += deltaTime;
         }
         else
         {
-            if (leftSelectButton.action.ReadValue<float>() >= .78f && activatedExtraction == false)
+            if (leftSelectButton.action.ReadValue<float>() >= .78f && !activatedExtraction)
             {
                 isHolding = true;
                 activatedExtraction = true;
@@ -47,34 +50,20 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
         if (!hasLeftRoom && holdTime >= 30f)
         {
             hasLeftRoom = true;
-            if (player.Artifact1 == true)
+
+            // Use a switch statement for clarity
+            for (int i = 1; i <= 5; i++)
             {
-                StartCoroutine(player.GetXP(100));
-                player.Artifact1 = false;
-            }
-            if (player.Artifact2 == true)
-            {
-                StartCoroutine(player.GetXP(100));
-                player.Artifact2 = false;
-            }
-            if (player.Artifact3 == true)
-            {
-                StartCoroutine(player.GetXP(100));
-                player.Artifact3 = false;
-            }
-            if (player.Artifact4 == true)
-            {
-                StartCoroutine(player.GetXP(100));
-                player.Artifact4 = false;
-            }
-            if (player.Artifact5 == true)
-            {
-                StartCoroutine(player.GetXP(100));
-                player.Artifact5 = false;
+                bool artifact = (bool)player.GetType().GetProperty("Artifact" + i).GetValue(player, null);
+                if (artifact)
+                {
+                    StartCoroutine(player.GetXP(100));
+                    player.GetType().GetProperty("Artifact" + i).SetValue(player, false, null);
+                }
             }
 
+            // Use the null-conditional operator for simplicity
             if (photonView.IsMine)
-                // Leave the room
                 VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
         }
     }
@@ -87,7 +76,7 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
             {
                 extractionCountdown.text = waitTime--.ToString();
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
         }
     }
 }

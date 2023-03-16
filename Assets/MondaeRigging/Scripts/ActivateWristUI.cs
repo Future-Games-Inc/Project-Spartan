@@ -17,9 +17,9 @@ public class ActivateWristUI : MonoBehaviour
     {
         timer = 0f;
         activated = false;
-        uiCanvas.SetActive(false);
-        miniMap.SetActive(false);
-        scoreboard.SetActive(false);
+        uiCanvas.SetActive(activated);
+        miniMap.SetActive(activated);
+        scoreboard.SetActive(activated);
     }
 
     // Update is called once per frame
@@ -39,17 +39,8 @@ public class ActivateWristUI : MonoBehaviour
             activated = false;
         }
 
-        if (activated == true)
-        {
-            uiCanvas.SetActive(true);
-            miniMap.SetActive(true);
-            scoreboard.SetActive(true);
-        }
-        else
-        {
-            uiCanvas.SetActive(false);
-            miniMap.SetActive(false);
-            scoreboard.SetActive(false);
-        }
+        uiCanvas.SetActive(activated);
+        miniMap.SetActive(activated);
+        scoreboard.SetActive(activated);
     }
 }

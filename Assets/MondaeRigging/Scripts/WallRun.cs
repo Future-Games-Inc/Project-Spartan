@@ -139,7 +139,6 @@ public class WallRun : MonoBehaviour
 
         // Calculate the wall running movement
         float xInput = wallDirection;
-        float yInput = 0f;
 
         // Project the movement vector onto the plane that is perpendicular to the wall normal
         Vector3 movement = Vector3.ProjectOnPlane(transform.forward, wallNormal).normalized;
