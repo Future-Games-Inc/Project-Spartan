@@ -104,7 +104,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6)
                 {
-                    PhotonNetwork.LoadLevel("6Multiplayer");
+                    PhotonNetwork.LoadLevel("Playground");
                 }
             }
         }

@@ -10,10 +10,10 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
     public Camera myCamera;
     public PlayerMovement playerMovement;
     public AbilityDash dash;
-    public VRIK_PUN_Player[] punPlayers;
-    public Animator[] animators;
+    //public VRIK_PUN_Player[] punPlayers;
+    //public Animator[] animators;
 
-    public GameObject[] AvatarModelPrefabs;
+    //public GameObject[] AvatarModelPrefabs;
 
     public TextMeshProUGUI[] playerNameText;
     public GameObject[] playerInformation;
@@ -71,11 +71,11 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
                     information.SetActive(false);
                 }
 
-                object avatarSelectionNumber;
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
-                {
-                    photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
-                }
+                //object avatarSelectionNumber;
+                //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
+                //{
+                //    photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
+                //}
 
                 if (photonView.Owner.NickName != null)
                 {
@@ -134,25 +134,25 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
 
     }
 
-    [PunRPC]
-    public void InitializeSelectedAvatarModel(int avatarSelectionNumber)
-    {
-        for (int i = 0; i < AvatarModelPrefabs.Length; i++)
-        {
-            if (AvatarModelPrefabs[avatarSelectionNumber] == AvatarModelPrefabs[i])
-            {
-                AvatarModelPrefabs[i].SetActive(true);
-                punPlayers[i].enabled = true;
-                animators[i].enabled = true;
-            }
-            else
-            {
-                AvatarModelPrefabs[i].SetActive(false);
-                punPlayers[i].enabled = false;
-                animators[i].enabled = false;
-            }
-        }
-    }
+    //[PunRPC]
+    //public void InitializeSelectedAvatarModel(int avatarSelectionNumber)
+    //{
+    //    for (int i = 0; i < AvatarModelPrefabs.Length; i++)
+    //    {
+    //        if (AvatarModelPrefabs[avatarSelectionNumber] == AvatarModelPrefabs[i])
+    //        {
+    //            AvatarModelPrefabs[i].SetActive(true);
+    //            punPlayers[i].enabled = true;
+    //            animators[i].enabled = true;
+    //        }
+    //        else
+    //        {
+    //            AvatarModelPrefabs[i].SetActive(false);
+    //            punPlayers[i].enabled = false;
+    //            animators[i].enabled = false;
+    //        }
+    //    }
+    //}
 
     [PunRPC]
     public void SetPlayerFaction()

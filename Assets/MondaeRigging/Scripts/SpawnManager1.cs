@@ -4,135 +4,149 @@ using Photon.Pun;
 
 public class SpawnManager1 : MonoBehaviourPunCallbacks
 {
-    public GameObject[] enemyAI;
-    public GameObject[] enemyBoss;
-    public GameObject securityAI;
-    public GameObject reactor;
-    public GameObject health;
+    [SerializeField] private GameObject[] enemyAI;
+    [SerializeField] private GameObject[] enemyBoss;
+    [SerializeField] private GameObject securityAI;
+    [SerializeField] private GameObject reactor;
+    [SerializeField] private GameObject health;
 
+    [SerializeField] private Transform[] enemyDrop;
+    [SerializeField] private Transform[] reactorDrop;
+    [SerializeField] private Transform[] healthDrop;
 
-    public Transform[] enemyDrop;
-    public Transform[] reactorDrop;
-    public Transform[] healthDrop;
+    [SerializeField] private MatchEffects matchProps;
 
-    public MatchEffects matchProps;
+    [SerializeField] private int enemyCountMax = 5;
+    [SerializeField] private int securityCountMax = 2;
+    [SerializeField] private int reactorCountMax = 1;
+    [SerializeField] private int healthCountMax = 1;
+    [SerializeField] private int enemiesKilledForBossSpawn = 5;
 
-    public int enemyCount;
-    public int securityCount;
-    public int reactorCount;
-    public int healthCount;
-    public int enemyCountMax;
-    public int securityCountMax;
-    public int reactorCountMax;
-    public int healthCountMax;
-    public int enemiesKilled;
+    private int enemyCount;
+    private int securityCount;
+    private int reactorCount;
+    private int healthCount;
+    private int enemiesKilled;
 
-    public bool spawnEnemy = true;
-    public bool spawnSecurity = true;
-    public bool spawnReactor = true;
-    public bool spawnHealth = true;
-    public bool spawnBoss = true;
+    private bool spawnEnemy = true;
+    private bool spawnSecurity = true;
+    private bool spawnReactor = true;
+    private bool spawnHealth = true;
+    private bool spawnBoss = true;
 
-    void Start()
+    private void Start()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(EnemySpawn());
-            StartCoroutine(SecuritySpawn());
-            StartCoroutine(ReactorSpawn());
-            StartCoroutine(HealthSpawn());
+            StartCoroutine(SpawnEnemies());
+            StartCoroutine(SpawnSecurity());
+            StartCoroutine(SpawnReactor());
+            StartCoroutine(SpawnHealth());
             StartCoroutine(SpawnBoss());
         }
     }
 
-    private void Awake()
+    private IEnumerator SpawnEnemies()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    IEnumerator EnemySpawn()
-    {
-        while (spawnEnemy == true && enemyCount < enemyCountMax)
+        while (spawnEnemy && enemyCount < enemyCountMax)
         {
-            if (matchProps.startMatchBool == true)
-            {
-                spawnEnemy = false;
-                GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)].gameObject;
-                PhotonNetwork.Instantiate(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
-                enemyCount += 1;
-                yield return new WaitForSeconds(10f);
-                spawnEnemy = true;
-            }
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnEnemy = false;
+
+            GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)];
+            PhotonNetwork.Instantiate(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
+
+            enemyCount++;
+
+            yield return new WaitForSeconds(10f);
+
+            spawnEnemy = true;
+
             yield return new WaitForSeconds(1);
         }
     }
 
-    IEnumerator SecuritySpawn()
+    private IEnumerator SpawnSecurity()
     {
-        while (spawnSecurity == true && securityCount < securityCountMax)
+        while (spawnSecurity && securityCount < securityCountMax)
         {
-            if (matchProps.startMatchBool == true)
-            {
-                spawnSecurity = false;
-                PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
-                securityCount += 1;
-                yield return new WaitForSeconds(15f);
-                spawnSecurity = true;
-            }
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnSecurity = false;
+
+            PhotonNetwork.Instantiate(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
+
+            securityCount++;
+
+            yield return new WaitForSeconds(15f);
+
+            spawnSecurity = true;
+
             yield return new WaitForSeconds(1);
         }
     }
 
-    IEnumerator ReactorSpawn()
+    private IEnumerator SpawnReactor()
     {
-        while (spawnReactor == true && reactorCount < 1)
+        while (spawnReactor && reactorCount < reactorCountMax)
         {
-            if (matchProps.startMatchBool == true)
-            {
-                spawnReactor = false;
-                PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity, 0);
-                reactorCount += 1;
-                yield return new WaitForSeconds(30f);
-                spawnReactor = true;
-            }
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnReactor = false;
+
+            PhotonNetwork.Instantiate(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity, 0);
+
+            reactorCount++;
+
+            yield return new WaitForSeconds(30f);
+
+            spawnReactor = true;
+
             yield return new WaitForSeconds(1);
         }
     }
 
-    IEnumerator HealthSpawn()
+    private IEnumerator SpawnHealth()
     {
-        while (spawnHealth == true && healthCount < healthCountMax)
+        while (spawnHealth && healthCount < healthCountMax)
         {
-            if (matchProps.startMatchBool == true)
-            {
-                spawnHealth = false;
-                PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity, 0);
-                healthCount += 1;
-                yield return new WaitForSeconds(35f);
-                spawnHealth = true;
-            }
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnHealth = false;
+
+            PhotonNetwork.Instantiate(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity, 0);
+
+            healthCount++;
+
+            yield return new WaitForSeconds(35f);
+
+            spawnHealth = true;
+
             yield return new WaitForSeconds(1);
         }
     }
-    IEnumerator SpawnBoss()
+
+    private IEnumerator SpawnBoss()
     {
-        while (spawnBoss == true && enemiesKilled > 5)
+        while (spawnBoss)
         {
-            if (matchProps.startMatchBool == true)
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            if (enemiesKilled >= enemiesKilledForBossSpawn)
             {
                 spawnBoss = false;
-                GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)].gameObject;
+
+                GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)];
                 PhotonNetwork.Instantiate(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0);
-                enemiesKilled = 2;
+
+                enemiesKilled = 0;
+
                 yield return new WaitForSeconds(45f);
+
                 spawnBoss = true;
             }
+
             yield return new WaitForSeconds(1);
         }
     }
