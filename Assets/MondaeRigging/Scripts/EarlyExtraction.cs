@@ -51,16 +51,16 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
         {
             hasLeftRoom = true;
 
-            // Use a switch statement for clarity
-            for (int i = 1; i <= 5; i++)
-            {
-                bool artifact = (bool)player.GetType().GetProperty("Artifact" + i).GetValue(player, null);
-                if (artifact)
-                {
-                    StartCoroutine(player.GetXP(100));
-                    player.GetType().GetProperty("Artifact" + i).SetValue(player, false, null);
-                }
-            }
+            //// Use a switch statement for clarity
+            //for (int i = 1; i <= 5; i++)
+            //{
+            //    bool artifact = (bool)player.GetType().GetProperty("Artifact" + i).GetValue(player, null);
+            //    if (artifact)
+            //    {
+            //        StartCoroutine(player.GetXP(100));
+            //        player.GetType().GetProperty("Artifact" + i).SetValue(player, false, null);
+            //    }
+            //}
 
             // Use the null-conditional operator for simplicity
             if (photonView.IsMine)

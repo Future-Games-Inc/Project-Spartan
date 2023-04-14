@@ -91,7 +91,6 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
         animator.SetTrigger("Death");
         deathElectric.SetActive(true);
 
-        agent = GetComponent<NavMeshAgent>();
         agent.enabled = false;
     }
 }

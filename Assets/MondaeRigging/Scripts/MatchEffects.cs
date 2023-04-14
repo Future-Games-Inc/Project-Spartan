@@ -30,7 +30,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioClip supplyShip2;
 
     public GameObject supplyDropShipPrefab;
-    public float spawnInterval = 330f; // 5 minutes in seconds
+    public float spawnInterval; // 5 minutes in seconds
     public float lastSpawnTime;
     public Transform spawnLocation;
 
@@ -73,7 +73,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             if (Time.time > lastSpawnTime + spawnInterval && spawned == false)
             {
                 lastSpawnTime = Time.time;
-                PhotonNetwork.Instantiate(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0);
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0);
                 StartCoroutine(SupplyShipAudio());
                 spawned = true;
             }

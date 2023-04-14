@@ -20,9 +20,11 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     public float lostTimer;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        photonView.RPC("RPC_Start", RpcTarget.All);
+        beamMaterial.color = beamColor;
+        detectedPlayer = null;
+        InvokeRepeating("AlarmSound", 5f, 3f);
         StartCoroutine(Lost());
     }
 
@@ -57,15 +59,8 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
 
     public void AlarmSound()
     {
-        photonView.RPC("RPC_AlarmSound", RpcTarget.AllBuffered);
-    }
-
-    [PunRPC]
-    void RPC_Start()
-    {
-        beamMaterial.color = beamColor;
-        detectedPlayer = null;
-        InvokeRepeating("AlarmSound", 0f, 3f);
+        if (!alarmSource.isPlaying && lost == false)
+            alarmSource.PlayOneShot(alarmClip);
     }
 
     [PunRPC]
@@ -83,11 +78,12 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
-            enemy.TryGetComponent<FollowAI>(out var followAI);
-            followAI.targetTransform = detectedPlayer.gameObject.transform;
-            followAI.maxFollowDistance = 500;
-            followAI.agent.speed = 3;
-            followAI.agent.SetDestination(followAI.targetTransform.position);
+            if (enemy.GetComponent<FollowAI>() != null)
+            {
+                enemy.GetComponent<FollowAI>().maxFollowDistance = 500;
+                enemy.GetComponent<FollowAI>().agent.speed = 3;
+                enemy.GetComponent<FollowAI>().inSight = true;
+            }
         }
     }
 
@@ -105,18 +101,12 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
-            enemy.TryGetComponent<FollowAI>(out var followAI);
-            followAI.maxFollowDistance = 5f;
-            followAI.agent.speed = 1f;
-            followAI.currentWaypoint = (0 + Random.Range(0, 6)) % followAI.waypoints.Length;
-            followAI.agent.SetDestination(followAI.waypoints[followAI.currentWaypoint].position);
+            if (enemy.GetComponent<FollowAI>() != null)
+            {
+                enemy.GetComponent<FollowAI>().maxFollowDistance = 20f;
+                enemy.GetComponent<FollowAI>().agent.speed = 1.5f;
+                enemy.GetComponent<FollowAI>().inSight = false;
+            }
         }
-    }
-
-    [PunRPC]
-    void RPC_AlarmSound()
-    {
-        if (!alarmSource.isPlaying && lost == false)
-            alarmSource.PlayOneShot(alarmClip);
     }
 }

@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump Velocity")]
     public float jumpVelocity = 100f;
     public bool isJumping;
+    public bool isGrounded;
 
 
     private CharacterController character;
@@ -48,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip jumpClip;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         character = GetComponent<CharacterController>();
 
@@ -103,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 direction = headYaw * new Vector3(inputAxis.x, 0, inputAxis.y);
         character.Move(direction * Time.fixedDeltaTime * currentSpeed);
 
-        bool isGrounded = CheckIfGrounded();
+        isGrounded = CheckIfGrounded();
         if (isGrounded)
         {
             fallingSpeed = 0;
@@ -160,7 +161,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Boost(float buff)
     {
-        Debug.Log("Boost Ability Activated");
         maxSpeed *= buff;
         accelerationTime = 0.25f;
     }

@@ -302,7 +302,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2116886079164345532
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -319,7 +319,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!65 &2116886079164345534
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -347,23 +348,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _visualEffect: {fileID: 1523753629019259339}
   powerups:
-  - Loot1d_2
-  - Loot1e
-  - Loot1g
-  - Loot1g_2
-  - Loot1j_1
-  - Loot1c
+  - Bullet Minor
+  - Bullet Major
+  - Toxic Minor
+  - Toxic Major
+  - Shield
+  - Health Major
   weapons:
-  - P_AR01
-  - P_GAT01
-  - P_LA01
-  - P_LMG01
-  - P_P01
-  - P_SG01
-  - P_SMG01
-  - P_SMG02
-  - P_SR02
-  - P_STUN01
+  - Pulse Rifle
+  - Railgun
+  - Plasma Launcher
+  - Plasma Pistol
+  - Laser Shotgun
+  - Sonic Rifle
+  - Plasma Cannon
   spawn1: {fileID: 7466674239868402336}
   spawn2: {fileID: 7466674238944524864}
   spawn3: {fileID: 7466674239025026002}

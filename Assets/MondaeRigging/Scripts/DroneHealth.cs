@@ -17,15 +17,15 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     public AudioClip bulletHit;
 
     public GameObject explosionEffect;
-    public EnemyHealthBar healthBar;
+    //public EnemyHealthBar healthBar;
     public AudioClip[] audioClip;
     public NavMeshAgent agent;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
+        InvokeRepeating("RandomSFX", 15, 20f);
         photonView.RPC("RPC_OnEnable", RpcTarget.All);
     }
 
@@ -67,7 +67,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     void RPC_OnEnable()
     {
         explosionEffect.SetActive(false);
-        healthBar.SetMaxHealth(Health);
+        //healthBar.SetMaxHealth(Health);
         alive = true;
     }
 
@@ -76,7 +76,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
-        healthBar.SetCurrentHealth(Health);
+        //healthBar.SetCurrentHealth(Health);
 
         if (Health <= 0 && alive == true)
         {
@@ -85,7 +85,6 @@ public class DroneHealth : MonoBehaviourPunCallbacks
 
             explosionEffect.SetActive(true);
 
-            agent = GetComponent<NavMeshAgent>();
             agent.enabled = false;
 
             StartCoroutine(DestroyEnemy());
@@ -95,8 +94,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PlayAudio()
     {
-        int playAudio = Random.Range(0, 70);
-        if (!audioSource.isPlaying && playAudio <= 70)
+        if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 }

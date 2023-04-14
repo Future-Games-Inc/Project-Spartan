@@ -2,7 +2,6 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Unity.XR.CoreUtils;
-using RootMotion.Demos;
 
 public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
 {
@@ -29,7 +28,7 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
     const string playerNamePrefKey = "PlayerName";
     // Start is called before the first frame update
 
-    void Start()
+    void OnEnable()
     {
         if (photonView != null)
         {

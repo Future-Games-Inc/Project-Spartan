@@ -20,7 +20,7 @@ public class SupplyDropShip : MonoBehaviourPunCallbacks
     //float speed = 0.1f;
     //float timeCount = 0.0f;
 
-    void Awake()
+    void OnEnable()
     {
         GameObject waypointObject = GameObject.FindGameObjectWithTag("SupplyWaypoints");
         waypoints = waypointObject.GetComponentsInChildren<Transform>();

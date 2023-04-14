@@ -19,7 +19,7 @@ public class securitybeamdetection : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            securityBeam.detectedPlayer = other.gameObject.transform.root.gameObject;
+            securityBeam.detectedPlayer = other.gameObject;
             StartCoroutine(securityBeam.FoundPlayer());
         }
     }

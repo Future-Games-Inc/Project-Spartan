@@ -10,7 +10,7 @@ public class TurnSpeed : MonoBehaviour
     public XRRayInteractor[] rayInteractors;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         if (PlayerPrefs.HasKey("TurnSpeed"))
             turnProvider.turnSpeed = PlayerPrefs.GetFloat("TurnSpeed");
@@ -60,11 +60,5 @@ public class TurnSpeed : MonoBehaviour
                 }
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

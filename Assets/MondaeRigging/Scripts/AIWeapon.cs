@@ -19,9 +19,18 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     public bool fireWeaponBool = false;
     public bool canShoot = true;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
+        if (gameObject.tag == "Enemy")
+        {
+            maxAmmo = 10;
+        }
+        else if (gameObject.tag == "BossEnemy")
+        {
+            maxAmmo = 15;
+        }
+        ammoLeft = maxAmmo;
+        StartCoroutine(Fire());
     }
 
     // Update is called once per frame
@@ -40,20 +49,20 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 {
                     photonView.RPC("RPC_ShootAudio", RpcTarget.AllBuffered);
                 }
-                GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0);
+                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity, 0);
                 if (this.gameObject.tag == "Enemy")
                 {
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(0, 3);
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = 2;
                 }
                 else if (this.gameObject.tag == "BossEnemy")
                 {
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(2, 5);
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = 4;
                 }
                 shootForce = (int)Random.Range(40, 75);
-                spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.right * shootForce;
+                spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
                 ammoLeft--;
-                yield return new WaitForSeconds(Random.Range(0.1f, 0.54f));
+                yield return new WaitForSeconds(.25f);
             }
 
             else if (ammoLeft <= 0)
@@ -74,22 +83,8 @@ public class AIWeapon : MonoBehaviourPunCallbacks
             photonView.RPC("RPC_Reload1", RpcTarget.AllBuffered);
         }
         yield return new WaitForSeconds(2);
-        photonView.RPC("RPC_Reload2", RpcTarget.AllBuffered);
-    }
-
-    [PunRPC]
-    void RPC_Start()
-    {
-        if (gameObject.tag == "Enemy")
-        {
-            maxAmmo = 10;
-        }
-        else if (gameObject.tag == "BossEnemy")
-        {
-            maxAmmo = 15;
-        }
         ammoLeft = maxAmmo;
-        StartCoroutine(Fire());
+        canShoot = true;
     }
 
     [PunRPC]
@@ -103,13 +98,4 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     {
         audioSource2.PlayOneShot(weaponReload);
     }
-
-    [PunRPC]
-    void RPC_Reload2()
-    {
-        ammoLeft = maxAmmo;
-        canShoot = true;
-    }
-
-
 }

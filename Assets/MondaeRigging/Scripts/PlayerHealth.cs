@@ -48,6 +48,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject[] chaosEmblem;
     public GameObject[] muerteEmblem;
     public GameObject[] playerObjects;
+    public GameObject healthBarObject;
     //public GameObject Artifact1Obj;
     //public GameObject Artifact2Obj;
     //public GameObject Artifact3Obj;
@@ -179,7 +180,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public MultiplayerHealth multiplayerHealth;
     public RespawnUI respawnUI;
-    public PlayerHealthBar healthBar;
+    //public PlayerHealthBar healthBar;
 
     //public SkinnedMeshRenderer[] characterSkins;
 
@@ -194,8 +195,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public int leaderboardID = 10220;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
+        PhotonNetwork.AddCallbackTarget(this);
         criticalHealth.SetActive(false);
 
         InitHealth();
@@ -269,6 +271,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             foreach (GameObject emblem in fedEmblem)
                 emblem.SetActive(true);
         }
+
+        if (photonView.IsMine)
+            healthBarObject.SetActive(true);
 
     }
 
@@ -1021,11 +1026,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private void OnEnable()
-    {
-        PhotonNetwork.AddCallbackTarget(this);
-    }
-
     private void OnDisable()
     {
         PhotonNetwork.RemoveCallbackTarget(this);
@@ -1416,7 +1416,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         Health -= damage;
-        healthBar.SetCurrentHealth(Health);
+        //healthBar.SetCurrentHealth(Health);
 
         if (Health <= 0 && playerLives > 1 && alive == true)
         {
@@ -1438,7 +1438,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         Health += health;
-        healthBar.SetCurrentHealth(Health);
+        //healthBar.SetCurrentHealth(Health);
     }
 
     [PunRPC]
@@ -1450,7 +1450,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         player.transform.position = spawnManager.spawnPosition;
         playerLives -= 1;
         Health = 125;
-        healthBar.SetMaxHealth(Health);
+        //healthBar.SetMaxHealth(Health);
         CheckHealthStatus();
         alive = true;
     }
@@ -1463,7 +1463,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         maxHealth = Health;
         multiplayerHealth.SetMaxHealth(maxHealth);
-        healthBar.SetMaxHealth(maxHealth);
+        //healthBar.SetMaxHealth(maxHealth);
     }
 
     [PunRPC]

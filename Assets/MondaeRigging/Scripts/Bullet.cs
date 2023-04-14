@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public MeshCollider colliderBullet;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(DestroyBullet());
     }

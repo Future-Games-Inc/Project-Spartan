@@ -24,7 +24,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     private bool contact = false;
     public bool playAudio = true;
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(PlayAudioLoop());
         activationSlider.maxValue = activationTime;
@@ -87,6 +87,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     IEnumerator Destroy()
     {
         yield return new WaitForSeconds(.75f);
+        matchProps.lastSpawnTime = Time.time;
+        matchProps.spawned = false;
         PhotonNetwork.Destroy(gameObject);
     }
 

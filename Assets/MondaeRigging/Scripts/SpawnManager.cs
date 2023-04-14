@@ -28,7 +28,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPlayer()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         object avatarSelectionNumber;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
         {

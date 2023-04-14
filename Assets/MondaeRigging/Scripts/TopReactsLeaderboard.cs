@@ -201,7 +201,7 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator CheckLevel()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         LootLockerSDKManager.GetPlayerInfo((response) =>
         {
             currentLevel.text = response.level.ToString();
