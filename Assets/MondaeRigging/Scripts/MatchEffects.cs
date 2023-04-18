@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using TMPro;
+using System.Collections.Generic;
 
 public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -36,6 +37,9 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public bool startMatchBool = false;
     public bool spawned = false;
+    public bool DE_supplyDrop;
+
+    public string numSequence;
 
     public enum EventCodes : byte
     {
@@ -64,17 +68,20 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         InitializeTimer();
         photonView.RPC("AudioEnter", RpcTarget.All);
         spawnInterval = 180f;
+
+        // Generate a random 4-digit sequence
+        numSequence = GenerateRandomSequence(4);
     }
 
     private void Update()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            if (Time.time > lastSpawnTime + spawnInterval && spawned == false)
+            if (Time.time > lastSpawnTime + spawnInterval && spawned == false && DE_supplyDrop == true)
             {
                 lastSpawnTime = Time.time;
                 if (PhotonNetwork.IsMasterClient)
-                    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0);
+                    PhotonNetwork.Instantiate(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0);
                 StartCoroutine(SupplyShipAudio());
                 spawned = true;
             }
@@ -244,6 +251,19 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void SupplyAudio2()
     {
         audioSource.PlayOneShot(supplyShip2);
+    }
+
+    private string GenerateRandomSequence(int length)
+    {
+        string sequence = "";
+        System.Random rnd = new System.Random();
+
+        for (int i = 0; i < length; i++)
+        {
+            sequence += rnd.Next(0, 10);
+        }
+
+        return sequence;
     }
 }
 

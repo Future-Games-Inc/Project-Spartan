@@ -30,17 +30,20 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     public bool isFiring = false;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
+        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
+        grabbable.activated.AddListener(StartFireBullet);
+        grabbable.deactivated.AddListener(StopFireBullet);
         photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
         StartCoroutine(TextUpdate());
     }
 
     IEnumerator TextUpdate()
     {
-        while(true)
+        while (true)
         {
             photonView.RPC("RPC_Update", RpcTarget.AllBuffered);
             yield return new WaitForSeconds(.15f);
@@ -50,7 +53,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void StartFireBullet(ActivateEventArgs arg)
@@ -69,6 +72,20 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     {
         while (isFiring)
         {
+            if (ammoLeft >= 1 && reloadingWeapon == false)
+            {
+                foreach (Transform t in spawnPoint)
+                {
+                    if (!audioSource.isPlaying)
+                        audioSource.PlayOneShot(weaponFire);
+                    GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity);
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
+                    spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
+                    spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
+                }
+            }
+
             photonView.RPC("RPC_Fire", RpcTarget.AllBuffered);
             yield return new WaitForSeconds(0.2f);
         }
@@ -104,9 +121,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
-        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
-        grabbable.activated.AddListener(StartFireBullet);
-        grabbable.deactivated.AddListener(StopFireBullet);
     }
 
     [PunRPC]
@@ -119,21 +133,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Fire()
     {
-        if (ammoLeft >= 1 && reloadingWeapon == false)
-        {
-            foreach (Transform t in spawnPoint)
-            {
-                if (!audioSource.isPlaying)
-                    audioSource.PlayOneShot(weaponFire);
-                GameObject spawnedBullet = Instantiate(bullet, t.position, Quaternion.identity);
-                spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
-                spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
-                spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
-                spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
-
-                ammoLeft--;
-            }
-        }
+        ammoLeft--;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
         {

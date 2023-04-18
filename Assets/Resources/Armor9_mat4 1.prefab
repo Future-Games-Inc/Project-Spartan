@@ -2445,8 +2445,8 @@ GameObject:
   - component: {fileID: 3888885654817260172}
   - component: {fileID: 1799011468459518908}
   - component: {fileID: 5884015577742174949}
-  - component: {fileID: 2198194677634263502}
   - component: {fileID: -4734081095835989360}
+  - component: {fileID: 9009362318184346560}
   m_Layer: 9
   m_Name: Armor9_mat4 1
   m_TagString: BossEnemy
@@ -2584,7 +2584,7 @@ MonoBehaviour:
   inSight: 0
   alive: 1
   waypoints: []
-  audioSource: {fileID: 2198194677634263502}
+  audioSource: {fileID: 9009362318184346560}
 --- !u!114 &7339452733834057934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2698,7 +2698,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!82 &2198194677634263502
+--- !u!114 &-4734081095835989360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824041771042350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
+  bulletTransform: {fileID: 421824761609566074}
+  shootForce: 100
+  ammoLeft: 0
+  maxAmmo: 0
+  audioSource: {fileID: 3239117333501985060}
+  audioSource2: {fileID: 2642686913866406122}
+  weaponFire: {fileID: 8300000, guid: 2a60d8d2e4715ab44af8212f1a286db0, type: 3}
+  weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
+  fireWeaponBool: 0
+  canShoot: 1
+--- !u!82 &9009362318184346560
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2707,8 +2730,7 @@ AudioSource:
   m_GameObject: {fileID: 1824041771042350}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243567727944115826, guid: c40bed98f23a748f89472abe9c1a6871,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2720,9 +2742,9 @@ AudioSource:
   Priority: 0
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 25
+  MaxDistance: 10
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2795,29 +2817,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-4734081095835989360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
-  bulletTransform: {fileID: 421824761609566074}
-  shootForce: 100
-  ammoLeft: 0
-  maxAmmo: 0
-  audioSource: {fileID: 3239117333501985060}
-  audioSource2: {fileID: 2642686913866406122}
-  weaponFire: {fileID: 8300000, guid: 2a60d8d2e4715ab44af8212f1a286db0, type: 3}
-  weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
-  fireWeaponBool: 0
-  canShoot: 1
 --- !u!1 &1827996949366762
 GameObject:
   m_ObjectHideFlags: 0
@@ -4034,9 +4033,9 @@ AudioSource:
   Priority: 26
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 50
+  MaxDistance: 10
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -4130,9 +4129,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 50
+  MaxDistance: 10
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0

@@ -822,7 +822,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3941197439919586059}
   m_LocalRotation: {x: -0.42902252, y: -0.5620852, z: -0.42902228, w: 0.56208533}
-  m_LocalPosition: {x: -0.007962799, y: 0.19, z: -3.48065e-10}
+  m_LocalPosition: {x: -0.007962799, y: 0.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1802,8 +1802,8 @@ GameObject:
   - component: {fileID: 8298710489907778390}
   - component: {fileID: 3999304296534623308}
   - component: {fileID: 2584860748200865684}
-  - component: {fileID: 932198695158471982}
   - component: {fileID: 7761508669064446960}
+  - component: {fileID: 470025675321031789}
   m_Layer: 9
   m_Name: securityAI
   m_TagString: Security
@@ -1972,7 +1972,7 @@ MonoBehaviour:
   - {fileID: 7141397235643652876}
   - {fileID: 7971686586214047509}
   xpDropRate: 0
-  audioSource: {fileID: 932198695158471982}
+  audioSource: {fileID: 470025675321031789}
   bulletHit: {fileID: 8300000, guid: bef3e5c3d3a13f5468e1aaacbe181e22, type: 3}
   explosionEffect: {fileID: 1959557837182592902}
   audioClip:
@@ -2005,7 +2005,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!82 &932198695158471982
+--- !u!114 &7761508669064446960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3941197441095112601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e9e2262e05e1884082e0044932123b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyAI: []
+  alarmSource: {fileID: 8218046683117436121}
+  alarmClip: {fileID: 8300000, guid: bf387dbe6b242b44caf2efe279be38c8, type: 3}
+  securityDrone: {fileID: 3941197441095112601}
+  detectedPlayer: {fileID: 0}
+  beamMaterial: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
+  beamColor: {r: 0, g: 0.78039217, b: 1, a: 0}
+  lost: 1
+  neverFound: 1
+  lostTimer: 0
+--- !u!82 &470025675321031789
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2014,8 +2036,7 @@ AudioSource:
   m_GameObject: {fileID: 3941197441095112601}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243567727944115826, guid: c40bed98f23a748f89472abe9c1a6871,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2024,12 +2045,12 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 0
+  Priority: 79
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 25
+  MaxDistance: 10
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2102,28 +2123,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7761508669064446960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3941197441095112601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e9e2262e05e1884082e0044932123b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyAI: []
-  alarmSource: {fileID: 5015605944075072760}
-  alarmClip: {fileID: 8300000, guid: bf387dbe6b242b44caf2efe279be38c8, type: 3}
-  securityDrone: {fileID: 3941197441095112601}
-  detectedPlayer: {fileID: 0}
-  beamMaterial: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
-  beamColor: {r: 0, g: 0.78039217, b: 1, a: 0}
-  lost: 1
-  neverFound: 1
-  lostTimer: 0
 --- !u!1 &4935353737761465564
 GameObject:
   m_ObjectHideFlags: 0
@@ -7363,7 +7362,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 2534964839176971238, guid: 1db60d6f05bfc504ea0b73ae74b0ae63, type: 3}
---- !u!82 &5015605944075072760
+--- !u!114 &6471531943108693586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5285654596892484075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc59c645be0fce34784fdac1bcd6fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  securityBeam: {fileID: 7761508669064446960}
+--- !u!82 &8218046683117436121
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7372,8 +7384,7 @@ AudioSource:
   m_GameObject: {fileID: 5285654596892484075}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243567727944115826, guid: c40bed98f23a748f89472abe9c1a6871,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -7382,12 +7393,12 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 0
+  Priority: 15
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 15
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -7460,19 +7471,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6471531943108693586
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5285654596892484075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc59c645be0fce34784fdac1bcd6fe2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  securityBeam: {fileID: 7761508669064446960}
 --- !u!1001 &7159478059412179137
 PrefabInstance:
   m_ObjectHideFlags: 0
