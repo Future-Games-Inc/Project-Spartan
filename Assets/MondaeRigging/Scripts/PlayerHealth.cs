@@ -124,11 +124,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool male;
     public bool primaryPowerupTimer;
     public bool secondaryPowerupTimer;
-    //public bool CyberGangDatacard = false;
-    //public bool MuerteDeDatacard = false;
-    //public bool ChaosDatacard = false;
-    //public bool CintSixDatacard = false;
-    //public bool FedZoneDatacard = false;
+    public bool CyberGangDatacard = false;
+    public bool MuerteDeDatacard = false;
+    public bool ChaosDatacard = false;
+    public bool CintSixDatacard = false;
+    public bool FedZoneDatacard = false;
     //public bool factionExtraction = false;
     //public bool Artifact1;
     //public bool Artifact2;
@@ -491,11 +491,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
 
-        //cyberIcon.SetActive(CyberGangDatacard);
-        //fedIcon.SetActive(FedZoneDatacard);
-        //muerteIcon.SetActive(MuerteDeDatacard);
-        //chaosIcon.SetActive(ChaosDatacard);
-        //cintIcon.SetActive(CintSixDatacard);
+        cyberIcon.SetActive(CyberGangDatacard);
+        fedIcon.SetActive(FedZoneDatacard);
+        muerteIcon.SetActive(MuerteDeDatacard);
+        chaosIcon.SetActive(ChaosDatacard);
+        cintIcon.SetActive(CintSixDatacard);
     }
 
     void CallAbilities1True()
@@ -1347,19 +1347,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    //public void FactionDataCard(string faction)
-    //{
-    //    if (faction == "Cyber SK Gang".ToString() && characterFaction != faction.ToString() && CyberGangDatacard == false)
-    //        CyberGangDatacard = true;
-    //    if (faction == "Muerte De Dios".ToString() && characterFaction != faction.ToString() && MuerteDeDatacard == false)
-    //        MuerteDeDatacard = true;
-    //    if (faction == "Chaos Cartel".ToString() && characterFaction != faction.ToString() && ChaosDatacard == false)
-    //        ChaosDatacard = true;
-    //    if (faction == "CintSix Cartel".ToString() && characterFaction != faction.ToString() && CintSixDatacard == false)
-    //        CintSixDatacard = true;
-    //    if (faction == "Federation Zone Authority".ToString() && characterFaction != faction.ToString() && FedZoneDatacard == false)
-    //        FedZoneDatacard = true;
-    //}
+    public void FactionDataCard(string faction)
+    {
+        if (faction == "Cyber SK Gang".ToString() && characterFaction != faction.ToString() && CyberGangDatacard == false)
+            CyberGangDatacard = true;
+        if (faction == "Muerte De Dios".ToString() && characterFaction != faction.ToString() && MuerteDeDatacard == false)
+            MuerteDeDatacard = true;
+        if (faction == "Chaos Cartel".ToString() && characterFaction != faction.ToString() && ChaosDatacard == false)
+            ChaosDatacard = true;
+        if (faction == "CintSix Cartel".ToString() && characterFaction != faction.ToString() && CintSixDatacard == false)
+            CintSixDatacard = true;
+        if (faction == "Federation Zone Authority".ToString() && characterFaction != faction.ToString() && FedZoneDatacard == false)
+            FedZoneDatacard = true;
+    }
 
     [System.Obsolete]
     public IEnumerator SubmitScoreRoutine(string faction, int scoreToUpload)

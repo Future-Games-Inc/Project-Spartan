@@ -47,13 +47,11 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     void RPC_Trigger()
     {
         player.UpdateSkills(tokenValue);
-        //tokenValue = 0;
-        PhotonNetwork.Destroy(gameObject);
-
-        //if (faction.ToString() != player.characterFaction.ToString())
-        //{
-        //    player.FactionDataCard(faction);
-        //    PhotonNetwork.Destroy(gameObject);
-        //}
+        tokenValue = 0;
+        if (faction.ToString() != player.characterFaction.ToString())
+        {
+            player.FactionDataCard(faction);
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 }

@@ -36,10 +36,13 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public Transform spawnLocation;
 
     public bool startMatchBool = false;
+    public bool spawnReactor = false;
     public bool spawned = false;
     public bool DE_supplyDrop;
 
     public string numSequence;
+
+    public TextMeshProUGUI nexusCodePanel;
 
     public enum EventCodes : byte
     {
@@ -71,6 +74,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
         // Generate a random 4-digit sequence
         numSequence = GenerateRandomSequence(4);
+        nexusCodePanel.text = numSequence.ToString();
     }
 
     private void Update()
@@ -264,6 +268,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         return sequence;
+        
     }
 }
 

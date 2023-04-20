@@ -91,7 +91,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     {
         while (spawnReactor && reactorCount < reactorCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            yield return new WaitUntil(() => matchProps.startMatchBool && matchProps.spawnReactor);
 
             spawnReactor = false;
 
