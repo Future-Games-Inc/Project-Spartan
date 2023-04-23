@@ -1,9 +1,13 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
+using ExitGames.Client.Photon;
 
-public class PowerSurge : MonoBehaviour
+
+public class PowerSurge : MonoBehaviourPunCallbacks
 {
     public float radius = 2f;
     public float lightRadius = 20f;
@@ -14,14 +18,36 @@ public class PowerSurge : MonoBehaviour
     public float maxIntensity = 1f;
     public float flickerSpeed = .05f;
 
-    private float targetIntensity;
+    private Dictionary<Light, int> lightIndexDict;
 
-    public bool activated;
+    [SerializeField]
+    bool activated = false;
     public bool canBeActivated;
+
+    void Enable()
+    {
+        PhotonPeer.RegisterType(typeof(Light), (byte)'L', Serialize, DeserializeLight);
+    }
+
+    public static readonly byte[] memLight = new byte[4] { 0, 0, 0, 0 };
+
+    public static object DeserializeLight(byte[] bytes)
+    {
+        float intensity = BitConverter.ToSingle(bytes, 0);
+        return new Light() { intensity = intensity };
+    }
+
+    public static byte[] Serialize(object obj)
+    {
+        Light light = (Light)obj;
+        float intensity = light.intensity;
+        byte[] intensityBytes = BitConverter.GetBytes(intensity);
+        return intensityBytes;
+    }
 
     void Start()
     {
-        activated = false;
+        Enable();
         canBeActivated = true;
         StartCoroutine(Flicker());
 
@@ -49,6 +75,7 @@ public class PowerSurge : MonoBehaviour
         }
 
         lightToFlicker = new Light[totalLights];
+        lightIndexDict = new Dictionary<Light, int>();
 
         int lightIndex = 0;
         foreach (GameObject obj in objectsWithTag)
@@ -59,6 +86,7 @@ public class PowerSurge : MonoBehaviour
                 foreach (Light light in lights)
                 {
                     lightToFlicker[lightIndex] = light;
+                    lightIndexDict.Add(light, lightIndex);
                     lightIndex++;
                 }
             }
@@ -69,7 +97,10 @@ public class PowerSurge : MonoBehaviour
     {
         if (CheckForPlayerWithinRadius() == true)
         {
-            activated = true;
+            if (!activated)
+            {
+                photonView.RPC("SetActivated", RpcTarget.All, true);
+            }
         }
 
         if (activated && canBeActivated)
@@ -77,7 +108,6 @@ public class PowerSurge : MonoBehaviour
             StartCoroutine(BlackOut());
         }
     }
-
     IEnumerator BlackOut()
     {
         yield return new WaitForSeconds(3);
@@ -86,12 +116,14 @@ public class PowerSurge : MonoBehaviour
         foreach (Light light in lightToFlicker)
         {
             light.intensity = 0;
+            photonView.RPC("SetLightIntensity", RpcTarget.All, light, light.intensity);
         }
         yield return new WaitForSeconds(10);
         canBeActivated = true;
         foreach (Light light in lightToFlicker)
         {
             light.intensity = maxIntensity;
+            photonView.RPC("SetLightIntensity", RpcTarget.All, light, light.intensity);
         }
     }
 
@@ -120,13 +152,27 @@ public class PowerSurge : MonoBehaviour
             // Calculate a random target intensity for each light
             foreach (Light light in lightToFlicker)
             {
-                float randomIntensity = Random.Range(0.0f, 1.0f);
+                float randomIntensity = UnityEngine.Random.Range(0.0f, 1.0f);
                 float targetIntensity = Mathf.Lerp(minIntensity, maxIntensity, randomIntensity);
+                int lightIndex = lightIndexDict[light];
+                photonView.RPC("SetLightIntensity", RpcTarget.All, light, targetIntensity);
                 light.intensity = targetIntensity;
             }
 
             // Wait for a short time before flickering again
             yield return new WaitForSeconds(flickerSpeed);
         }
+    }
+
+    [PunRPC]
+    private void SetActivated(bool newActivated)
+    {
+        activated = newActivated;
+    }
+
+    [PunRPC]
+    private void SetLightIntensity(Light light, float intensity)
+    {
+        light.intensity = intensity;
     }
 }

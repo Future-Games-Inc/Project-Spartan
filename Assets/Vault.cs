@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class Vault : MonoBehaviour
+public class Vault : MonoBehaviourPunCallbacks
 {
     public float startY;
     public float endY;
@@ -25,7 +26,7 @@ public class Vault : MonoBehaviour
     public Material decativatedMaterial;
     public Material lootedMaterial;
 
-    private float elapsedTime;
+    public float elapsedTime;
     public float activationTime = 15;
     public float radius = 4;
     public Slider activationSlider;
@@ -38,82 +39,98 @@ public class Vault : MonoBehaviour
 
     void Update()
     {
-        if (CheckForPlayerWithinRadius() == true)
+        if (photonView.IsMine)
         {
-            if (!activated)
+            // Check for player within radius and synchronize activation timer and slider value
+            CheckForPlayerWithinRadius();
+
+            if (CheckForPlayerWithinRadius() == true)
             {
-                elapsedTime += Time.deltaTime;
-                float remainingTime = activationTime - elapsedTime;
-                activationSlider.value = remainingTime;
-                if (elapsedTime >= activationTime)
+                if (!activated)
                 {
-                    activated = true;
-                    activationSlider.gameObject.SetActive(false);
+                    elapsedTime += Time.deltaTime;
+                    float remainingTime = activationTime - elapsedTime;
+                    activationSlider.value = remainingTime;
+                    if (elapsedTime >= activationTime)
+                    {
+                        activated = true;
+                        activationSlider.gameObject.SetActive(false);
+                    }
                 }
             }
-        }
 
-        if (activated)
-        {
-            keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
-            if (!isHolding)
+            if (activated)
             {
-                // Increment the timer
-                timer += Time.deltaTime;
-
-                // Calculate the rotation amount based on the elapsed time
-                float t = timer / duration;
-                float y = Mathf.Lerp(startY, endY, t);
-
-                // Rotate the game object
-                transform.rotation = Quaternion.Euler(0, y, 0);
-
-                // Start holding if endY is reached
-                if (y >= endY)
+                keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
+                if (!isHolding)
                 {
-                    isHolding = true;
+                    // Increment the timer
+                    timer += Time.deltaTime;
+
+                    // Call RotateVault RPC to synchronize rotation across the network
+                    photonView.RPC("RotateVault", RpcTarget.All, Mathf.Lerp(startY, endY, timer / duration), elapsedTime, activationSlider.value);
+
+                    // Start holding if endY is reached
+                    if (Mathf.Lerp(startY, endY, timer / duration) >= endY)
+                    {
+                        isHolding = true;
+                    }
                 }
-            }
-            else if (isRotatingBack)
-            {
-                // Increment the timer
-                timer += Time.deltaTime;
-
-                // Calculate the rotation amount based on the elapsed time
-                float t = timer / duration;
-                float y = Mathf.Lerp(endY, startY, t);
-
-                // Rotate the game object
-                transform.rotation = Quaternion.Euler(0, y, 0);
-
-                // Stop rotating if startY is reached
-                if (y <= startY)
+                else if (isRotatingBack)
                 {
-                    transform.rotation = Quaternion.Euler(0, startY, 0);
-                    isRotatingBack = false;
-                    isHolding = false;
-                    timer = 0;
-                    keycardObject.GetComponent<MeshRenderer>().material = lootedMaterial;
-                    enabled = false;
+                    // Increment the timer
+                    timer += Time.deltaTime;
+
+                    // Calculate the rotation amount based on the elapsed time
+                    float t = timer / duration;
+                    float y = Mathf.Lerp(endY, startY, t);
+
+                    // Call RotateVault RPC to synchronize rotation across the network
+                    photonView.RPC("RotateVault", RpcTarget.All, startY, startY, elapsedTime, activationSlider.value);
+
+                    // Stop rotating if startY is reached
+                    if (y <= startY)
+                    {
+                        transform.rotation = Quaternion.Euler(0, startY, 0);
+                        isRotatingBack = false;
+                        isHolding = false;
+                        timer = 0;
+                        keycardObject.GetComponent<MeshRenderer>().material = lootedMaterial;
+                        enabled = false;
+                    }
                 }
-            }
-            else
-            {
-                // Increment the hold timer
-                holdTimer += Time.deltaTime;
-
-                // Check if hold duration has elapsed
-                if (holdTimer >= holdDuration)
+                else
                 {
-                    // Start rotating back to endY
-                    isRotatingBack = true;
-                    timer = 0;
-                    holdTimer = 0;
+                    // Increment the hold timer
+                    holdTimer += Time.deltaTime;
+
+                    // Check if hold duration has elapsed
+                    if (holdTimer >= holdDuration)
+                    {
+                        // Start rotating back to endY
+                        isRotatingBack = true;
+                        timer = 0;
+                        holdTimer = 0;
+                    }
                 }
             }
         }
     }
-    bool CheckForPlayerWithinRadius()
+
+    [PunRPC]
+    void RotateVault(float y, float elapsedTime, float sliderValue)
+    {
+        // Rotate the game object
+        transform.rotation = Quaternion.Euler(0, y, 0);
+
+        // Synchronize activation timer and slider value
+        activated = true;
+        this.elapsedTime = elapsedTime;
+        activationSlider.gameObject.SetActive(true);
+      
+    }
+
+    public bool CheckForPlayerWithinRadius()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
         foreach (Collider collider in hitColliders)

@@ -1,10 +1,9 @@
+using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class RadioTowerPost : MonoBehaviour
+public class RadioTowerPost : MonoBehaviourPunCallbacks
 {
     public XRSocketInteractor socket;
     public TextMeshProUGUI displayText;
@@ -13,17 +12,40 @@ public class RadioTowerPost : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        displayText.fontSize = 24;
-        displayText.text = "Disconneected";
+        if (PhotonNetwork.IsMasterClient)
+            photonView.RPC("RPC_RadioStart", RpcTarget.All);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(socket.hasSelection) 
+
+    }
+
+    IEnumerator CheckTower()
+    {
+        while(true)
         {
-            displayText.text = "Connected";
-            Connected = true;
+            while (!socket.hasSelection)
+            {
+                yield return null;
+            }
+            photonView.RPC("RPC_TowersConnected", RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    void RPC_RadioStart()
+    {
+        displayText.fontSize = 24;
+        displayText.text = "Disconneected";
+        StartCoroutine(CheckTower());    
+    }
+
+    [PunRPC]
+    void RPC_TowersConnected()
+    {
+        displayText.text = "Connected";
+        Connected = true;
     }
 }
