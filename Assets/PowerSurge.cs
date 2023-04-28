@@ -97,7 +97,7 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     {
         if (CheckForPlayerWithinRadius() == true)
         {
-            if (!activated)
+            if (!activated && canBeActivated)
             {
                 photonView.RPC("SetActivated", RpcTarget.All, true);
             }
@@ -110,8 +110,8 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     }
     IEnumerator BlackOut()
     {
-        yield return new WaitForSeconds(3);
         canBeActivated = false;
+        yield return new WaitForSeconds(3);
         activated = false;
         foreach (Light light in lightToFlicker)
         {

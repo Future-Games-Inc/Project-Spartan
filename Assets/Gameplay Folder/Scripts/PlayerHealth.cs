@@ -771,6 +771,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         respawnUI.UpdateRespawnUI();
     }
 
+    public void ApplyBlindEffect(float duration)
+    {
+        StartCoroutine(sceneFader.BlackOut(duration));
+    }
+
     IEnumerator ReactorExtraction()
     {
         yield return new WaitForSeconds(0);

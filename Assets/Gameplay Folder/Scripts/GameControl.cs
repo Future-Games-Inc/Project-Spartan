@@ -1,14 +1,15 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class GameControl : MonoBehaviour
 {
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI highScoreText;
     public TextMeshProUGUI Timer;
-    public GameObject highScoreBanner;
     public GameObject scoreBanner;
+    public GameObject gameButton;
     public EnemySpawner spawner;
 
     private int score;
@@ -36,7 +37,6 @@ public class GameControl : MonoBehaviour
     {
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         highScoreText.text = "High Score: " + highScore.ToString();
-        highScoreBanner.SetActive(false);
         scoreBanner.SetActive(false);
     }
 
@@ -94,10 +94,10 @@ public class GameControl : MonoBehaviour
             highScore = score;
             highScoreText.text = "High Score: " + highScore.ToString();
             PlayerPrefs.SetInt("HighScore", highScore);
-            highScoreBanner.SetActive(true);
         }
 
         audioSource.PlayOneShot(endClip);
+        gameButton.SetActive(true);
 
         StartCoroutine(Deactivate());
     }
@@ -119,9 +119,6 @@ public class GameControl : MonoBehaviour
 
             // show high score display
             highScoreText.text = "High Score: " + highScore.ToString();
-
-            // hide high score banner
-            highScoreBanner.SetActive(false);
 
             // start game
             spawner.enabled = false;
@@ -158,7 +155,6 @@ public class GameControl : MonoBehaviour
     IEnumerator Deactivate()
     {
         yield return new WaitForSeconds(10);
-        highScoreBanner.SetActive(false);
         scoreBanner.SetActive(false);
     }
 }
