@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Speed")]
     public float minSpeed = 3f;
-    public float maxSpeed = 10f;
-    public float accelerationTime = 3f; // Time it takes to reach maxSpeed
+    public float maxSpeed = 8f;
+    public float accelerationTime = 10f; // Time it takes to reach maxSpeed
     public float currentSpeed;
     private float velocity;
 
