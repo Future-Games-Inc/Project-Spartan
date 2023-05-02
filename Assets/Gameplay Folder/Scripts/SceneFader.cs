@@ -8,6 +8,7 @@ public class SceneFader : MonoBehaviour
 
     public Image img;
     public AnimationCurve curve;
+    public int playerDeaths;
 
     void Start()
     {
@@ -56,16 +57,65 @@ public class SceneFader : MonoBehaviour
 
     public IEnumerator Respawn()
     {
-        float t = 2f;
-
-        while (t > 0f)
+        if (playerDeaths <= 2)
         {
-            t -= Time.deltaTime;
+            float t = 2f;
 
-            float a = curve.Evaluate(t);
-            img.color = new Color(106f, 0f, 0f, a);
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
 
-            yield return 0; // wait a frame and then continue...
+                float a = curve.Evaluate(t);
+                img.color = new Color(106f, 0f, 0f, a);
+                playerDeaths++;
+
+                yield return 0; // wait a frame and then continue...
+            }
+        }
+        else if (playerDeaths > 2 && playerDeaths <= 6)
+        {
+            float t = 2f;
+
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
+
+                float a = curve.Evaluate(t);
+                img.color = new Color(106f, 0f, 0f, a);
+                playerDeaths++;
+
+                yield return 5; // wait a frame and then continue...
+            }
+        }
+        else if (playerDeaths > 6 && playerDeaths <= 10)
+        {
+            float t = 2f;
+
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
+
+                float a = curve.Evaluate(t);
+                img.color = new Color(106f, 0f, 0f, a);
+                playerDeaths++;
+
+                yield return 10; // wait a frame and then continue...
+            }
+        }
+        else if (playerDeaths > 10)
+        {
+            float t = 2f;
+
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
+
+                float a = curve.Evaluate(t);
+                img.color = new Color(106f, 0f, 0f, a);
+                playerDeaths++;
+
+                yield return 15; // wait a frame and then continue...
+            }
         }
     }
 

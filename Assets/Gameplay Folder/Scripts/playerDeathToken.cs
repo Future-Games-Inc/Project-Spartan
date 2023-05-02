@@ -27,14 +27,14 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
         if (other.CompareTag("Player") && tokenActivated == true)
         {
             player = other.GetComponent<PlayerHealth>();
-            photonView.RPC("RPC_Trigger", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_DestroyToken", RpcTarget.All);
         }
     }
 
     private IEnumerator TokenActivation()
     {
         yield return new WaitForSeconds(1f);
-        photonView.RPC("RPC_TokenActivated", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_TokenActivated", RpcTarget.All);
     }
 
     [PunRPC]
@@ -44,7 +44,7 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_Trigger()
+    void RPC_DestroyToken()
     {
         player.UpdateSkills(tokenValue);
         tokenValue = 0;

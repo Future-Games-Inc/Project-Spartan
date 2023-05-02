@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class SpawnManager1 : MonoBehaviourPunCallbacks
 {
@@ -173,5 +174,14 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     public void RPC_UpdateEnemyCount()
     {
         enemiesKilled++;
+    }
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        // Check if this is the object's current owner and if the new master client exists
+        if (photonView.IsMine && newMasterClient != null)
+        {
+            // Transfer ownership of the object to the new master client
+            photonView.TransferOwnership(newMasterClient.ActorNumber);
+        }
     }
 }

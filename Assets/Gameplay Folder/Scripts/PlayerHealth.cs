@@ -95,7 +95,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     //public float aiCompanionDuration = 30;
     //public float decoyDeployDuration = 30;
 
-    public int playerLives = 3;
+    //public int playerLives = 3;
     public int playersKilled;
     public int enemiesKilled;
     public int startingBulletModifier;
@@ -208,7 +208,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         InitAvatarSelection();
 
         spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
-        playerLives = 3;
+        //playerLives = 3;
 
         StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
@@ -322,10 +322,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void InitSavingGrace()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
-        {
-            playerLives += 1;
-        }
+        //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
+        //{
+        //    playerLives += 1;
+        //}
     }
     private int SetMaxHealthFromHealthLevel()
     {
@@ -697,7 +697,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         yield return new WaitForSeconds(0);
         StartCoroutine(sceneFader.ScreenFade());
         GameObject playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0);
-        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 4);
+        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 10);
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
         object implant;
@@ -734,10 +734,15 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         //    PhotonNetwork.Instantiate(Artifact5Drp.name, artifactDrop5.position, Quaternion.identity, 0);
         //    Artifact5 = false;
         //}
-        yield return new WaitForSeconds(.75f);
-        if (photonView.IsMine)
-            // Leave the room
-            VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+        //yield return new WaitForSeconds(.75f);
+        //if (photonView.IsMine)
+        //{
+        //    // Leave the room
+        //    Hashtable customProps = new Hashtable();
+        //    customProps.Add("IsDead", true);
+        //    PhotonNetwork.LocalPlayer.SetCustomProperties(customProps);
+        //    VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+        //}
     }
 
     IEnumerator PlayerRespawn()
@@ -768,7 +773,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             direct.enabled = true;
         }
 
-        respawnUI.UpdateRespawnUI();
+        //respawnUI.UpdateRespawnUI();
     }
 
     public void ApplyBlindEffect(float duration)
@@ -1423,17 +1428,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         Health -= damage;
         //healthBar.SetCurrentHealth(Health);
 
-        if (Health <= 0 && playerLives > 1 && alive == true)
+        if (Health <= 0/* && playerLives > 1 */&& alive == true)
         {
             alive = false;
             StartCoroutine(PlayerRespawn());
-        }
-
-        else if (Health <= 0 && playerLives == 1 && alive == true)
-        {
-            alive = false;
             StartCoroutine(PlayerDeath());
         }
+
+        //else if (Health <= 0 && playerLives == 1 && alive == true)
+        //{
+        //    alive = false;
+        //    StartCoroutine(PlayerDeath());
+        //}
     }
 
     [PunRPC]
@@ -1453,7 +1459,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         player.transform.position = spawnManager.spawnPosition;
-        playerLives -= 1;
+        //playerLives -= 1;
         Health = 125;
         //healthBar.SetMaxHealth(Health);
         CheckHealthStatus();
@@ -1669,4 +1675,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         InvokeRepeating("HealthRegen", 0f, 3f);
     }
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        // Check if this is the object's current owner and if the new master client exists
+        if (photonView.IsMine && newMasterClient != null)
+        {
+            // Transfer ownership of the object to the new master client
+            photonView.TransferOwnership(newMasterClient.ActorNumber);
+        }
+    }
+
 }

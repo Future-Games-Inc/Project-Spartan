@@ -86,7 +86,7 @@ public class Vault : MonoBehaviourPunCallbacks
                     float y = Mathf.Lerp(endY, startY, t);
 
                     // Call RotateVault RPC to synchronize rotation across the network
-                    photonView.RPC("RotateVault", RpcTarget.All, startY, startY, elapsedTime, activationSlider.value);
+                    photonView.RPC("RotateVault", RpcTarget.All, Mathf.Lerp(endY, startY, timer / duration), elapsedTime, activationSlider.value);
 
                     // Stop rotating if startY is reached
                     if (y <= startY)

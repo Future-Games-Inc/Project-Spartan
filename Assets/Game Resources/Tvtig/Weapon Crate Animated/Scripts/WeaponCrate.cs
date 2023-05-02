@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class WeaponCrate : MonoBehaviourPunCallbacks
 {
@@ -29,10 +30,13 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
-        _collider = GetComponent<BoxCollider>();
-        cacheAudio = GetComponent<AudioSource>();
-        photonView.RPC("RPC_Awake", RpcTarget.AllBuffered);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _animator = GetComponent<Animator>();
+            _collider = GetComponent<BoxCollider>();
+            cacheAudio = GetComponent<AudioSource>();
+            photonView.RPC("RPC_Awake", RpcTarget.AllBuffered);
+        }
     }
     void Start()
     {
@@ -44,17 +48,29 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     }
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        // Check if this is the object's current owner and if the new master client exists
+        if (photonView.IsMine && newMasterClient != null)
+        {
+            // Transfer ownership of the object to the new master client
+            photonView.TransferOwnership(newMasterClient.ActorNumber);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            photonView.RPC("RPC_Opened", RpcTarget.AllBuffered);
+            if (PhotonNetwork.IsMasterClient)
+                photonView.RPC("RPC_Opened", RpcTarget.AllBuffered);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        photonView.RPC("RPC_Exit", RpcTarget.AllBuffered);
+        if (PhotonNetwork.IsMasterClient)
+            photonView.RPC("RPC_Exit", RpcTarget.AllBuffered);
     }
 
     IEnumerator WeaponCache()

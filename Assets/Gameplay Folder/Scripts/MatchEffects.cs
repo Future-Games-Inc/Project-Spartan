@@ -49,6 +49,16 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         RefreshTimer
     }
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        // Check if this is the object's current owner and if the new master client exists
+        if (photonView.IsMine && newMasterClient != null)
+        {
+            // Transfer ownership of the object to the new master client
+            photonView.TransferOwnership(newMasterClient.ActorNumber);
+        }
+    }
+
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code >= 200)
@@ -68,13 +78,16 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
-        InitializeTimer();
-        photonView.RPC("AudioEnter", RpcTarget.All);
-        spawnInterval = 180f;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InitializeTimer();
+            photonView.RPC("AudioEnter", RpcTarget.All);
+            spawnInterval = 180f;
 
-        // Generate a random 4-digit sequence
-        numSequence = GenerateRandomSequence(4);
-        nexusCodePanel.text = numSequence.ToString();
+            // Generate a random 4-digit sequence
+            numSequence = GenerateRandomSequence(4);
+            nexusCodePanel.text = numSequence.ToString();
+        }
     }
 
     private void Update()
