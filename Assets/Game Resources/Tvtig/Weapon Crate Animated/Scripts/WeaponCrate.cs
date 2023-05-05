@@ -30,13 +30,10 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            _animator = GetComponent<Animator>();
-            _collider = GetComponent<BoxCollider>();
-            cacheAudio = GetComponent<AudioSource>();
-            photonView.RPC("RPC_Awake", RpcTarget.AllBuffered);
-        }
+        _animator = GetComponent<Animator>();
+        _collider = GetComponent<BoxCollider>();
+        cacheAudio = GetComponent<AudioSource>();
+        photonView.RPC("RPC_Awake", RpcTarget.AllBuffered);
     }
     void Start()
     {
@@ -62,23 +59,21 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            if (PhotonNetwork.IsMasterClient)
-                photonView.RPC("RPC_Opened", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Opened", RpcTarget.AllBuffered);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (PhotonNetwork.IsMasterClient)
-            photonView.RPC("RPC_Exit", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Exit", RpcTarget.AllBuffered);
     }
 
     IEnumerator WeaponCache()
     {
         yield return new WaitForSeconds(1);
-        PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation, 0);
-        PhotonNetwork.Instantiate(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation, 0);
-        PhotonNetwork.Instantiate(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation, 0);
+        PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation, 0, null);
         StartCoroutine(CacheRespawn());
     }
 

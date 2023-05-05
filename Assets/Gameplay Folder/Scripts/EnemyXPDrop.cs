@@ -5,7 +5,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
 {
     public SpawnManager1 spawnManager;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
     }
@@ -27,11 +27,11 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                 //cal it at random probability
                 if (Random.Range(0, 100f) < xpDrop)
                 {
-                    other.gameObject.GetComponent<PlayerHealth>().UpdateSkills(10);
+                    other.gameObject.GetComponentInParent<PlayerHealth>().UpdateSkills(10);
                 }
                 else
                 {
-                    other.gameObject.GetComponent<PlayerHealth>().UpdateSkills(5);
+                    other.gameObject.GetComponentInParent<PlayerHealth>().UpdateSkills(5);
                 }
                 PhotonNetwork.Destroy(gameObject);
             }           
@@ -41,8 +41,8 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {
-                spawnManager.photonView.RPC("RPC_UpdateHealthCount", RpcTarget.AllBuffered);
-                other.GetComponent<PlayerHealth>().AddHealth(10);
+                spawnManager.photonView.RPC("RPC_UpdateHealthCount", RpcTarget.All, 0, null);
+                other.GetComponentInParent<PlayerHealth>().AddHealth(10);
                 PhotonNetwork.Destroy(gameObject);
             }           
         }
@@ -51,7 +51,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().AddHealth(5);
+                other.GetComponentInParent<PlayerHealth>().AddHealth(5);
                 PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -65,11 +65,11 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                 //cal it at random probability
                 if (Random.Range(0, 100f) < xpDrop)
                 {
-                    other.gameObject.GetComponent<PlayerHealth>().UpdateSkills(100);
+                    other.gameObject.GetComponentInParent<PlayerHealth>().UpdateSkills(100);
                 }
                 else
                 {
-                    other.gameObject.GetComponent<PlayerHealth>().UpdateSkills(50);
+                    other.gameObject.GetComponentInParent<PlayerHealth>().UpdateSkills(50);
                 }
                 PhotonNetwork.Destroy(gameObject);
             }
@@ -79,8 +79,8 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().toxicEffectActive = true;
-                other.GetComponent<PlayerHealth>().Toxicity(10);
+                other.GetComponentInParent<PlayerHealth>().toxicEffectActive = true;
+                other.GetComponentInParent<PlayerHealth>().Toxicity(10);
                 PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -89,8 +89,8 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().toxicEffectActive = true;
-                other.GetComponent<PlayerHealth>().Toxicity(20);
+                other.GetComponentInParent<PlayerHealth>().toxicEffectActive = true;
+                other.GetComponentInParent<PlayerHealth>().Toxicity(20);
                 PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -99,8 +99,8 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {                
-                other.GetComponent<PlayerHealth>().BulletImprove(10,2);
-                other.GetComponent<PlayerHealth>().bulletImproved = true;
+                other.GetComponentInParent<PlayerHealth>().BulletImprove(10,2);
+                other.GetComponentInParent<PlayerHealth>().bulletImproved = true;
                 PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -109,8 +109,8 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().BulletImprove(15, 4);
-                other.GetComponent<PlayerHealth>().bulletImproved = true;
+                other.GetComponentInParent<PlayerHealth>().BulletImprove(15, 4);
+                other.GetComponentInParent<PlayerHealth>().bulletImproved = true;
                 PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -119,8 +119,8 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerHealth>().shieldActive = true;
-                other.GetComponent<PlayerHealth>().Shield(10);
+                other.GetComponentInParent<PlayerHealth>().shieldActive = true;
+                other.GetComponentInParent<PlayerHealth>().Shield(10);
                 PhotonNetwork.Destroy(gameObject);
             }
         }

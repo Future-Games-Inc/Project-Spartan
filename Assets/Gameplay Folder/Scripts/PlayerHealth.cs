@@ -34,19 +34,19 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject secondaryActive;
     public Transform tokenDropLocation;
     //public Supercharge superCharge;
-    public GameObject fedIcon;
-    public GameObject cyberIcon;
-    public GameObject cintIcon;
-    public GameObject muerteIcon;
-    public GameObject chaosIcon;
+    //public GameObject fedIcon;
+    //public GameObject cyberIcon;
+    //public GameObject cintIcon;
+    //public GameObject muerteIcon;
+    //public GameObject chaosIcon;
     public GameObject reactorIcon;
     public GameObject factionIcon;
     public GameObject shipIcon;
-    public GameObject[] cyberEmblem;
-    public GameObject[] cintEmblem;
-    public GameObject[] fedEmblem;
-    public GameObject[] chaosEmblem;
-    public GameObject[] muerteEmblem;
+    //public GameObject[] cyberEmblem;
+    //public GameObject[] cintEmblem;
+    ////public GameObject[] fedEmblem;
+    //public GameObject[] chaosEmblem;
+    //public GameObject[] muerteEmblem;
     public GameObject[] playerObjects;
     public GameObject healthBarObject;
     //public GameObject Artifact1Obj;
@@ -95,7 +95,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     //public float aiCompanionDuration = 30;
     //public float decoyDeployDuration = 30;
 
-    //public int playerLives = 3;
+    public int playerLives = 3;
+    public int datacards = 0;
     public int playersKilled;
     public int enemiesKilled;
     public int startingBulletModifier;
@@ -124,11 +125,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool male;
     public bool primaryPowerupTimer;
     public bool secondaryPowerupTimer;
-    public bool CyberGangDatacard = false;
-    public bool MuerteDeDatacard = false;
-    public bool ChaosDatacard = false;
-    public bool CintSixDatacard = false;
-    public bool FedZoneDatacard = false;
+    //public bool CyberGangDatacard = false;
+    //public bool MuerteDeDatacard = false;
+    //public bool ChaosDatacard = false;
+    //public bool CintSixDatacard = false;
+    //public bool FedZoneDatacard = false;
     //public bool factionExtraction = false;
     //public bool Artifact1;
     //public bool Artifact2;
@@ -161,7 +162,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public int bulletModifier;
     public int bulletXPModifier;
     public int maxAmmo;
-    public int factionScore;
+    //public int factionScore;
 
     public GameObject winCanvas;
     public TextMeshProUGUI messageText;
@@ -208,7 +209,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         InitAvatarSelection();
 
         spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
-        //playerLives = 3;
+        playerLives = 3;
 
         StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
@@ -240,37 +241,37 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         startingBulletModifier = bulletModifier;
 
-        object faction;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Cyber SK Gang".ToString();
-            foreach (GameObject emblem in cyberEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Muerte De Dios".ToString();
-            foreach (GameObject emblem in muerteEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Chaos Cartel".ToString();
-            foreach (GameObject emblem in chaosEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "CintSix Cartel".ToString();
-            foreach (GameObject emblem in cintEmblem)
-                emblem.SetActive(true);
-        }
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
-        {
-            characterFaction = "Federation Zone Authority".ToString();
-            foreach (GameObject emblem in fedEmblem)
-                emblem.SetActive(true);
-        }
+        //object faction;
+        //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
+        //{
+        //    characterFaction = "Cyber SK Gang".ToString();
+        //    foreach (GameObject emblem in cyberEmblem)
+        //        emblem.SetActive(true);
+        //}
+        //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
+        //{
+        //    characterFaction = "Muerte De Dios".ToString();
+        //    foreach (GameObject emblem in muerteEmblem)
+        //        emblem.SetActive(true);
+        //}
+        //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
+        //{
+        //    characterFaction = "Chaos Cartel".ToString();
+        //    foreach (GameObject emblem in chaosEmblem)
+        //        emblem.SetActive(true);
+        //}
+        //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
+        //{
+        //    characterFaction = "CintSix Cartel".ToString();
+        //    foreach (GameObject emblem in cintEmblem)
+        //        emblem.SetActive(true);
+        //}
+        //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
+        //{
+        //    characterFaction = "Federation Zone Authority".ToString();
+        //    foreach (GameObject emblem in fedEmblem)
+        //        emblem.SetActive(true);
+        //}
 
         if (photonView.IsMine)
             healthBarObject.SetActive(true);
@@ -322,10 +323,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void InitSavingGrace()
     {
-        //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
-        //{
-        //    playerLives += 1;
-        //}
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
+        {
+            playerLives += 1;
+        }
     }
     private int SetMaxHealthFromHealthLevel()
     {
@@ -379,7 +380,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.AllBuffered);
             StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
             UpdateSkills(200);
-            StartCoroutine(SubmitScoreRoutine(characterFaction, 200));
+            //StartCoroutine(SubmitScoreRoutine(characterFaction, 200));
             ExtractionGame();
         }
 
@@ -389,7 +390,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.AllBuffered);
             StartCoroutine(WinMessage("250 skill points awarded for winning the round"));
             UpdateSkills(250);
-            StartCoroutine(SubmitScoreRoutine(characterFaction, 250));
+            //StartCoroutine(SubmitScoreRoutine(characterFaction, 250));
             PlayerGame();
         }
 
@@ -399,43 +400,51 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.AllBuffered);
             StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
             UpdateSkills(150);
-            StartCoroutine(SubmitScoreRoutine(characterFaction, 150));
+            //StartCoroutine(SubmitScoreRoutine(characterFaction, 150));
             EnemyGame();
         }
 
-        if (toxicTimer <= toxicEffectTimer && toxicEffectActive == true)
+        if (toxicTimer <= toxicEffectTimer && toxicEffectActive == true && !shouldCallAbilities1True)
         {
+            shouldCallAbilities1True = true;
             CallAbilities1True();
         }
-        else if (toxicTimer > toxicEffectTimer && toxicEffectActive == true)
+        else if (toxicTimer > toxicEffectTimer && toxicEffectActive == true && !shouldCallAbilities1False)
         {
+            shouldCallAbilities1False = true;
             CallAbilities1False();
         }
 
-        if (shieldTimer <= shieldEffectTimer && shieldActive == true)
+        if (shieldTimer <= shieldEffectTimer && shieldActive == true && !shouldCallAbilities2True)
         {
+            shouldCallAbilities2True = true;
             CallAbilities2True();
         }
-        else if (shieldTimer > shieldEffectTimer && shieldActive == true)
+        else if (shieldTimer > shieldEffectTimer && shieldActive == true && !shouldCallAbilities2False)
         {
+            shouldCallAbilities2False = true;
             CallAbilities2False();
         }
 
-        if (bulletImproved == true)
+        if (bulletImproved == true && !shouldCallAbilities3True)
         {
+            shouldCallAbilities3True = true;
             CallAbilities3True();
         }
-        else if (upgradeTimer > bulletXPTimer && bulletImproved == true)
+        else if (upgradeTimer > bulletXPTimer && bulletImproved == true && !shouldCallAbilities3False)
         {
+            shouldCallAbilities3False = true;
             CallAbilities3False();
         }
 
-        if (leechEffect == true && leechEffectTimer <= leechEffectDuration)
+        if (leechEffect == true && leechEffectTimer <= leechEffectDuration && !shouldCallAbilities4True)
         {
+            shouldCallAbilities4True = true;
             CallAbilities4True();
         }
-        else if (leechEffectTimer > leechEffectDuration || leechEffect == false)
+        else if (leechEffectTimer > leechEffectDuration && !shouldCallAbilities4False || leechEffect == false && !shouldCallAbilities4False)
         {
+            shouldCallAbilities4False = true;
             CallAbilities4False();
         }
 
@@ -491,11 +500,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
 
-        cyberIcon.SetActive(CyberGangDatacard);
-        fedIcon.SetActive(FedZoneDatacard);
-        muerteIcon.SetActive(MuerteDeDatacard);
-        chaosIcon.SetActive(ChaosDatacard);
-        cintIcon.SetActive(CintSixDatacard);
+        //cyberIcon.SetActive(CyberGangDatacard);
+        ////fedIcon.SetActive(FedZoneDatacard);
+        //muerteIcon.SetActive(MuerteDeDatacard);
+        //chaosIcon.SetActive(ChaosDatacard);
+        //cintIcon.SetActive(CintSixDatacard);
     }
 
     void CallAbilities1True()
@@ -520,7 +529,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities2True)
         {
-            photonView.RPC("RPC_Abilities2True", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities2True", RpcTarget.All, 0, null);
             shouldCallAbilities2True = false;
         }
     }
@@ -529,7 +538,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities2False)
         {
-            photonView.RPC("RPC_Abilities2False", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities2False", RpcTarget.All, 0, null);
             shouldCallAbilities2False = false;
         }
     }
@@ -696,7 +705,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(0);
         StartCoroutine(sceneFader.ScreenFade());
-        GameObject playerDeathTokenObject = PhotonNetwork.Instantiate(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0);
+        GameObject playerDeathTokenObject = PhotonNetwork.InstantiateRoomObject(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0, null);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 10);
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
@@ -706,7 +715,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
                 PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
         {
-            PhotonNetwork.Instantiate(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0);
+            PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0, null);
         }
 
         //if (Artifact1)
@@ -734,15 +743,15 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         //    PhotonNetwork.Instantiate(Artifact5Drp.name, artifactDrop5.position, Quaternion.identity, 0);
         //    Artifact5 = false;
         //}
-        //yield return new WaitForSeconds(.75f);
-        //if (photonView.IsMine)
-        //{
-        //    // Leave the room
-        //    Hashtable customProps = new Hashtable();
-        //    customProps.Add("IsDead", true);
-        //    PhotonNetwork.LocalPlayer.SetCustomProperties(customProps);
-        //    VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
-        //}
+        yield return new WaitForSeconds(.75f);
+        if (photonView.IsMine)
+        {
+            // Leave the room
+            Hashtable customProps = new Hashtable();
+            customProps.Add("IsDead", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(customProps);
+            VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+        }
     }
 
     IEnumerator PlayerRespawn()
@@ -773,7 +782,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             direct.enabled = true;
         }
 
-        //respawnUI.UpdateRespawnUI();
+        respawnUI.UpdateRespawnUI();
     }
 
     public void ApplyBlindEffect(float duration)
@@ -828,7 +837,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         //superCharge.IncreaseKillCount();
 
-        StartCoroutine(SubmitScoreRoutine(characterFaction, 20));
+        //StartCoroutine(SubmitScoreRoutine(characterFaction, 20));
         StartCoroutine(GetXP(2));
     }
 
@@ -853,7 +862,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         //superCharge.IncreaseKillCount();
 
-        StartCoroutine(SubmitScoreRoutine(characterFaction, 50));
+        //StartCoroutine(SubmitScoreRoutine(characterFaction, 50));
         StartCoroutine(GetXP(5));
     }
 
@@ -1357,51 +1366,52 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    public void FactionDataCard(string faction)
+    public void FactionDataCard()
     {
-        if (faction == "Cyber SK Gang".ToString() && characterFaction != faction.ToString() && CyberGangDatacard == false)
-            CyberGangDatacard = true;
-        if (faction == "Muerte De Dios".ToString() && characterFaction != faction.ToString() && MuerteDeDatacard == false)
-            MuerteDeDatacard = true;
-        if (faction == "Chaos Cartel".ToString() && characterFaction != faction.ToString() && ChaosDatacard == false)
-            ChaosDatacard = true;
-        if (faction == "CintSix Cartel".ToString() && characterFaction != faction.ToString() && CintSixDatacard == false)
-            CintSixDatacard = true;
-        if (faction == "Federation Zone Authority".ToString() && characterFaction != faction.ToString() && FedZoneDatacard == false)
-            FedZoneDatacard = true;
+        //if (faction == "Cyber SK Gang".ToString() && characterFaction != faction.ToString() && CyberGangDatacard == false)
+        //    CyberGangDatacard = true;
+        //else if (faction == "Muerte De Dios".ToString() && characterFaction != faction.ToString() && MuerteDeDatacard == false)
+        //    MuerteDeDatacard = true;
+        //else if (faction == "Chaos Cartel".ToString() && characterFaction != faction.ToString() && ChaosDatacard == false)
+        //    ChaosDatacard = true;
+        //else if (faction == "CintSix Cartel".ToString() && characterFaction != faction.ToString() && CintSixDatacard == false)
+        //    CintSixDatacard = true;
+        //if (faction == "Federation Zone Authority".ToString() && characterFaction != faction.ToString() && FedZoneDatacard == false)
+        //    FedZoneDatacard = true;
+        datacards++;
     }
 
-    [System.Obsolete]
-    public IEnumerator SubmitScoreRoutine(string faction, int scoreToUpload)
-    {
-        LootLockerSDKManager.GetMemberRank("faction_leaderboard", faction, (response) =>
-        {
-            if (response.statusCode == 200)
-            {
-                factionScore = response.score;
-            }
-            else
-            {
-                Debug.Log("failed: " + response.Error);
-            }
-        });
+    //[System.Obsolete]
+    //public IEnumerator SubmitScoreRoutine(string faction, int scoreToUpload)
+    //{
+    //    LootLockerSDKManager.GetMemberRank("faction_leaderboard", faction, (response) =>
+    //    {
+    //        if (response.statusCode == 200)
+    //        {
+    //            factionScore = response.score;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("failed: " + response.Error);
+    //        }
+    //    });
 
-        bool done = false;
-        LootLockerSDKManager.SubmitScore(characterFaction, (factionScore + scoreToUpload), leaderboardID, (response) =>
-        {
-            if (response.success)
-            {
-                Debug.Log("Successfully uploaded score");
-                done = true;
-            }
-            else
-            {
-                Debug.Log("Failed" + response.Error);
-                done = true;
-            }
-        });
-        yield return new WaitWhile(() => done == false);
-    }
+    //    bool done = false;
+    //    LootLockerSDKManager.SubmitScore(characterFaction, (factionScore + scoreToUpload), leaderboardID, (response) =>
+    //    {
+    //        if (response.success)
+    //        {
+    //            Debug.Log("Successfully uploaded score");
+    //            done = true;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("Failed" + response.Error);
+    //            done = true;
+    //        }
+    //    });
+    //    yield return new WaitWhile(() => done == false);
+    //}
 
     public IEnumerator GetXP(int XP)
     {
@@ -1435,11 +1445,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             StartCoroutine(PlayerDeath());
         }
 
-        //else if (Health <= 0 && playerLives == 1 && alive == true)
-        //{
-        //    alive = false;
-        //    StartCoroutine(PlayerDeath());
-        //}
+        else if (Health <= 0 && playerLives == 1 && alive == true)
+        {
+            alive = false;
+            StartCoroutine(PlayerDeath());
+        }
     }
 
     [PunRPC]
@@ -1459,7 +1469,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         player.transform.position = spawnManager.spawnPosition;
-        //playerLives -= 1;
+        playerLives -= 1;
         Health = 125;
         //healthBar.SetMaxHealth(Health);
         CheckHealthStatus();

@@ -50,7 +50,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        joinAsInfo.text = "Joining Room With Alias: " + PhotonNetwork.NickName;
+        joinAsInfo.text = "Joining Room With Tag: " + PhotonNetwork.NickName;
     }
 
     #region UI Callback Methods

@@ -48,10 +48,10 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     {
         player.UpdateSkills(tokenValue);
         tokenValue = 0;
-        if (faction.ToString() != player.characterFaction.ToString())
-        {
-            player.FactionDataCard(faction);
+        //if (faction.ToString() != player.characterFaction.ToString())
+        //{
+            player.FactionDataCard();
             PhotonNetwork.Destroy(gameObject);
-        }
+        //}
     }
 }

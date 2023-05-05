@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ExitGames.Client.Photon;
 
 
 public class PowerSurge : MonoBehaviourPunCallbacks

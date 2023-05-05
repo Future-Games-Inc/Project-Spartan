@@ -7,6 +7,7 @@ public class MenuTrigger2 : MonoBehaviour
 
     public GameObject MainMenu;
     public GameObject bannerCanvas;
+    public GameObject connectionLost;
 
     public bool activated;
 
@@ -22,16 +23,12 @@ public class MenuTrigger2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (activated == true)
-        {
-            MainMenu.SetActive(true);
-            bannerCanvas.SetActive(false);
-        }
-        else
-        {
-            MainMenu.SetActive(false);
-            bannerCanvas.SetActive(true);
-        }
+        if (MainMenu != null)
+            MainMenu.SetActive(activated);
+        bannerCanvas.SetActive(!activated);
+        if (connectionLost != null)
+            connectionLost.SetActive(activated);
+
     }
 
     public void OnTriggerEnter(Collider other)
@@ -39,8 +36,8 @@ public class MenuTrigger2 : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
-            if (!audioSource.isPlaying)
-                audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+            ////if (!audioSource.isPlaying)
+            ////    audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
         }
     }
 

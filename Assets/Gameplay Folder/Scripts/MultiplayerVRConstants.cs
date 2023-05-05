@@ -53,5 +53,5 @@ public class MultiplayerVRConstants
     public const string MUERTE_DE_DIOS = "MuerteDeDios";
     public const string CHAOS_CARTEL = "ChaosCartel";
     public const string CINTSIX_CARTEL = "CintsixCartel";
-    public const string FEDZONE_AUTHORITY = "FedzoneAuthority";
+    //public const string FEDZONE_AUTHORITY = "FedzoneAuthority";
 }

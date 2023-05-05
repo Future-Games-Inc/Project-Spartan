@@ -78,30 +78,23 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            InitializeTimer();
-            photonView.RPC("AudioEnter", RpcTarget.All);
-            spawnInterval = 180f;
+        InitializeTimer();
+        photonView.RPC("AudioEnter", RpcTarget.All);
+        spawnInterval = 180f;
 
-            // Generate a random 4-digit sequence
-            numSequence = GenerateRandomSequence(4);
-            nexusCodePanel.text = numSequence.ToString();
-        }
+        // Generate a random 4-digit sequence
+        numSequence = GenerateRandomSequence(4);
+        nexusCodePanel.text = numSequence.ToString();
     }
 
     private void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (Time.time > lastSpawnTime + spawnInterval && spawned == false && DE_supplyDrop == true)
         {
-            if (Time.time > lastSpawnTime + spawnInterval && spawned == false && DE_supplyDrop == true)
-            {
-                lastSpawnTime = Time.time;
-                if (PhotonNetwork.IsMasterClient)
-                    PhotonNetwork.Instantiate(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0);
-                StartCoroutine(SupplyShipAudio());
-                spawned = true;
-            }
+            lastSpawnTime = Time.time;
+            PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0, null);
+            StartCoroutine(SupplyShipAudio());
+            spawned = true;
         }
     }
 
@@ -124,10 +117,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         currentMatchTime = matchCountdown;
         RefreshTimerUI();
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            timerCoroutine = StartCoroutine(TimerEvent());
-        }
+        timerCoroutine = StartCoroutine(TimerEvent());
     }
 
     IEnumerator TimerEvent()
@@ -281,7 +271,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         return sequence;
-        
+
     }
 }
 
