@@ -128,6 +128,15 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Trigger"",
+                    ""type"": ""Value"",
+                    ""id"": ""b662776f-7b99-4bd0-b8c1-0edf699ded65"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -260,6 +269,17 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LThumbstick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""161988bd-c2a8-4ac9-bc85-624b296c4183"",
+                    ""path"": ""<XRController>{LeftHand}/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic XR Controller"",
+                    ""action"": ""Trigger"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -643,6 +663,15 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Trigger"",
+                    ""type"": ""Value"",
+                    ""id"": ""062807a8-24c3-412f-85eb-f93e50fc324d"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Rotation"",
                     ""type"": ""Value"",
                     ""id"": ""ee6bf5bf-bb0a-4a50-8327-cb654b19e298"",
@@ -673,6 +702,15 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""name"": ""RThumbstick"",
                     ""type"": ""Button"",
                     ""id"": ""8746321f-eb35-4d09-b468-80011a131ad1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""B_ButtonPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4664e42-ac1e-447f-9cb5-b7754d9d0a69"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -798,6 +836,28 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RThumbstick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10f13212-3811-49cb-ad4a-116943c4ab67"",
+                    ""path"": ""<XRController>{RightHand}/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic XR Controller"",
+                    ""action"": ""Trigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""772347a7-a2dd-413a-9554-88fb8bfdccd5"",
+                    ""path"": ""<XRController>{RightHand}/back"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""B_ButtonPress"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1230,6 +1290,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         m_XRILeftHand_HapticDevice = m_XRILeftHand.FindAction("Haptic Device", throwIfNotFound: true);
         m_XRILeftHand_MenuButton = m_XRILeftHand.FindAction("MenuButton", throwIfNotFound: true);
         m_XRILeftHand_LThumbstick = m_XRILeftHand.FindAction("LThumbstick", throwIfNotFound: true);
+        m_XRILeftHand_Trigger = m_XRILeftHand.FindAction("Trigger", throwIfNotFound: true);
         // XRI LeftHand Interaction
         m_XRILeftHandInteraction = asset.FindActionMap("XRI LeftHand Interaction", throwIfNotFound: true);
         m_XRILeftHandInteraction_Select = m_XRILeftHandInteraction.FindAction("Select", throwIfNotFound: true);
@@ -1250,10 +1311,12 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         // XRI RightHand
         m_XRIRightHand = asset.FindActionMap("XRI RightHand", throwIfNotFound: true);
         m_XRIRightHand_Position = m_XRIRightHand.FindAction("Position", throwIfNotFound: true);
+        m_XRIRightHand_Trigger = m_XRIRightHand.FindAction("Trigger", throwIfNotFound: true);
         m_XRIRightHand_Rotation = m_XRIRightHand.FindAction("Rotation", throwIfNotFound: true);
         m_XRIRightHand_TrackingState = m_XRIRightHand.FindAction("Tracking State", throwIfNotFound: true);
         m_XRIRightHand_HapticDevice = m_XRIRightHand.FindAction("Haptic Device", throwIfNotFound: true);
         m_XRIRightHand_RThumbstick = m_XRIRightHand.FindAction("RThumbstick", throwIfNotFound: true);
+        m_XRIRightHand_B_ButtonPress = m_XRIRightHand.FindAction("B_ButtonPress", throwIfNotFound: true);
         // XRI RightHand Interaction
         m_XRIRightHandInteraction = asset.FindActionMap("XRI RightHand Interaction", throwIfNotFound: true);
         m_XRIRightHandInteraction_Select = m_XRIRightHandInteraction.FindAction("Select", throwIfNotFound: true);
@@ -1392,6 +1455,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
     private readonly InputAction m_XRILeftHand_HapticDevice;
     private readonly InputAction m_XRILeftHand_MenuButton;
     private readonly InputAction m_XRILeftHand_LThumbstick;
+    private readonly InputAction m_XRILeftHand_Trigger;
     public struct XRILeftHandActions
     {
         private @XRIDefaultInputActions m_Wrapper;
@@ -1402,6 +1466,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         public InputAction @HapticDevice => m_Wrapper.m_XRILeftHand_HapticDevice;
         public InputAction @MenuButton => m_Wrapper.m_XRILeftHand_MenuButton;
         public InputAction @LThumbstick => m_Wrapper.m_XRILeftHand_LThumbstick;
+        public InputAction @Trigger => m_Wrapper.m_XRILeftHand_Trigger;
         public InputActionMap Get() { return m_Wrapper.m_XRILeftHand; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1429,6 +1494,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @LThumbstick.started += instance.OnLThumbstick;
             @LThumbstick.performed += instance.OnLThumbstick;
             @LThumbstick.canceled += instance.OnLThumbstick;
+            @Trigger.started += instance.OnTrigger;
+            @Trigger.performed += instance.OnTrigger;
+            @Trigger.canceled += instance.OnTrigger;
         }
 
         private void UnregisterCallbacks(IXRILeftHandActions instance)
@@ -1451,6 +1519,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @LThumbstick.started -= instance.OnLThumbstick;
             @LThumbstick.performed -= instance.OnLThumbstick;
             @LThumbstick.canceled -= instance.OnLThumbstick;
+            @Trigger.started -= instance.OnTrigger;
+            @Trigger.performed -= instance.OnTrigger;
+            @Trigger.canceled -= instance.OnTrigger;
         }
 
         public void RemoveCallbacks(IXRILeftHandActions instance)
@@ -1653,19 +1724,23 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
     private readonly InputActionMap m_XRIRightHand;
     private List<IXRIRightHandActions> m_XRIRightHandActionsCallbackInterfaces = new List<IXRIRightHandActions>();
     private readonly InputAction m_XRIRightHand_Position;
+    private readonly InputAction m_XRIRightHand_Trigger;
     private readonly InputAction m_XRIRightHand_Rotation;
     private readonly InputAction m_XRIRightHand_TrackingState;
     private readonly InputAction m_XRIRightHand_HapticDevice;
     private readonly InputAction m_XRIRightHand_RThumbstick;
+    private readonly InputAction m_XRIRightHand_B_ButtonPress;
     public struct XRIRightHandActions
     {
         private @XRIDefaultInputActions m_Wrapper;
         public XRIRightHandActions(@XRIDefaultInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Position => m_Wrapper.m_XRIRightHand_Position;
+        public InputAction @Trigger => m_Wrapper.m_XRIRightHand_Trigger;
         public InputAction @Rotation => m_Wrapper.m_XRIRightHand_Rotation;
         public InputAction @TrackingState => m_Wrapper.m_XRIRightHand_TrackingState;
         public InputAction @HapticDevice => m_Wrapper.m_XRIRightHand_HapticDevice;
         public InputAction @RThumbstick => m_Wrapper.m_XRIRightHand_RThumbstick;
+        public InputAction @B_ButtonPress => m_Wrapper.m_XRIRightHand_B_ButtonPress;
         public InputActionMap Get() { return m_Wrapper.m_XRIRightHand; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1678,6 +1753,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @Position.started += instance.OnPosition;
             @Position.performed += instance.OnPosition;
             @Position.canceled += instance.OnPosition;
+            @Trigger.started += instance.OnTrigger;
+            @Trigger.performed += instance.OnTrigger;
+            @Trigger.canceled += instance.OnTrigger;
             @Rotation.started += instance.OnRotation;
             @Rotation.performed += instance.OnRotation;
             @Rotation.canceled += instance.OnRotation;
@@ -1690,6 +1768,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @RThumbstick.started += instance.OnRThumbstick;
             @RThumbstick.performed += instance.OnRThumbstick;
             @RThumbstick.canceled += instance.OnRThumbstick;
+            @B_ButtonPress.started += instance.OnB_ButtonPress;
+            @B_ButtonPress.performed += instance.OnB_ButtonPress;
+            @B_ButtonPress.canceled += instance.OnB_ButtonPress;
         }
 
         private void UnregisterCallbacks(IXRIRightHandActions instance)
@@ -1697,6 +1778,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @Position.started -= instance.OnPosition;
             @Position.performed -= instance.OnPosition;
             @Position.canceled -= instance.OnPosition;
+            @Trigger.started -= instance.OnTrigger;
+            @Trigger.performed -= instance.OnTrigger;
+            @Trigger.canceled -= instance.OnTrigger;
             @Rotation.started -= instance.OnRotation;
             @Rotation.performed -= instance.OnRotation;
             @Rotation.canceled -= instance.OnRotation;
@@ -1709,6 +1793,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @RThumbstick.started -= instance.OnRThumbstick;
             @RThumbstick.performed -= instance.OnRThumbstick;
             @RThumbstick.canceled -= instance.OnRThumbstick;
+            @B_ButtonPress.started -= instance.OnB_ButtonPress;
+            @B_ButtonPress.performed -= instance.OnB_ButtonPress;
+            @B_ButtonPress.canceled -= instance.OnB_ButtonPress;
         }
 
         public void RemoveCallbacks(IXRIRightHandActions instance)
@@ -1946,6 +2033,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         void OnHapticDevice(InputAction.CallbackContext context);
         void OnMenuButton(InputAction.CallbackContext context);
         void OnLThumbstick(InputAction.CallbackContext context);
+        void OnTrigger(InputAction.CallbackContext context);
     }
     public interface IXRILeftHandInteractionActions
     {
@@ -1969,10 +2057,12 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
     public interface IXRIRightHandActions
     {
         void OnPosition(InputAction.CallbackContext context);
+        void OnTrigger(InputAction.CallbackContext context);
         void OnRotation(InputAction.CallbackContext context);
         void OnTrackingState(InputAction.CallbackContext context);
         void OnHapticDevice(InputAction.CallbackContext context);
         void OnRThumbstick(InputAction.CallbackContext context);
+        void OnB_ButtonPress(InputAction.CallbackContext context);
     }
     public interface IXRIRightHandInteractionActions
     {

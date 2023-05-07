@@ -8,12 +8,14 @@ public class FiringRangeAI : MonoBehaviour
     {
         Patrol,
         Follow,
-        Attack
+        Attack,
+        Shocked
     }
 
     public NavMeshAgent agent;
     public Transform targetTransform;
     public GameControl gameControl;
+    private Animator animator;
 
     public Transform[] waypoints;
     public GameObject[] players;
@@ -38,22 +40,27 @@ public class FiringRangeAI : MonoBehaviour
     public GameObject deathEffect;
 
     public bool firstHit = false;
-
-    // Start is called before the first frame update
+    [HideInInspector]
+    public bool shocked = false;
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+    // Start is called before the first frame updat
     void Start()
     {
-        Health = 100;
+        // Health = 100;
         agent = GetComponent<NavMeshAgent>();
         deathEffect.SetActive(false);
         hitEffect.SetActive(false);
-        gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
+        //gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
 
         alive = true;
 
         InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
-        GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
-        waypoints = waypointObject.GetComponentsInChildren<Transform>();
-        currentWaypoint = Random.Range(1, 9);
+        // GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
+        // waypoints = waypointObject.GetComponentsInChildren<Transform>();
+        currentWaypoint = Random.Range(0, waypoints.Length);
         FindClosestEnemy();
     }
 
@@ -79,9 +86,21 @@ public class FiringRangeAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FindClosestEnemy();
-        CheckForPlayer();
-        UpdateStates();
+        // if the AI is in a shocked mode stop them from moving
+        if (currentState != States.Shocked)
+        {
+            FindClosestEnemy();
+            CheckForPlayer();
+            UpdateStates();
+
+        }
+        else if (currentState == States.Shocked)
+        {
+            
+            agent.isStopped = true;
+            agent.SetDestination(gameObject.transform.position);
+        }
+
 
         if (Health <= 0 && alive == true)
         {
@@ -89,6 +108,8 @@ public class FiringRangeAI : MonoBehaviour
             deathEffect.SetActive(true);
             StartCoroutine(Death());
         }
+
+        
     }
 
     private void UpdateStates()
@@ -204,10 +225,10 @@ public class FiringRangeAI : MonoBehaviour
 
     IEnumerator Death()
     {
-        if (gameControl.enabled == true)
-        {
-            gameControl.EnemyKilled();
-        }
+        //if (gameControl.enabled == true)
+        //{
+        //    gameControl.EnemyKilled();
+        //}
         yield return new WaitForSeconds(0.75f);
         Destroy(gameObject);
     }
@@ -217,6 +238,41 @@ public class FiringRangeAI : MonoBehaviour
         hitEffect.SetActive(false);
         firstHit = false;
     }
+
+    public void EMPShock()
+    {
+        IEnumerator shock()
+        {
+            //States preState = currentState;
+            currentState = States.Shocked;
+            agent.isStopped = true;
+            animator.enabled = false;
+
+            // apply damage
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            Destroy(Instantiate(hitEffect, transform.position, Quaternion.identity), 1f);
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            Destroy(Instantiate(hitEffect, transform.position, Quaternion.identity), 1f);
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            Destroy(Instantiate(hitEffect, transform.position, Quaternion.identity), 1f);
+            // enable movement
+
+            currentState = States.Follow;
+            agent.isStopped = false;
+
+            animator.enabled = true;
+        }
+        // if already shocked, ignore effects
+        if (currentState == States.Shocked) return;
+        StartCoroutine(shock());
+    }
+
 }
 
 
