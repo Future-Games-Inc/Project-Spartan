@@ -106,6 +106,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Trigger",
+                    "type": "Value",
+                    "id": "b662776f-7b99-4bd0-b8c1-0edf699ded65",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -238,6 +247,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LThumbstick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "161988bd-c2a8-4ac9-bc85-624b296c4183",
+                    "path": "<XRController>{LeftHand}/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Trigger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -621,6 +641,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Trigger",
+                    "type": "Value",
+                    "id": "062807a8-24c3-412f-85eb-f93e50fc324d",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Rotation",
                     "type": "Value",
                     "id": "ee6bf5bf-bb0a-4a50-8327-cb654b19e298",
@@ -651,6 +680,15 @@
                     "name": "RThumbstick",
                     "type": "Button",
                     "id": "8746321f-eb35-4d09-b468-80011a131ad1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "B_ButtonPress",
+                    "type": "Button",
+                    "id": "f4664e42-ac1e-447f-9cb5-b7754d9d0a69",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -776,6 +814,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "RThumbstick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10f13212-3811-49cb-ad4a-116943c4ab67",
+                    "path": "<XRController>{RightHand}/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Trigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "772347a7-a2dd-413a-9554-88fb8bfdccd5",
+                    "path": "<XRController>{RightHand}/back",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "B_ButtonPress",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
