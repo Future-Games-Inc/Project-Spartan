@@ -29,8 +29,8 @@ public class PlayerWeapon1 : MonoBehaviour
         XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
         grabbable.activated.AddListener(StartFireBullet);
         grabbable.deactivated.AddListener(StopFireBullet);
-        StartCoroutine(PickedUp());
-        StartCoroutine(DestroyWeapon())
+        //StartCoroutine(PickedUp());
+        //StartCoroutine(DestroyWeapon())
 ;
     }
 
@@ -99,18 +99,18 @@ public class PlayerWeapon1 : MonoBehaviour
         }
     }
 
-    IEnumerator PickedUp()
-    {
-        yield return new WaitForSeconds(20);
-        if (!hasTouched)
-        {
-            Destroy(gameObject);
-        }
-    }
+    //IEnumerator PickedUp()
+    //{
+    //    yield return new WaitForSeconds(20);
+    //    if (!hasTouched)
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
-    IEnumerator DestroyWeapon()
-    {
-        yield return new WaitForSeconds(120);
-        Destroy(gameObject);
-    }
+    //IEnumerator DestroyWeapon()
+    //{
+    //    yield return new WaitForSeconds(120);
+    //    Destroy(gameObject);
+    //}
 }

@@ -79,7 +79,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         InitializeTimer();
-        photonView.RPC("AudioEnter", RpcTarget.All);
+        photonView.RPC("AudioEnter", RpcTarget.All, 0, null);
         spawnInterval = 180f;
 
         // Generate a random 4-digit sequence
@@ -101,9 +101,9 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator SupplyShipAudio()
     {
         yield return new WaitForSeconds(0);
-        photonView.RPC("SupplyAudio1", RpcTarget.All);
+        photonView.RPC("SupplyAudio1", RpcTarget.All, 0, null);
         yield return new WaitForSeconds(supplyShip1.length);
-        photonView.RPC("SupplyAudio2", RpcTarget.All);
+        photonView.RPC("SupplyAudio2", RpcTarget.All, 0, null);
     }
 
     private void RefreshTimerUI()
@@ -128,28 +128,28 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (currentMatchTime == 5)
         {
-            photonView.RPC("Audio5", RpcTarget.All);
+            photonView.RPC("Audio5", RpcTarget.All, 0, null);
         }
         if (currentMatchTime == 4)
         {
-            photonView.RPC("Audio4", RpcTarget.All);
+            photonView.RPC("Audio4", RpcTarget.All, 0, null);
         }
         if (currentMatchTime == 3)
         {
-            photonView.RPC("Audio3", RpcTarget.All);
+            photonView.RPC("Audio3", RpcTarget.All, 0, null);
         }
         if (currentMatchTime == 2)
         {
-            photonView.RPC("Audio2", RpcTarget.All);
+            photonView.RPC("Audio2", RpcTarget.All, 0, null);
         }
         if (currentMatchTime == 1)
         {
-            photonView.RPC("Audio1", RpcTarget.All);
+            photonView.RPC("Audio1", RpcTarget.All, 0, null);
         }
 
         if (currentMatchTime <= 0)
         {
-            photonView.RPC("AudioStart", RpcTarget.All);
+            photonView.RPC("AudioStart", RpcTarget.All, 0, null);
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
             //StartCoroutine(Artifacts());

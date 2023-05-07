@@ -26,7 +26,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
-        photonView.RPC("RPC_OnEnable", RpcTarget.All);
+        photonView.RPC("RPC_OnEnable", RpcTarget.All, 0, null);
     }
 
     // Update is called once per frame
@@ -37,7 +37,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        photonView.RPC("RPC_TakeDamage", RpcTarget.All, 0, null, damage);
     }
 
     IEnumerator DestroyEnemy()
@@ -60,7 +60,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
 
     public void RandomSFX()
     {
-        photonView.RPC("RPC_PlayAudio", RpcTarget.All);
+        photonView.RPC("RPC_PlayAudio", RpcTarget.All, 0, null);
     }
 
     [PunRPC]
@@ -81,7 +81,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
         if (Health <= 0 && alive == true)
         {
             alive = false;
-            enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.AllBuffered);
+            enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All, 0, null);
 
             explosionEffect.SetActive(true);
 

@@ -377,7 +377,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (reactorExtraction >= 100 && spawnManager.gameOver == false)
         {
             extractionWinner = true;
-            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All, 0, null);
             StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
             UpdateSkills(200);
             //StartCoroutine(SubmitScoreRoutine(characterFaction, 200));
@@ -387,7 +387,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (playersKilled >= 15 && spawnManager.gameOver == false)
         {
             playerWinner = true;
-            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All, 0, null);
             StartCoroutine(WinMessage("250 skill points awarded for winning the round"));
             UpdateSkills(250);
             //StartCoroutine(SubmitScoreRoutine(characterFaction, 250));
@@ -397,7 +397,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (enemiesKilled >= 25 && spawnManager.gameOver == false)
         {
             enemyWinner = true;
-            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All, 0, null);
             StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
             UpdateSkills(150);
             //StartCoroutine(SubmitScoreRoutine(characterFaction, 150));
@@ -511,7 +511,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities1True)
         {
-            photonView.RPC("RPC_Abilities1True", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities1True", RpcTarget.All, 0, null);
             shouldCallAbilities1True = false;
         }
     }
@@ -547,7 +547,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities3True)
         {
-            photonView.RPC("RPC_Abilities3True", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities3True", RpcTarget.All, 0, null);
             shouldCallAbilities3True = false;
         }
     }
@@ -556,7 +556,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities3False)
         {
-            photonView.RPC("RPC_Abilities3False", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities3False", RpcTarget.All, 0, null);
             shouldCallAbilities3False = false;
         }
     }
@@ -565,7 +565,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities4True)
         {
-            photonView.RPC("RPC_Abilities4True", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities4True", RpcTarget.All, 0, null);
             shouldCallAbilities4True = false;
         }
     }
@@ -574,7 +574,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities4False)
         {
-            photonView.RPC("RPC_Abilities4False", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities4False", RpcTarget.All, 0, null);
             shouldCallAbilities4False = false;
         }
     }
@@ -637,7 +637,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities8)
         {
-            photonView.RPC("RPC_Abilities8", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities8", RpcTarget.All, 0, null);
             shouldCallAbilities8 = false;
         }
     }
@@ -646,7 +646,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (shouldCallAbilities9)
         {
-            photonView.RPC("RPC_Abilities9", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Abilities9", RpcTarget.All, 0, null);
             shouldCallAbilities9 = false;
         }
     }
@@ -670,7 +670,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             damageTaken = (damage - ((int)storedDamageTaken / 4));
         else
             damageTaken = damage;
-        photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, damageTaken);
+        photonView.RPC("RPC_TakeDamage", RpcTarget.All, 0, null, damageTaken);
         CheckHealthStatus();
 
     }
@@ -684,7 +684,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             healthAdded = (health + (int)storedHealthPowerup);
         else
             healthAdded = health;
-        photonView.RPC("RPC_GainHealth", RpcTarget.AllBuffered, healthAdded);
+        photonView.RPC("RPC_GainHealth", RpcTarget.All, 0, null, healthAdded);
         CheckHealthStatus();
     }
 
@@ -768,7 +768,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         StartCoroutine(sceneFader.Respawn());
-        photonView.RPC("RPC_Respawn", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Respawn", RpcTarget.All, 0, null);
 
         //player.transform.position = spawnManager.spawnPosition;
         //playerLives -= 1;
@@ -973,14 +973,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator DisplayMessage(string message)
     {
-        Debug.Log("Display Start");
         yield return new WaitForSeconds(3);
         winCanvas.SetActive(true);
         messageText.text = message;
         yield return new WaitForSeconds(5);
         messageText.text = "";
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
-        Debug.Log("Display End");
     }
 
     IEnumerator WinMessage(string message)
@@ -1088,7 +1086,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         ExitGames.Client.Photon.Hashtable cintsUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, playerCints } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(cintsUpdate);
-        Debug.Log("Cints Updated");
     }
 
     IEnumerator PrimaryTimer(float time)
@@ -1333,7 +1330,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(time);
         {
-            photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, ((int)maxHealth));
+            photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, 0, null, ((int)maxHealth));
             movement.currentSpeed = startingSpeed;
             bulletModifier = startingBulletModifier;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
@@ -1359,7 +1356,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(time);
         {
-            photonView.RPC("RPC_SetMaxHealth", RpcTarget.AllBuffered, ((int)maxHealth));
+            photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, 0, null, ((int)maxHealth));
             movement.currentSpeed = startingSpeed;
             bulletModifier = startingBulletModifier;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
@@ -1420,11 +1417,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             if (response.success)
             {
-                Debug.Log("Successfully uploaded score");
+                //Debug.Log("Successfully uploaded score");
             }
             else
             {
-                Debug.Log("Failed" + response.Error);
+                //Debug.Log("Failed" + response.Error);
             }
         });
     }

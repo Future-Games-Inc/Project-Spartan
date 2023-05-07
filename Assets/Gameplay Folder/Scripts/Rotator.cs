@@ -22,29 +22,28 @@ public class Rotator : MonoBehaviour
         //Forward Direction
         if (ForwardX == true)
         {
-            transform.Rotate(Time.deltaTime * speed, 0, 0, Space.Self);
+            transform.Rotate(Time.deltaTime * speed, 0, 0, Space.World);
         }
         if (ForwardY == true)
         {
-            transform.Rotate(0, Time.deltaTime * speed, 0, Space.Self);
+            transform.Rotate(0, Time.deltaTime * speed, 0, Space.World);
         }
         if (ForwardZ == true)
         {
-            transform.Rotate(0, 0, Time.deltaTime * speed, Space.Self);
+            transform.Rotate(0, 0, Time.deltaTime * speed, Space.World);
         }
         //Reverse Direction
         if (ReverseX == true)
         {
-            transform.Rotate(-Time.deltaTime * speed, 0, 0, Space.Self);
+            transform.Rotate(-Time.deltaTime * speed, 0, 0, Space.World);
         }
         if (ReverseY == true)
         {
-            transform.Rotate(0, -Time.deltaTime * speed, 0, Space.Self);
+            transform.Rotate(0, -Time.deltaTime * speed, 0, Space.World);
         }
         if (ReverseZ == true)
         {
-            transform.Rotate(0, 0, -Time.deltaTime * speed, Space.Self);
+            transform.Rotate(0, 0, -Time.deltaTime * speed, Space.World);
         }
-
     }
 }

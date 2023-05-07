@@ -37,7 +37,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
         grabbable.activated.AddListener(StartFireBullet);
         grabbable.deactivated.AddListener(StopFireBullet);
-        photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Start", RpcTarget.All, 0, null);
         StartCoroutine(TextUpdate());
     }
 
@@ -45,7 +45,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     {
         while (true)
         {
-            photonView.RPC("RPC_Update", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Update", RpcTarget.All, 0, null);
             yield return new WaitForSeconds(.15f);
         }
     }
@@ -78,7 +78,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
                 {
                     if (!audioSource.isPlaying)
                         audioSource.PlayOneShot(weaponFire);
-                    GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, t.position, Quaternion.identity, 0, null);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
@@ -86,16 +86,16 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
                 }
             }
 
-            photonView.RPC("RPC_Fire", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Fire", RpcTarget.All, 0, null);
             yield return new WaitForSeconds(0.2f);
         }
     }
 
     IEnumerator ReloadWeapon()
     {
-        photonView.RPC("RPC_Reload", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Reload", RpcTarget.All, 0, null);
         yield return new WaitForSeconds(2);
-        photonView.RPC("RPC_Reload2", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Reload2", RpcTarget.All, 0, null);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -103,14 +103,14 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            photonView.RPC("RPC_Trigger", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Trigger", RpcTarget.All, 0, null);
         }
     }
 
     IEnumerator DestroyWeapon()
     {
         yield return new WaitForSeconds(0.5f);
-        photonView.RPC("RPC_Destroy", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Destroy", RpcTarget.All, 0, null);
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.Destroy(gameObject);
     }

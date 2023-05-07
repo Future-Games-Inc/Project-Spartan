@@ -160,7 +160,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         if (!alive)
             return;
-        photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
+        photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, 0, null, damage);
     }
 
     public void RandomSFX()
@@ -172,7 +172,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     IEnumerator StopHit()
     {
         yield return new WaitForSeconds(3f);
-        photonView.RPC("RPC_StopHit", RpcTarget.All);
+        photonView.RPC("RPC_StopHit", RpcTarget.All, 0, null);
     }
 
     //[PunRPC]
