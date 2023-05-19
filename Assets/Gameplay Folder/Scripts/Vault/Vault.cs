@@ -14,14 +14,14 @@ public class Vault : MonoBehaviourPunCallbacks
     private bool isHolding = false;
     private float holdTimer = 0f;
 
-    private bool isRotatingBack = false;
+    private bool isMovingBack = false;
 
     public GameObject keycardObject;
 
     public bool activated;
 
     public Material activatedMaterial;
-    public Material decativatedMaterial;
+    public Material deactivatedMaterial;
     public Material lootedMaterial;
 
     public float elapsedTime;
@@ -40,12 +40,8 @@ public class Vault : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             // Check for player within radius and synchronize activation timer and slider value
-            CheckForPlayerWithinRadius();
-
-            if (CheckForPlayerWithinRadius() == true)
-            {
-                photonView.RPC("RPC_VaultUnlock", RpcTarget.All);
-            }
+            bool playerWithinRadius = CheckForPlayerWithinRadius();
+            photonView.RPC("RPC_UpdateVaultActivation", RpcTarget.All, playerWithinRadius);
 
             if (activated)
             {
@@ -55,32 +51,36 @@ public class Vault : MonoBehaviourPunCallbacks
                     // Increment the timer
                     timer += Time.deltaTime;
 
-                    // Call RotateVault RPC to synchronize rotation across the network
-                    photonView.RPC("RotateVault", RpcTarget.All, Mathf.Lerp(startY, endY, timer / duration), elapsedTime, activationSlider.value);
+                    // Calculate the position based on the elapsed time
+                    float t = timer / duration;
+                    float y = Mathf.Lerp(startY, endY, t);
+
+                    // Call MoveVault RPC to synchronize position across the network
+                    photonView.RPC("MoveVault", RpcTarget.All, y);
 
                     // Start holding if endY is reached
-                    if (Mathf.Lerp(startY, endY, timer / duration) >= endY)
+                    if (y >= endY)
                     {
                         isHolding = true;
                     }
                 }
-                else if (isRotatingBack)
+                else if (isMovingBack)
                 {
                     // Increment the timer
                     timer += Time.deltaTime;
 
-                    // Calculate the rotation amount based on the elapsed time
+                    // Calculate the position based on the elapsed time
                     float t = timer / duration;
                     float y = Mathf.Lerp(endY, startY, t);
 
-                    // Call RotateVault RPC to synchronize rotation across the network
-                    photonView.RPC("RotateVault", RpcTarget.All, Mathf.Lerp(endY, startY, timer / duration), elapsedTime, activationSlider.value);
+                    // Call MoveVault RPC to synchronize position across the network
+                    photonView.RPC("MoveVault", RpcTarget.All, y);
 
-                    // Stop rotating if startY is reached
+                    // Stop moving if startY is reached
                     if (y <= startY)
                     {
-                        transform.rotation = Quaternion.Euler(0, startY, 0);
-                        isRotatingBack = false;
+                        transform.position = new Vector3(transform.position.x, startY, transform.position.z);
+                        isMovingBack = false;
                         isHolding = false;
                         timer = 0;
                         photonView.RPC("RPC_VaultClosedMaterial", RpcTarget.All);
@@ -95,8 +95,8 @@ public class Vault : MonoBehaviourPunCallbacks
                     // Check if hold duration has elapsed
                     if (holdTimer >= holdDuration)
                     {
-                        // Start rotating back to endY
-                        isRotatingBack = true;
+                        // Start moving back to endY
+                        isMovingBack = true;
                         timer = 0;
                         holdTimer = 0;
                     }
@@ -106,7 +106,7 @@ public class Vault : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_VaultUnlock()
+    void RPC_UpdateVaultActivation(bool playerWithinRadius)
     {
         if (!activated)
         {
@@ -118,6 +118,12 @@ public class Vault : MonoBehaviourPunCallbacks
                 activated = true;
                 activationSlider.gameObject.SetActive(false);
             }
+        }
+        else if (!playerWithinRadius)
+        {
+            // Stop the vault if player moves away outside the radius
+            isHolding = false;
+            isMovingBack = false;
         }
     }
 
@@ -134,14 +140,12 @@ public class Vault : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RotateVault(float y, float elapsedTime, float sliderValue)
+    void MoveVault(float y)
     {
-        // Rotate the game object
-        transform.rotation = Quaternion.Euler(0, y, 0);
+        // Move the game object on the Y-axis
+        transform.position = new Vector3(transform.position.x, y, transform.position.z);
 
-        // Synchronize activation timer and slider value
-        activated = true;
-        this.elapsedTime = elapsedTime;
+        // Synchronize activation slider position
         activationSlider.gameObject.SetActive(true);
     }
 

@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PowerSurge : MonoBehaviourPunCallbacks
 {
     [Header("Power Surge Effect -------------------------------------------------------")]
@@ -23,6 +22,11 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     bool activated = false;
     public bool canBeActivated;
     public Light[] lightToFlicker;
+    public GameObject surgeBubble;
+    public Transform bubbleScale;
+
+    private Vector3 initialScale;
+    private Coroutine bubbleScaleCoroutine;
 
     void Enable()
     {
@@ -91,15 +95,18 @@ public class PowerSurge : MonoBehaviourPunCallbacks
                 }
             }
         }
+
+        initialScale = surgeBubble.transform.localScale;
     }
 
     void Update()
     {
-        if (CheckForPlayerWithinRadius() == true)
+        if (CheckForPlayerWithinRadius())
         {
             if (!activated && canBeActivated)
             {
                 photonView.RPC("SetActivated", RpcTarget.All, true);
+                bubbleScaleCoroutine = StartCoroutine(GrowBubbleCoroutine());
             }
         }
 
@@ -108,6 +115,7 @@ public class PowerSurge : MonoBehaviourPunCallbacks
             StartCoroutine(BlackOut());
         }
     }
+
     IEnumerator BlackOut()
     {
         canBeActivated = false;
@@ -136,6 +144,9 @@ public class PowerSurge : MonoBehaviourPunCallbacks
             light.intensity = maxIntensity;
             photonView.RPC("SetLightIntensity", RpcTarget.All, light, light.intensity);
         }
+
+        surgeBubble.transform.localScale = initialScale;
+        surgeBubble.SetActive(false);
     }
 
     bool CheckForPlayerWithinRadius()
@@ -160,6 +171,9 @@ public class PowerSurge : MonoBehaviourPunCallbacks
                 // Wait until activated is true
                 yield return null;
             }
+
+            photonView.RPC("ActivateBubble", RpcTarget.All, true);
+
             // Calculate a random target intensity for each light
             foreach (Light light in lightToFlicker)
             {
@@ -176,6 +190,25 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void ActivateBubble(bool active)
+    {
+        surgeBubble.SetActive(active);
+    }
+
+    IEnumerator GrowBubbleCoroutine()
+    {
+        while (activated)
+        {
+            float scaleIncrease = 8f * Time.deltaTime;
+            surgeBubble.transform.localScale += new Vector3(scaleIncrease, scaleIncrease, scaleIncrease);
+
+            photonView.RPC("SyncBubbleScale", RpcTarget.Others, surgeBubble.transform.localScale);
+
+            yield return null;
+        }
+    }
+
+    [PunRPC]
     private void SetActivated(bool newActivated)
     {
         activated = newActivated;
@@ -185,5 +218,11 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     private void SetLightIntensity(Light light, float intensity)
     {
         light.intensity = intensity;
+    }
+
+    [PunRPC]
+    void SyncBubbleScale(Vector3 scale)
+    {
+        surgeBubble.transform.localScale = scale;
     }
 }

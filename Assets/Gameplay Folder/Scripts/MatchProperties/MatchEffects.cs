@@ -20,12 +20,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     private Coroutine timerCoroutine;
 
     public AudioSource audioSource;
+    public AudioClip[] countdownClips;
     public AudioClip matchBegan;
-    public AudioClip countdownFive;
-    public AudioClip countdownOne;
-    public AudioClip countdownTwo;
-    public AudioClip countdownThree;
-    public AudioClip countdownFour;
     public AudioClip supplyShip1;
     public AudioClip supplyShip2;
 
@@ -99,9 +95,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator SupplyShipAudio()
     {
         yield return new WaitForSeconds(0);
-        photonView.RPC("SupplyAudio1", RpcTarget.All);
-        yield return new WaitForSeconds(supplyShip1.length);
-        photonView.RPC("SupplyAudio2", RpcTarget.All);
+        photonView.RPC("PlaySupplyDropAudio", RpcTarget.All);
     }
 
     private void RefreshTimerUI()
@@ -124,25 +118,9 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
         currentMatchTime -= 1;
 
-        if (currentMatchTime == 5)
+        if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
         {
-            photonView.RPC("Audio5", RpcTarget.All);
-        }
-        if (currentMatchTime == 4)
-        {
-            photonView.RPC("Audio4", RpcTarget.All);
-        }
-        if (currentMatchTime == 3)
-        {
-            photonView.RPC("Audio3", RpcTarget.All);
-        }
-        if (currentMatchTime == 2)
-        {
-            photonView.RPC("Audio2", RpcTarget.All);
-        }
-        if (currentMatchTime == 1)
-        {
-            photonView.RPC("Audio1", RpcTarget.All);
+            photonView.RPC("PlayCountdownAudio", RpcTarget.All, currentMatchTime - 1);
         }
 
         if (currentMatchTime <= 0)
@@ -151,6 +129,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
             //StartCoroutine(Artifacts());
+            timerCoroutine = null; // Stop the coroutine
         }
         else
         {
@@ -199,33 +178,22 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void Audio5()
+    void PlayCountdownAudio(int clipIndex)
     {
-        audioSource.PlayOneShot(countdownFive);
+        audioSource.PlayOneShot(countdownClips[clipIndex]);
     }
 
     [PunRPC]
-    void Audio4()
+    void PlaySupplyDropAudio()
     {
-        audioSource.PlayOneShot(countdownFour);
+        audioSource.PlayOneShot(supplyShip1);
+        StartCoroutine(PlaySupplyDropAudioDelayed());
     }
 
-    [PunRPC]
-    void Audio3()
+    IEnumerator PlaySupplyDropAudioDelayed()
     {
-        audioSource.PlayOneShot(countdownThree);
-    }
-
-    [PunRPC]
-    void Audio2()
-    {
-        audioSource.PlayOneShot(countdownTwo);
-    }
-
-    [PunRPC]
-    void Audio1()
-    {
-        audioSource.PlayOneShot(countdownOne);
+        yield return new WaitForSeconds(supplyShip1.length);
+        audioSource.PlayOneShot(supplyShip2);
     }
 
     [PunRPC]
@@ -234,7 +202,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(matchBegan);
         uiCanvas.SetActive(false);
         spawnManager.SetActive(true);
-        timerCoroutine = null;
         startMatchBool = true;
     }
 
@@ -243,19 +210,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         spawnManager.SetActive(false);
         startMatchBool = false;
-    }
-
-
-    [PunRPC]
-    void SupplyAudio1()
-    {
-        audioSource.PlayOneShot(supplyShip1);
-    }
-
-    [PunRPC]
-    void SupplyAudio2()
-    {
-        audioSource.PlayOneShot(supplyShip2);
     }
 
     [PunRPC]
@@ -286,7 +240,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         return sequence;
-
     }
 }
 
