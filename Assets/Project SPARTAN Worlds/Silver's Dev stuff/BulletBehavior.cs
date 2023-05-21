@@ -14,9 +14,12 @@ public class BulletBehavior : MonoBehaviour
     [Header("Other Properties -------------")]
     public bool BreakOnImpact = true;
     public bool BreakOnEnemyImpact = true;
+    public GameObject BreakEffect;
     public bool AutoTracking = false;
     [Header("Audio Properties  -------------")]
-    public AudioClip clip;
+    public bool PlayAudioOnSpawn = false;
+    public AudioClip fireSound;
+    public AudioClip hitSound;
     private AudioSource audioSource;
     // Start is called before the first frame update
     private void Awake()
@@ -27,7 +30,7 @@ public class BulletBehavior : MonoBehaviour
     {
         Destroy(gameObject, Duration);
         // attach clip and play
-        // audioSource.PlayOneShot(clip);
+        if (PlayAudioOnSpawn) audioSource.PlayOneShot(fireSound);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,10 +43,10 @@ public class BulletBehavior : MonoBehaviour
             switch (Type)
             {
                 case "EMP Bullet":
-                    EMPBulletDamage(other, Damage);
+                    EMPBulletDamage(other);
                     break;
                 default:
-                    DefaultDamage(other, Damage);
+                    DefaultDamage(other);
                     break;
             }
         }
@@ -53,27 +56,27 @@ public class BulletBehavior : MonoBehaviour
             switch (Type)
             {
                 case "EMP Bullet":
-                    EMPBulletDamage(other, Damage);
+                    EMPBulletDamage(other);
                     break;
                 default:
-                    DefaultDamage(other, Damage);
+                    DefaultDamage(other);
                     break;
             }
         }
         /// <summary> -------------------------------------------------------------------
         ///                           CUSTOME BULLET FUNCTIONS
         /// </summary> -------------------------------------------------------------------
-        void DefaultDamage(Collider target, float damage)
+        void DefaultDamage(Collider target)
         {
             FiringRangeAI enemyDamageReg = target.GetComponent<FiringRangeAI>();
-            enemyDamageReg.TakeDamage(Damage);
+            enemyDamageReg.TakeDamage(bullet: this);
             Destroy(gameObject);
         }
-        void EMPBulletDamage(Collider target, float damage)
+        void EMPBulletDamage(Collider target)
         {
             FiringRangeAI enemyDamageReg = target.GetComponent<FiringRangeAI>();
-            enemyDamageReg.TakeDamage(Damage);
-            enemyDamageReg.EMPShock();
+            enemyDamageReg.TakeDamage(bullet: this);
+            enemyDamageReg.EMPShock(BreakEffect);
             Destroy(gameObject);
         }
     }
