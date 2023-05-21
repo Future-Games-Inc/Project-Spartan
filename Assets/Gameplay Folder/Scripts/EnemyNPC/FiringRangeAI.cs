@@ -7,61 +7,156 @@ public class FiringRangeAI : MonoBehaviour
     public enum States
     {
         Patrol,
-        Follow,
+        Chase,
         Attack,
         Shocked
     }
-
+    [HideInInspector]
     public NavMeshAgent agent;
-    public Transform targetTransform;
-    public GameControl gameControl;
     private Animator animator;
-
-    public Transform[] waypoints;
-    public GameObject[] players;
-    public GameObject hitEffect;
-
-    [Header("AI Properties")]
-    public float maxFollowDistance = 20f;
-    public float shootDistance = 10f;
-    public int Health;
-
-    public bool inSight;
-    public bool alive = true;
-    private Vector3 directionToTarget;
-
-    public States currentState;
-
-    public int currentWaypoint;
-
+    private ShootScript shootScript;
+    [HideInInspector]
     public AudioSource audioSource;
-    public AudioClip bulletHit;
-    public AudioClip[] audioClip;
-    public GameObject deathEffect;
+    public GameControl gameControl;
 
-    public bool firstHit = false;
+    [HideInInspector]
+    public Transform targetTransform = null;
+
+    [HideInInspector]
+    public GameObject[] players;
+
+    [Header("---------------- Ranges ------------------")]
+    public float DetectRange;
+    public float AttackRange;
+    public float AgroRange;
+
+    public LayerMask obstacleMask;
+
+    public bool RangeDebug = true;
+    private float DistanceToPlayer;
+    [Header("-------------- Properties ----------------")]
+    public int Health = 100;
+    [HideInInspector]
+    public bool inSight;
+    [HideInInspector]
+    public bool alive = true;
+    public bool shootable = true;
+    private Vector3 directionToTarget;
+    private float TurnSpeed = 5f;
+    private bool isLookingAtPlayer = false;
+    private bool isShooting = false;
+    // STATES --------------------
+    public States currentState;
+    private States previousState;
+    [HideInInspector]
+    public bool Agro = false;
     [HideInInspector]
     public bool shocked = false;
+    [HideInInspector]
+    public bool firstHit = false;
+    // ---------------------------
+    [HideInInspector]
+    public int currentWaypoint;
+    public Transform[] PatrolPoints;
+    private int currentPatrolPointIndex = 0;
+    private bool PatrolPauseDone = true;
+    [Header("------------ Audio & Effects -------------")]
+    public AudioClip[] VoiceLines;
+    public AudioClip DefaultBulletHitSound;
+    public GameObject hitEffect;
+    [Header("------------ Weapons -------------")]
+    public GameObject Bullet;
+    public Transform FirePoint;
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        agent = GetComponent<NavMeshAgent>();
+        shootScript = GetComponent<ShootScript>();
     }
     // Start is called before the first frame updat
     void Start()
     {
-        // Health = 100;
-        agent = GetComponent<NavMeshAgent>();
-        deathEffect.SetActive(false);
         hitEffect.SetActive(false);
-        //gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
-
-        alive = true;
-
         InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
+        //gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
         // GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
         // waypoints = waypointObject.GetComponentsInChildren<Transform>();
-        currentWaypoint = Random.Range(0, waypoints.Length);
+        Patrol();
+    }
+    // Update is called once per frame
+    void Update()
+    {
         FindClosestEnemy();
+
+        if (!alive) return;
+        // calculates the distance from NPC to player
+        float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+        // Debug.Log(distanceToPlayer);
+        // match the animator Aggro with the NPC aggro
+        animator.SetBool("Agro", Agro);
+
+        if (currentState == States.Shocked)
+        {
+            return;
+        }
+
+        // If the player are seen by the NPC or if the distance is close enough
+        if (distanceToPlayer <= DetectRange && CanSeeTarget())
+        {
+            Agro = true;
+        }
+        // if it is not agro, then patrol like normal
+        // else then see if the player is in the valid agro range (bigger than detect range) then give chase
+        //          if the player is outside of agro range, drop agro.
+        if (!Agro)
+        {
+            SwitchStates(States.Patrol);
+            Patrol();
+        }
+        else
+        {
+            // if the NPC is BEYOND the range that it could agro, drop the agro.
+            if (distanceToPlayer > AgroRange)
+            {
+                Agro = false;
+                // stop where it is
+                agent.SetDestination(gameObject.transform.position);
+                return;
+            }
+            // if in range of attacks
+            if (distanceToPlayer <= AttackRange)
+            {
+                SwitchStates(States.Attack);
+                LookatTarget(1, 3f);
+                Attack();
+            }
+            // give chase if not in range
+            else
+            {
+                SwitchStates(States.Chase);
+                Follow();
+            }
+        }
+
+
+        if (isLookingAtPlayer)
+        {
+            Vector3 direction = targetTransform.position - transform.position;
+            direction.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
+        }
+
+        // set the speed for the agent for the blend tree
+        animator.SetFloat("Speed", agent.velocity.magnitude);
+    }
+
+    public void SwitchStates(States input)
+    {
+        previousState = currentState;
+
+        currentState = input;
     }
 
     public void FindClosestEnemy()
@@ -83,50 +178,31 @@ public class FiringRangeAI : MonoBehaviour
         targetTransform = closest.transform;
     }
 
-    // Update is called once per frame
-    void Update()
+    private bool CanSeeTarget()
     {
-        // if the AI is in a shocked mode stop them from moving
-        if (currentState != States.Shocked)
-        {
-            FindClosestEnemy();
-            CheckForPlayer();
-            UpdateStates();
+        Transform playerPOS = targetTransform;
+        if (playerPOS == null)
+            return false;
 
-        }
-        else if (currentState == States.Shocked)
-        {
-            
-            agent.isStopped = true;
-            agent.SetDestination(gameObject.transform.position);
-        }
+        if (Vector3.Distance(transform.position, playerPOS.position) > DetectRange)
+            return false;
 
+        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, directionToTarget) > 110/2f)
+            return false;
 
-        if (Health <= 0 && alive == true)
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, DetectRange, obstacleMask);
+        foreach (RaycastHit hit in hits)
         {
-            alive = false;
-            deathEffect.SetActive(true);
-            StartCoroutine(Death());
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            {
+                return true;
+            }
         }
 
-        
+        return false;
     }
 
-    private void UpdateStates()
-    {
-        switch (currentState)
-        {
-            case States.Patrol:
-                Patrol();
-                break;
-            case States.Follow:
-                Follow();
-                break;
-            case States.Attack:
-                Attack();
-                break;
-        }
-    }
     private void CheckForPlayer()
     {
         directionToTarget = targetTransform.position - transform.position;
@@ -137,82 +213,118 @@ public class FiringRangeAI : MonoBehaviour
             inSight = hitInfo.transform.CompareTag("Player");
         }
     }
+    // Cycle between patrol points
     private void Patrol()
     {
-        if (agent.destination != waypoints[currentWaypoint].position && agent.enabled == true)
+        
+        // patrols from one place to the next
+        if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
         {
-            agent.destination = waypoints[currentWaypoint].position;
+            PatrolPauseDone = false;
+            agent.isStopped = false;
+            StartCoroutine(PatrolDelay());
         }
 
-        if (HasReached())
-        {
-            currentWaypoint = (currentWaypoint + Random.Range(1, 6)) % waypoints.Length;
-        }
 
-        if (inSight && directionToTarget.magnitude <= maxFollowDistance)
-        {
-            currentState = States.Follow;
-        }
+    }
+    // Patrol to a point, waits a certain amount of seconds, and goes to the next point
+    private IEnumerator PatrolDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        PatrolPauseDone = true;
+        currentPatrolPointIndex = (currentPatrolPointIndex + 1) % PatrolPoints.Length;
+        agent.destination = PatrolPoints[currentPatrolPointIndex].position;
+        // agent.speed = PatrolPoints.WalkingSpeed;
     }
 
     private void Follow()
     {
-        if (directionToTarget.magnitude <= shootDistance && inSight)
-        {
-            agent.ResetPath();
-            currentState = States.Attack;
-        }
-
-        else
-        {
-            if (targetTransform != null && agent.enabled == true)
-            {
-                agent.SetDestination(targetTransform.position);
-            }
-
-            if (directionToTarget.magnitude > maxFollowDistance && agent.enabled == true)
-            {
-                currentState = States.Patrol;
-            }
-        }
+        // interupts any patrolling process
+        StopCoroutine(PatrolDelay());
+        // set agent desitnation and speed
+        agent.destination = targetTransform.position;
+        // running speed
+        // agent.speed = attributes.RunningSpeed;
     }
 
     private void Attack()
     {
-        if (!inSight || directionToTarget.magnitude > shootDistance)
+        IEnumerator LookShootPause(float duration)
         {
-            currentState = States.Follow;
+            isShooting = true;
+            /// LookatTarget(duration / 3, 3f);
+            agent.isStopped = true;
+            // call shoot
+            Debug.Log("PEW!");
+
+            yield return new WaitForSeconds(duration);
+            agent.isStopped = false;
+            agent.SetDestination(targetTransform.position);
+            isShooting = false;
         }
-        LookAtTarget();
-    }
 
-    private void LookAtTarget()
-    {
-        Vector3 lookDirection = directionToTarget;
-        lookDirection.y = 0f;
-
-        Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
-
-        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * agent.angularSpeed);
-    }
-
-    private bool HasReached()
-    {
-        return (agent.hasPath && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance);
-    }
-
-    public void TakeDamage(int damage)
-    {
-        if (alive == true)
+        IEnumerator Shoot(int amount)
         {
-            if (!firstHit)
+            for (int i = 0; i <= amount; i++)
             {
-                hitEffect.SetActive(true);
-                firstHit = true;
-                StartCoroutine(StopHit());
+                // Instantiate a new instance of the Bullet prefab
+                GameObject bulletInstance = Instantiate(Bullet, FirePoint.position, Quaternion.identity);
+                if (shootable ) shootScript.Shoot(bulletInstance, FirePoint.position);
+                yield return new WaitForSeconds(bulletInstance.GetComponent<BulletBehavior>().RateOfFire);
             }
-            audioSource.PlayOneShot(bulletHit);
-            Health -= damage;
+        }
+
+        if (!isShooting)
+        {
+            StartCoroutine(LookShootPause(3f));
+            StartCoroutine(Shoot(10));
+        }
+    }
+
+    public void LookatTarget(float duration, float RotationSpeed = 0.5f)
+    {
+        TurnSpeed = RotationSpeed;
+        IEnumerator start()
+        {
+            isLookingAtPlayer = true;
+            yield return new WaitForSeconds(duration);
+            isLookingAtPlayer = false;
+        }
+        StartCoroutine(start());
+    }
+
+    public void TakeDamage(int damage = 0, BulletBehavior bullet = null)
+    {
+        // if there was a bullet in the damage taking option
+        if (bullet == null)
+        {
+            if (alive == true)
+            {
+                if (!firstHit)
+                {
+                    StartCoroutine(FirstHit());
+                }
+                audioSource.PlayOneShot(DefaultBulletHitSound);
+                Health -= damage;
+            }
+        } else
+        // if the AI is just taking plain damage
+        {
+            if (alive == true)
+            {
+                if (!firstHit)
+                {
+                    StartCoroutine(FirstHit());
+                }
+                audioSource.PlayOneShot(bullet.hitSound);
+                Health -= bullet.Damage;
+            }
+        }
+
+        // Check for death
+        if (Health <= 0 && alive == true)
+        {
+            StartCoroutine(Death());
         }
     }
 
@@ -220,59 +332,132 @@ public class FiringRangeAI : MonoBehaviour
     {
         int playAudio = Random.Range(0, 70);
         if (!audioSource.isPlaying && playAudio <= 70)
-            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+            audioSource.PlayOneShot(VoiceLines[Random.Range(0, VoiceLines.Length)]);
     }
 
     IEnumerator Death()
     {
-        //if (gameControl.enabled == true)
-        //{
-        //    gameControl.EnemyKilled();
-        //}
-        yield return new WaitForSeconds(0.75f);
-        Destroy(gameObject);
+        alive = false;
+
+        if (gameControl != null)
+        {
+            if (gameControl.enabled == true)
+            {
+                gameControl.EnemyKilled();
+            }
+        }
+        // wait one frame
+        yield return null;
+        // activate ragdoll
+
+        
+        Destroy(gameObject, 5);
     }
-    IEnumerator StopHit()
+    IEnumerator FirstHit()
     {
+        firstHit = true;
+        hitEffect.SetActive(true);
         yield return new WaitForSeconds(3f);
         hitEffect.SetActive(false);
         firstHit = false;
     }
 
-    public void EMPShock()
+    // This function is complete unless we want to make adjustments/refinements
+    public void EMPShock(GameObject Effect)
     {
         IEnumerator shock()
         {
             //States preState = currentState;
-            currentState = States.Shocked;
+            SwitchStates(States.Shocked);
             agent.isStopped = true;
-            animator.enabled = false;
-
+            animator.SetTrigger("Shock");
+            animator.SetBool("ShockDone", false);
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0,1,0), Quaternion.identity), 1f);
             // apply damage
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            Destroy(Instantiate(hitEffect, transform.position, Quaternion.identity), 1f);
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+            agent.isStopped = true;
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            Destroy(Instantiate(hitEffect, transform.position, Quaternion.identity), 1f);
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+            agent.isStopped = true;
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            Destroy(Instantiate(hitEffect, transform.position, Quaternion.identity), 1f);
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
             // enable movement
-
-            currentState = States.Follow;
+            animator.ResetTrigger("shock");
+            animator.SetBool("ShockDone", true);
+            currentState = previousState;
             agent.isStopped = false;
-
-            animator.enabled = true;
         }
         // if already shocked, ignore effects
         if (currentState == States.Shocked) return;
         StartCoroutine(shock());
     }
 
+
+    /// <summary> ----------------------------------------------------------
+    ///  Visualizatinon stuff
+    /// </summary> ---------------------------------------------------------
+    ///
+    private void OnDrawGizmos()
+    {
+        if (!RangeDebug) return;
+        // draw the NPC Vision cone
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, transform.forward * DetectRange);
+        Vector3 rightDirection = Quaternion.Euler(0f, 110 / 2f, 0f) * transform.forward;
+        Gizmos.DrawRay(transform.position, rightDirection * DetectRange);
+        Vector3 leftDirection = Quaternion.Euler(0f, - 110 / 2f, 0f) * transform.forward;
+        Gizmos.DrawRay(transform.position, leftDirection * DetectRange);
+        // draw the ranges
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, DetectRange);
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, AgroRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
+        // draw the destination
+        if (agent != null)
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(agent.destination, 0.5f);
+        }
+        // this part takes care of drawing the patrol points and line visuals between them
+        Color lineColor = new Color32(0, 255, 0, 255);
+
+        Transform[] PatrolPoints_Debug = null;
+
+        if (Application.isEditor) PatrolPoints_Debug = PatrolPoints;
+
+        for (int i = 0; i < PatrolPoints_Debug.Length; i++)
+        {
+            int colorVal = 40 * i;
+            int colorValGreen = 255 - (40 * i);
+            lineColor = new Color32((byte)colorVal, (byte)colorValGreen, (byte)colorVal, 255);
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(PatrolPoints_Debug[i].position, 0.25f);
+            if (i + 1 >= PatrolPoints_Debug.Length)
+            {
+                #if UNITY_EDITOR
+                    UnityEditor.Handles.color = lineColor;
+                    UnityEditor.Handles.DrawAAPolyLine(3, PatrolPoints_Debug[i].position, PatrolPoints_Debug[0].position);
+                #endif
+                return;
+            }
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(PatrolPoints_Debug[i + 1].position, 0.25f);
+            #if UNITY_EDITOR
+                    UnityEditor.Handles.color = lineColor;
+                    UnityEditor.Handles.DrawAAPolyLine(3, PatrolPoints_Debug[i].position, PatrolPoints_Debug[i + 1].position);
+            #endif
+        }
+    }
 }
 
 

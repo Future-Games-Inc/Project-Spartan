@@ -89,7 +89,7 @@ public class PulseAR : MonoBehaviour
             if (ammoLeft > 0 && active == true)
             {
                 GameObject spawnedBullet = Instantiate(PulseBullet, spawnPoint[0].position, Quaternion.identity);
-                audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().clip);
+                audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().fireSound);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehavior>().TravelSpeed;
                 ammoLeft -= 3;
             }
@@ -100,7 +100,7 @@ public class PulseAR : MonoBehaviour
             if (ammoLeft > 0 && active == true)
             {
                 GameObject spawnedBullet = Instantiate(playerBullet, spawnPoint[0].position, Quaternion.identity);
-                audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().clip);
+                audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().fireSound);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehavior>().TravelSpeed;
                 ammoLeft--;
             }
