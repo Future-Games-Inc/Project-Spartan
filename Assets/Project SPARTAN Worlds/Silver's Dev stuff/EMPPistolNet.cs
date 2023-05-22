@@ -112,8 +112,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
                 foreach (Transform t in spawnPoint)
                 {
                     GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(Bullet.name, t.position, Quaternion.identity, 0, null);
-                    audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().clip);
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehavior>().TravelSpeed;
+                    audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
