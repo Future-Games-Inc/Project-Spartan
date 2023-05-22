@@ -2535,8 +2535,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiScript: {fileID: 8484980518805742075}
-  xpDrop: {fileID: 6262760109702015730, guid: b44bf429506e6d74c950afa1483f2c51, type: 3}
-  xpDropExtra: {fileID: 6262760109702015730, guid: 0067cc3b9f3214741b8c01973dd1824a,
+  xpDrop: {fileID: 7575082814562487098, guid: b13bcbe346710c44b908f2948305ac23, type: 3}
+  xpDropExtra: {fileID: 7575082814562487098, guid: b13bcbe346710c44b908f2948305ac23,
     type: 3}
   enemyCounter: {fileID: 0}
   alive: 0
@@ -2560,11 +2560,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxFollowDistance: 30
+  shootDistance: 10
+  Health: 200
   agent: {fileID: 1799011468459518908}
   targetTransform: {fileID: 0}
   enemyHealth: {fileID: 26474372960577008}
   attackWeapon: {fileID: -4734081095835989360}
   hitEffect: {fileID: 6409444301976251970}
+  currentState: 0
+  inSight: 0
+  alive: 1
+  waypoints: []
+  audioSource: {fileID: 9009362318184346560}
   bulletHit: {fileID: 8300000, guid: 16b00231e6bfc444b9beeefd434a0714, type: 3}
   audioClip:
   - {fileID: 8300000, guid: 661d7b0caccb0ea4abcb287e188abbc4, type: 3}
@@ -2577,14 +2585,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ef284a975ac96fa4aa8c355a3f78c397, type: 3}
   - {fileID: 8300000, guid: 8e41edeaedfb5414abda99244ca7f775, type: 3}
   - {fileID: 8300000, guid: 717e1ce862156564ea0a052ba007e3a1, type: 3}
-  maxFollowDistance: 30
-  shootDistance: 10
-  Health: 200
-  currentState: 0
-  inSight: 0
-  alive: 1
-  waypoints: []
-  audioSource: {fileID: 9009362318184346560}
 --- !u!114 &7339452733834057934
 MonoBehaviour:
   m_ObjectHideFlags: 0

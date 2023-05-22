@@ -33,7 +33,7 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
         _animator = GetComponent<Animator>();
         _collider = GetComponent<BoxCollider>();
         cacheAudio = GetComponent<AudioSource>();
-        photonView.RPC("RPC_Awake", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Awake", RpcTarget.All);
     }
     void Start()
     {
@@ -59,13 +59,13 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            photonView.RPC("RPC_Opened", RpcTarget.AllBuffered);
+            photonView.RPC("RPC_Opened", RpcTarget.All);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        photonView.RPC("RPC_Exit", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Exit", RpcTarget.All);
     }
 
     IEnumerator WeaponCache()
@@ -80,7 +80,7 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     IEnumerator CacheRespawn()
     {
         yield return new WaitForSeconds(30);
-        photonView.RPC("RPC_Closed", RpcTarget.AllBuffered);
+        photonView.RPC("RPC_Closed", RpcTarget.All);
     }
 
     [PunRPC]
