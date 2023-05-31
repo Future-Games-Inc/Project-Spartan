@@ -45,6 +45,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && fireWeaponBool == true && canShoot == true)
             {
+                yield return new WaitForSeconds(0.25f);
                 if (!audioSource.isPlaying)
                 {
                     photonView.RPC("RPC_ShootAudio", RpcTarget.All);

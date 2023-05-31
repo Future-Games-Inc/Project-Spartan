@@ -6,34 +6,40 @@ using Photon.Realtime;
 
 public class WeaponCrate : MonoBehaviourPunCallbacks
 {
+    [Header("Cache Effects ------------------------------------------------------")]
     [SerializeField]
-    private VisualEffect _visualEffect;
-
-    public string[] powerups;
-    public string[] weapons;
+    private VisualEffect _visualEffect;    
+    
     public Transform spawn1;
     public Transform spawn2;
-    public Transform spawn3;
-
-    private Animator _animator;
-    private BoxCollider _collider;
-
-    public bool cacheActive;
-    public GameObject cacheBase;
-
-    public Transform spawnPosition;
-
-    public MatchEffects matchProps;
-
+    public Transform spawn3;    
+    
     public AudioSource cacheAudio;
     public AudioClip cacheClip;
 
+    public bool cacheActive;
+
+    [Header("Cache Properties ------------------------------------------------------")]
+    public string[] powerups;
+    public string[] weapons;
+
+    public Animator _animator;
+
+    private BoxCollider _collider;
+
+    public GameObject[] cacheBase;
+
+    public Material activeMaterial;
+    public Material deactiveMaterial;
+
+    public MatchEffects matchProps;
+
+
+
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _collider = GetComponent<BoxCollider>();
-        cacheAudio = GetComponent<AudioSource>();
-        photonView.RPC("RPC_Awake", RpcTarget.All);
+        photonView.RPC("RPC_CacheStart", RpcTarget.All);
     }
     void Start()
     {
@@ -59,13 +65,8 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            photonView.RPC("RPC_Opened", RpcTarget.All);
+            photonView.RPC("RPC_CacheOpened", RpcTarget.All);
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        photonView.RPC("RPC_Exit", RpcTarget.All);
     }
 
     IEnumerator WeaponCache()
@@ -75,43 +76,46 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
         PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation, 0, null);
         PhotonNetwork.InstantiateRoomObject(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation, 0, null);
         StartCoroutine(CacheRespawn());
+        photonView.RPC("RPC_CacheExit", RpcTarget.All);
     }
 
     IEnumerator CacheRespawn()
     {
         yield return new WaitForSeconds(30);
-        photonView.RPC("RPC_Closed", RpcTarget.All);
+        photonView.RPC("RPC_CacheClosed", RpcTarget.All);
     }
 
     [PunRPC]
-    void RPC_Awake()
+    void RPC_CacheStart()
     {
         cacheActive = true;
     }
 
     [PunRPC]
-    void RPC_Opened()
+    void RPC_CacheOpened()
     {
         _collider.enabled = false;
         _animator.SetBool("Open", true);
         _visualEffect.SendEvent("OnPlay");
         cacheAudio.PlayOneShot(cacheClip);
         cacheActive = false;
-        cacheBase.SetActive(false);
+        foreach(GameObject cache in cacheBase)
+            cache.GetComponent<Renderer>().material = deactiveMaterial;
         StartCoroutine(WeaponCache());
     }
 
     [PunRPC]
-    void RPC_Closed()
+    void RPC_CacheClosed()
     {
         _animator.SetBool("Open", false);
         cacheActive = true;
-        cacheBase.SetActive(true);
+        foreach (GameObject cache in cacheBase)
+            cache.GetComponent<Renderer>().material = activeMaterial;
         _collider.enabled = true;
     }
 
     [PunRPC]
-    void RPC_Exit()
+    void RPC_CacheExit()
     {
         _animator.SetBool("Open", false);
     }

@@ -14,9 +14,16 @@ public class FollowAI : MonoBehaviourPunCallbacks
     }
 
     [Header("AI Settings --------------------------------------------------------------")]
-    public float maxFollowDistance = 20f;
-    public float shootDistance = 10f;
+    public float DetectRange = 20;
+    public float AttackRange = 15;
+    public float AgroRange = 25;
+
     public int Health;
+
+    public LayerMask obstacleMask;
+
+    private float DistanceToPlayer;
+
     public NavMeshAgent agent;
     public Transform targetTransform;
     //public EnemyHealthBar healthBar;
@@ -24,15 +31,30 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public AIWeapon attackWeapon;
     public GameObject hitEffect;
 
+    private float TurnSpeed = 5f;
+    private bool isLookingAtPlayer = false;
+
     [Header("AI Behavior --------------------------------------------------------------")]
     private Vector3 directionToTarget;
-    public States currentState = States.Patrol;
+
     public bool inSight;
     public bool alive = true;
     private bool firstHit = false;
 
-    public Transform[] waypoints;
+    public int currentWaypoint;
+    public Transform[] PatrolPoints;
+    private int currentPatrolPointIndex = 0;
+    private bool PatrolPauseDone = true;
+
     private GameObject[] players;
+
+    public States currentState = States.Patrol;
+    private States previousState;
+
+    [HideInInspector]
+    public bool Agro = false;
+    [HideInInspector]
+    public bool shocked = false;
 
     [Header("AI Audio ----------------------------------------------------------------")]
     public AudioSource audioSource;
@@ -46,8 +68,15 @@ public class FollowAI : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             InvokeRepeating("RandomSFX", 15, 20);
+            animator = GetComponent<Animator>();
+            GameObject parentObject = GameObject.FindGameObjectWithTag("Waypoints");
+            if (parentObject != null)
+            {
+                // Get the child transforms of the parent object
+                PatrolPoints = parentObject.GetComponentsInChildren<Transform>();
+            }
 
-            waypoints = GameObject.FindGameObjectWithTag("Waypoints").GetComponentsInChildren<Transform>();
+            Patrol();
 
             //photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
         }
@@ -74,82 +103,150 @@ public class FollowAI : MonoBehaviourPunCallbacks
         targetTransform = closest.transform;
     }
 
+    public void SwitchStates(States input)
+    {
+        previousState = currentState;
+
+        currentState = input;
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            if (currentState != States.Shocked)
+            FindClosestEnemy();
+
+            if (!alive) return;
+            // calculates the distance from NPC to player
+            float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+            // Debug.Log(distanceToPlayer);
+            // match the animator Aggro with the NPC aggro
+            animator.SetBool("Agro", Agro);
+
+            if (currentState == States.Shocked)
             {
-                FindClosestEnemy();
-                CheckForPlayer();
-                UpdateStates();
-
+                return;
             }
-            else if (currentState == States.Shocked)
+
+            // If the player are seen by the NPC or if the distance is close enough
+            if (distanceToPlayer <= DetectRange && CheckForPlayer())
             {
-
-                agent.isStopped = true;
-                agent.SetDestination(gameObject.transform.position);
+                Agro = true;
             }
-        }
-    }
-
-    private void UpdateStates()
-    {
-        switch (currentState)
-        {
-            case States.Patrol:
+            // if it is not agro, then patrol like normal
+            // else then see if the player is in the valid agro range (bigger than detect range) then give chase
+            //          if the player is outside of agro range, drop agro.
+            if (!Agro)
+            {
+                SwitchStates(States.Patrol);
+                agent.isStopped = false;
                 Patrol();
-                break;
-            case States.Follow:
-                Follow();
-                break;
-            case States.Attack:
-                Attack();
-                break;
+            }
+            else
+            {
+                // if the NPC is BEYOND the range that it could agro, drop the agro.
+                if (distanceToPlayer > AgroRange)
+                {
+                    Agro = false;
+                    // stop where it is
+                    agent.SetDestination(gameObject.transform.position);
+                    return;
+                }
+                // if in range of attacks
+                if (distanceToPlayer <= AttackRange)
+                {
+                    SwitchStates(States.Attack);
+                    LookatTarget(1, 3f);
+                    agent.isStopped = true;
+                    Attack();
+                }
+                // give chase if not in range
+                else
+                {
+                    SwitchStates(States.Follow);
+                    agent.isStopped = false;
+                    Follow();
+                }
+            }
+
+            if (isLookingAtPlayer)
+            {
+                Vector3 direction = targetTransform.position - transform.position;
+                direction.y = 0;
+                Quaternion desiredRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
+            }
+
+            // set the speed for the agent for the blend tree
+            animator.SetFloat("Speed", agent.velocity.magnitude);
         }
     }
-    private void CheckForPlayer()
-    {
-        directionToTarget = targetTransform.position - transform.position;
 
-        float distance = directionToTarget.magnitude;
-        if (distance <= shootDistance)
+    public void LookatTarget(float duration, float RotationSpeed = 0.5f)
+    {
+        TurnSpeed = RotationSpeed;
+        IEnumerator start()
         {
-            currentState = States.Attack;
-            inSight = true;
+            isLookingAtPlayer = true;
+            yield return new WaitForSeconds(duration);
+            isLookingAtPlayer = false;
         }
-        else if (distance <= maxFollowDistance && distance > shootDistance)
+        StartCoroutine(start());
+    }
+
+    private bool CheckForPlayer()
+    {
+        Transform playerPOS = targetTransform;
+        if (playerPOS == null)
+            return false;
+
+        if (Vector3.Distance(transform.position, playerPOS.position) > DetectRange)
+            return false;
+
+        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
+            return false;
+
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, DetectRange, obstacleMask);
+        foreach (RaycastHit hit in hits)
         {
-            currentState = States.Follow;
-            inSight = true;
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            {
+                return true;
+            }
         }
-        else
-        {
-            currentState = States.Patrol;
-            inSight = false;
-        }
+
+        return false;
     }
 
     private void Patrol()
     {
         attackWeapon.fireWeaponBool = false;
-        if (agent.destination == null)
+        Agro = false;
+        // patrols from one place to the next
+        if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
         {
-            agent.SetDestination(waypoints[Random.Range(0, waypoints.Length)].position);
+            PatrolPauseDone = false;
+            agent.isStopped = false;
+            StartCoroutine(PatrolDelay());
         }
+    }
 
-        if (Vector3.Distance(transform.position, agent.destination) < 2f)
-        {
-            agent.SetDestination(waypoints[Random.Range(0, waypoints.Length)].position);
-        }
+    private IEnumerator PatrolDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        PatrolPauseDone = true;
+        currentPatrolPointIndex = (currentPatrolPointIndex + 1) % PatrolPoints.Length;
+        agent.destination = PatrolPoints[currentPatrolPointIndex].position;
+        // agent.speed = PatrolPoints.WalkingSpeed;
     }
 
     private void Follow()
     {
         attackWeapon.fireWeaponBool = false;
-        agent.SetDestination(targetTransform.position);
+        StopCoroutine(PatrolDelay());
+        agent.destination = targetTransform.position;
     }
 
     private void Attack()
@@ -226,6 +323,42 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(3f);
         photonView.RPC("RPC_StopHit", RpcTarget.All);
+    }
+
+    public void EMPShock(GameObject Effect)
+    {
+        IEnumerator shock()
+        {
+            //States preState = currentState;
+            SwitchStates(States.Shocked);
+            agent.isStopped = true;
+            animator.SetTrigger("Shock");
+            animator.SetBool("ShockDone", false);
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+            // apply damage
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+            agent.isStopped = true;
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+            agent.isStopped = true;
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
+            // enable movement
+            animator.ResetTrigger("shock");
+            animator.SetBool("ShockDone", true);
+            currentState = previousState;
+            agent.isStopped = false;
+        }
+        // if already shocked, ignore effects
+        if (currentState == States.Shocked) return;
+        StartCoroutine(shock());
     }
 
     //[PunRPC]

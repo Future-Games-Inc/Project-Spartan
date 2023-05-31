@@ -80,7 +80,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         {
             if (enemy.GetComponent<FollowAI>() != null)
             {
-                enemy.GetComponent<FollowAI>().maxFollowDistance = 500;
+                enemy.GetComponent<FollowAI>().AgroRange = 500;
                 enemy.GetComponent<FollowAI>().agent.speed = 3;
                 enemy.GetComponent<FollowAI>().inSight = true;
             }
@@ -103,7 +103,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         {
             if (enemy.GetComponent<FollowAI>() != null)
             {
-                enemy.GetComponent<FollowAI>().maxFollowDistance = 20f;
+                enemy.GetComponent<FollowAI>().AgroRange = 25f;
                 enemy.GetComponent<FollowAI>().agent.speed = 1.5f;
                 enemy.GetComponent<FollowAI>().inSight = false;
             }
