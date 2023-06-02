@@ -8,13 +8,14 @@ public class Vault : MonoBehaviourPunCallbacks
     public float endY;
     public float duration;
     public float holdDuration;
+    public float moveSpeed = 1f; // Speed of movement
 
     private float timer;
 
     private bool isHolding = false;
     private float holdTimer = 0f;
 
-    private bool isMovingBack = false;
+    private bool isMovingUp;
 
     public GameObject keycardObject;
 
@@ -33,6 +34,8 @@ public class Vault : MonoBehaviourPunCallbacks
     {
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
+        startY = transform.position.y;
+        endY = startY + 4f; // Adjust the end position as per your requirement
     }
 
     void Update()
@@ -45,49 +48,21 @@ public class Vault : MonoBehaviourPunCallbacks
 
             if (activated)
             {
-                photonView.RPC("RPC_VaultOpenMaterial", RpcTarget.All);
-                if (!isHolding)
+                photonView.RPC("RPC_VaultMaterial", RpcTarget.All, activatedMaterial);
+                if (isMovingUp)
                 {
-                    // Increment the timer
-                    timer += Time.deltaTime;
+                    // Move the object up
+                    transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 
-                    // Calculate the position based on the elapsed time
-                    float t = timer / duration;
-                    float y = Mathf.Lerp(startY, endY, t);
-
-                    // Call MoveVault RPC to synchronize position across the network
-                    photonView.RPC("MoveVault", RpcTarget.All, y);
-
-                    // Start holding if endY is reached
-                    if (y >= endY)
+                    // Check if the object has reached the end position
+                    if (transform.position.y >= endY)
                     {
+                        isMovingUp = false;
                         isHolding = true;
+                        holdTimer = 0f;
                     }
                 }
-                else if (isMovingBack)
-                {
-                    // Increment the timer
-                    timer += Time.deltaTime;
-
-                    // Calculate the position based on the elapsed time
-                    float t = timer / duration;
-                    float y = Mathf.Lerp(endY, startY, t);
-
-                    // Call MoveVault RPC to synchronize position across the network
-                    photonView.RPC("MoveVault", RpcTarget.All, y);
-
-                    // Stop moving if startY is reached
-                    if (y <= startY)
-                    {
-                        transform.position = new Vector3(transform.position.x, startY, transform.position.z);
-                        isMovingBack = false;
-                        isHolding = false;
-                        timer = 0;
-                        photonView.RPC("RPC_VaultClosedMaterial", RpcTarget.All);
-                        enabled = false;
-                    }
-                }
-                else
+                else if (isHolding)
                 {
                     // Increment the hold timer
                     holdTimer += Time.deltaTime;
@@ -95,11 +70,25 @@ public class Vault : MonoBehaviourPunCallbacks
                     // Check if hold duration has elapsed
                     if (holdTimer >= holdDuration)
                     {
-                        // Start moving back to endY
-                        isMovingBack = true;
-                        timer = 0;
-                        holdTimer = 0;
+                        isHolding = false;
+                        isMovingUp = false;
+                        holdTimer = 0f;
                     }
+                }
+                else
+                {
+                    photonView.RPC("RPC_VaultMaterial", RpcTarget.All, lootedMaterial);
+                    // Move the object down
+                    transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
+
+                    // Check if the object has reached the start position
+                    if (transform.position.y <= startY)
+                    {
+                        isMovingUp = true;
+                        isHolding = false;
+                        holdTimer = 0f;
+                    }
+
                 }
             }
         }
@@ -108,7 +97,7 @@ public class Vault : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_UpdateVaultActivation(bool playerWithinRadius)
     {
-        if (!activated)
+        if (!activated && playerWithinRadius)
         {
             elapsedTime += Time.deltaTime;
             float remainingTime = activationTime - elapsedTime;
@@ -116,6 +105,7 @@ public class Vault : MonoBehaviourPunCallbacks
             if (elapsedTime >= activationTime)
             {
                 activated = true;
+                isMovingUp = true;
                 activationSlider.gameObject.SetActive(false);
             }
         }
@@ -123,30 +113,14 @@ public class Vault : MonoBehaviourPunCallbacks
         {
             // Stop the vault if player moves away outside the radius
             isHolding = false;
-            isMovingBack = false;
+            isMovingUp = false;
         }
     }
 
     [PunRPC]
-    void RPC_VaultOpenMaterial()
+    void RPC_VaultMaterial(Material material)
     {
-        keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
-    }
-
-    [PunRPC]
-    void RPC_VaultClosedMaterial()
-    {
-        keycardObject.GetComponent<MeshRenderer>().material = lootedMaterial;
-    }
-
-    [PunRPC]
-    void MoveVault(float y)
-    {
-        // Move the game object on the Y-axis
-        transform.position = new Vector3(transform.position.x, y, transform.position.z);
-
-        // Synchronize activation slider position
-        activationSlider.gameObject.SetActive(true);
+        keycardObject.GetComponent<MeshRenderer>().material = material;
     }
 
     public bool CheckForPlayerWithinRadius()

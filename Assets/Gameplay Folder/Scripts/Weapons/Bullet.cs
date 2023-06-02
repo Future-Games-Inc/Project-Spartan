@@ -130,7 +130,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     }
     IEnumerator DestroyBulletCollision()
     {
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.15f);
         PhotonNetwork.Destroy(gameObject);
     }
 }

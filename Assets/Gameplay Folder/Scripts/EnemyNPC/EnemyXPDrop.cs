@@ -13,7 +13,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PickupSlot"))
         {
             PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
 
@@ -31,15 +31,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                     }
                     PhotonNetwork.Destroy(gameObject);
                     break;
-            }
-        }
 
-        if (other.CompareTag("PickupSlot"))
-        {
-            PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
-
-            switch (pickupData.pickupType)
-            {
                 case "Health":
                     spawnManager.photonView.RPC("RPC_UpdateHealthCount", RpcTarget.All);
                     playerHealth.AddHealth(pickupData.healthAmount);
@@ -47,6 +39,21 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                     break;
 
                 case "EMP":
+                    Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
+                    foreach (Collider collider in colliders)
+                    {
+                        if (collider.CompareTag("Security"))
+                        {
+                            DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
+                            enemyDamageCrit.TakeDamage(200);
+                        }
+                        if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
+                        {
+                            FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                            enemyDamageCrit.TakeDamage(75);
+                            enemyDamageCrit.EMPShock();
+                        }
+                    }
                     PhotonNetwork.Destroy(gameObject);
                     break;
 

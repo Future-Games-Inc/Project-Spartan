@@ -30,6 +30,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public EnemyHealth enemyHealth;
     public AIWeapon attackWeapon;
     public GameObject hitEffect;
+    public GameObject shockEffect;
 
     private float TurnSpeed = 5f;
     private bool isLookingAtPlayer = false;
@@ -48,7 +49,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     private GameObject[] players;
 
-    public States currentState = States.Patrol;
+    public States currentState;
     private States previousState;
 
     [HideInInspector]
@@ -223,6 +224,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     private void Patrol()
     {
         attackWeapon.fireWeaponBool = false;
+        agent.speed = 1.5f;
         Agro = false;
         // patrols from one place to the next
         if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
@@ -235,6 +237,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
 
     private IEnumerator PatrolDelay()
     {
+        attackWeapon.fireWeaponBool = false;
         yield return new WaitForSeconds(3f);
         PatrolPauseDone = true;
         currentPatrolPointIndex = (currentPatrolPointIndex + 1) % PatrolPoints.Length;
@@ -247,6 +250,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
         attackWeapon.fireWeaponBool = false;
         StopCoroutine(PatrolDelay());
         agent.destination = targetTransform.position;
+        agent.speed = 2.5f;
     }
 
     private void Attack()
@@ -260,36 +264,38 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         IEnumerator shock()
         {
+            attackWeapon.fireWeaponBool = false;
             //States preState = currentState;
             currentState = States.Shocked;
             agent.isStopped = true;
-            animator.enabled = false;
+            animator.SetTrigger("Shock");
+            animator.SetBool("ShockDone", false);
 
             // apply damage
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect = PhotonNetwork.InstantiateRoomObject(hitEffect.name, transform.position, Quaternion.identity, 0, null);
+            GameObject effect = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
             yield return new WaitForSeconds(1);
             PhotonNetwork.Destroy(effect);
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect2 = PhotonNetwork.InstantiateRoomObject(hitEffect.name, transform.position, Quaternion.identity, 0, null);
+            GameObject effect2 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
             yield return new WaitForSeconds(1);
             PhotonNetwork.Destroy(effect2);
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect3 = PhotonNetwork.InstantiateRoomObject(hitEffect.name, transform.position, Quaternion.identity, 0, null);
+            GameObject effect3 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
             yield return new WaitForSeconds(1);
             PhotonNetwork.Destroy(effect3);
             // enable movement
 
-            currentState = States.Follow;
+            animator.ResetTrigger("shock");
+            animator.SetBool("ShockDone", true);
+            currentState = previousState;
             agent.isStopped = false;
-
-            animator.enabled = true;
         }
         // if already shocked, ignore effects
         if (currentState == States.Shocked) return;
@@ -329,6 +335,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         IEnumerator shock()
         {
+            attackWeapon.fireWeaponBool = false;
             //States preState = currentState;
             SwitchStates(States.Shocked);
             agent.isStopped = true;

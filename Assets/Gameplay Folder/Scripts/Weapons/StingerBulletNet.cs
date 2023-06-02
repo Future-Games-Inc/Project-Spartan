@@ -19,11 +19,10 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
     public PlayerHealth playerHealth;
     public bool playerBullet = false;
     public int bulletModifier;
-    public MeshCollider colliderBullet;
 
     [Header("Bullet Effects ---------------------------------------------------")]
     public float energyPulseRadius = 5.0f;
-    public int numSmallBullets = 100;
+    public int numSmallBullets = 5;
     public float smallBulletTargetRadius = 10.0f;
     public float smallBulletLifetime = 5.0f;
 
@@ -51,6 +50,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         if (playerBullet == true)
         {
             playerHealth = bulletOwner.GetComponent<PlayerHealth>();
+            bulletModifier = playerHealth.bulletModifier;
         }
         else
         {
@@ -68,20 +68,6 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
             {
                 enemyDamageCrit.TakeDamage((20 * bulletModifier));
-            }
-            Explode();
-        }
-        else
-        {
-            FollowAI enemyDamage = other.GetComponent<FollowAI>();
-            if (enemyDamage.Health <= (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
-            {
-                playerHealth.EnemyKilled();
-                enemyDamage.TakeDamage((10 * bulletModifier));
-            }
-            else if (enemyDamage.Health > (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
-            {
-                enemyDamage.TakeDamage((10 * bulletModifier));
             }
             Explode();
         }
@@ -159,7 +145,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
                 {
                     Vector3 direction = targetRb.transform.position - transform.position;
                     direction.Normalize();
-                    targetRb.AddForce(direction * 30.0f, ForceMode.Impulse);
+                    targetRb.AddForce(direction * 15.0f, ForceMode.Impulse);
                 }
             }
         }
@@ -169,13 +155,13 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         {
             GameObject smallBullet = PhotonNetwork.InstantiateRoomObject(smallBulletPrefab.name, transform.position, Quaternion.identity, 0, null);
             smallBullet.transform.forward = Random.insideUnitSphere;
-            smallBullet.gameObject.GetComponent<Bullet>().bulletOwner = bulletOwner.gameObject;
-            smallBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
+            smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
+            smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().playerBullet = true;
             Collider[] targets = Physics.OverlapSphere(transform.position, smallBulletTargetRadius);
             if (targets.Length > 0)
             {
                 Transform target = targets[Random.Range(0, targets.Length)].transform;
-                smallBullet.GetComponent<SmallBullet>().SetTarget(target, smallBulletLifetime);
+                smallBullet.GetComponent<StingerBulletMiniNet>().SetTarget(target, smallBulletLifetime);
             }
         }
 

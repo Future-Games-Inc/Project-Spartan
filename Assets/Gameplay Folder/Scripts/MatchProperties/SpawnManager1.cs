@@ -113,7 +113,8 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnHealth = false;
 
-            PhotonNetwork.InstantiateRoomObject(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity, 0, null);
+            GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity, 0, null);
+            Health.GetComponent<Rigidbody>().isKinematic = false;
 
             healthCount++;
 

@@ -6,7 +6,7 @@ public class MondaeSceneAsync : MonoBehaviour
 {
     private void Start()
     {
-        StartCoroutine(LoadSceneAsync(9));
+        StartCoroutine(LoadSceneAsync(1));
     }
 
     IEnumerator LoadSceneAsync(int sceneIndex)

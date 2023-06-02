@@ -679,12 +679,16 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonView.IsMine)
             healthBarObject.SetActive(true);
 
+        CheckHealthStatus();
+
     }
 
     private void InitHealth()
     {
         Health = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out object storedPlayerHealth) && (int)storedPlayerHealth >= 1
             ? 100 + ((int)storedPlayerHealth * 10) : 100;
+
+        multiplayerHealth.SetMaxHealth(Health);
     }
 
     private void InitAvatarSelection()
@@ -971,7 +975,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             damageTaken = damage;
         photonView.RPC("RPC_TakeDamage", RpcTarget.All, damageTaken);
         CheckHealthStatus();
-
     }
 
     public void AddHealth(int health)

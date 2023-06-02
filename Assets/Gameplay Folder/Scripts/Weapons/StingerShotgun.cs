@@ -86,9 +86,9 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
                 {
                     GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, t.position, Quaternion.identity, 0, null);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
-                    spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
-                    spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
+                    spawnedBullet.GetComponent<StingerBulletNet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
+                    spawnedBullet.gameObject.GetComponent<StingerBulletNet>().bulletOwner = player.gameObject;
+                    spawnedBullet.gameObject.GetComponent<StingerBulletNet>().playerBullet = true;
                 }
             }
 

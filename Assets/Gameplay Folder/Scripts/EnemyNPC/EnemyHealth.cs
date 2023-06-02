@@ -53,10 +53,14 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
 
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, t.position, Quaternion.identity, 0, null);
+                GameObject DropExtra = PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, t.position, Quaternion.identity, 0, null);
+                DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
-                PhotonNetwork.InstantiateRoomObject(xpDrop.name, t.position, Quaternion.identity, 0, null);
+            {
+                GameObject DropNormal = PhotonNetwork.InstantiateRoomObject(xpDrop.name, t.position, Quaternion.identity, 0, null);
+                DropNormal.GetComponent<Rigidbody>().isKinematic = false;
+            }
         }
         StartCoroutine(Destroy());
     }

@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class SmallBulletMiniNet : MonoBehaviourPunCallbacks
+public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     public GameObject explosionPrefab;
@@ -14,7 +14,7 @@ public class SmallBulletMiniNet : MonoBehaviourPunCallbacks
 
     [Header("Bullet Effects ---------------------------------------------------")]
     public float explosionRadius = 2.0f;
-    public float explosionForce = 30.0f;
+    public float explosionForce = 15.0f;
 
     public void SetTarget(Transform target, float lifetime)
     {

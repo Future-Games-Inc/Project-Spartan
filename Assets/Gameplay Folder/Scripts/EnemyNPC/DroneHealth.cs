@@ -48,10 +48,14 @@ public class DroneHealth : MonoBehaviourPunCallbacks
             xpDropRate = 10f;
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, t.position, Quaternion.identity, 0);
+                GameObject DropExtra = PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, t.position, Quaternion.identity, 0);
+                DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
-                PhotonNetwork.InstantiateRoomObject(xpDrop.name, t.position, Quaternion.identity, 0);
+            {
+                GameObject DropNormal = PhotonNetwork.InstantiateRoomObject(xpDrop.name, t.position, Quaternion.identity, 0);
+                DropNormal.GetComponent<Rigidbody>().isKinematic = false;
+            }
         }
 
         yield return new WaitForSeconds(.75f);
