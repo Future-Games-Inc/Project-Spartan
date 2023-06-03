@@ -56,10 +56,10 @@ public class PlayerMovement : MonoBehaviour
         object storedPlayerSpeed;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_SPEED, out storedPlayerSpeed) && (int)storedPlayerSpeed >= 1)
         {
-            maxSpeed = (10f + ((int)storedPlayerSpeed / 10));
+            maxSpeed = (8f + ((int)storedPlayerSpeed / 10));
         }
         else
-            maxSpeed = 10f;
+            maxSpeed = 8f;
 
         currentSpeed = minSpeed;
         playerCamera = rig.Camera.GetComponent<Camera>();
@@ -90,9 +90,8 @@ public class PlayerMovement : MonoBehaviour
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
 
-        InputDevice jumpbutton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
-        jumpbutton.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
-
+        InputDevice jumpButton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
+        jumpButton.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
     }
 
     private void FixedUpdate()

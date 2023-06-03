@@ -257,7 +257,6 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         transform.LookAt(targetTransform);
         attackWeapon.fireWeaponBool = true;
-        audioSource.PlayOneShot(audioClip[1]);
     }
 
     public void EMPShock()

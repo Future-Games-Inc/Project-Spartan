@@ -59,17 +59,30 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
 
         if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
         {
-            FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-            if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+            float criticalChance = 30f;
+
+            //cal it at random probability
+            if (Random.Range(0, 100f) < criticalChance)
             {
-                playerHealth.EnemyKilled();
-                enemyDamageCrit.TakeDamage((20 * bulletModifier));
+                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
+                if (enemyDamageCrit.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled();
+                }
+                enemyDamageCrit.TakeDamage((30 * bulletModifier));
+                Explode();
             }
-            else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+            else
             {
+                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
+                if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled();
+                }
                 enemyDamageCrit.TakeDamage((20 * bulletModifier));
+                Explode();
             }
-            Explode();
+
         }
 
         if (other.CompareTag("Security"))
@@ -81,7 +94,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             {
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
-                enemyDamageCrit.TakeDamage((30 * bulletModifier));
+                enemyDamageCrit.TakeDamage((40 * bulletModifier));
                 Explode();
             }
 
@@ -93,7 +106,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && other != bulletOwner)
         {
             float criticalChance = 10f;
 
@@ -153,7 +166,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         // Create smaller bullets and target nearby enemies
         for (int i = 0; i < numSmallBullets; i++)
         {
-            GameObject smallBullet = PhotonNetwork.InstantiateRoomObject(smallBulletPrefab.name, transform.position, Quaternion.identity, 0, null);
+            GameObject smallBullet = PhotonNetwork.Instantiate(smallBulletPrefab.name, transform.position, Quaternion.identity, 0, null);
             smallBullet.transform.forward = Random.insideUnitSphere;
             smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
             smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().playerBullet = true;

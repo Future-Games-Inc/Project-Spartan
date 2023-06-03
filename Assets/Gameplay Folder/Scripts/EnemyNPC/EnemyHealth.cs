@@ -81,6 +81,7 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     void RPC_KillEnemy()
     {
         alive = false;
+        aiScript.attackWeapon.fireWeaponBool = false;
         aiScript.alive = false;
 
         enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);

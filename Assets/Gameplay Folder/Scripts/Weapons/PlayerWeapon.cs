@@ -78,7 +78,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
                     audioSource.PlayOneShot(weaponFire);
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, t.position, Quaternion.identity, 0, null);
+                    GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0, null);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;

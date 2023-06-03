@@ -6,20 +6,20 @@ public class Vault : MonoBehaviourPunCallbacks
 {
     public float startY;
     public float endY;
-    public float duration;
     public float holdDuration;
     public float moveSpeed = 1f; // Speed of movement
 
     private float timer;
 
-    private bool isHolding = false;
+    public bool isHolding;
     private float holdTimer = 0f;
 
-    private bool isMovingUp;
+    public bool isMovingUp;
 
     public GameObject keycardObject;
 
-    public bool activated;
+    public bool activated = false;
+    public bool hasBeenActivated = false; // Added variable to track if the vault has been activated before
 
     public Material activatedMaterial;
     public Material deactivatedMaterial;
@@ -35,7 +35,7 @@ public class Vault : MonoBehaviourPunCallbacks
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         startY = transform.position.y;
-        endY = startY + 4f; // Adjust the end position as per your requirement
+        endY = startY + 2f; // Adjust the end position as per your requirement
     }
 
     void Update()
@@ -46,11 +46,13 @@ public class Vault : MonoBehaviourPunCallbacks
             bool playerWithinRadius = CheckForPlayerWithinRadius();
             photonView.RPC("RPC_UpdateVaultActivation", RpcTarget.All, playerWithinRadius);
 
-            if (activated)
+            if (activated && hasBeenActivated) // Only move if the vault has been activated before
             {
-                photonView.RPC("RPC_VaultMaterial", RpcTarget.All, activatedMaterial);
-                if (isMovingUp)
+
+                photonView.RPC("RPC_VaultOpenMaterial", RpcTarget.All);
+                if (isMovingUp && isHolding)
                 {
+                    radius = 10f;
                     // Move the object up
                     transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 
@@ -58,12 +60,12 @@ public class Vault : MonoBehaviourPunCallbacks
                     if (transform.position.y >= endY)
                     {
                         isMovingUp = false;
-                        isHolding = true;
                         holdTimer = 0f;
                     }
                 }
                 else if (isHolding)
                 {
+                    radius = 10f;
                     // Increment the hold timer
                     holdTimer += Time.deltaTime;
 
@@ -71,24 +73,22 @@ public class Vault : MonoBehaviourPunCallbacks
                     if (holdTimer >= holdDuration)
                     {
                         isHolding = false;
-                        isMovingUp = false;
-                        holdTimer = 0f;
                     }
                 }
                 else
                 {
-                    photonView.RPC("RPC_VaultMaterial", RpcTarget.All, lootedMaterial);
+                    radius = 4f;
+                    photonView.RPC("RPC_VaultClosedMaterial", RpcTarget.All);
                     // Move the object down
                     transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
 
                     // Check if the object has reached the start position
                     if (transform.position.y <= startY)
                     {
-                        isMovingUp = true;
-                        isHolding = false;
+                        activated = false;
+                        elapsedTime = 0f;
                         holdTimer = 0f;
                     }
-
                 }
             }
         }
@@ -104,9 +104,11 @@ public class Vault : MonoBehaviourPunCallbacks
             activationSlider.value = remainingTime;
             if (elapsedTime >= activationTime)
             {
-                activated = true;
                 isMovingUp = true;
+                isHolding = true;
+                hasBeenActivated = true; // Update the flag to indicate the vault has been activated
                 activationSlider.gameObject.SetActive(false);
+                activated = true;
             }
         }
         else if (!playerWithinRadius)
@@ -118,9 +120,15 @@ public class Vault : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_VaultMaterial(Material material)
+    void RPC_VaultOpenMaterial()
     {
-        keycardObject.GetComponent<MeshRenderer>().material = material;
+        keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
+    }
+
+    [PunRPC]
+    void RPC_VaultClosedMaterial()
+    {
+        keycardObject.GetComponent<MeshRenderer>().material = lootedMaterial;
     }
 
     public bool CheckForPlayerWithinRadius()

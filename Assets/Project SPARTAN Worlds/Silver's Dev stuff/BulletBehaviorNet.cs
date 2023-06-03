@@ -67,7 +67,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && other != bulletOwner)
         {
             // select custom functions for damage
             switch (Type)
