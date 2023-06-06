@@ -94,14 +94,26 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             {
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
-                enemyDamageCrit.TakeDamage((40 * bulletModifier));
+                if (enemyDamageCrit != null)
+                    enemyDamageCrit.TakeDamage((40 * bulletModifier));
+                else
+                {
+                    SentryDrone enemyDamageCrit2 = other.GetComponent<SentryDrone>();
+                    enemyDamageCrit2.TakeDamage(40 * bulletModifier);
+                }
                 Explode();
             }
 
             else
             {
                 DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
-                enemyDamage.TakeDamage((20 * bulletModifier));
+                if (enemyDamage != null)
+                    enemyDamage.TakeDamage((30 * bulletModifier));
+                else
+                {
+                    SentryDrone enemyDamage2 = other.GetComponent<SentryDrone>();
+                    enemyDamage2.TakeDamage(30 * bulletModifier);
+                }
                 Explode();
             }
         }

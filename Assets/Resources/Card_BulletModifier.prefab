@@ -189,8 +189,9 @@ GameObject:
   - component: {fileID: 6362898707588670302}
   - component: {fileID: 6068821405772493519}
   - component: {fileID: 5600601891988749336}
-  - component: {fileID: 8925406458406309953}
   - component: {fileID: 2096295529041117893}
+  - component: {fileID: 6583288581978853133}
+  - component: {fileID: 5232689427898603462}
   m_Layer: 6
   m_Name: Card_BulletModifier
   m_TagString: Untagged
@@ -279,7 +280,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 10
   m_CollisionDetection: 2
 --- !u!65 &6362898707588670302
 BoxCollider:
@@ -329,7 +330,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.40000007, z: 0.008173069}
   m_Center: {x: 0, y: 0, z: 0.0040865345}
---- !u!114 &8925406458406309953
+--- !u!114 &2096295529041117893
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -338,7 +339,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 6362898707595115858}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 68e6da4d6b234a646ac02f9fd938398f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupData: {fileID: 11400000, guid: dda050576ffd9d04cb9b6889c3a48623, type: 2}
+  spawnManager: {fileID: 0}
+--- !u!114 &6583288581978853133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6362898707595115858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ddc10defd7b6e94b920b716656363c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 12
+  ForwardX: 0
+  ForwardY: 1
+  ForwardZ: 0
+  ReverseX: 0
+  ReverseY: 0
+  ReverseZ: 0
+--- !u!114 &5232689427898603462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6362898707595115858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7011927d0b11984a929b2184a617fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -379,6 +413,18 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 6583288581978853133}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 6362898707589704798}
         m_TargetAssemblyTypeName: UnityEngine.Rigidbody, UnityEngine
         m_MethodName: set_isKinematic
@@ -476,17 +522,3 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
---- !u!114 &2096295529041117893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6362898707595115858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68e6da4d6b234a646ac02f9fd938398f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickupData: {fileID: 11400000, guid: dda050576ffd9d04cb9b6889c3a48623, type: 2}
-  spawnManager: {fileID: 0}

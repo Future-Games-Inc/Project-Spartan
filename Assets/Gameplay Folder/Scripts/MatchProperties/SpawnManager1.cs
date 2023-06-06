@@ -7,7 +7,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject[] enemyAI;
     [SerializeField] private GameObject[] enemyBoss;
-    [SerializeField] private GameObject securityAI;
+    [SerializeField] private GameObject[] securityAI;
     [SerializeField] private GameObject reactor;
     [SerializeField] private GameObject health;
 
@@ -73,7 +73,8 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnSecurity = false;
 
-            PhotonNetwork.InstantiateRoomObject(securityAI.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+            GameObject securityDrone = securityAI[Random.Range(0, securityAI.Length)];
+            PhotonNetwork.InstantiateRoomObject(securityDrone.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
 
             securityCount++;
 

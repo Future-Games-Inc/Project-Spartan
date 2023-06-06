@@ -152,13 +152,25 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
         void DefaultDamageSecurity(Collider target, float damage)
         {
             DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
-            enemyDamageReg.TakeDamage(Damage);
+            if (enemyDamageReg != null)
+                enemyDamageReg.TakeDamage(Damage);
+            else
+            {
+                SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
+                enemyDamageReg2.TakeDamage(Damage);
+            }
             PhotonNetwork.Destroy(gameObject);
         }
         void EMPBulletDamageSecurity(Collider target, float damage)
         {
             DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
-            enemyDamageReg.TakeDamage(Damage * 200);
+            if (enemyDamageReg != null)
+                enemyDamageReg.TakeDamage(Damage);
+            else
+            {
+                SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
+                enemyDamageReg2.TakeDamage(Damage * 200);
+            }
             PhotonNetwork.Destroy(gameObject);
         }
     }

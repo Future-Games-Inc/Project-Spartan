@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
     public GameObject winnerPlayer;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {

@@ -123,7 +123,13 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
                 // Calculate damage and apply to enemy
                 int Damage = baseDamage + bleedStacks * bleedDamage;
                 DroneHealth enemyDamageReg = other.GetComponent<DroneHealth>();
-                enemyDamageReg.TakeDamage(Damage);
+                if (enemyDamageReg != null)
+                    enemyDamageReg.TakeDamage(Damage);
+                else
+                {
+                    SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
+                    enemyDamageReg2.TakeDamage(Damage);
+                }
 
                 // Apply hit effect
                 PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);

@@ -58,19 +58,16 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                     break;
 
                 case "toxicDrop":
-                    playerHealth.toxicEffectActive = true;
                     playerHealth.Toxicity(pickupData.toxicAmount);
                     PhotonNetwork.Destroy(gameObject);
                     break;
 
                 case "bulletModifier":
                     playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
-                    playerHealth.bulletImproved = true;
                     PhotonNetwork.Destroy(gameObject);
                     break;
 
                 case "Shield":
-                    playerHealth.shieldActive = true;
                     playerHealth.Shield(pickupData.shieldDuration);
                     PhotonNetwork.Destroy(gameObject);
                     break;

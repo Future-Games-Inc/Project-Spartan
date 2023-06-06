@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("EnemyBullet"))
+        if (!collision.gameObject.CompareTag("EnemyBullet") && gameObject.activeInHierarchy == true)
             StartCoroutine(DestroyBulletCollision());
     }
 
@@ -71,7 +71,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Security"))
+        else if (other.CompareTag("Security"))
         {
             float criticalChance = 30f;
 
@@ -80,20 +80,32 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
-                enemyDamageCrit.TakeDamage(30 * bulletModifier);
+                if (enemyDamageCrit != null)
+                    enemyDamageCrit.TakeDamage(30 * bulletModifier);
+                else
+                {
+                    SentryDrone enemyDamageCrit2 = other.GetComponent<SentryDrone>();
+                    enemyDamageCrit2.TakeDamage(30 * bulletModifier);
+                }
                 PhotonNetwork.Destroy(gameObject);
             }
 
             else
             {
                 DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
-                enemyDamage.TakeDamage(20 * bulletModifier);
+                if (enemyDamage != null)
+                    enemyDamage.TakeDamage(20 * bulletModifier);
+                else
+                {
+                    SentryDrone enemyDamage2 = other.GetComponent<SentryDrone>();
+                    enemyDamage2.TakeDamage(20 * bulletModifier);
+                }
                 PhotonNetwork.Destroy(gameObject);
             }
         }
 
 
-        if (other.CompareTag("Player"))
+        else if (other.CompareTag("Player"))
         {
             float criticalChance = 10f;
 

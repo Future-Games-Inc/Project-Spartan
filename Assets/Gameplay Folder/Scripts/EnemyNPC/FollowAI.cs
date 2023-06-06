@@ -17,6 +17,7 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public float DetectRange = 20;
     public float AttackRange = 15;
     public float AgroRange = 25;
+    public float wanderRadius = 500;
 
     public int Health;
 
@@ -42,9 +43,6 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public bool alive = true;
     private bool firstHit = false;
 
-    public int currentWaypoint;
-    public Transform[] PatrolPoints;
-    private int currentPatrolPointIndex = 0;
     private bool PatrolPauseDone = true;
 
     private GameObject[] players;
@@ -70,12 +68,9 @@ public class FollowAI : MonoBehaviourPunCallbacks
         {
             InvokeRepeating("RandomSFX", 15, 20);
             animator = GetComponent<Animator>();
-            GameObject parentObject = GameObject.FindGameObjectWithTag("Waypoints");
-            if (parentObject != null)
-            {
-                // Get the child transforms of the parent object
-                PatrolPoints = parentObject.GetComponentsInChildren<Transform>();
-            }
+
+            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+            agent.SetDestination(newPos);
 
             Patrol();
 
@@ -221,6 +216,19 @@ public class FollowAI : MonoBehaviourPunCallbacks
         return false;
     }
 
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    {
+        Vector3 randDirection = Random.insideUnitSphere * dist;
+
+        randDirection += origin;
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+
+        return navHit.position;
+    }
+
     private void Patrol()
     {
         attackWeapon.fireWeaponBool = false;
@@ -240,8 +248,8 @@ public class FollowAI : MonoBehaviourPunCallbacks
         attackWeapon.fireWeaponBool = false;
         yield return new WaitForSeconds(3f);
         PatrolPauseDone = true;
-        currentPatrolPointIndex = (currentPatrolPointIndex + 1) % PatrolPoints.Length;
-        agent.destination = PatrolPoints[currentPatrolPointIndex].position;
+        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+        agent.SetDestination(newPos);
         // agent.speed = PatrolPoints.WalkingSpeed;
     }
 

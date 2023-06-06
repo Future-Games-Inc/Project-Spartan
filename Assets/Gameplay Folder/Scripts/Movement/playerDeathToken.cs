@@ -11,7 +11,7 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     public bool tokenActivated = false;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(TokenActivation());
     }
@@ -24,7 +24,7 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && tokenActivated == true)
+        if (other.CompareTag("Player") && tokenActivated == true && other.GetComponent<PlayerHealth>().alive == true)
         {
             player = other.GetComponent<PlayerHealth>();
             photonView.RPC("RPC_DestroyToken", RpcTarget.All);

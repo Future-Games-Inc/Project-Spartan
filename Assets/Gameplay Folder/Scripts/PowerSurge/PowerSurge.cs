@@ -134,7 +134,20 @@ public class PowerSurge : MonoBehaviourPunCallbacks
             if (collider.CompareTag("Security"))
             {
                 DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
-                enemyDamageCrit.TakeDamage(200);
+                if (enemyDamageCrit != null)
+                    enemyDamageCrit.TakeDamage(200);
+                else
+                {
+                    SentryDrone enemyDamageCrit2 = collider.GetComponent<SentryDrone>();
+                    enemyDamageCrit.TakeDamage(200);
+                }
+            }
+
+            if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
+            {
+                FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                enemyDamageCrit.TakeDamage(50);
+                enemyDamageCrit.EMPShock();
             }
         }
         yield return new WaitForSeconds(10);

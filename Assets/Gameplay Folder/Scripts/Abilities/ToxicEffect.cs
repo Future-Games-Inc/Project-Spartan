@@ -14,8 +14,8 @@ public class ToxicEffect : MonoBehaviour
     {
         if (this.CompareTag("toxicRadius"))
             StartCoroutine(ToxicHealth());
-        else
-            StartCoroutine(Leech());
+        //else
+        //    StartCoroutine(Leech());
     }
 
     private void OnDisable()
@@ -60,6 +60,16 @@ public class ToxicEffect : MonoBehaviour
                             else
                                 droneDamage.TakeDamage(10);
                         }
+
+                        if (nearbyObjects.TryGetComponent<SentryDrone>(out var sentryDamage))
+                        {
+                            object storedToxicDamage;
+                            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.TOXICITY_DAMAGE, out storedToxicDamage) && (int)storedToxicDamage >= 1)
+                                sentryDamage.TakeDamage(10 + (int)storedToxicDamage);
+
+                            else
+                                sentryDamage.TakeDamage(10);
+                        }
                     }
 
                     if (nearbyObjects.CompareTag("Player"))
@@ -83,47 +93,47 @@ public class ToxicEffect : MonoBehaviour
         }
     }
 
-    IEnumerator Leech()
-    {
-        yield return new WaitForSeconds(0);
-        while (true)
-        {
-            if (player.leechEffect == true)
-            {
-                yield return new WaitForSeconds(0);
-                Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
-                foreach (Collider nearbyObjects in colliders)
-                {
-                    if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy") || nearbyObjects.CompareTag("Security"))
-                    {
-                        if (nearbyObjects.TryGetComponent<FollowAI>(out var enemyDamage))
-                        {
-                            enemyDamage.TakeDamage(10);
-                            player.AddHealth(10);
-                        }
+    //IEnumerator Leech()
+    //{
+    //    yield return new WaitForSeconds(0);
+    //    while (true)
+    //    {
+    //        if (player.leechEffect == true)
+    //        {
+    //            yield return new WaitForSeconds(0);
+    //            Collider[] colliders = Physics.OverlapSphere(transform.position, effectRadius);
+    //            foreach (Collider nearbyObjects in colliders)
+    //            {
+    //                if (nearbyObjects.CompareTag("Enemy") || nearbyObjects.CompareTag("BossEnemy") || nearbyObjects.CompareTag("Security"))
+    //                {
+    //                    if (nearbyObjects.TryGetComponent<FollowAI>(out var enemyDamage))
+    //                    {
+    //                        enemyDamage.TakeDamage(10);
+    //                        player.AddHealth(10);
+    //                    }
 
-                        if (nearbyObjects.TryGetComponent<DroneHealth>(out var droneDamage))
-                        {
-                            droneDamage.TakeDamage(10);
-                            player.AddHealth(10);
-                        }
-                    }
+    //                    if (nearbyObjects.TryGetComponent<DroneHealth>(out var droneDamage))
+    //                    {
+    //                        droneDamage.TakeDamage(10);
+    //                        player.AddHealth(10);
+    //                    }
+    //                }
 
-                    if (nearbyObjects.CompareTag("Player"))
-                    {
-                        if (nearbyObjects.gameObject != playerCharacter)
-                        {
-                            if (nearbyObjects.TryGetComponent<PlayerHealth>(out var playerDamage))
-                            {
-                                playerDamage.TakeDamage(15);
-                                player.AddHealth(15);
-                            }
-                        }
-                    }
-                }
-                yield return new WaitForSeconds(2);
-            }
-            yield return null;
-        }
-    }
+    //                if (nearbyObjects.CompareTag("Player"))
+    //                {
+    //                    if (nearbyObjects.gameObject != playerCharacter)
+    //                    {
+    //                        if (nearbyObjects.TryGetComponent<PlayerHealth>(out var playerDamage))
+    //                        {
+    //                            playerDamage.TakeDamage(15);
+    //                            player.AddHealth(15);
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            yield return new WaitForSeconds(2);
+    //        }
+    //        yield return null;
+    //    }
+    //}
 }

@@ -2851,7 +2851,7 @@ MonoBehaviour:
   healthLevel: 0
   Health: 100
   reactorExtraction: 0
-  shockEffect: {fileID: 0}
+  shockEffect: {fileID: 100000, guid: a9a6f8e950cc72e478555efcf743d741, type: 3}
   winCanvas: {fileID: 4874241508588086991}
   reactorIcon: {fileID: 7014045480335570997}
   factionIcon: {fileID: 7537622712827892262}
@@ -2892,6 +2892,10 @@ MonoBehaviour:
   bombDeath: {fileID: 2063942784232251886, guid: 451488a9c1a392c49b9016f7d10787fa,
     type: 3}
   smoke: {fileID: 5518808719273611208, guid: dd06282fe628c8f47932c40760bd2f05, type: 3}
+  model: {fileID: 7620330943963629721}
+  energyBlade: {fileID: 2397339617195738737, guid: 1fdb570429684e1449b164dae76e7e32,
+    type: 3}
+  meleeAttach: {fileID: 8080482293782229162}
   bombDropLocation: {fileID: 2140480699328679751}
   tokenDropLocation: {fileID: 4782225921789746073}
   messageText: {fileID: 76358930735213220}
@@ -2929,7 +2933,6 @@ MonoBehaviour:
   downloading: {fileID: 8300000, guid: bed4ff95cda324c4da21c7fa84d6898d, type: 3}
   toxicEffect: {fileID: 4383910991532059661}
   bubbleShield: {fileID: 8482196663451708058}
-  leechBubble: {fileID: 5528359533859540500}
   bulletModifier: 0
   bulletXPModifier: 0
   maxAmmo: 0
@@ -2937,8 +2940,6 @@ MonoBehaviour:
   toxicTimer: 0
   upgradeTimer: 0
   shieldTimer: 0
-  leechEffectTimer: 0
-  leechEffectDuration: 20
   toxicEffectTimer: 0
   bulletXPTimer: 0
   shieldEffectTimer: 0
@@ -2947,7 +2948,6 @@ MonoBehaviour:
   toxicEffectActive: 0
   bulletImproved: 0
   shieldActive: 0
-  leechEffect: 0
   slotAvailable: 1
   primaryPowerupTimer: 0
   secondaryPowerupTimer: 0
@@ -3276,12 +3276,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 3
+  logLevel: 1
   ignoreGlobalLogLevel: 0
   recorderInUse: {fileID: 0}
   speakerInUse: {fileID: 4448196289633016241}
   AutoCreateRecorderIfNotFound: 0
-  UsePrimaryRecorder: 0
+  UsePrimaryRecorder: 1
   SetupDebugSpeaker: 0
 --- !u!114 &1045607452798956821
 MonoBehaviour:
@@ -3319,6 +3319,18 @@ MonoBehaviour:
   myCamera: {fileID: 439788778509456224}
   playerMovement: {fileID: 8466841071859713464}
   dash: {fileID: 1045607452798956821}
+  controller:
+  - {fileID: 439788778409400103}
+  - {fileID: 439788777949049148}
+  - {fileID: 439788777057011561}
+  - {fileID: 439788777756213186}
+  handPoseAnimators:
+  - {fileID: 4448196289246613614}
+  - {fileID: 4448196288769704797}
+  wristUI: {fileID: 6016826935182032225}
+  controllerSnapTurnProvider: {fileID: 5915154923276044914}
+  controllerContinuousTurnProvider: {fileID: 5140085503071145464}
+  earlyExtraction: {fileID: 1650279767881213376}
   playerNameText:
   - {fileID: 8442321561479727818}
   playerInformation:
@@ -4473,7 +4485,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 128
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
@@ -7585,7 +7597,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 0
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 10
   MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0

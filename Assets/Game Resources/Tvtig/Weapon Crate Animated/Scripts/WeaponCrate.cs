@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.AI;
 
 public class WeaponCrate : MonoBehaviourPunCallbacks
 {
@@ -118,5 +119,12 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     void RPC_CacheExit()
     {
         _animator.SetBool("Open", false);
+    }
+
+    [PunRPC]
+    public void RPC_Obstacle(bool obstacle)
+    {
+        GetComponent<NavMeshObstacle>().enabled = obstacle;
+        GetComponent<Rigidbody>().useGravity = obstacle;
     }
 }

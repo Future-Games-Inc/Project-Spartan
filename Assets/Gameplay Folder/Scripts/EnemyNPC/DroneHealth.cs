@@ -90,6 +90,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
             explosionEffect.SetActive(true);
 
             agent.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = false;
 
             StartCoroutine(DestroyEnemy());
         }

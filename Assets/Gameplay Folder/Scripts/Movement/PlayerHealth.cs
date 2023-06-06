@@ -1,5 +1,4 @@
 using ExitGames.Client.Photon;
-using Invector.vMelee;
 using LootLocker.Requests;
 using Photon.Pun;
 using Photon.Realtime;
@@ -77,6 +76,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject bomb;
     public GameObject bombDeath;
     public GameObject smoke;
+    public GameObject model;
+    public GameObject energyBlade;
+    public Transform meleeAttach;
 
     public Transform bombDropLocation;
     public Transform tokenDropLocation;
@@ -103,7 +105,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Player Abilities ------------------------------------")]
     public GameObject toxicEffect;
     public GameObject bubbleShield;
-    public GameObject leechBubble;
+    //public GameObject leechBubble;
 
     public int bulletModifier;
     public int bulletXPModifier;
@@ -113,8 +115,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public float toxicTimer = 0;
     public float upgradeTimer = 0;
     public float shieldTimer = 0;
-    public float leechEffectTimer = 0;
-    public float leechEffectDuration = 20;
+    //public float leechEffectTimer = 0;
+    //public float leechEffectDuration = 20;
     public float toxicEffectTimer;
     public float bulletXPTimer;
     public float shieldEffectTimer;
@@ -124,7 +126,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool toxicEffectActive;
     public bool bulletImproved;
     public bool shieldActive;
-    public bool leechEffect;
+    //public bool leechEffect;
     public bool slotAvailable = true;
     public bool primaryPowerupTimer;
     public bool secondaryPowerupTimer;
@@ -134,10 +136,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     bool shouldCallAbilities2False;
     bool shouldCallAbilities3True;
     bool shouldCallAbilities3False;
-    bool shouldCallAbilities4True;
-    bool shouldCallAbilities4False;
-    bool shouldCallAbilities8;
-    bool shouldCallAbilities9;
+    //bool shouldCallAbilities4True;
+    //bool shouldCallAbilities4False;
+    //bool shouldCallAbilities8;
+    //bool shouldCallAbilities9;
+    bool hasButtonAssignment;
+    bool hasButtonAssignment2;
+    InputDevice primaryImplant;
+    InputDevice secondaryImplant;
 
     [Header("Player Inputs ------------------------------------")]
     public XRNode left_HandButtonSource;
@@ -649,8 +655,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
         playerLives = 3;
 
-        StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-        StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        //StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        //StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
 
         reactorExtraction = 0;
         playersKilled = 0;
@@ -660,7 +666,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         playerWinner = false;
         enemyWinner = false;
         toxicEffectActive = false;
-        leechEffect = false;
+        //leechEffect = false;
         winCanvas.SetActive(false);
         shipIcon.SetActive(false);
 
@@ -680,6 +686,16 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             healthBarObject.SetActive(true);
 
         CheckHealthStatus();
+
+        GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, meleeAttach.rotation);
+        blade.GetComponent<EnergyBladeNet>().playerHealth = this.gameObject.GetComponent<PlayerHealth>();
+        meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
+
+        //hasButtonAssignment = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment) && (int)assignment >= 1;
+        //hasButtonAssignment2 = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment2) && (int)assignment2 >= 2;
+
+        //InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
+        //InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
 
     }
 
@@ -746,213 +762,241 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [System.Obsolete]
     void Update()
     {
-        if (activeState == States.Shocked)
-        {
-            movement.enabled = false;
-        }
-        else
-        {
-            movement.enabled = true;
-        }
-        if (!photonView.IsMine)
-        {
-            foreach (GameObject playerObject in playerObjects)
-            {
-                playerObject.SetActive(false);
-            }
-        }
-
-        bool hasButtonAssignment = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment) && (int)assignment >= 1;
-        bool hasButtonAssignment2 = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment2) && (int)assignment2 >= 2;
-        primaryActive.SetActive(hasButtonAssignment && primaryPowerupTimer);
-        secondaryActive.SetActive(hasButtonAssignment2 && secondaryPowerupTimer);
-
-        if (reactorHeld == true)
-        {
-            reactorText.enabled = true;
-            reactorTimer += Time.deltaTime;
-            if (reactorTimer > 5f)
-            {
-                StartCoroutine(ReactorExtraction());
-            }
-        }
-        else
-        {
+        // Perform time-based actions
+        if (reactorHeld)
+            UpdateReactor();
+        else if (!reactorHeld)
             reactorText.enabled = false;
-        }
+        //UpdatePowerups();
 
-        criticalHealth.SetActive(Health <= 25);
+        // Check win conditions
+        if (reactorExtraction >= 100 && !spawnManager.gameOver)
+            CheckExtractionWinCondition();
+        if (playersKilled >= 15 && !spawnManager.gameOver)
+            CheckPlayerWinCondition();
+        if (enemiesKilled >= 25 && !spawnManager.gameOver)
+            CheckEnemyWinCondition();
 
-        if (reactorExtraction >= 100 && spawnManager.gameOver == false)
+        // Call abilities
+        if (toxicEffectActive)
+            CheckAbility1();
+        if (shieldActive)
+            CheckAbility2();
+        if (bulletImproved)
+            CheckAbility3();
+        //CheckAbility4();
+        //CallAbilities8();
+        //CallAbilities9();
+
+        // Get input device values
+        //GetPrimaryButtonState();
+        //GetSecondaryButtonState();
+    }
+
+    //void GetPrimaryButtonState()
+    //{
+    //    primaryImplant.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
+    //}
+
+    //void GetSecondaryButtonState()
+    //{
+    //    secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
+    //}
+
+    void UpdateReactor()
+    {
+        reactorText.enabled = true;
+        reactorTimer += Time.deltaTime;
+        if (reactorTimer > 5f)
         {
-            extractionWinner = true;
-            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
-            StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
-            UpdateSkills(200);
-            ExtractionGame();
+            StartCoroutine(ReactorExtraction());
         }
+    }
 
-        if (playersKilled >= 15 && spawnManager.gameOver == false)
-        {
-            playerWinner = true;
-            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
-            StartCoroutine(WinMessage("250 skill points awarded for winning the round"));
-            UpdateSkills(250);
-            PlayerGame();
-        }
+    //void UpdatePowerups()
+    //{
+    //    primaryActive.SetActive(hasButtonAssignment && primaryPowerupTimer);
+    //    secondaryActive.SetActive(hasButtonAssignment2 && secondaryPowerupTimer);
+    //}
 
-        if (enemiesKilled >= 25 && spawnManager.gameOver == false)
-        {
-            enemyWinner = true;
-            photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
-            StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
-            UpdateSkills(150);
-            EnemyGame();
-        }
+    void CheckExtractionWinCondition()
+    {
+        extractionWinner = true;
+        photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
+        StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
+        UpdateSkills(200);
+        ExtractionGame();
+    }
 
+    void CheckPlayerWinCondition()
+    {
+        playerWinner = true;
+        photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
+        StartCoroutine(WinMessage("250 skill points awarded for winning the round"));
+        UpdateSkills(250);
+        PlayerGame();
+    }
+
+    void CheckEnemyWinCondition()
+    {
+        enemyWinner = true;
+        photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
+        StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
+        UpdateSkills(150);
+        EnemyGame();
+    }
+
+    void CheckAbility1()
+    {
         if (toxicTimer <= toxicEffectTimer && toxicEffectActive == true && !shouldCallAbilities1True)
         {
             shouldCallAbilities1True = true;
-            CallAbilities1True();
+            photonView.RPC("RPC_Abilities1True", RpcTarget.All);
+            shouldCallAbilities1True = false;
         }
         else if (toxicTimer > toxicEffectTimer && toxicEffectActive == true && !shouldCallAbilities1False)
         {
             shouldCallAbilities1False = true;
-            CallAbilities1False();
-        }
-
-        if (shieldTimer <= shieldEffectTimer && shieldActive == true && !shouldCallAbilities2True)
-        {
-            shouldCallAbilities2True = true;
-            CallAbilities2True();
-        }
-        else if (shieldTimer > shieldEffectTimer && shieldActive == true && !shouldCallAbilities2False)
-        {
-            shouldCallAbilities2False = true;
-            CallAbilities2False();
-        }
-
-        if (bulletImproved == true && !shouldCallAbilities3True)
-        {
-            shouldCallAbilities3True = true;
-            CallAbilities3True();
-        }
-        else if (upgradeTimer > bulletXPTimer && bulletImproved == true && !shouldCallAbilities3False)
-        {
-            shouldCallAbilities3False = true;
-            CallAbilities3False();
-        }
-
-        if (leechEffect == true && leechEffectTimer <= leechEffectDuration && !shouldCallAbilities4True)
-        {
-            shouldCallAbilities4True = true;
-            CallAbilities4True();
-        }
-        else if (leechEffectTimer > leechEffectDuration && !shouldCallAbilities4False && leechEffect == false)
-        {
-            shouldCallAbilities4False = true;
-            CallAbilities4False();
-        }
-
-        CallAbilities8();
-        CallAbilities9();
-
-        InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
-        primaryImplant.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
-
-        InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
-        secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
-    }
-
-    void CallAbilities1True()
-    {
-        if (shouldCallAbilities1True)
-        {
-            photonView.RPC("RPC_Abilities1True", RpcTarget.All);
-            shouldCallAbilities1True = false;
-        }
-    }
-
-    void CallAbilities1False()
-    {
-        if (shouldCallAbilities1False)
-        {
             photonView.RPC("RPC_Abilities1False", RpcTarget.All);
             shouldCallAbilities1False = false;
         }
     }
 
-    void CallAbilities2True()
+    void CheckAbility2()
     {
-        if (shouldCallAbilities2True)
+        if (shieldTimer <= shieldEffectTimer && shieldActive == true && !shouldCallAbilities2True)
         {
+            shouldCallAbilities2True = true;
             photonView.RPC("RPC_Abilities2True", RpcTarget.All);
             shouldCallAbilities2True = false;
         }
-    }
-
-    void CallAbilities2False()
-    {
-        if (shouldCallAbilities2False)
+        else if (shieldTimer > shieldEffectTimer && shieldActive == true && !shouldCallAbilities2False)
         {
+            shouldCallAbilities2False = true;
             photonView.RPC("RPC_Abilities2False", RpcTarget.All);
             shouldCallAbilities2False = false;
         }
     }
 
-    void CallAbilities3True()
+    void CheckAbility3()
     {
-        if (shouldCallAbilities3True)
+        if (bulletImproved == true && !shouldCallAbilities3True)
         {
+            shouldCallAbilities3True = true;
             photonView.RPC("RPC_Abilities3True", RpcTarget.All);
             shouldCallAbilities3True = false;
         }
-    }
-
-    void CallAbilities3False()
-    {
-        if (shouldCallAbilities3False)
+        else if (upgradeTimer > bulletXPTimer && bulletImproved == true && !shouldCallAbilities3False)
         {
+            shouldCallAbilities3False = true;
             photonView.RPC("RPC_Abilities3False", RpcTarget.All);
             shouldCallAbilities3False = false;
         }
     }
 
-    void CallAbilities4True()
-    {
-        if (shouldCallAbilities4True)
-        {
-            photonView.RPC("RPC_Abilities4True", RpcTarget.All);
-            shouldCallAbilities4True = false;
-        }
-    }
+    //void CheckAbility4()
+    //{
+    //    if (leechEffect == true && leechEffectTimer <= leechEffectDuration && !shouldCallAbilities4True)
+    //    {
+    //        shouldCallAbilities4True = true;
+    //        CallAbilities4True();
+    //    }
+    //    else if (leechEffectTimer > leechEffectDuration && !shouldCallAbilities4False && leechEffect == false)
+    //    {
+    //        shouldCallAbilities4False = true;
+    //        CallAbilities4False();
+    //    }
+    //}
 
-    void CallAbilities4False()
-    {
-        if (shouldCallAbilities4False)
-        {
-            photonView.RPC("RPC_Abilities4False", RpcTarget.All);
-            shouldCallAbilities4False = false;
-        }
-    }
+    //void CallAbilities1True()
+    //{
+    //    if (shouldCallAbilities1True)
+    //    {
+    //        photonView.RPC("RPC_Abilities1True", RpcTarget.All);
+    //        shouldCallAbilities1True = false;
+    //    }
+    //}
 
-    void CallAbilities8()
-    {
-        if (shouldCallAbilities8)
-        {
-            photonView.RPC("RPC_Abilities8", RpcTarget.All);
-            shouldCallAbilities8 = false;
-        }
-    }
+    //void CallAbilities1False()
+    //{
+    //    if (shouldCallAbilities1False)
+    //    {
+    //        photonView.RPC("RPC_Abilities1False", RpcTarget.All);
+    //        shouldCallAbilities1False = false;
+    //    }
+    //}
 
-    void CallAbilities9()
-    {
-        if (shouldCallAbilities9)
-        {
-            photonView.RPC("RPC_Abilities9", RpcTarget.All);
-            shouldCallAbilities9 = false;
-        }
-    }
+    //void CallAbilities2True()
+    //{
+    //    if (shouldCallAbilities2True)
+    //    {
+    //        photonView.RPC("RPC_Abilities2True", RpcTarget.All);
+    //        shouldCallAbilities2True = false;
+    //    }
+    //}
+
+    //void CallAbilities2False()
+    //{
+    //    if (shouldCallAbilities2False)
+    //    {
+    //        photonView.RPC("RPC_Abilities2False", RpcTarget.All);
+    //        shouldCallAbilities2False = false;
+    //    }
+    //}
+
+    //void CallAbilities3True()
+    //{
+    //    if (shouldCallAbilities3True)
+    //    {
+    //        photonView.RPC("RPC_Abilities3True", RpcTarget.All);
+    //        shouldCallAbilities3True = false;
+    //    }
+    //}
+
+    //void CallAbilities3False()
+    //{
+    //    if (shouldCallAbilities3False)
+    //    {
+    //        photonView.RPC("RPC_Abilities3False", RpcTarget.All);
+    //        shouldCallAbilities3False = false;
+    //    }
+    //}
+
+    //void CallAbilities4True()
+    //{
+    //    if (shouldCallAbilities4True)
+    //    {
+    //        photonView.RPC("RPC_Abilities4True", RpcTarget.All);
+    //        shouldCallAbilities4True = false;
+    //    }
+    //}
+
+    //void CallAbilities4False()
+    //{
+    //    if (shouldCallAbilities4False)
+    //    {
+    //        photonView.RPC("RPC_Abilities4False", RpcTarget.All);
+    //        shouldCallAbilities4False = false;
+    //    }
+    //}
+
+    //void CallAbilities8()
+    //{
+    //    if (shouldCallAbilities8)
+    //    {
+    //        photonView.RPC("RPC_Abilities8", RpcTarget.All);
+    //        shouldCallAbilities8 = false;
+    //    }
+    //}
+
+    //void CallAbilities9()
+    //{
+    //    if (shouldCallAbilities9)
+    //    {
+    //        photonView.RPC("RPC_Abilities9", RpcTarget.All);
+    //        shouldCallAbilities9 = false;
+    //    }
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -1007,6 +1051,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(0);
         StartCoroutine(sceneFader.ScreenFade());
+        alive = false;
         GameObject playerDeathTokenObject = PhotonNetwork.InstantiateRoomObject(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0, null);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 10);
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
@@ -1019,7 +1064,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0, null);
         }
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(.15f);
         if (photonView.IsMine)
         {
             // Leave the room
@@ -1218,6 +1263,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         toxicTimer = 0;
         toxicEffectTimer = toxicTime;
+        toxicEffectActive = true;
     }
 
     public void BulletImprove(float bulletTimer, int newModifier)
@@ -1226,6 +1272,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         bulletXPTimer = bulletTimer;
         bulletXPModifier = newModifier;
         startingBulletModifier = bulletModifier;
+        bulletImproved = true;
     }
 
     public void HealthRegen()
@@ -1244,6 +1291,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             shieldEffectTimer = shieldTime + ((int)storedShieldDuration * (int)1.5);
         else
             shieldEffectTimer = shieldTime;
+        shieldActive = true;
     }
 
     public void UpdateSkills(int cintsEarned)
@@ -1254,123 +1302,123 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.LocalPlayer.SetCustomProperties(cintsUpdate);
     }
 
-    IEnumerator PrimaryTimer(float time)
-    {
-        yield return new WaitForSeconds(time);
-        primaryPowerupTimer = true;
-    }
+    //IEnumerator PrimaryTimer(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    primaryPowerupTimer = true;
+    //}
 
-    IEnumerator SecondaryTimer(float time)
-    {
-        yield return new WaitForSeconds(time);
-        secondaryPowerupTimer = true;
-    }
+    //IEnumerator SecondaryTimer(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    secondaryPowerupTimer = true;
+    //}
 
-    void PrimaryImplantActivation()
-    {
-        if (primaryButtonPressed && primaryPowerupTimer == true)
-        {
-            primaryPowerupTimer = false;
+    //void PrimaryImplantActivation()
+    //{
+    //    if (primaryButtonPressed && primaryPowerupTimer == true)
+    //    {
+    //        primaryPowerupTimer = false;
 
-            object primaryImplant;
-            object primaryNode;
+    //        object primaryImplant;
+    //        object primaryNode;
 
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                AddHealth(25);
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
+    //        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
+    //                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
+    //        {
+    //            AddHealth(25);
+    //            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+    //        }
 
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                leechEffect = true;
-                leechEffectTimer = 0;
-                StartCoroutine(PrimaryPowerupDelay(leechEffectDuration));
-            }
+    //        //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
+    //        //        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
+    //        //{
+    //        //    leechEffect = true;
+    //        //    leechEffectTimer = 0;
+    //        //    StartCoroutine(PrimaryPowerupDelay(leechEffectDuration));
+    //        //}
 
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                if (slotAvailable == true)
-                {
-                    if (proxBombCount > 1)
-                        proxBombCount--;
-                    if (proxBombCount == 1)
-                        proxBombCount = 3;
-                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity, 0);
-                }
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
+    //        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
+    //                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, out primaryNode) && (int)primaryNode == 1)
+    //        {
+    //            if (slotAvailable == true)
+    //            {
+    //                if (proxBombCount > 1)
+    //                    proxBombCount--;
+    //                if (proxBombCount == 1)
+    //                    proxBombCount = 3;
+    //                PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity, 0);
+    //            }
+    //            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+    //        }
 
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                if (slotAvailable == true)
-                {
-                    if (smokeBombCount > 1)
-                        smokeBombCount--;
-                    if (smokeBombCount == 1)
-                        smokeBombCount = 3;
-                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity, 0);
-                }
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-        }
-    }
+    //        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out primaryImplant) && (int)primaryImplant >= 1 &&
+    //                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB_SLOT, out primaryNode) && (int)primaryNode == 1)
+    //        {
+    //            if (slotAvailable == true)
+    //            {
+    //                if (smokeBombCount > 1)
+    //                    smokeBombCount--;
+    //                if (smokeBombCount == 1)
+    //                    smokeBombCount = 3;
+    //                PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity, 0);
+    //            }
+    //            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+    //        }
+    //    }
+    //}
 
-    void SecondayImplantActivation()
-    {
-        if (secondaryButtonPressed && secondaryPowerupTimer == true)
-        {
-            object secondaryImplant;
-            object secondaryNode;
+    //void SecondayImplantActivation()
+    //{
+    //    if (secondaryButtonPressed && secondaryPowerupTimer == true)
+    //    {
+    //        object secondaryImplant;
+    //        object secondaryNode;
 
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                AddHealth(25);
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
+    //        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+    //                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+    //        {
+    //            AddHealth(25);
+    //            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+    //        }
 
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                leechEffect = true;
-                leechEffectTimer = 0;
-                StartCoroutine(SecondaryPowerupDelay(leechEffectDuration));
-            }
+    //        //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+    //        //        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+    //        //{
+    //        //    leechEffect = true;
+    //        //    leechEffectTimer = 0;
+    //        //    StartCoroutine(SecondaryPowerupDelay(leechEffectDuration));
+    //        //}
 
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                if (slotAvailable == true)
-                {
-                    if (proxBombCount > 1)
-                        proxBombCount--;
-                    if (proxBombCount == 1)
-                        proxBombCount = 3;
-                    PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity, 0);
-                }
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
+    //        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+    //                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PROXIMITY_BOMB_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+    //        {
+    //            if (slotAvailable == true)
+    //            {
+    //                if (proxBombCount > 1)
+    //                    proxBombCount--;
+    //                if (proxBombCount == 1)
+    //                    proxBombCount = 3;
+    //                PhotonNetwork.Instantiate(bomb.name, bombDropLocation.position, Quaternion.identity, 0);
+    //            }
+    //            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+    //        }
 
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                if (slotAvailable == true)
-                {
-                    if (smokeBombCount > 1)
-                        smokeBombCount--;
-                    if (smokeBombCount == 1)
-                        smokeBombCount = 3;
-                    PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity, 0);
-                }
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-        }
-    }
+    //        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+    //                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SMOKE_BOMB_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+    //        {
+    //            if (slotAvailable == true)
+    //            {
+    //                if (smokeBombCount > 1)
+    //                    smokeBombCount--;
+    //                if (smokeBombCount == 1)
+    //                    smokeBombCount = 3;
+    //                PhotonNetwork.Instantiate(smoke.name, bombDropLocation.position, Quaternion.identity, 0);
+    //            }
+    //            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+    //        }
+    //    }
+    //}
 
     public void EMPShock()
     {
@@ -1409,42 +1457,42 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         StartCoroutine(shock());
     }
 
-    IEnumerator PrimaryPowerupDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-        {
-            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-        }
-    }
+    //IEnumerator PrimaryPowerupDelay(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    {
+    //        StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+    //    }
+    //}
 
-    IEnumerator PrimaryBerserkerDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-        {
-            photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, ((int)maxHealth));
-            movement.currentSpeed = startingSpeed;
-            bulletModifier = startingBulletModifier;
-            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-        }
-    }
-    IEnumerator SecondaryPowerupDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-        {
-            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-        }
-    }
+    //IEnumerator PrimaryBerserkerDelay(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    {
+    //        photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, ((int)maxHealth));
+    //        movement.currentSpeed = startingSpeed;
+    //        bulletModifier = startingBulletModifier;
+    //        StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+    //    }
+    //}
+    //IEnumerator SecondaryPowerupDelay(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    {
+    //        StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+    //    }
+    //}
 
-    IEnumerator SecondaryBerserkerDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-        {
-            photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, ((int)maxHealth));
-            movement.currentSpeed = startingSpeed;
-            bulletModifier = startingBulletModifier;
-            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-        }
-    }
+    //IEnumerator SecondaryBerserkerDelay(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    {
+    //        photonView.RPC("RPC_SetMaxHealth", RpcTarget.All, ((int)maxHealth));
+    //        movement.currentSpeed = startingSpeed;
+    //        bulletModifier = startingBulletModifier;
+    //        StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+    //    }
+    //}
 
     public void FactionDataCard()
     {
@@ -1495,11 +1543,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!photonView.IsMine)
         { return; }
 
+        model.SetActive(false);
         player.transform.position = spawnManager.spawnPosition;
         playerLives -= 1;
         Health = 125;
         CheckHealthStatus();
         alive = true;
+        model.SetActive(true);
     }
 
     [PunRPC]
@@ -1579,25 +1629,25 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         bulletImproved = false;
     }
 
-    [PunRPC]
-    void RPC_Abilities4True()
-    {
-        if (!photonView.IsMine)
-        { return; }
+    //[PunRPC]
+    //void RPC_Abilities4True()
+    //{
+    //    if (!photonView.IsMine)
+    //    { return; }
 
-        leechEffectTimer += Time.deltaTime;
-        leechBubble.SetActive(true);
-    }
+    //    leechEffectTimer += Time.deltaTime;
+    //    leechBubble.SetActive(true);
+    //}
 
-    [PunRPC]
-    void RPC_Abilities4False()
-    {
-        if (!photonView.IsMine)
-        { return; }
+    //[PunRPC]
+    //void RPC_Abilities4False()
+    //{
+    //    if (!photonView.IsMine)
+    //    { return; }
 
-        leechBubble.SetActive(false);
-        leechEffect = false;
-    }
+    //    leechBubble.SetActive(false);
+    //    leechEffect = false;
+    //}
 
     [PunRPC]
     void RPC_HealthRegen()

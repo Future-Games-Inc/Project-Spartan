@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2233471642417106472}
   - component: {fileID: 6385456413640983275}
   - component: {fileID: 1716108238311173270}
+  - component: {fileID: 4417540588246263369}
   m_Layer: 0
   m_Name: 4xBullet
   m_TagString: EnemyBullet
@@ -97,7 +98,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5451881146956983319}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
   m_Convex: 1
@@ -134,8 +135,7 @@ MonoBehaviour:
   bulletOwner: {fileID: 0}
   playerHealth: {fileID: 0}
   playerBullet: 0
-  bulletModifier: 4
-  colliderBullet: {fileID: 0}
+  bulletModifier: 1
 --- !u!114 &2233471642417106472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,3 +274,16 @@ TrailRenderer:
   m_MinVertexDistance: 0.05
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!135 &4417540588246263369
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5451881146956983319}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.02
+  m_Center: {x: 0, y: 0.0000037252903, z: 0.057025004}
