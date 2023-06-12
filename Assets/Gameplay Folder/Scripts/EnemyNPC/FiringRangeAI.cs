@@ -15,6 +15,7 @@ public class FiringRangeAI : MonoBehaviour
     public NavMeshAgent agent;
     private Animator animator;
     private ShootScript shootScript;
+    private Ragdoll ragDoll;
     [HideInInspector]
     public AudioSource audioSource;
     public GameControl gameControl;
@@ -73,11 +74,13 @@ public class FiringRangeAI : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
         shootScript = GetComponent<ShootScript>();
+        ragDoll = GetComponent<Ragdoll>();
     }
     // Start is called before the first frame updat
     void Start()
     {
         hitEffect.SetActive(false);
+        ragDoll.SetActive(false);
         InvokeRepeating("RandomSFX", 15, Random.Range(0, 30));
         //gameControl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControl>();
         // GameObject waypointObject = GameObject.FindGameObjectWithTag("Waypoints");
@@ -105,6 +108,7 @@ public class FiringRangeAI : MonoBehaviour
         if (distanceToPlayer <= DetectRange && CanSeeTarget())
         {
             Agro = true;
+            animator.SetBool("Agro", Agro);
         }
         // if it is not agro, then patrol like normal
         // else then see if the player is in the valid agro range (bigger than detect range) then give chase
@@ -125,7 +129,7 @@ public class FiringRangeAI : MonoBehaviour
                 return;
             }
             // if in range of attacks
-            if (distanceToPlayer <= AttackRange)
+            if (distanceToPlayer <= AttackRange && Agro)
             {
                 SwitchStates(States.Attack);
                 LookatTarget(1, 3f);
@@ -254,8 +258,6 @@ public class FiringRangeAI : MonoBehaviour
             isShooting = true;
             /// LookatTarget(duration / 3, 3f);
             agent.isStopped = true;
-            // call shoot
-            Debug.Log("PEW!");
 
             yield return new WaitForSeconds(duration);
             agent.isStopped = false;
@@ -321,6 +323,9 @@ public class FiringRangeAI : MonoBehaviour
             }
         }
 
+        Agro = true;
+        animator.SetBool("Agro", Agro);
+
         // Check for death
         if (Health <= 0 && alive == true)
         {
@@ -349,9 +354,10 @@ public class FiringRangeAI : MonoBehaviour
         // wait one frame
         yield return null;
         // activate ragdoll
-
-        
-        Destroy(gameObject, 5);
+        ragDoll.SetActive(true);
+        agent.isStopped = true;
+        StopAllCoroutines();
+        Destroy(gameObject, 20);
     }
     IEnumerator FirstHit()
     {
