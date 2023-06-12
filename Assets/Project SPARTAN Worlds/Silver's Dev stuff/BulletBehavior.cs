@@ -35,6 +35,17 @@ public class BulletBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        collisionAndTriggerCheck(other);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        collisionAndTriggerCheck(collision.collider);
+    }
+
+    private void collisionAndTriggerCheck(Collider other)
+    {
+        Debug.Log("hit:" + other.tag + " : " + other.name);
         // if break on impact
         if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact == true) Destroy(gameObject);
         if ((other.CompareTag("Enemy") || other.CompareTag("BossEnemy")))
@@ -63,28 +74,22 @@ public class BulletBehavior : MonoBehaviour
                     break;
             }
         }
-        /// <summary> -------------------------------------------------------------------
-        ///                           CUSTOME BULLET FUNCTIONS
-        /// </summary> -------------------------------------------------------------------
-        void DefaultDamage(Collider target)
-        {
-            FiringRangeAI enemyDamageReg = target.GetComponent<FiringRangeAI>();
-            enemyDamageReg.TakeDamage(bullet: this);
-            Destroy(gameObject);
-        }
-        void EMPBulletDamage(Collider target)
-        {
-            FiringRangeAI enemyDamageReg = target.GetComponent<FiringRangeAI>();
-            enemyDamageReg.TakeDamage(bullet: this);
-            enemyDamageReg.EMPShock(BreakEffect);
-            Destroy(gameObject);
-        }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    /// <summary> -------------------------------------------------------------------
+    ///                           CUSTOME BULLET FUNCTIONS
+    /// </summary> -------------------------------------------------------------------
+    void DefaultDamage(Collider target)
     {
-        // still need to modify to allow bullets pass through enemies if we want to do that later on
-        if (!collision.gameObject.CompareTag("Bullet") && BreakOnImpact == true) Destroy(gameObject);
+        FiringRangeAI enemyDamageReg = target.GetComponentInParent<FiringRangeAI>();
+        enemyDamageReg.TakeDamage(bullet: this);
+        Destroy(gameObject);
     }
-
+    void EMPBulletDamage(Collider target)
+    {
+        FiringRangeAI enemyDamageReg = target.GetComponentInParent<FiringRangeAI>();
+        enemyDamageReg.TakeDamage(bullet: this);
+        enemyDamageReg.EMPShock(BreakEffect);
+        Destroy(gameObject);
+    }
 }
