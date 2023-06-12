@@ -20,6 +20,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     //public EnemyHealthBar healthBar;
     public AudioClip[] audioClip;
     public NavMeshAgent agent;
+    public string type;
 
     // Start is called before the first frame update
     void OnEnable()

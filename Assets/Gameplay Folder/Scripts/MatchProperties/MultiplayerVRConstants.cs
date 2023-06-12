@@ -54,4 +54,46 @@ public class MultiplayerVRConstants
     public const string CHAOS_CARTEL = "ChaosCartel";
     public const string CINTSIX_CARTEL = "CintsixCartel";
     //public const string FEDZONE_AUTHORITY = "FedzoneAuthority";
+
+    public const string BossQuest = "BossEnemy";
+    public const string ArtifactQuest = "Artifacts";
+    public const string BombQuest = "Bombs";
+    public const string GuardianQuest = "Guardian";
+    public const string IntelQuest = "Intel";
+    public const string CollectorQuest = "Collector";
+
+    public const string BossKilled = "BossKilled";
+    public const string ArtifactFound = "ArtifactFound";
+    public const string BombDestroyed = "BombDestroyed";
+    public const string GuardianDestroyed = "GuardianDestroyed";
+    public const string IntelFound = "IntelFound";
+    public const string CollectorDestroyed = "CollectorDestroyed";
+
+    public const string BossQuestTarget = "BossEnemyTarget";
+    public const string ArtifactQuestTarget = "ArtifactsTarget";
+    public const string BombQuestTarget = "BombsTarget";
+    public const string GuardianQuestTarget = "GuardianTarget";
+    public const string IntelQuestTarget = "IntelTarget";
+    public const string CollectorQuestTarget = "CollectorTarget";
+
+    public const string BossQuestCintTarget = "BossEnemyCintTarget";
+    public const string ArtifactQuestCintTarget = "ArtifactsCintTarget";
+    public const string BombQuestCintTarget = "BombsCintTarget";
+    public const string GuardianQuestCintTarget = "GuardianCintTarget";
+    public const string IntelQuestCintTarget = "IntelCintTarget";
+    public const string CollectorQuestCintTarget = "CollectorCintTarget";
+
+    public const string BossQuestExpTarget = "BossEnemyExpTarget";
+    public const string ArtifactQuestExpTarget = "ArtifactsExpTarget";
+    public const string BombQuestExpTarget = "BombsExpTarget";
+    public const string GuardianQuestExpTarget = "GuardianExpTarget";
+    public const string IntelQuestExpTarget = "IntelExpTarget";
+    public const string CollectorQuestExpTarget = "CollectorExpTarget";
+
+    public const string BossQuestCompleted = "BossEnemyCompleted";
+    public const string ArtifactQuestCompleted = "ArtifactsCompleted";
+    public const string BombQuestCompleted = "BombsCompleted";
+    public const string GuardianQuestCompleted = "GuardianCompleted";
+    public const string IntelQuestCompleted = "IntelCompleted";
+    public const string CollectorQuestCompleted = "CollectorCompleted";
 }

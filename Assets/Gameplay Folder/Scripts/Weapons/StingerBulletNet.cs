@@ -1,9 +1,6 @@
-using LootLocker.Requests;
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class StingerBulletNet : MonoBehaviourPunCallbacks
 {
@@ -12,7 +9,6 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
     public GameObject explosionPrefab;
     public Transform spawnTransform;
 
-    private Rigidbody rb;
     private bool hasExploded = false;
 
     public GameObject bulletOwner;
@@ -28,7 +24,6 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
 
     private void OnEnable()
     {
-        rb = GetComponent<Rigidbody>();
         StartCoroutine(ExplodeBullets());
     }
 
@@ -57,7 +52,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             playerHealth = null;
         }
 
-        if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
+        if (other.CompareTag("Enemy"))
         {
             float criticalChance = 30f;
 
@@ -67,7 +62,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
                 FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
                 if (enemyDamageCrit.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
-                    playerHealth.EnemyKilled();
+                    playerHealth.EnemyKilled("Normal");
                 }
                 enemyDamageCrit.TakeDamage((30 * bulletModifier));
                 Explode();
@@ -77,7 +72,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
                 FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
                 if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
-                    playerHealth.EnemyKilled();
+                    playerHealth.EnemyKilled("Normal");
                 }
                 enemyDamageCrit.TakeDamage((20 * bulletModifier));
                 Explode();
@@ -85,7 +80,35 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
 
         }
 
-        if (other.CompareTag("Security"))
+        if (other.CompareTag("BossEnemy"))
+        {
+            float criticalChance = 30f;
+
+            //cal it at random probability
+            if (Random.Range(0, 100f) < criticalChance)
+            {
+                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
+                if (enemyDamageCrit.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled("Boss");
+                }
+                enemyDamageCrit.TakeDamage((30 * bulletModifier));
+                Explode();
+            }
+            else
+            {
+                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
+                if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled("Boss");
+                }
+                enemyDamageCrit.TakeDamage((20 * bulletModifier));
+                Explode();
+            }
+
+        }
+
+        else if (other.CompareTag("Security"))
         {
             float criticalChance = 30f;
 
@@ -118,7 +141,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Player") && other != bulletOwner)
+        else if (other.CompareTag("Player") && other != bulletOwner)
         {
             float criticalChance = 10f;
 
@@ -159,22 +182,6 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
 
     private void Explode()
     {
-        // Create an energy pulse that pushes enemies away
-        Collider[] colliders = Physics.OverlapSphere(transform.position, energyPulseRadius);
-        foreach (Collider collider in colliders)
-        {
-            if (!collider.CompareTag("Player"))
-            {
-                Rigidbody targetRb = collider.GetComponent<Rigidbody>();
-                if (targetRb != null)
-                {
-                    Vector3 direction = targetRb.transform.position - transform.position;
-                    direction.Normalize();
-                    targetRb.AddForce(direction * 15.0f, ForceMode.Impulse);
-                }
-            }
-        }
-
         // Create smaller bullets and target nearby enemies
         for (int i = 0; i < numSmallBullets; i++)
         {

@@ -31,6 +31,8 @@ public class TopReactsLeaderboard : MonoBehaviour
     public String isLocalPlayer;
     public String firstPlayerID;
 
+    public int currentLevelInt;
+
     // Start is called before the first frame update
     [Obsolete]
     void Start()
@@ -201,9 +203,10 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator CheckLevel()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         LootLockerSDKManager.GetPlayerInfo((response) =>
         {
+            currentLevelInt = (int)response.level;
             currentLevel.text = response.level.ToString();
             nextLevel.text = (response.level + 1).ToString();
             currentXPText.text = response.xp.ToString() + " / " + response.level_thresholds.next.ToString();

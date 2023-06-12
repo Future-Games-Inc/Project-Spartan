@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 1272973160436937346}
   - component: {fileID: 1087494937273268094}
   - component: {fileID: -3316758449544338894}
-  - component: {fileID: 8598787815954786549}
   - component: {fileID: 8839711460035260878}
   - component: {fileID: 1159676437518758424}
+  - component: {fileID: 85573997266630916}
   m_Layer: 6
   m_Name: Card_Toxicity
   m_TagString: Untagged
@@ -156,20 +156,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.40000007, z: 0.008173069}
   m_Center: {x: 0, y: 0, z: 0.0040865345}
---- !u!114 &8598787815954786549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272973160430607382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68e6da4d6b234a646ac02f9fd938398f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickupData: {fileID: 11400000, guid: 3833db823b8a81348b0e4c2c85a270fd, type: 2}
-  spawnManager: {fileID: 0}
 --- !u!114 &8839711460035260878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,7 +193,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4096
+    m_Bits: 4120
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
@@ -348,6 +334,20 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
+--- !u!114 &85573997266630916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272973160430607382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68e6da4d6b234a646ac02f9fd938398f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupData: {fileID: 11400000, guid: 3833db823b8a81348b0e4c2c85a270fd, type: 2}
+  spawnManager: {fileID: 0}
 --- !u!1 &4637808189729421146
 GameObject:
   m_ObjectHideFlags: 0

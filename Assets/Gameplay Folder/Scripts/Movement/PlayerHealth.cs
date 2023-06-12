@@ -86,6 +86,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public TextMeshProUGUI messageText;
     public TextMeshProUGUI reactorText;
 
+    public ActivateWristUI activateWristUI;
+
     public MultiplayerHealth multiplayerHealth;
     public RespawnUI respawnUI;
 
@@ -158,6 +160,27 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Player Leaderboard Data ------------------------------------")]
     public int leaderboardID = 10220;
 
+    [Header("Contract Tracking ------------------------------------")]
+    public int bossesKilled;
+    public int bossesRequired;
+
+    public int guardiansDestroyed;
+    public int guardianRequired;
+
+    public int collectorsDestroyed;
+    public int collectorsRequired;
+
+    public int artifactsRecovered;
+    public int artifactsRequired;
+
+    public int intelCollected;
+    public int intelRequired;
+
+    public int bombsDestroyed;
+    public int bombsRequired;
+
+    public int expReward;
+    public int cintReward;
 
     // Unused --------------------------------------------------------------------------------------------
     //
@@ -680,6 +703,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         InitSavingGrace();
 
+        InitBossesKilled();
+
+        InitCollectorsKilled();
+
+        InitGuardiansKilled();
+
+        InitBombsDestroyed();
+
+        InitArtifactsFound();
+
+        InitIntelGathered();
+
         startingBulletModifier = bulletModifier;
 
         if (photonView.IsMine)
@@ -687,7 +722,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         CheckHealthStatus();
 
-        GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, meleeAttach.rotation);
+        GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation);
         blade.GetComponent<EnergyBladeNet>().playerHealth = this.gameObject.GetComponent<PlayerHealth>();
         meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
 
@@ -697,6 +732,35 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         //InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         //InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
 
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestTarget, out object storedBossesTarget))
+            bossesRequired = (int)storedBossesTarget;
+        else
+            bossesRequired = 0;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestTarget, out object storedGuardianTarget))
+            guardianRequired = (int)storedGuardianTarget;
+        else
+            guardianRequired = 0;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestTarget, out object storedCollectorsTarget))
+            collectorsRequired = (int)storedCollectorsTarget;
+        else
+            collectorsRequired = 0;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestTarget, out object storedIntelTarget))
+            intelRequired = (int)storedIntelTarget;
+        else
+            intelRequired = 0;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestTarget, out object storedArtifactTarget))
+            artifactsRequired = (int)storedArtifactTarget;
+        else
+            artifactsRequired = 0;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestTarget, out object storedBombTarget))
+            bombsRequired = (int)storedBombTarget;
+        else
+            bombsRequired = 0;
     }
 
     private void InitHealth()
@@ -741,6 +805,54 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out object storedPlayerCints) && (int)storedPlayerCints >= 1)
         {
             playerCints = (int)storedPlayerCints;
+        }
+    }
+
+    private void InitBossesKilled()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossKilled, out object storedBossesKilled) && (int)storedBossesKilled >= 1)
+        {
+            bossesKilled = (int)storedBossesKilled;
+        }
+    }
+
+    private void InitIntelGathered()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelFound, out object storedIntelFound) && (int)storedIntelFound >= 1)
+        {
+            intelCollected = (int)storedIntelFound;
+        }
+    }
+
+    private void InitArtifactsFound()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactFound, out object storedArtifactsFound) && (int)storedArtifactsFound >= 1)
+        {
+            artifactsRecovered = (int)storedArtifactsFound;
+        }
+    }
+
+    private void InitBombsDestroyed()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombDestroyed, out object storedBombsDestroyed) && (int)storedBombsDestroyed >= 1)
+        {
+            bombsDestroyed = (int)storedBombsDestroyed;
+        }
+    }
+
+    private void InitCollectorsKilled()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorDestroyed, out object storedCollectorsKilled) && (int)storedCollectorsKilled >= 1)
+        {
+            collectorsDestroyed = (int)storedCollectorsKilled;
+        }
+    }
+
+    private void InitGuardiansKilled()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianDestroyed, out object storedGuardiansKilled) && (int)storedGuardiansKilled >= 1)
+        {
+            guardiansDestroyed = (int)storedGuardiansKilled;
         }
     }
 
@@ -791,6 +903,145 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         // Get input device values
         //GetPrimaryButtonState();
         //GetSecondaryButtonState();
+
+        activateWristUI.BossIcon.GetComponentInChildren<TextMeshProUGUI>().text = bossesKilled.ToString() + "/" + bossesRequired.ToString();
+        activateWristUI.CollectorIcon.GetComponentInChildren<TextMeshProUGUI>().text = collectorsDestroyed.ToString() + "/" + collectorsRequired.ToString();
+        activateWristUI.GuardianIcon.GetComponentInChildren<TextMeshProUGUI>().text = guardiansDestroyed.ToString() + "/" + guardianRequired.ToString();
+        activateWristUI.IntelIcon.GetComponentInChildren<TextMeshProUGUI>().text = intelCollected.ToString() + "/" + intelRequired.ToString();
+        activateWristUI.BombIcon.GetComponentInChildren<TextMeshProUGUI>().text = bombsDestroyed.ToString() + "/" + bombsRequired.ToString();
+        activateWristUI.ArtifactIcon.GetComponentInChildren<TextMeshProUGUI>().text = artifactsRecovered.ToString() + "/" + artifactsRequired.ToString();
+
+        if (bossesKilled >= bossesRequired)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestCompleted, out object contractState) && (bool)contractState == true)
+            {
+                contractState = false;
+
+                ExitGames.Client.Photon.Hashtable bossContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuest, contractState } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContract);
+
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestExpTarget, out object storedBossesTargetEXP))
+                {
+                    expReward = (int)storedBossesTargetEXP;
+                    GetXP(expReward);
+                }
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestCintTarget, out object storedBossesTargetCint))
+                {
+                    cintReward = (int)storedBossesTargetCint;
+                    UpdateSkills(cintReward);
+                }
+            }
+        }
+
+        if (collectorsDestroyed >= collectorsRequired)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuest, out object contractState) && (bool)contractState == true)
+            {
+                contractState = false;
+
+                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuest, contractState } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
+
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestExpTarget, out object storedTargetEXP))
+                {
+                    expReward = (int)storedTargetEXP;
+                    GetXP(expReward);
+                }
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestCintTarget, out object storedTargetCint))
+                {
+                    cintReward = (int)storedTargetCint;
+                    UpdateSkills(cintReward);
+                }
+            }
+        }
+
+        if (guardiansDestroyed >= guardianRequired)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuest, out object contractState) && (bool)contractState == true)
+            {
+                contractState = false;
+
+                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuest, contractState } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
+
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestExpTarget, out object storedTargetEXP))
+                {
+                    expReward = (int)storedTargetEXP;
+                    GetXP(expReward);
+                }
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestCintTarget, out object storedTargetCint))
+                {
+                    cintReward = (int)storedTargetCint;
+                    UpdateSkills(cintReward);
+                }
+            }
+        }
+
+        if (intelCollected >= intelRequired)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuest, out object contractState) && (bool)contractState == true)
+            {
+                contractState = false;
+
+                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuest, contractState } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
+
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestExpTarget, out object storedTargetEXP))
+                {
+                    expReward = (int)storedTargetEXP;
+                    GetXP(expReward);
+                }
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestCintTarget, out object storedTargetCint))
+                {
+                    cintReward = (int)storedTargetCint;
+                    UpdateSkills(cintReward);
+                }
+            }
+        }
+
+        if (bombsDestroyed >= bombsRequired)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuest, out object contractState) && (bool)contractState == true)
+            {
+                contractState = false;
+
+                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuest, contractState } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
+
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestExpTarget, out object storedTargetEXP))
+                {
+                    expReward = (int)storedTargetEXP;
+                    GetXP(expReward);
+                }
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestCintTarget, out object storedTargetCint))
+                {
+                    cintReward = (int)storedTargetCint;
+                    UpdateSkills(cintReward);
+                }
+            }
+        }
+
+        if (artifactsRecovered >= artifactsRequired)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuest, out object contractState) && (bool)contractState == true)
+            {
+                contractState = false;
+
+                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuest, contractState } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
+
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestExpTarget, out object storedTargetEXP))
+                {
+                    expReward = (int)storedTargetEXP;
+                    GetXP(expReward);
+                }
+                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestCintTarget, out object storedTargetCint))
+                {
+                    cintReward = (int)storedTargetCint;
+                    UpdateSkills(cintReward);
+                }
+            }
+        }
     }
 
     //void GetPrimaryButtonState()
@@ -826,6 +1077,75 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
         UpdateSkills(200);
         ExtractionGame();
+    }
+
+    public void DroneKilled(string type, GameObject drone)
+    {
+        if (type == "Collector" && drone.GetComponent<LootDrone>().attachedCache != null)
+        {
+            object questActive;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuest, out questActive) && (bool)questActive == true)
+            {
+                collectorsDestroyed++;
+
+                ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuest, collectorsDestroyed } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+            }
+        }
+    }
+
+    public void GuardianKilled()
+    {
+        object questActive;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuest, out questActive) && (bool)questActive == true)
+        {
+            guardiansDestroyed++;
+
+            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuest, guardiansDestroyed } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+        }
+    }
+
+    public void ArtifactFound()
+    {
+        object questActive;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuest, out questActive) && (bool)questActive == true)
+        {
+            artifactsRecovered++;
+
+            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuest, artifactsRecovered } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+        }
+        else
+            GetXP(100);
+    }
+
+    public void IntelFound()
+    {
+        object questActive;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuest, out questActive) && (bool)questActive == true)
+        {
+            intelCollected++;
+
+            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuest, intelCollected } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+        }
+        else
+            GetXP(100);
+    }
+
+    public void BombNeutralized()
+    {
+        object questActive;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuest, out questActive) && (bool)questActive == true)
+        {
+            bombsDestroyed++;
+
+            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuest, bombsDestroyed } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+        }
+        else
+            GetXP(100);
     }
 
     void CheckPlayerWinCondition()
@@ -1123,25 +1443,57 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [System.Obsolete]
-    public void EnemyKilled()
+    public void EnemyKilled(string type)
     {
-        enemiesKilled++;
-
-        Hashtable hash = new Hashtable();
-        hash.Add("enemyKills", enemiesKilled);
-        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-
-        int playAudio = Random.Range(0, 100);
-        if (!audioSource.isPlaying && playAudio <= 50)
+        if (type == "Normal")
         {
-            if (male)
+            enemiesKilled++;
+
+            Hashtable hash = new Hashtable();
+            hash.Add("enemyKills", enemiesKilled);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
+            int playAudio = Random.Range(0, 100);
+            if (!audioSource.isPlaying && playAudio <= 50)
             {
-                audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsMale.Length)]);
+                if (male)
+                {
+                    audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsMale.Length)]);
+                }
+                else
+                    audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            else
-                audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
+            StartCoroutine(GetXP(2));
         }
-        StartCoroutine(GetXP(2));
+
+        else if (type == "Boss")
+        {
+            object questActive;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuest, out questActive) && (bool)questActive == true)
+            {
+                bossesKilled++;
+
+                ExitGames.Client.Photon.Hashtable bossUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossKilled, bossesKilled } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(bossUpdate);
+            }
+            enemiesKilled++;
+
+            Hashtable hash = new Hashtable();
+            hash.Add("enemyKills", enemiesKilled);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
+            int playAudio = Random.Range(0, 100);
+            if (!audioSource.isPlaying && playAudio <= 50)
+            {
+                if (male)
+                {
+                    audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsMale.Length)]);
+                }
+                else
+                    audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
+            }
+            StartCoroutine(GetXP(2));
+        }
     }
 
     [System.Obsolete]

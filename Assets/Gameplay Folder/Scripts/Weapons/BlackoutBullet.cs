@@ -34,12 +34,12 @@ public class BlackoutBullet : MonoBehaviourPunCallbacks
                 playerHealth = null;
             }
 
-            if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("BossEnemy"))
+            if (other.gameObject.CompareTag("Enemy"))
             {
                 FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
                 if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
-                    playerHealth.EnemyKilled();
+                    playerHealth.EnemyKilled("Normal");
                     enemyDamageCrit.TakeDamage(10);
                 }
                 else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
@@ -48,14 +48,28 @@ public class BlackoutBullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            if (other.CompareTag("Security"))
+            else if (other.gameObject.CompareTag("BossEnemy"))
+            {
+                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
+                if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled("Boss");
+                    enemyDamageCrit.TakeDamage(10);
+                }
+                else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    enemyDamageCrit.TakeDamage(10);
+                }
+            }
+
+            else if (other.CompareTag("Security"))
             {
                 //critical hit here
                 DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
                 enemyDamageCrit.TakeDamage(15);
             }
 
-            if (other.CompareTag("Player"))
+            else if (other.CompareTag("Player"))
             {
                 //critical hit here
                 PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();

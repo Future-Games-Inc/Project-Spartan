@@ -4,19 +4,25 @@ using System;
 public class Contract
 {
     public int ID;
+    public int requiredLevel;
     public string description;
     public string objectives;
     public bool isCompleted;
-    public float duration; // Duration in seconds
-    public DateTime completionTime;
+    public int expRewards;
+    public int cintRewards;
+    public bool isActive;
 
-    public Contract(int id, string desc, string obj, float dur)
+    public ContractGoal goal;
+
+    public Contract(int id, int level, string desc, string obj, int exp, int cint)
     {
         ID = id;
+        requiredLevel = level;
         description = desc;
         objectives = obj;
-        duration = dur;
         isCompleted = false;
-        completionTime = DateTime.MinValue;
+        isActive = false;
+        expRewards = exp;
+        cintRewards = cint;
     }
 }

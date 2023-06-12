@@ -35,7 +35,7 @@ public class Vault : MonoBehaviourPunCallbacks
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         startY = transform.position.y;
-        endY = startY + 2f; // Adjust the end position as per your requirement
+        endY = startY + 4f; // Adjust the end position as per your requirement
     }
 
     void Update()

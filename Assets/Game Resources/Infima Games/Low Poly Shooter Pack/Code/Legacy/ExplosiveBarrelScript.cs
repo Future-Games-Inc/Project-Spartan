@@ -31,8 +31,6 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
         [Header("Explosion Options")]
         //How far the explosion will reach
         public float explosionRadius = 10f;
-        //How powerful the explosion is
-        public float explosionForce = 150f;
 
         public float Health = 100;
 
@@ -67,12 +65,6 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
             Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius);
             foreach (Collider hit in colliders)
             {
-                Rigidbody rb = hit.GetComponent<Rigidbody>();
-
-                //Add force to nearby rigidbodies
-                if (rb != null)
-                    rb.AddExplosionForce(explosionForce * 50, explosionPos, explosionRadius);
-
                 //If the barrel explosion hits other barrels with the tag "ExplosiveBarrel"
                 if (hit.transform.tag == "ExplosiveBarrel")
                 {

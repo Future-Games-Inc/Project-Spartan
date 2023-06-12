@@ -108,7 +108,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
                     FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
                     if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
                     {
-                        playerHealth.EnemyKilled();
+                        playerHealth.EnemyKilled("Normal");
                         enemyDamageCrit.TakeDamage(damage);
                     }
                     else if (enemyDamageCrit.Health > damage && enemyDamageCrit.alive == true && playerHealth != null)
@@ -124,7 +124,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
                     FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
                     if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
                     {
-                        playerHealth.EnemyKilled();
+                        playerHealth.EnemyKilled("BossEnemy");
                         enemyDamageCrit.TakeDamage(damage);
                     }
                     else if (enemyDamageCrit.Health > damage && enemyDamageCrit.alive == true && playerHealth != null)

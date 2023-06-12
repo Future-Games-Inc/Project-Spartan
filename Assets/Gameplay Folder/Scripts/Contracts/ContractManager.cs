@@ -40,18 +40,6 @@ public class ContractManager : MonoBehaviour
         return completedContracts.Contains(contract);
     }
 
-    public bool IsContractExpired(Contract contract)
-    {
-        if (contract == null || !IsContractCompleted(contract))
-        {
-            return false;
-        }
-
-        DateTime expirationTime = contract.completionTime.AddDays(7); // Assuming a one-week duration
-
-        return DateTime.Now >= expirationTime;
-    }
-
     public void CompleteContract(Contract contract)
     {
         if (contract == null || IsContractCompleted(contract))
@@ -60,7 +48,6 @@ public class ContractManager : MonoBehaviour
         }
 
         contract.isCompleted = true;
-        contract.completionTime = DateTime.Now;
 
         completedContracts.Add(contract);
     }

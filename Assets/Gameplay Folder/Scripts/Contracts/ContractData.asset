@@ -13,53 +13,87 @@ MonoBehaviour:
   m_Name: ContractData
   m_EditorClassIdentifier: 
   contracts:
+  - ID: 0
+    requiredLevel: 0
+    description: 
+    objectives: 
+    isCompleted: 0
+    expRewards: 0
+    cintRewards: 0
+    isActive: 0
+    goal:
+      ContractType: 0
+      requriedAmount: 10
+      currentAmount: 0
   - ID: 1
-    description: Eliminate Enemy Leader
-    objectives: Defeat the enemy leader in the specified location
+    requiredLevel: 5
+    description: Lost History
+    objectives: Recover the 5 AO Centauri aritifacts from the CUA Vaults
     isCompleted: 0
-    duration: 2
+    expRewards: 90
+    cintRewards: 350
+    isActive: 0
+    goal:
+      ContractType: 1
+      requriedAmount: 5
+      currentAmount: 0
   - ID: 2
-    description: Retrieve Stolen Artifact
-    objectives: Recover the stolen artifact from the enemy base
+    requiredLevel: 1
+    description: Bomb Patrol
+    objectives: Disable 10 rebel bombs placed within CUA Drop Zones
     isCompleted: 0
-    duration: 3
+    expRewards: 80
+    cintRewards: 300
+    isActive: 0
+    goal:
+      ContractType: 2
+      requriedAmount: 10
+      currentAmount: 0
   - ID: 3
-    description: Disarm Bombs
-    objectives: Disable the bombs planted in various locations
+    requiredLevel: 3
+    description: Guardian Destroyer
+    objectives: Destroy 20 CUA Guardians in the Drop Zones
     isCompleted: 0
-    duration: 1
+    expRewards: 70
+    cintRewards: 200
+    isActive: 0
+    goal:
+      ContractType: 3
+      requriedAmount: 20
+      currentAmount: 0
   - ID: 4
-    description: Escort VIP
-    objectives: Safely escort the VIP to the extraction point
+    requiredLevel: 9
+    description: 'Mission: Intel'
+    objectives: Collect 15 pieces of intelligence from CUA Drop Zone terminals
     isCompleted: 0
-    duration: 4
+    expRewards: 50
+    cintRewards: 450
+    isActive: 0
+    goal:
+      ContractType: 4
+      requriedAmount: 15
+      currentAmount: 0
   - ID: 5
-    description: Gather Intel
-    objectives: Collect vital intelligence from enemy outposts
+    requiredLevel: 8
+    description: Loot No More
+    objectives: Destroy 20 CUA Collectors carrying caches in Drop Zones
     isCompleted: 0
-    duration: 2
+    expRewards: 100
+    cintRewards: 500
+    isActive: 0
+    goal:
+      ContractType: 5
+      requriedAmount: 20
+      currentAmount: 0
   - ID: 6
-    description: Exterminate Mutant Creatures
-    objectives: Collect vital intelligence from enemy outposts
+    requiredLevel: 2
+    description: BruteHunter
+    objectives: Defeat 10 Brute Centuari Corps Officers in Drop Zones
     isCompleted: 0
-    duration: 2
-  - ID: 7
-    description: Disable Enemy Communications
-    objectives: Collect vital intelligence from enemy outposts
-    isCompleted: 0
-    duration: 2
-  - ID: 8
-    description: Recover Lost Data
-    objectives: Collect vital intelligence from enemy outposts
-    isCompleted: 0
-    duration: 2
-  - ID: 9
-    description: Eliminate Rogue Agent
-    objectives: Collect vital intelligence from enemy outposts
-    isCompleted: 0
-    duration: 2
-  - ID: 10
-    description: Retrieve Stolen Prototype
-    objectives: Infiltrate the enemy facility and recover a stolen prototype weapon.
-    isCompleted: 0
-    duration: 2
+    expRewards: 100
+    cintRewards: 500
+    isActive: 1
+    goal:
+      ContractType: 0
+      requriedAmount: 10
+      currentAmount: 0

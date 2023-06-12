@@ -9,6 +9,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     public GameObject bleedIcon;
     public GameObject hitEffectPrefab;
+    public GameObject Blade;
     public PlayerHealth playerHealth;
 
     private Transform bladeTransform;
@@ -43,7 +44,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
+        if (other.CompareTag("Enemy"))
         {
             if (bladeVelocity >= 3f) // Check if blade is moving fast enough
             {
@@ -52,7 +53,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
                 FollowAI enemyDamageReg = other.GetComponent<FollowAI>();
                 if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
                 {
-                    playerHealth.EnemyKilled();
+                    playerHealth.EnemyKilled("Normal");
                     enemyDamageReg.TakeDamage(Damage);
                 }
                 else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
@@ -81,7 +82,45 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Player"))
+        else if (other.CompareTag("BossEnemy"))
+        {
+            if (bladeVelocity >= 3f) // Check if blade is moving fast enough
+            {
+                // Calculate damage and apply to enemy
+                int Damage = baseDamage + bleedStacks * bleedDamage;
+                FollowAI enemyDamageReg = other.GetComponent<FollowAI>();
+                if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled("Boss");
+                    enemyDamageReg.TakeDamage(Damage);
+                }
+                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+                {
+                    enemyDamageReg.TakeDamage(Damage);
+                }
+                // Apply hit effect
+                PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
+
+                // Apply bleed effect
+                if (!isBleeding)
+                {
+                    isBleeding = true;
+                    bleedStacks = 1;
+                    bleedTimer = bleedDuration;
+                }
+                else
+                {
+                    bleedStacks++;
+                    bleedTimer = bleedDuration;
+                    if (bleedStacks > 3)
+                    {
+                        Damage += (bleedStacks - 1) * bleedIncrease;
+                    }
+                }
+            }
+        }
+
+        else if (other.CompareTag("Player"))
         {
             if (bladeVelocity >= 3f) // Check if blade is moving fast enough
             {
@@ -116,7 +155,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Security"))
+        else if (other.CompareTag("Security"))
         {
             if (bladeVelocity >= 3f) // Check if blade is moving fast enough
             {
@@ -189,13 +228,13 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_BladeBleeding()
     {
-        this.GetComponent<Renderer>().material = bleed;
+        Blade.GetComponent<Renderer>().material = bleed;
     }
 
     [PunRPC]
     void RPC_BladeNormal()
     {
-        this.GetComponent<Renderer>().material = normal;
+        Blade.GetComponent<Renderer>().material = normal;
     }
 }
 

@@ -10,6 +10,9 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject[] securityAI;
     [SerializeField] private GameObject reactor;
     [SerializeField] private GameObject health;
+    [SerializeField] private GameObject[] artifacts;
+    [SerializeField] private GameObject[] bombs;
+    [SerializeField] private GameObject intel;
 
     [SerializeField] private Transform[] enemyDrop;
     [SerializeField] private Transform[] reactorDrop;
@@ -22,18 +25,27 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     [SerializeField] private int reactorCountMax = 1;
     [SerializeField] private int healthCountMax = 1;
     [SerializeField] private int enemiesKilledForBossSpawn = 5;
+    [SerializeField] private int intelCountMax = 10;
+    [SerializeField] private int bombsCountMax = 10;
+    [SerializeField] private int artifactCountMax = 10;
 
     private int enemyCount;
     private int securityCount;
     private int reactorCount;
     private int healthCount;
     private int enemiesKilled;
+    private int intelCount;
+    private int artifactCount;
+    private int bombsCount;
 
     private bool spawnEnemy = true;
     private bool spawnSecurity = true;
     private bool spawnReactor = true;
     private bool spawnHealth = true;
     private bool spawnBoss = true;
+    private bool spawnIntel = true;
+    private bool spawnBombs = true;
+    private bool spawnArtifacts = true;
 
     private void Start()
     {
@@ -42,6 +54,9 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         StartCoroutine(SpawnReactor());
         StartCoroutine(SpawnHealth());
         StartCoroutine(SpawnBoss());
+        StartCoroutine(SpawnIntel());
+        StartCoroutine(SpawnArtifacts());
+        StartCoroutine(SpawnBombs());
     }
 
     private IEnumerator SpawnEnemies()
@@ -106,6 +121,68 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         }
     }
 
+    private IEnumerator SpawnBombs()
+    {
+        while (spawnBombs && bombsCount < bombsCountMax)
+        {
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnBombs = false;
+
+            GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
+            PhotonNetwork.InstantiateRoomObject(bombObject.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+
+            bombsCount++;
+
+            yield return new WaitForSeconds(10f);
+
+            spawnBombs = true;
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    private IEnumerator SpawnArtifacts()
+    {
+        while (spawnArtifacts && artifactCount < artifactCountMax)
+        {
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnArtifacts = false;
+
+            GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
+            PhotonNetwork.InstantiateRoomObject(artifactObject.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+
+            artifactCount++;
+
+            yield return new WaitForSeconds(15f);
+
+            spawnArtifacts = true;
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    private IEnumerator SpawnIntel()
+    {
+        while (spawnIntel && intelCount < intelCountMax)
+        {
+            yield return new WaitUntil(() => matchProps.startMatchBool);
+
+            spawnIntel = false;
+
+            PhotonNetwork.InstantiateRoomObject(intel.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+
+            intelCount++;
+
+            yield return new WaitForSeconds(30f);
+
+            spawnIntel = true;
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
     private IEnumerator SpawnHealth()
     {
         while (spawnHealth && healthCount < healthCountMax)
@@ -149,6 +226,24 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             yield return new WaitForSeconds(1);
         }
+    }
+
+    [PunRPC]
+    public void RPC_UpdateIntel()
+    {
+        intelCount--;
+    }
+
+    [PunRPC]
+    public void RPC_UpdateArtifact()
+    {
+        artifactCount--;
+    }
+
+    [PunRPC]
+    public void RPC_UpdateBombs()
+    {
+        bombsCount--;
     }
 
     [PunRPC]
