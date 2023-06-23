@@ -46,8 +46,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public int enemiesKilled;
     public int startingBulletModifier;
     public int playerCints;
-    public int proxBombCount = 3;
-    public int smokeBombCount = 3;
+    //public int proxBombCount = 3;
+    //public int smokeBombCount = 3;
     public int characterInt;
     public int damageTaken;
     public int healthAdded;
@@ -55,6 +55,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public int currentHelath;
     public int healthLevel;
     public int Health = 100;
+    public int armorAdded;
+    public int maxArmor;
+    public int currentArmor;
+    public int armorLevel;
+    public int Armor = 100;
     public int reactorExtraction;
 
     [Header("Player State Effects ------------------------------------")]
@@ -66,25 +71,30 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject factionIcon;
     public GameObject shipIcon;
     public GameObject[] playerObjects;
+    public GameObject[] shieldObjects;
     public GameObject healthBarObject;
+    public GameObject armorBarObject;
     public GameObject criticalHealth;
     public GameObject crackedScreen;
     public GameObject[] minimapSymbol;
-    public GameObject primaryActive;
-    public GameObject secondaryActive;
+    //public GameObject primaryActive;
+    //public GameObject secondaryActive;
     public GameObject deathToken;
-    public GameObject bomb;
-    public GameObject bombDeath;
-    public GameObject smoke;
+    //public GameObject bomb;
+    //public GameObject bombDeath;
+    //public GameObject smoke;
     public GameObject model;
     public GameObject energyBlade;
     public Transform meleeAttach;
 
-    public Transform bombDropLocation;
+    //public Transform bombDropLocation;
     public Transform tokenDropLocation;
 
     public TextMeshProUGUI messageText;
     public TextMeshProUGUI reactorText;
+
+    public Color shieldNormal;
+    public Color shieldCritical;
 
     public ActivateWristUI activateWristUI;
 
@@ -92,7 +102,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public RespawnUI respawnUI;
 
     public Color minimapStart;
-    public Color minimapStealth;
+    ////public Color minimapStealth;
 
     [Header("Player Audio ------------------------------------")]
     public AudioSource audioSource;
@@ -106,51 +116,51 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Abilities ------------------------------------")]
     public GameObject toxicEffect;
-    public GameObject bubbleShield;
+    //public GameObject bubbleShield;
     //public GameObject leechBubble;
 
     public int bulletModifier;
     public int bulletXPModifier;
     public int maxAmmo;
 
-    public float bombRespawnTimer = 15;
+    //public float bombRespawnTimer = 15;
     public float toxicTimer = 0;
     public float upgradeTimer = 0;
-    public float shieldTimer = 0;
+    //public float shieldTimer = 0;
     //public float leechEffectTimer = 0;
     //public float leechEffectDuration = 20;
     public float toxicEffectTimer;
     public float bulletXPTimer;
-    public float shieldEffectTimer;
-    public float primaryPowerupEffectTimer = 30;
-    public float secondaryPowerupEffectTimer = 40;
+    //public float shieldEffectTimer;
+    //public float primaryPowerupEffectTimer = 30;
+    //public float secondaryPowerupEffectTimer = 40;
 
     public bool toxicEffectActive;
     public bool bulletImproved;
-    public bool shieldActive;
+    //public bool shieldActive;
     //public bool leechEffect;
-    public bool slotAvailable = true;
-    public bool primaryPowerupTimer;
-    public bool secondaryPowerupTimer;
+    //public bool slotAvailable = true;
+    //public bool primaryPowerupTimer;
+    //public bool secondaryPowerupTimer;
     bool shouldCallAbilities1True;
     bool shouldCallAbilities1False;
-    bool shouldCallAbilities2True;
-    bool shouldCallAbilities2False;
+    //bool shouldCallAbilities2True;
+    //bool shouldCallAbilities2False;
     bool shouldCallAbilities3True;
     bool shouldCallAbilities3False;
     //bool shouldCallAbilities4True;
     //bool shouldCallAbilities4False;
     //bool shouldCallAbilities8;
     //bool shouldCallAbilities9;
-    bool hasButtonAssignment;
-    bool hasButtonAssignment2;
-    InputDevice primaryImplant;
-    InputDevice secondaryImplant;
+    //bool hasButtonAssignment;
+    //bool hasButtonAssignment2;
+    //InputDevice primaryImplant;
+    //InputDevice secondaryImplant;
 
-    [Header("Player Inputs ------------------------------------")]
-    public XRNode left_HandButtonSource;
-    [SerializeField] private bool primaryButtonPressed;
-    [SerializeField] private bool secondaryButtonPressed;
+    //[Header("Player Inputs ------------------------------------")]
+    //public XRNode left_HandButtonSource;
+    //[SerializeField] private bool primaryButtonPressed;
+    //[SerializeField] private bool secondaryButtonPressed;
 
     [Header("Player Static Byte Data ------------------------------------")]
     public static readonly byte ExtractionGameMode = 1;
@@ -670,8 +680,10 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         InitHealth();
 
-        primaryPowerupTimer = false;
-        secondaryPowerupTimer = false;
+        InitArmor();
+
+        //primaryPowerupTimer = false;
+        //secondaryPowerupTimer = false;
 
         InitAvatarSelection();
 
@@ -701,7 +713,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         InitPlayerCints();
 
-        InitSavingGrace();
+        //InitSavingGrace();
 
         InitBossesKilled();
 
@@ -718,9 +730,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         startingBulletModifier = bulletModifier;
 
         if (photonView.IsMine)
+        {
             healthBarObject.SetActive(true);
+            armorBarObject.SetActive(true);
+        }
 
         CheckHealthStatus();
+        CheckArmorStatus();
 
         GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation);
         blade.GetComponent<EnergyBladeNet>().playerHealth = this.gameObject.GetComponent<PlayerHealth>();
@@ -769,6 +785,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             ? 100 + ((int)storedPlayerHealth * 10) : 100;
 
         multiplayerHealth.SetMaxHealth(Health);
+    }
+
+    private void InitArmor()
+    {
+        Armor = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_ARMOR, out object storedPlayerArmor) && (int)storedPlayerArmor >= 1
+            ? 100 + ((int)storedPlayerArmor * 10) : 100;
+
+        multiplayerHealth.SetMaxArmor(Armor);
     }
 
     private void InitAvatarSelection()
@@ -856,18 +880,25 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private void InitSavingGrace()
-    {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
-        {
-            playerLives += 1;
-        }
-    }
+    //private void InitSavingGrace()
+    //{
+    //    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
+    //    {
+    //        playerLives += 1;
+    //    }
+    //}
     private int SetMaxHealthFromHealthLevel()
     {
         // TODO: Create Formula to improve health upon level up of character. int 10 can be changed. 
         maxHealth = Health;
         return maxHealth;
+    }
+
+    private int SetMaxArmorFromArmorLevel()
+    {
+        // TODO: Create Formula to improve health upon level up of character. int 10 can be changed. 
+        maxArmor = Armor;
+        return maxArmor;
     }
 
     // Update is called once per frame
@@ -892,8 +923,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         // Call abilities
         if (toxicEffectActive)
             CheckAbility1();
-        if (shieldActive)
-            CheckAbility2();
+        //if (shieldActive)
+        //    CheckAbility2();
         if (bulletImproved)
             CheckAbility3();
         //CheckAbility4();
@@ -1182,21 +1213,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    void CheckAbility2()
-    {
-        if (shieldTimer <= shieldEffectTimer && shieldActive == true && !shouldCallAbilities2True)
-        {
-            shouldCallAbilities2True = true;
-            photonView.RPC("RPC_Abilities2True", RpcTarget.All);
-            shouldCallAbilities2True = false;
-        }
-        else if (shieldTimer > shieldEffectTimer && shieldActive == true && !shouldCallAbilities2False)
-        {
-            shouldCallAbilities2False = true;
-            photonView.RPC("RPC_Abilities2False", RpcTarget.All);
-            shouldCallAbilities2False = false;
-        }
-    }
+    //void CheckAbility2()
+    //{
+    //    if (shieldTimer <= shieldEffectTimer && shieldActive == true && !shouldCallAbilities2True)
+    //    {
+    //        shouldCallAbilities2True = true;
+    //        photonView.RPC("RPC_Abilities2True", RpcTarget.All);
+    //        shouldCallAbilities2True = false;
+    //    }
+    //    else if (shieldTimer > shieldEffectTimer && shieldActive == true && !shouldCallAbilities2False)
+    //    {
+    //        shouldCallAbilities2False = true;
+    //        photonView.RPC("RPC_Abilities2False", RpcTarget.All);
+    //        shouldCallAbilities2False = false;
+    //    }
+    //}
 
     void CheckAbility3()
     {
@@ -1338,6 +1369,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         else
             damageTaken = damage;
         photonView.RPC("RPC_TakeDamage", RpcTarget.All, damageTaken);
+        CheckArmorStatus();
         CheckHealthStatus();
     }
 
@@ -1359,6 +1391,20 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         multiplayerHealth.SetCurrentHealth(Health);
     }
 
+    public void AddArmor(int armor)
+    {
+        audioSource.PlayOneShot(bulletHit);
+
+        armorAdded = armor;
+        photonView.RPC("RPC_GainArmor", RpcTarget.All, armorAdded);
+        CheckArmorStatus();
+    }
+
+    public void CheckArmorStatus()
+    {
+        multiplayerHealth.SetCurrentArmor(Armor);
+    }
+
     IEnumerator Cracked()
     {
         yield return new WaitForSeconds(0);
@@ -1370,20 +1416,23 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator PlayerDeath()
     {
         yield return new WaitForSeconds(0);
+        int cintUpdate = (playerCints / 10);
         StartCoroutine(sceneFader.ScreenFade());
         alive = false;
         GameObject playerDeathTokenObject = PhotonNetwork.InstantiateRoomObject(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0, null);
-        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = (playerCints / 10);
+        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = cintUpdate;
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
-        object implant;
-        object node;
+        UpdateSkills(-cintUpdate);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
-        {
-            PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0, null);
-        }
+        //object implant;
+        //object node;
+
+        //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
+        //        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
+        //{
+        //    PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0, null);
+        //}
         yield return new WaitForSeconds(.15f);
         if (photonView.IsMine)
         {
@@ -1418,6 +1467,22 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         respawnUI.UpdateRespawnUI();
+    }
+
+    IEnumerator ShieldBuffNormal()
+    {
+        yield return new WaitForSeconds(0);
+        photonView.RPC("RPC_ShieldNomral", RpcTarget.All, true);
+        yield return new WaitForSeconds(.75f);
+        photonView.RPC("RPC_ShieldNomral", RpcTarget.All, false);
+    }
+
+    IEnumerator ShieldBuffCritical()
+    {
+        yield return new WaitForSeconds(0);
+        photonView.RPC("RPC_ShieldCritical", RpcTarget.All, true);
+        yield return new WaitForSeconds(.75f);
+        photonView.RPC("RPC_ShieldCritical", RpcTarget.All, false);
     }
 
     public void ApplyBlindEffect(float duration)
@@ -1634,17 +1699,17 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             AddHealth(2);
     }
 
-    public void Shield(float shieldTime)
-    {
-        shieldTimer = 0;
+    //public void Shield(float shieldTime)
+    //{
+    //    shieldTimer = 0;
 
-        object storedShieldDuration;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SHIELD_DURATION, out storedShieldDuration) && (int)storedShieldDuration >= 1)
-            shieldEffectTimer = shieldTime + ((int)storedShieldDuration * (int)1.5);
-        else
-            shieldEffectTimer = shieldTime;
-        shieldActive = true;
-    }
+    //    object storedShieldDuration;
+    //    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SHIELD_DURATION, out storedShieldDuration) && (int)storedShieldDuration >= 1)
+    //        shieldEffectTimer = shieldTime + ((int)storedShieldDuration * (int)1.5);
+    //    else
+    //        shieldEffectTimer = shieldTime;
+    //    shieldActive = true;
+    //}
 
     public void UpdateSkills(int cintsEarned)
     {
@@ -1860,20 +1925,61 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
+    void RPC_ShieldNomral(bool state)
+    {
+        if (!photonView.IsMine)
+        { return; }
+
+        foreach(GameObject shield in shieldObjects)
+        {
+            shield.GetComponent<Renderer>().material.color = shieldNormal;
+            shield.SetActive(state);
+        }
+    }
+
+
+    [PunRPC]
+    void RPC_ShieldCritical(bool state)
+    {
+        if (!photonView.IsMine)
+        { return; }
+
+        foreach (GameObject shield in shieldObjects)
+        {
+            shield.GetComponent<Renderer>().material.color = shieldCritical;
+            shield.SetActive(state);
+        }
+    }
+
+    [PunRPC]
     void RPC_TakeDamage(int damage)
     {
         if (!photonView.IsMine)
         { return; }
 
-        Health -= damage;
+        if(Armor >= damage)
+        {
+            Armor -= damage;
+            StartCoroutine(ShieldBuffNormal());
+        }
+        else if(Armor < damage && Armor > 0)
+        {
+            Health -= (damage - Armor);
+            Armor = 0;
+            StartCoroutine(ShieldBuffCritical());
+        }
+        else if(Armor <= 0)
+        {
+            Health -= damage;
+        }
 
-        if (Health <= 0 && playerLives > 1 && alive == true)
+        if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
         {
             alive = false;
             StartCoroutine(PlayerRespawn());
         }
 
-        else if (Health <= 0 && playerLives == 1 && alive == true)
+        else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
         {
             alive = false;
             StartCoroutine(PlayerDeath());
@@ -1889,6 +1995,16 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         Health += health;
     }
 
+
+    [PunRPC]
+    void RPC_GainArmor(int armor)
+    {
+        if (!photonView.IsMine)
+        { return; }
+
+        Armor += armor;
+    }
+
     [PunRPC]
     void RPC_Respawn()
     {
@@ -1896,23 +2012,25 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         model.SetActive(false);
-        player.transform.position = spawnManager.spawnPosition;
+        player.transform.position = spawnManager.spawnPosition[Random.Range(0, spawnManager.spawnPosition.Length)].position;
         playerLives -= 1;
+        Armor = 125;
         Health = 125;
+        CheckArmorStatus();
         CheckHealthStatus();
         alive = true;
         model.SetActive(true);
     }
 
-    [PunRPC]
-    void RPC_SetMaxHealth(int Health)
-    {
-        if (!photonView.IsMine)
-        { return; }
+    //[PunRPC]
+    //void RPC_SetMaxHealth(int Health)
+    //{
+    //    if (!photonView.IsMine)
+    //    { return; }
 
-        maxHealth = Health;
-        multiplayerHealth.SetMaxHealth(maxHealth);
-    }
+    //    maxHealth = Health;
+    //    multiplayerHealth.SetMaxHealth(maxHealth);
+    //}
 
     [PunRPC]
     void RPC_SpawnManagerTrue()
@@ -1941,25 +2059,25 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         toxicEffectActive = false;
     }
 
-    [PunRPC]
-    void RPC_Abilities2True()
-    {
-        if (!photonView.IsMine)
-        { return; }
+    //[PunRPC]
+    //void RPC_Abilities2True()
+    //{
+    //    if (!photonView.IsMine)
+    //    { return; }
 
-        bubbleShield.SetActive(true);
-        shieldTimer += Time.deltaTime;
-    }
+    //    bubbleShield.SetActive(true);
+    //    shieldTimer += Time.deltaTime;
+    //}
 
-    [PunRPC]
-    void RPC_Abilities2False()
-    {
-        if (!photonView.IsMine)
-        { return; }
+    //[PunRPC]
+    //void RPC_Abilities2False()
+    //{
+    //    if (!photonView.IsMine)
+    //    { return; }
 
-        bubbleShield.SetActive(false);
-        shieldActive = false;
-    }
+    //    bubbleShield.SetActive(false);
+    //    shieldActive = false;
+    //}
 
     [PunRPC]
     void RPC_Abilities3True()

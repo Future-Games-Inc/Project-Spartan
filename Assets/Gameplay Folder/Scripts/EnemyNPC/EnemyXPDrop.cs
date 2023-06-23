@@ -68,7 +68,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                     break;
 
                 case "Shield":
-                    playerHealth.Shield(pickupData.shieldDuration);
+                    playerHealth.AddArmor(pickupData.armorAmount);
                     PhotonNetwork.Destroy(gameObject);
                     break;
 

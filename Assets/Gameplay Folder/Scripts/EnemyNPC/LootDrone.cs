@@ -2,7 +2,6 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class LootDrone : MonoBehaviourPunCallbacks
 {

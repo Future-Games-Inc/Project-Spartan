@@ -41,7 +41,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
         }
         else
         {
@@ -56,6 +56,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
                 playerHealth.EnemyKilled("Normal");
                 enemyDamageCrit.TakeDamage(10);
             }
+
             else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
             {
                 enemyDamageCrit.TakeDamage(10);
@@ -64,7 +65,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (other.gameObject.CompareTag("BossEnemy"))
+        else if (other.gameObject.CompareTag("BossEnemy"))
         {
             FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
             if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
@@ -72,6 +73,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
                 playerHealth.EnemyKilled("Boss");
                 enemyDamageCrit.TakeDamage(10);
             }
+
             else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
             {
                 enemyDamageCrit.TakeDamage(10);
@@ -103,6 +105,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
             {
                 playerHealth.PlayersKilled();
             }
+
             playerDamageCrit.TakeDamage(5);
             Explode();
             return;

@@ -64,8 +64,8 @@ public class Skill : MonoBehaviour
                 properties[MultiplayerVRConstants.BULLET_MODIFIER] = skillLevel;
                 break;
 
-            case "shieldDur":
-                properties[MultiplayerVRConstants.SHIELD_DURATION] = skillLevel;
+            case "armorLevel":
+                properties[MultiplayerVRConstants.PLAYER_ARMOR] = skillLevel;
                 break;
 
             case "toxDam":

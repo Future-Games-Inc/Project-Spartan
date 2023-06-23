@@ -169,6 +169,11 @@ public class SentryDrone : MonoBehaviourPunCallbacks
                 transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
             }
         }
+
+        if (agent != null && !agent.isOnNavMesh)
+        {
+            TakeDamage(300);
+        }
     }
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {

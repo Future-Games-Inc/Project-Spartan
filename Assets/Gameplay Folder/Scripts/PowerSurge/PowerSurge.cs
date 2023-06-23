@@ -27,6 +27,7 @@ public class PowerSurge : MonoBehaviourPunCallbacks
 
     private Vector3 initialScale;
     private Coroutine bubbleScaleCoroutine;
+    public MatchEffects matchProps;
 
     void Enable()
     {
@@ -99,17 +100,17 @@ public class PowerSurge : MonoBehaviourPunCallbacks
         initialScale = surgeBubble.transform.localScale;
     }
 
+    public void ActivateSurge()
+    {
+        if (!activated && canBeActivated && matchProps.startMatchBool)
+        {
+            photonView.RPC("SetActivated", RpcTarget.All, true);
+            bubbleScaleCoroutine = StartCoroutine(GrowBubbleCoroutine());
+        }
+    }
+
     void Update()
     {
-        if (CheckForPlayerWithinRadius())
-        {
-            if (!activated && canBeActivated)
-            {
-                photonView.RPC("SetActivated", RpcTarget.All, true);
-                bubbleScaleCoroutine = StartCoroutine(GrowBubbleCoroutine());
-            }
-        }
-
         if (activated && canBeActivated)
         {
             StartCoroutine(BlackOut());
@@ -139,15 +140,19 @@ public class PowerSurge : MonoBehaviourPunCallbacks
                 else
                 {
                     SentryDrone enemyDamageCrit2 = collider.GetComponent<SentryDrone>();
-                    enemyDamageCrit.TakeDamage(200);
+                    if (enemyDamageCrit2 != null)
+                        enemyDamageCrit.TakeDamage(200);
                 }
             }
 
             if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
             {
                 FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-                enemyDamageCrit.TakeDamage(50);
-                enemyDamageCrit.EMPShock();
+                if (enemyDamageCrit != null)
+                {
+                    enemyDamageCrit.TakeDamage(50);
+                    enemyDamageCrit.EMPShock();
+                }
             }
         }
         yield return new WaitForSeconds(10);
@@ -160,19 +165,6 @@ public class PowerSurge : MonoBehaviourPunCallbacks
 
         surgeBubble.transform.localScale = initialScale;
         surgeBubble.SetActive(false);
-    }
-
-    bool CheckForPlayerWithinRadius()
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider collider in hitColliders)
-        {
-            if (collider.CompareTag("Player"))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     IEnumerator Flicker()

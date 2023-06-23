@@ -75,9 +75,9 @@ public class SkillTree : MonoBehaviour
         initialLoad = false;
     }
 
-    public void SetPowerUp()
-    {
-        ExitGames.Client.Photon.Hashtable buttonAssign = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BUTTON_ASSIGN, powerupButtonAssign } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(buttonAssign);
-    }
+    //public void SetPowerUp()
+    //{
+    //    ExitGames.Client.Photon.Hashtable buttonAssign = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BUTTON_ASSIGN, powerupButtonAssign } };
+    //    PhotonNetwork.LocalPlayer.SetCustomProperties(buttonAssign);
+    //}
 }

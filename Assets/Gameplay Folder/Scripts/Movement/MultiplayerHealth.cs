@@ -3,15 +3,28 @@ using UnityEngine.UI;
 
 public class MultiplayerHealth : MonoBehaviour
 {
-    public Slider slider;
+    public Slider healthSlider;
+    public Slider armorSlider;
+
     public void SetMaxHealth(int maxHealth)
     {
-        slider.maxValue = maxHealth;
-        slider.value = maxHealth;
+        healthSlider.maxValue = maxHealth;
+        healthSlider.value = maxHealth;
     }
 
     public void SetCurrentHealth(int currentHealth)
     {
-        slider.value = currentHealth;
+        healthSlider.value = currentHealth;
+    }
+
+    public void SetMaxArmor(int maxArmor)
+    {
+        armorSlider.maxValue = maxArmor;
+        armorSlider.value = maxArmor;
+    }
+
+    public void SetCurrentArmor(int currentArmor)
+    {
+        armorSlider.value = currentArmor;
     }
 }

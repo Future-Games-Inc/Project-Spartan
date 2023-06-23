@@ -75,7 +75,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         InitializeTimer();
         photonView.RPC("AudioEnter", RpcTarget.All);
-        spawnInterval = 180f;
 
         // Generate a random 4-digit sequence
         photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);

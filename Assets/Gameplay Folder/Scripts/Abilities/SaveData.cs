@@ -186,48 +186,42 @@ public class SaveData : MonoBehaviour
     public void BossSave()
     {
         ES3.Save("bossesKilled", bossesKilled);
-        StartCoroutine(SubmitScore(bossesKilled));
     }
 
     [System.Obsolete]
     public void ArtifactSave()
     {
         ES3.Save("artifactsRecovered", artifactsRecovered);
-        StartCoroutine(SubmitScore(artifactsRecovered));
     }
 
     [System.Obsolete]
     public void BombSave()
     {
         ES3.Save("bombsDestroyed", bombsDestroyed);
-        StartCoroutine(SubmitScore(bombsDestroyed));
     }
 
     [System.Obsolete]
     public void GuardianSave()
     {
         ES3.Save("guardiansDestroyed", guardiansDestroyed);
-        StartCoroutine(SubmitScore(guardiansDestroyed));
     }
 
     [System.Obsolete]
     public void IntelSave()
     {
         ES3.Save("intelSecured", intelSecured);
-        StartCoroutine(SubmitScore(intelSecured));
     }
 
     [System.Obsolete]
     public void CollectorSave()
     {
         ES3.Save("collectorsDestroyed", collectorsDestroyed);
-        StartCoroutine(SubmitScore(collectorsDestroyed));
     }
 
     [System.Obsolete]
     IEnumerator SubmitScore(int score)
     {
         yield return new WaitForSeconds(0f);
-        yield return leaderboard.SubmitScoreRoutine(score);
+        StartCoroutine(leaderboard.SubmitScoreRoutine(score));
     }
 }

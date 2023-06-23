@@ -16,13 +16,13 @@ public class BombHolder : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Bomb"))
-        {
-            other.GetComponent<Rigidbody>().isKinematic = true;
-            player.slotAvailable = false;
-        }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.CompareTag("Bomb"))
+    //    {
+    //        other.GetComponent<Rigidbody>().isKinematic = true;
+    //        player.slotAvailable = false;
+    //    }
         
-    }
+    //}
 }

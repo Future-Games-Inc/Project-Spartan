@@ -27,14 +27,15 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
+            bulletModifier = playerHealth.bulletModifier;
         }
         else
         {
             playerHealth = null;
         }
 
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") && playerHealth != null)
         {
             float criticalChance = 10f;
 
@@ -48,11 +49,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerHealth.EnemyKilled("Normal");
                     enemyDamageCrit.TakeDamage((20 * bulletModifier));
                 }
+
                 else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
                     enemyDamageCrit.TakeDamage(20 * bulletModifier);
                 }
-                PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -63,15 +64,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerHealth.EnemyKilled("Normal");
                     enemyDamage.TakeDamage(10 * bulletModifier);
                 }
+
                 else if (enemyDamage.Health > (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                 {
                     enemyDamage.TakeDamage(10 * bulletModifier);
                 }
-                PhotonNetwork.Destroy(gameObject);
             }
         }
 
-        if (other.CompareTag("BossEnemy"))
+        else if (other.CompareTag("BossEnemy") && playerHealth != null)
         {
             float criticalChance = 10f;
 
@@ -85,11 +86,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerHealth.EnemyKilled("Boss");
                     enemyDamageCrit.TakeDamage((20 * bulletModifier));
                 }
+
                 else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
                     enemyDamageCrit.TakeDamage(20 * bulletModifier);
                 }
-                PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -100,15 +101,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerHealth.EnemyKilled("Boss");
                     enemyDamage.TakeDamage(10 * bulletModifier);
                 }
-                else if (enemyDamage.Health > (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+
+                else if (enemyDamage.Health > (10 * bulletModifier) && !enemyDamage.alive == true && playerHealth != null)
                 {
                     enemyDamage.TakeDamage(10 * bulletModifier);
                 }
-                PhotonNetwork.Destroy(gameObject);
             }
         }
 
-        else if (other.CompareTag("Security"))
+        else if (other.CompareTag("Security") && playerHealth != null)
         {
             float criticalChance = 30f;
 
@@ -124,6 +125,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         playerHealth.DroneKilled(other.GetComponent<DroneHealth>().type.ToString(), other.gameObject);
                         enemyDamageCrit.TakeDamage(30 * bulletModifier);
                     }
+
                     else if (enemyDamageCrit.Health > (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                         enemyDamageCrit.TakeDamage(30 * bulletModifier);
                 }
@@ -135,10 +137,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                         playerHealth.GuardianKilled();
                         enemyDamageCrit.TakeDamage(30 * bulletModifier);
                     }
+
                     else if (enemyDamageCrit.Health > (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                         enemyDamageCrit.TakeDamage(30 * bulletModifier);
                 }
-                PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -151,6 +153,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         playerHealth.DroneKilled(other.GetComponent<DroneHealth>().type.ToString(), other.gameObject);
                         enemyDamage.TakeDamage(30 * bulletModifier);
                     }
+
                     else if (enemyDamage.Health > (30 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                         enemyDamage.TakeDamage(30 * bulletModifier);
                 }
@@ -162,10 +165,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                         playerHealth.GuardianKilled();
                         enemyDamage2.TakeDamage(30 * bulletModifier);
                     }
+
                     else if (enemyDamage2.Health > (30 * bulletModifier) && enemyDamage2.alive == true && playerHealth != null)
                         enemyDamage2.TakeDamage(30 * bulletModifier);
                 }
-                PhotonNetwork.Destroy(gameObject);
             }
         }
 
@@ -182,8 +185,8 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     playerHealth.PlayersKilled();
                 }
+
                 playerDamageCrit.TakeDamage(10 * bulletModifier);
-                PhotonNetwork.Destroy(gameObject);
             }
 
             else
@@ -193,11 +196,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     playerHealth.PlayersKilled();
                 }
+
                 playerDamage.TakeDamage(5 * bulletModifier);
-                PhotonNetwork.Destroy(gameObject);
             }
         }
-
+        PhotonNetwork.Destroy(gameObject);
     }
 
     IEnumerator DestroyBullet()

@@ -8,6 +8,7 @@ public class ReactorGrab : MonoBehaviourPunCallbacks
     public Material normalMaterial;
     public Material mediumMaterial;
     public Material criticalMaterial;
+    public GameObject reactorCore;
 
     public AudioSource audioSource;
     public AudioClip extractionClip;
@@ -18,7 +19,7 @@ public class ReactorGrab : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        this.GetComponent<Renderer>().material = normalMaterial;
+        reactorCore.GetComponent<Renderer>().material = normalMaterial;
         InvokeRepeating("ExtractionChirp", 0f, 5f);
     }
 
@@ -64,7 +65,7 @@ public class ReactorGrab : MonoBehaviourPunCallbacks
     void RPC_TriggerExit()
     {
         playerHealth.reactorHeld = false;
-        this.GetComponent<Renderer>().material = normalMaterial;
+        reactorCore.GetComponent<Renderer>().material = normalMaterial;
         photonView.RPC("RaiseEvent2", RpcTarget.All, ReactorGrab.ReactorExtractionFalse, null);
     }
 
@@ -75,12 +76,12 @@ public class ReactorGrab : MonoBehaviourPunCallbacks
 
         if (playerHealth.reactorExtraction < 50)
         {
-            this.GetComponent<Renderer>().material = mediumMaterial;
+            reactorCore.GetComponent<Renderer>().material = mediumMaterial;
         }
 
         if (playerHealth.reactorExtraction >= 50)
         {
-            this.GetComponent<Renderer>().material = criticalMaterial;
+            reactorCore.GetComponent<Renderer>().material = criticalMaterial;
         }
     }
 

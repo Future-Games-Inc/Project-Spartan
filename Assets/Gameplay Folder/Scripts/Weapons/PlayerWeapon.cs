@@ -80,7 +80,7 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
                 {
                     GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0, null);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                 }

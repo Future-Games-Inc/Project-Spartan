@@ -14368,7 +14368,7 @@ TrailRenderer:
   m_Time: 0.5
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.31
+    widthMultiplier: 0.015
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -14601,7 +14601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5513012799096319914
 Transform:
   m_ObjectHideFlags: 0
@@ -15676,23 +15676,23 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 0.27058825, g: 0.26666668, b: 0.26666668, a: 0}
         key1: {r: 0, g: 0, b: 0, a: 1}
-        key2: {r: 0.15149835, g: 0.4245283, b: 0, a: 1}
-        key3: {r: 0.21238886, g: 0.34381387, b: 0.13634634, a: 0}
+        key2: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
+        key3: {r: 0.3597525, g: 0.3597525, b: 0.3597525, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0.27058825, g: 0.26666668, b: 0.26666668, a: 0}
-        key6: {r: 0, g: 0, b: 0, a: 0}
-        key7: {r: 0, g: 0, b: 0, a: 0}
+        key6: {r: 0.27058825, g: 0.26666668, b: 0.26666668, a: 0}
+        key7: {r: 0.27058825, g: 0.26666668, b: 0.26666668, a: 0}
         ctime0: 0
         ctime1: 7132
-        ctime2: 12529
-        ctime3: 38743
-        ctime4: 46453
+        ctime2: 13493
+        ctime3: 51464
+        ctime4: 56861
         ctime5: 65535
-        ctime6: 0
-        ctime7: 0
+        ctime6: 65535
+        ctime7: 65535
         atime0: 0
         atime1: 6939
-        atime2: 45875
+        atime2: 56861
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -24265,7 +24265,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 2
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -24438,18 +24438,6 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5499884429224921818}
-        m_TargetAssemblyTypeName: UnityEngine.Rigidbody, UnityEngine
-        m_MethodName: set_isKinematic
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 4637150846149593596}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
@@ -24464,6 +24452,12 @@ MonoBehaviour:
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
+      m_Calls: []
+  m_Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Deactivated:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4174025184020132977}
         m_TargetAssemblyTypeName: NetworkGrenade, Assembly-CSharp
@@ -24477,12 +24471,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_Activated:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Deactivated:
-    m_PersistentCalls:
-      m_Calls: []
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
@@ -54920,7 +54908,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3368002977831143514
 Transform:
   m_ObjectHideFlags: 0
@@ -55995,8 +55983,8 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 0.27058825, g: 0.26666668, b: 0.26666668, a: 0}
         key1: {r: 0, g: 0, b: 0, a: 1}
-        key2: {r: 0.15149835, g: 0.4245283, b: 0, a: 1}
-        key3: {r: 0.21238886, g: 0.34381387, b: 0.13634634, a: 0}
+        key2: {r: 0.9088254, g: 0, b: 1, a: 1}
+        key3: {r: 1, g: 0, b: 0.77156544, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0.27058825, g: 0.26666668, b: 0.26666668, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}

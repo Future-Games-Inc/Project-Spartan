@@ -24,6 +24,7 @@ public class Vault : MonoBehaviourPunCallbacks
     public Material activatedMaterial;
     public Material deactivatedMaterial;
     public Material lootedMaterial;
+    public MatchEffects matchProps;
 
     public float elapsedTime;
     public float activationTime = 15;
@@ -97,7 +98,7 @@ public class Vault : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_UpdateVaultActivation(bool playerWithinRadius)
     {
-        if (!activated && playerWithinRadius)
+        if (!activated && playerWithinRadius && matchProps.startMatchBool)
         {
             elapsedTime += Time.deltaTime;
             float remainingTime = activationTime - elapsedTime;

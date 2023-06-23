@@ -4,7 +4,7 @@ using Photon.Pun;
 
 public class SpawnManager : MonoBehaviour
 {
-    public Vector3 spawnPosition;
+    public Transform[] spawnPosition;
     public GameObject[] playerPrefab;
     public bool gameOver;
     public GameObject winnerPlayer;
@@ -33,7 +33,7 @@ public class SpawnManager : MonoBehaviour
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
         {
             int selectionValue = (int)avatarSelectionNumber;
-            PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition, Quaternion.identity);
+            PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition[Random.Range(0, spawnPosition.Length)].position, Quaternion.identity);
         }
     }
 }

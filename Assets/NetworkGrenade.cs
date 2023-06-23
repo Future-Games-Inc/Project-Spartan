@@ -48,14 +48,16 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            player = other.transform.root.gameObject;
-            photonView.RPC("RPC_Trigger", RpcTarget.All);
-            StartCoroutine(ActivateDelayed());
+
         }
     }
 
     public void Throw()
     {
+        if (rb.useGravity == false)
+            rb.useGravity = true;
+        if (rb.isKinematic == true)
+            rb.isKinematic = false;
         Camera cam = player.GetComponentInChildren<Camera>();
         Vector3 forceToAdd = cam.transform.forward * throwForce * throwUpwardForce;
         rb.AddForce(forceToAdd);
@@ -187,14 +189,9 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Trigger()
     {
-        rb.useGravity = true;
-        rb.isKinematic = false;
-    }
-
-    [PunRPC]
-    void RPC_DrawGizmos()
-    {
-        Gizmos.color = new Color(0, 1, 0, 0.2f);
-        Gizmos.DrawSphere(transform.position, explosionRadius);
+        if (rb.useGravity == false)
+            rb.useGravity = true;
+        if (rb.isKinematic == true)
+            rb.isKinematic = false;
     }
 }

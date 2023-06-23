@@ -8,12 +8,10 @@ public class IntelScript : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public AudioClip pickupClip;
 
-    public SpawnManager1 enemyCounter;
-
     // Start is called before the first frame update
     void OnEnable()
     {
-        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+
     }
 
     // Update is called once per frame
@@ -27,14 +25,7 @@ public class IntelScript : MonoBehaviourPunCallbacks
         if (other.CompareTag("PickupSlot"))
         {
             other.GetComponentInParent<PlayerHealth>().IntelFound();
-            StartCoroutine(Destroy());
+            PhotonNetwork.Destroy(gameObject);
         }
-    }
-
-    IEnumerator Destroy()
-    {
-        yield return new WaitForSeconds(.75f);
-        enemyCounter.photonView.RPC("RPC_UpdateIntel", RpcTarget.AllBuffered);
-        PhotonNetwork.Destroy(gameObject);
     }
 }

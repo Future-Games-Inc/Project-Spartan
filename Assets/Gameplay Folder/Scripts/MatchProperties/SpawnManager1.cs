@@ -12,11 +12,8 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject[] artifacts;
     [SerializeField] private GameObject[] bombs;
-    [SerializeField] private GameObject intel;
 
     [SerializeField] private Transform[] enemyDrop;
-    [SerializeField] private Transform[] reactorDrop;
-    [SerializeField] private Transform[] healthDrop;
 
     [SerializeField] private MatchEffects matchProps;
 
@@ -25,7 +22,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     [SerializeField] private int reactorCountMax = 1;
     [SerializeField] private int healthCountMax = 1;
     [SerializeField] private int enemiesKilledForBossSpawn = 5;
-    [SerializeField] private int intelCountMax = 10;
     [SerializeField] private int bombsCountMax = 10;
     [SerializeField] private int artifactCountMax = 10;
 
@@ -34,7 +30,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     private int reactorCount;
     private int healthCount;
     private int enemiesKilled;
-    private int intelCount;
     private int artifactCount;
     private int bombsCount;
 
@@ -43,7 +38,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     private bool spawnReactor = true;
     private bool spawnHealth = true;
     private bool spawnBoss = true;
-    private bool spawnIntel = true;
     private bool spawnBombs = true;
     private bool spawnArtifacts = true;
 
@@ -54,7 +48,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         StartCoroutine(SpawnReactor());
         StartCoroutine(SpawnHealth());
         StartCoroutine(SpawnBoss());
-        StartCoroutine(SpawnIntel());
         StartCoroutine(SpawnArtifacts());
         StartCoroutine(SpawnBombs());
     }
@@ -109,7 +102,10 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnReactor = false;
 
-            PhotonNetwork.InstantiateRoomObject(reactor.name, reactorDrop[Random.Range(0, reactorDrop.Length)].position, Quaternion.identity, 0, null);
+            Vector3 spawnPosition = enemyDrop[Random.Range(0, enemyDrop.Length)].position;
+            spawnPosition += new Vector3(0f, 2f, 0f); // Add 2 to the y transform
+
+            PhotonNetwork.InstantiateRoomObject(reactor.name, spawnPosition, Quaternion.identity, 0, null);
 
             reactorCount++;
 
@@ -163,26 +159,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         }
     }
 
-    private IEnumerator SpawnIntel()
-    {
-        while (spawnIntel && intelCount < intelCountMax)
-        {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
-
-            spawnIntel = false;
-
-            PhotonNetwork.InstantiateRoomObject(intel.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
-
-            intelCount++;
-
-            yield return new WaitForSeconds(30f);
-
-            spawnIntel = true;
-
-            yield return new WaitForSeconds(1);
-        }
-    }
-
     private IEnumerator SpawnHealth()
     {
         while (spawnHealth && healthCount < healthCountMax)
@@ -191,7 +167,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnHealth = false;
 
-            GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, healthDrop[Random.Range(0, healthDrop.Length)].position, Quaternion.identity, 0, null);
+            GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
             Health.GetComponent<Rigidbody>().isKinematic = false;
 
             healthCount++;
@@ -226,12 +202,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             yield return new WaitForSeconds(1);
         }
-    }
-
-    [PunRPC]
-    public void RPC_UpdateIntel()
-    {
-        intelCount--;
     }
 
     [PunRPC]

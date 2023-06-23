@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HitBox : MonoBehaviour
@@ -12,7 +10,7 @@ public class HitBox : MonoBehaviour
     {
         foreach (Transform child in parent)
         {
-            child.gameObject.tag = "Enemy";
+            child.gameObject.tag = this.gameObject.tag;
             ApplyTagRecursively(child);
         }
     }

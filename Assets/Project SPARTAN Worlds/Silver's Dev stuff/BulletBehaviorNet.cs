@@ -43,7 +43,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
         }
         else
         {

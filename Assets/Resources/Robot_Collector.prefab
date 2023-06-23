@@ -172,7 +172,6 @@ GameObject:
   - component: {fileID: 5950993363525062681}
   - component: {fileID: 7784772225422173241}
   - component: {fileID: 1337322463001221985}
-  - component: {fileID: 8175064070426425102}
   - component: {fileID: 561718029665665433}
   - component: {fileID: 789172449994262910}
   - component: {fileID: 2811088867937196126}
@@ -316,6 +315,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8d4851574d898e3489aeed0ae257a80f, type: 3}
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
   agent: {fileID: 5950993363525062681}
+  type: 
 --- !u!82 &1337322463001221985
 AudioSource:
   m_ObjectHideFlags: 0
@@ -412,19 +412,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!135 &8175064070426425102
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4782317824383775665}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.4
-  m_Center: {x: 0, y: 1.42, z: 0}
 --- !u!135 &561718029665665433
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -504,7 +491,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 8c7e90cd8231f9a4c9936aafd7ec1fed, type: 3}
 --- !u!114 &7686642839091752342
@@ -606,8 +593,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d56c7b3b477523b46b54486753921d29, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 2657873270443967794, guid: 3da05e9f66c9f254c8875335e7e9179e,
+    type: 3}
+  m_Color: {r: 0.32323617, g: 0.27987415, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

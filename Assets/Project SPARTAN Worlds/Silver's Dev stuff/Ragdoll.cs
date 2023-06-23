@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ragdoll : MonoBehaviour
@@ -22,7 +20,8 @@ public class Ragdoll : MonoBehaviour
                 rigidBody.isKinematic = true;
             }
             animator.enabled = true;
-        } else
+        } 
+        else
         {
             foreach (var rigidBody in rigidbodies)
             {

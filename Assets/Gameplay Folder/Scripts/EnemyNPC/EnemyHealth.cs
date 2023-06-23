@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.AI;
+using Invector.vCharacterController;
 
 public class EnemyHealth : MonoBehaviourPunCallbacks
 {
@@ -10,6 +11,8 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     public GameObject xpDropExtra;
     public SpawnManager1 enemyCounter;
     public bool alive;
+
+    public Ragdoll ragDoll;
 
     public Animator animator;
     public GameObject deathElectric;
@@ -67,7 +70,7 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
 
     IEnumerator Destroy()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(5f);
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -93,9 +96,8 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     void RPC_DestroyEnemy()
     {
         this.aiScript.enabled = false;
-        animator.SetTrigger("Death");
+        ragDoll.SetActive(true);
+        agent.isStopped = true;
         deathElectric.SetActive(true);
-
-        agent.enabled = false;
     }
 }

@@ -177,6 +177,11 @@ public class FollowAI : MonoBehaviourPunCallbacks
             // set the speed for the agent for the blend tree
             animator.SetFloat("Speed", agent.velocity.magnitude);
         }
+
+        //if (agent != null && !agent.isOnNavMesh)
+        //{
+        //    TakeDamage(300);
+        //}
     }
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)

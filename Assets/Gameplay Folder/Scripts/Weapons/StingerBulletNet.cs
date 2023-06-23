@@ -44,7 +44,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
             bulletModifier = playerHealth.bulletModifier;
         }
         else

@@ -180,7 +180,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            player = other.transform.root.gameObject;
+            player = other.transform.parent.gameObject;
             photonView.RPC("RPC_PulseTrigger", RpcTarget.All);
         }
     }

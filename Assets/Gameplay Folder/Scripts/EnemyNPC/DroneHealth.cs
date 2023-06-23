@@ -33,7 +33,10 @@ public class DroneHealth : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        if (agent != null && !agent.isOnNavMesh)
+        {
+            TakeDamage(300);
+        }
     }
 
     public void TakeDamage(int damage)

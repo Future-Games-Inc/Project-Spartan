@@ -9,5 +9,5 @@ public class Pickup : ScriptableObject
     public int toxicAmount;
     public int bulletModifierDamage;
     public int bulletModifierCount;
-    public int shieldDuration;
+    public int armorAmount;
 }
