@@ -17,11 +17,11 @@ public class decoySpawner : MonoBehaviour
     IEnumerator DecoySpawnActive()
     {
         yield return new WaitForSeconds(0);
-    //    foreach (Transform spawnPoint in spawnLocations)
-    //    {
-    //        PhotonNetwork.Instantiate(decoyModel.name, spawnPoint.position, Quaternion.identity, 0);
-    //    }
-    //    player.decoyDeploy = false;
-    //    this.gameObject.SetActive(false);
+        foreach (Transform spawnPoint in spawnLocations)
+        {
+            PhotonNetwork.Instantiate(decoyModel.name, spawnPoint.position, Quaternion.identity, 0);
+        }
+        player.decoyDeploy = false;
+        this.gameObject.SetActive(false);
     }
 }

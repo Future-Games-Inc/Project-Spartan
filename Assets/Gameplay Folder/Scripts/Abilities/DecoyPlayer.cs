@@ -1,59 +1,53 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class DecoyPlayer : MonoBehaviour
+public class DecoyPlayer : MonoBehaviourPunCallbacks
 {
-    public int avatarLoader;
-    public GameObject[] AvatarModelPrefabs;
     public GameObject decoyDeath;
     public Animator animator;
+    public bool active = true;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        decoyDeath.SetActive(false);
         StartCoroutine(DestroyDecoy());
-        object avatarSelectionNumber;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
-        {
-            avatarLoader = (int)avatarSelectionNumber;
-        }
-
-        for (int i = 0; i < AvatarModelPrefabs.Length; i++)
-        {
-            if (AvatarModelPrefabs[avatarLoader] == AvatarModelPrefabs[i])
-            {
-                AvatarModelPrefabs[i].SetActive(true);
-            }
-            else
-            {
-                AvatarModelPrefabs[i].SetActive(false);
-            }
-        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Bullet"))
+        if (other.CompareTag("Bullet") && active || other.CompareTag("EnemyBullet") && active)
         StartCoroutine(DecoyKilled());
     }
 
     IEnumerator DestroyDecoy()
     {
         yield return new WaitForSeconds(15);
-        decoyDeath.SetActive(true);
-        animator.SetTrigger("Death");
+        PhotonNetwork.Instantiate(decoyDeath.name, transform.position, Quaternion.identity, 0);
+        photonView.RPC("RPC_DecoyDestroyed", RpcTarget.All);
         yield return new WaitForSeconds(3f);
         PhotonNetwork.Destroy(gameObject);
     }
 
     IEnumerator DecoyKilled()
     {
-        animator.SetTrigger("Death");
-        decoyDeath.SetActive(true);
+        PhotonNetwork.Instantiate(decoyDeath.name, transform.position, Quaternion.identity, 0);
+        photonView.RPC("RPC_DecoyKilled", RpcTarget.All);
         yield return new WaitForSeconds(3f);
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    void RPC_DecoyDestroyed()
+    {
+        active = false;
+        animator.SetTrigger("Death");
+    }
+
+    [PunRPC]
+    void RPC_DecoyKilled()
+    {
+        active = false;
+        animator.SetTrigger("Death");
     }
 }

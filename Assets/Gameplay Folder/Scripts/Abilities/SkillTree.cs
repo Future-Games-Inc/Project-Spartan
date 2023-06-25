@@ -11,7 +11,6 @@ public class SkillTree : MonoBehaviour
 
     public int[] SkillLevels;
     public int[] SkillCaps;
-    public int powerupButtonAssign;
     //public string[] SkillNames;
     //public string[] SkillDescriptions;
 
@@ -40,7 +39,6 @@ public class SkillTree : MonoBehaviour
     {
         initialLoad = true;
         powerUpCount = 0f;
-        powerupButtonAssign = 0;
 
         SkillLevels = new int[6];
         SkillCaps = new[] { 7, 5, 5, 3, 3, 1, };

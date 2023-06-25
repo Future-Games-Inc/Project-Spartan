@@ -20,35 +20,35 @@ public class MultiplayerVRConstants
     public const string AMMO_OVERLOAD = "Ammo_Overload";
     public const string HEALTH_REGEN = "Health_Regen";
 
-    //public const string HEALTH_STIM = "Health_Stim";
-    //public const string LEECH = "Leech";
-    //public const string ACTIVE_CAMO = "Active_Camo";
-    //public const string STEALTH = "Stealth";
+    public const string HEALTH_STIM = "Health_Stim";
+    public const string LEECH = "Leech";
+    public const string ACTIVE_CAMO = "Active_Camo";
+    public const string STEALTH = "Stealth";
     //public const string DOUBLE_AGENT = "Double_Agent";
     //public const string PROXIMITY_BOMB = "Proximity_Bomb";
     //public const string SMOKE_BOMB = "Smoke_Bomb";
-    //public const string EXPLOSIVE_DEATH = "Explosive_Death";
-    //public const string BERSERKER_FURY = "Berserker_Fury";
-    //public const string AI_COMPANION = "AI_Companion";
-    //public const string DECOY_DEPLOYMENT = "Decoy_Deployment";
-    //public const string SAVING_GRACE = "Saving_Grace";
+    public const string EXPLOSIVE_DEATH = "Explosive_Death";
+    public const string BERSERKER_FURY = "Berserker_Fury";
+    public const string AI_COMPANION = "AI_Companion";
+    public const string DECOY_DEPLOYMENT = "Decoy_Deployment";
+    public const string SAVING_GRACE = "Saving_Grace";
 
-    //public const string HEALTH_STIM_SLOT = "Health_Stim_Slot";
-    //public const string LEECH_SLOT = "Leech_Slot";
-    //public const string ACTIVE_CAMO_SLOT = "Active_Camo_Slot";
-    //public const string STEALTH_SLOT = "Stealth_Slot";
+    public const string HEALTH_STIM_SLOT = "Health_Stim_Slot";
+    public const string LEECH_SLOT = "Leech_Slot";
+    public const string ACTIVE_CAMO_SLOT = "Active_Camo_Slot";
+    public const string STEALTH_SLOT = "Stealth_Slot";
     //public const string DOUBLE_AGENT_SLOT = "Double_Agent_Slot";
     //public const string PROXIMITY_BOMB_SLOT = "Proximity_Bomb_Slot";
     //public const string SMOKE_BOMB_SLOT = "Smoke_Bomb_Slot";
-    //public const string EXPLOSIVE_DEATH_SLOT = "Explosive_Death_Slot";
-    //public const string BERSERKER_FURY_SLOT = "Berserker_Fury_Slot";
-    //public const string AI_COMPANION_SLOT = "AI_Companion_Slot";
-    //public const string DECOY_DEPLOYMENT_SLOT = "Decoy_Deployment_Slot";
-    //public const string SAVING_GRACE_SLOT = "Saving_Grace_Slot";
+    public const string EXPLOSIVE_DEATH_SLOT = "Explosive_Death_Slot";
+    public const string BERSERKER_FURY_SLOT = "Berserker_Fury_Slot";
+    public const string AI_COMPANION_SLOT = "AI_Companion_Slot";
+    public const string DECOY_DEPLOYMENT_SLOT = "Decoy_Deployment_Slot";
+    public const string SAVING_GRACE_SLOT = "Saving_Grace_Slot";
 
     public const string CINTS = "Cints";
 
-    //public const string BUTTON_ASSIGN = "Button_Assign";
+    public const string BUTTON_ASSIGN = "Button_Assign";
 
     //public const string CYBER_SK_GANG = "CyberSKGang";
     //public const string MUERTE_DE_DIOS = "MuerteDeDios";

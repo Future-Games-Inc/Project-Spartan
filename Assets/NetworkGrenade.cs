@@ -48,16 +48,24 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
+            photonView.RPC("RPC_GrenadeTrigger", RpcTarget.All);
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        {
+            if (rb.useGravity == false)
+                rb.useGravity = true;
+            if (rb.isKinematic == true)
+                rb.isKinematic = false;
+            Throw();
         }
     }
 
     public void Throw()
     {
-        if (rb.useGravity == false)
-            rb.useGravity = true;
-        if (rb.isKinematic == true)
-            rb.isKinematic = false;
         Camera cam = player.GetComponentInChildren<Camera>();
         Vector3 forceToAdd = cam.transform.forward * throwForce * throwUpwardForce;
         rb.AddForce(forceToAdd);
@@ -71,7 +79,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
         photonView.RPC("EnableGrenade", RpcTarget.All);
     }
 
-    IEnumerator ExplodeDelayed()
+    public IEnumerator ExplodeDelayed()
     {
         yield return new WaitForSeconds(explosionDelay);
         photonView.RPC("Explode", RpcTarget.All);
@@ -187,7 +195,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_Trigger()
+    void RPC_GrenadeTrigger()
     {
         if (rb.useGravity == false)
             rb.useGravity = true;
