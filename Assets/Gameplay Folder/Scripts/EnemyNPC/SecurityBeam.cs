@@ -29,15 +29,13 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
-    IEnumerator LostPlayer()
+    private void LostPlayer()
     {
-        yield return new WaitForSeconds(0);
         photonView.RPC("RPC_LostPlayer", RpcTarget.AllBuffered);
     }
 
-    public IEnumerator FoundPlayer()
+    public void FoundPlayer()
     {
-        yield return new WaitForSeconds(0);
         photonView.RPC("RPC_TriggerEnter", RpcTarget.AllBuffered);
 
     }
@@ -53,7 +51,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
             }
             lostTimer += Time.deltaTime;
             if (lostTimer >= 10 && neverFound == false)
-                StartCoroutine(LostPlayer());
+                LostPlayer();
             yield return null;
         }
     }
