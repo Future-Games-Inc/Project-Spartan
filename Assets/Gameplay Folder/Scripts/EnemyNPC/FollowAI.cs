@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
 using System.Collections;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class FollowAI : MonoBehaviourPunCallbacks
 {
@@ -75,7 +77,16 @@ public class FollowAI : MonoBehaviourPunCallbacks
             Patrol();
 
             //photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
+
+            //Listen to PhotonEvents
+            PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
         }
+    }
+
+    private void OnDisable()
+    {
+        //Stop listening to PhotonEvents
+        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
     }
 
     public void FindClosestEnemy()
@@ -328,7 +339,9 @@ public class FollowAI : MonoBehaviourPunCallbacks
     {
         if (!alive)
             return;
-        photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
+        //photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
+        object[] data = new object[] { damage };
+        PhotonNetwork.RaiseEvent(PUNEventDatabase.FOLLOW_AI_TAKE_DAMAGE, data, RaiseEventOptions.Default, SendOptions.SendUnreliable);
     }
 
     public void RandomSFX()
@@ -386,15 +399,16 @@ public class FollowAI : MonoBehaviourPunCallbacks
     //    healthBar.SetMaxHealth(Health);
     //}
 
-    [PunRPC]
-    void RPC_StopHit()
+    private void NetworkingClient_EventReceived(EventData obj)
     {
-        hitEffect.SetActive(false);
-        firstHit = false;
+        if (obj.Code == PUNEventDatabase.FOLLOW_AI_TAKE_DAMAGE)
+        {
+            object[] data = (object[])obj.CustomData;
+            int damage = (int)data[0];
+            TakeDamageEnemy(damage);
+        }
     }
-
-    [PunRPC]
-    void RPC_TakeDamageEnemy(int damage)
+    void TakeDamageEnemy(int damage)
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
@@ -413,5 +427,37 @@ public class FollowAI : MonoBehaviourPunCallbacks
             StartCoroutine(StopHit());
         }
     }
+
+    [PunRPC]
+    void RPC_StopHit()
+    {
+        hitEffect.SetActive(false);
+        firstHit = false;
+    }
+
+    // --------- OLD RPC FOR ENEMY TAKING DAMAGE ---------------
+
+    //[PunRPC]
+    //void RPC_TakeDamageEnemy(int damage)
+    //{
+    //    audioSource.PlayOneShot(bulletHit);
+    //    Health -= damage;
+    //    //healthBar.SetCurrentHealth(Health);
+
+    //    if (Health <= 0 && alive == true)
+    //    {
+    //        alive = false;
+    //        enemyHealth.KillEnemy();
+    //    }
+
+    //    if (!firstHit)
+    //    {
+    //        hitEffect.SetActive(true);
+    //        firstHit = true;
+    //        StartCoroutine(StopHit());
+    //    }
+    //}
+
+   
 }
 

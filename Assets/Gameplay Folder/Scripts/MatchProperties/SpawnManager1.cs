@@ -52,6 +52,23 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         StartCoroutine(SpawnBombs());
     }
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        // Listen to Photon Events
+        PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        // Stop listening to Photon Events
+        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+
+    }
+
+    
+
     private IEnumerator SpawnEnemies()
     {
         while (spawnEnemy && enemyCount < enemyCountMax)
@@ -239,6 +256,27 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     {
         enemiesKilled++;
     }
+
+    private void NetworkingClient_EventReceived(ExitGames.Client.Photon.EventData obj)
+    {
+        if (obj.Code == PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT)
+        {
+            UpdateEnemy();
+            UpdateEnemyCount();
+            return;
+        }
+    }
+
+    public void UpdateEnemy()
+    {
+        enemyCount--;
+    }
+
+    public void UpdateEnemyCount()
+    {
+        enemiesKilled++;
+    }
+
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         // Check if this is the object's current owner and if the new master client exists

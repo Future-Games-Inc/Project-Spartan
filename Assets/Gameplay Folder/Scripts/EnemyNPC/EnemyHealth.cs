@@ -3,6 +3,9 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.AI;
 using Invector.vCharacterController;
+using UnityEditor.EditorTools;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class EnemyHealth : MonoBehaviourPunCallbacks
 {
@@ -89,6 +92,7 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
 
         enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
         enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
+        PhotonNetwork.RaiseEvent(PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT, null, RaiseEventOptions.Default, SendOptions.SendUnreliable);;
         DestroyEnemy();
     }
 
