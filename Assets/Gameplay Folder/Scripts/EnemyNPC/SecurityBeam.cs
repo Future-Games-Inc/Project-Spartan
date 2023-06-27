@@ -26,6 +26,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         detectedPlayer = null;
         InvokeRepeating("AlarmSound", 5f, 3f);
         StartCoroutine(Lost());
+        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     IEnumerator LostPlayer()
@@ -75,14 +76,13 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         securityDrone.GetComponent<SecuityCamera>().enabled = false;
         securityDrone.GetComponent<NavMeshAgent>().speed = 2;
         //droneAgent.SetDestination(detectedPlayer.transform.position);
-        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
-            if (enemy.GetComponent<FollowAI>() != null)
+            if (enemy.TryGetComponent(out FollowAI followAi))
             {
-                enemy.GetComponent<FollowAI>().AgroRange = 500;
-                enemy.GetComponent<FollowAI>().agent.speed = 3;
-                enemy.GetComponent<FollowAI>().inSight = true;
+                followAi.AgroRange = 500;
+                followAi.agent.speed = 3;
+                followAi.inSight = true;
             }
         }
     }
@@ -98,14 +98,13 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         securityDrone.GetComponent<WanderingAI>().enabled = true;
         securityDrone.GetComponent<SecuityCamera>().enabled = true;
         securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f;
-        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
-            if (enemy.GetComponent<FollowAI>() != null)
+            if (enemy.TryGetComponent(out FollowAI followAi))
             {
-                enemy.GetComponent<FollowAI>().AgroRange = 25f;
-                enemy.GetComponent<FollowAI>().agent.speed = 1.5f;
-                enemy.GetComponent<FollowAI>().inSight = false;
+                followAi.AgroRange = 25f;
+                followAi.agent.speed = 1.5f;
+                followAi.inSight = false;
             }
         }
     }
