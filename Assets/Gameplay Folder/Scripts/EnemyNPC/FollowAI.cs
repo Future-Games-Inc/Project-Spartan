@@ -350,9 +350,8 @@ public class FollowAI : MonoBehaviourPunCallbacks
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
-    IEnumerator StopHit()
+    void StopHit()
     {
-        yield return new WaitForSeconds(3f);
         photonView.RPC("RPC_StopHit", RpcTarget.All);
     }
 
@@ -424,7 +423,8 @@ public class FollowAI : MonoBehaviourPunCallbacks
         {
             hitEffect.SetActive(true);
             firstHit = true;
-            StartCoroutine(StopHit());
+            // Invoke StopHit after 3 seconds so no need for Coroutine
+            Invoke("StopHit", 3f);
         }
     }
 

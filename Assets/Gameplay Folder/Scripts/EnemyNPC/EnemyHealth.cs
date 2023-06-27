@@ -44,7 +44,11 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
 
     public void DestroyEnemy()
     {
-        photonView.RPC("RPC_DestroyEnemy", RpcTarget.All);
+        //photonView.RPC("RPC_DestroyEnemy", RpcTarget.All);
+        this.aiScript.enabled = false;
+        ragDoll.SetActive(true);
+        agent.isStopped = true;
+        deathElectric.SetActive(true);
         foreach (Transform t in lootSpawn)
         {
             if (gameObject.CompareTag("Enemy"))
@@ -90,18 +94,18 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
         aiScript.attackWeapon.fireWeaponBool = false;
         aiScript.alive = false;
 
-        enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
-        enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
+       // enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
+       // enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
         PhotonNetwork.RaiseEvent(PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT, null, RaiseEventOptions.Default, SendOptions.SendUnreliable);;
         DestroyEnemy();
     }
 
-    [PunRPC]
-    void RPC_DestroyEnemy()
-    {
-        this.aiScript.enabled = false;
-        ragDoll.SetActive(true);
-        agent.isStopped = true;
-        deathElectric.SetActive(true);
-    }
+    //[PunRPC]
+    //void RPC_DestroyEnemy()
+    //{
+    //    this.aiScript.enabled = false;
+    //    ragDoll.SetActive(true);
+    //    agent.isStopped = true;
+    //    deathElectric.SetActive(true);
+    //}
 }
