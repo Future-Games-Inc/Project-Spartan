@@ -417,6 +417,9 @@ public class FollowAI : MonoBehaviourPunCallbacks
         {
             alive = false;
             enemyHealth.KillEnemy();
+
+            // Updates Enemy counts
+            PhotonNetwork.RaiseEvent(PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT, null, RaiseEventOptions.Default, SendOptions.SendUnreliable);
         }
 
         if (!firstHit)

@@ -221,42 +221,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    public void RPC_UpdateArtifact()
-    {
-        artifactCount--;
-    }
-
-    [PunRPC]
-    public void RPC_UpdateBombs()
-    {
-        bombsCount--;
-    }
-
-    [PunRPC]
-    public void RPC_UpdateEnemy()
-    {
-        enemyCount--;
-    }
-
-    [PunRPC]
-    public void RPC_UpdateSecurity()
-    {
-        securityCount--;
-    }
-
-    [PunRPC]
-    public void RPC_UpdateHealthCount()
-    {
-        healthCount--;
-    }
-
-    [PunRPC]
-    public void RPC_UpdateEnemyCount()
-    {
-        enemiesKilled++;
-    }
-
     private void NetworkingClient_EventReceived(ExitGames.Client.Photon.EventData obj)
     {
         if (obj.Code == PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT)
@@ -276,6 +240,44 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     {
         enemiesKilled++;
     }
+
+    [PunRPC]
+    public void RPC_UpdateArtifact()
+    {
+        artifactCount--;
+    }
+
+    [PunRPC]
+    public void RPC_UpdateBombs()
+    {
+        bombsCount--;
+    }
+
+    [PunRPC]
+    public void RPC_UpdateSecurity()
+    {
+        securityCount--;
+    }
+
+    [PunRPC]
+    public void RPC_UpdateHealthCount()
+    {
+        healthCount--;
+    }
+
+    //[PunRPC]
+    //public void RPC_UpdateEnemy()
+    //{
+    //    enemyCount--;
+    //}
+
+    //[PunRPC]
+    //public void RPC_UpdateEnemyCount()
+    //{
+    //    enemiesKilled++;
+    //}
+
+   
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
