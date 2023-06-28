@@ -43,7 +43,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
         }
         else
         {
@@ -53,7 +53,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
         // if break on impact
         if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
             PhotonNetwork.Destroy(gameObject);
-        if ((other.CompareTag("Enemy") || other.CompareTag("BossEnemy")))
+        if ((other.CompareTag("Enemy")))
         {
             // select custom functions for damage
             switch (Type)
@@ -67,7 +67,21 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Player"))
+        if ((other.CompareTag("BossEnemy")))
+        {
+            // select custom functions for damage
+            switch (Type)
+            {
+                case "EMP Bullet":
+                    EMPBulletDamageBossEnemy(other, Damage);
+                    break;
+                default:
+                    DefaultDamageBossEnemy(other, Damage);
+                    break;
+            }
+        }
+
+        if (other.CompareTag("Player") && other != bulletOwner)
         {
             // select custom functions for damage
             switch (Type)
@@ -102,7 +116,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
             if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
             {
-                playerHealth.EnemyKilled();
+                playerHealth.EnemyKilled("Normal");
                 enemyDamageReg.TakeDamage(Damage);
             }
             else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
@@ -116,7 +130,37 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
             if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
             {
-                playerHealth.EnemyKilled();
+                playerHealth.EnemyKilled("Normal");
+                enemyDamageReg.TakeDamage(Damage);
+            }
+            else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+            {
+                enemyDamageReg.TakeDamage(Damage);
+            }
+            enemyDamageReg.EMPShock();
+            PhotonNetwork.Destroy(gameObject);
+        }
+
+        void DefaultDamageBossEnemy(Collider target, float damage)
+        {
+            FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
+            if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
+            {
+                playerHealth.EnemyKilled("Boss");
+                enemyDamageReg.TakeDamage(Damage);
+            }
+            else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+            {
+                enemyDamageReg.TakeDamage(Damage);
+            }
+            PhotonNetwork.Destroy(gameObject);
+        }
+        void EMPBulletDamageBossEnemy(Collider target, float damage)
+        {
+            FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
+            if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
+            {
+                playerHealth.EnemyKilled("Boss");
                 enemyDamageReg.TakeDamage(Damage);
             }
             else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
@@ -152,13 +196,25 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
         void DefaultDamageSecurity(Collider target, float damage)
         {
             DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
-            enemyDamageReg.TakeDamage(Damage);
+            if (enemyDamageReg != null)
+                enemyDamageReg.TakeDamage(Damage);
+            else
+            {
+                SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
+                enemyDamageReg2.TakeDamage(Damage);
+            }
             PhotonNetwork.Destroy(gameObject);
         }
         void EMPBulletDamageSecurity(Collider target, float damage)
         {
             DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
-            enemyDamageReg.TakeDamage(Damage * 200);
+            if (enemyDamageReg != null)
+                enemyDamageReg.TakeDamage(Damage);
+            else
+            {
+                SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
+                enemyDamageReg2.TakeDamage(Damage * 200);
+            }
             PhotonNetwork.Destroy(gameObject);
         }
     }

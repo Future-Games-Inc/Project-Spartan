@@ -31,24 +31,16 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [Header("Bullet Types --------------------------------")]
     public GameObject Bullet;
     [HideInInspector]
-    public bool active = true;
-    [HideInInspector]
     public bool isFiring = false;
     public bool reloadingWeapon = false;
 
-    [Header("Keybinds ------------------------------------")]
-    public InputActionProperty triggerL;
-    public InputActionProperty triggerR;
-    [HideInInspector]
-    public bool isDual = false;
-    [HideInInspector]
-    public bool isTriggerSingle = false;
-    // Start is called before the first frame update
-    void OnEnbale()
+    void OnEnable()
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
+        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
+        grabbable.activated.AddListener(StartFireBullet);
+        grabbable.deactivated.AddListener(StopFireBullet);
         photonView.RPC("RPC_EMPStart", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -65,45 +57,22 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        checkForInputs();
-        // check for durablity
-        if (durability <= 0)
-            StartCoroutine(DestroyWeapon());
+
     }
 
-    private void checkForInputs()
+    public void StartFireBullet(ActivateEventArgs arg)
     {
-        // ignore if the gun is not being held
-        if (!isTriggerSingle) return;
-
-        // hold down trigger R for fire (works on left hand as well)
-        if ((triggerR.action.ReadValue<float>() > 0.8f || triggerL.action.ReadValue<float>() > 0.8f))
-        {
-            if (!isFiring)
-            {
-                isFiring = true;
-                StartCoroutine(StartFireBullet());
-            }
-        }
-
-        if ((triggerR.action.ReadValue<float>() < 0.8f || triggerL.action.ReadValue<float>() < 0.8f))
-        {
-            if (isFiring)
-                isFiring = false;
-        }
+        isFiring = true;
+        StartCoroutine(FireBullet());
     }
 
-    public void setDual(bool state)
+    public void StopFireBullet(DeactivateEventArgs arg)
     {
-        isDual = state;
+        isFiring = false;
+        StopCoroutine(FireBullet());
     }
 
-    public void setHeld(bool state)
-    {
-        isTriggerSingle = state;
-    }
-
-    IEnumerator StartFireBullet()
+    IEnumerator FireBullet()
     {
         while (isFiring)
         {
@@ -111,16 +80,15 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(Bullet.name, t.position, Quaternion.identity, 0, null);
-                    audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().clip);
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehavior>().TravelSpeed;
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
-                    spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
-                    spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
+                    GameObject spawnedBullet = PhotonNetwork.Instantiate(Bullet.name, t.position, Quaternion.identity, 0, null);
+                    audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
+                    spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
+                    spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().playerBullet = true;
                 }
-                photonView.RPC("RPC_EMPFire", RpcTarget.All);
-                yield return new WaitForSeconds(0.2f);
             }
+            photonView.RPC("RPC_EMPFire", RpcTarget.All);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -164,7 +132,7 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_RPC_EMPFire()
+    void RPC_EMPFire()
     {
         ammoLeft--;
 
@@ -178,6 +146,7 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPReload()
     {
+        StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
         durability--;

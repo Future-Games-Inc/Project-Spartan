@@ -136,8 +136,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                     foreach (Transform t in spawnPoint)
                     {
                         GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(PulseBullet.name, t.position, Quaternion.identity, 0, null);
-                        audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().clip);
-                        spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * spawnedBullet.GetComponent<BulletBehavior>().TravelSpeed;
+                        audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
+                        spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                         spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                         spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
@@ -156,14 +156,14 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                     foreach (Transform t in spawnPoint)
                     {
                         GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(playerBullet.name, spawnPoint[0].position, Quaternion.identity, 0, null);
-                        audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehavior>().clip);
-                        spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehavior>().TravelSpeed;
+                        audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
+                        spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                         spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                         spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseSingleFire", RpcTarget.All);
-                    yield return new WaitForSeconds(playerBullet.GetComponent<BulletBehavior>().RateOfFire);
+                    yield return new WaitForSeconds(playerBullet.GetComponent<BulletBehaviorNet>().RateOfFire);
                 }
             }
         }
@@ -180,7 +180,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
-            player = other.transform.root.gameObject;
+            player = other.transform.parent.gameObject;
             photonView.RPC("RPC_PulseTrigger", RpcTarget.All);
         }
     }
