@@ -1,8 +1,9 @@
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using Photon.Realtime;
 
-public class EnergyBladeNet : MonoBehaviourPunCallbacks
+public class EnergyBladeNet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     [Header("Blade Characteristics ---------------------------------------------------------------")]
     public TextMeshProUGUI bleedStackText;
@@ -34,11 +35,8 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     void OnEnable()
     {
-        if (photonView.IsMine)
-        {
-            bladeTransform = transform;
-            previousPosition = bladeTransform.localPosition;
-        }
+        bladeTransform = transform;
+        previousPosition = bladeTransform.localPosition;
     }
 
     [System.Obsolete]
@@ -235,6 +233,22 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     void RPC_BladeNormal()
     {
         Blade.GetComponent<Renderer>().material = normal;
+    }
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (photonView.IsMine)
+        {
+            // Set the owner of the PhotonView to the local player
+            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+
+            // Retrieve the playerHealth from the object instantiation data
+            object[] instantiationData = photonView.InstantiationData;
+            if (instantiationData != null && instantiationData.Length > 0)
+            {
+                playerHealth = (PlayerHealth)instantiationData[0];
+            }
+        }
     }
 }
 

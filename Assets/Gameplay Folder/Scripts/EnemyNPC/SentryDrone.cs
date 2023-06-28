@@ -205,10 +205,10 @@ public class SentryDrone : MonoBehaviourPunCallbacks
     {
         while (true)
         {
-            if (isFiring)
+            if (isFiring && ammoLeft > 0)
             {
                 yield return new WaitForSeconds(0.25f);
-                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
+                GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
                 shootForce = (int)Random.Range(40, 75);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
@@ -216,7 +216,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks
                 yield return new WaitForSeconds(.25f);
             }
 
-            else if (ammoLeft <= 0)
+            else if (isFiring && ammoLeft <= 0)
             {
                 isFiring = false;
                 StartCoroutine(ReloadWeapon());

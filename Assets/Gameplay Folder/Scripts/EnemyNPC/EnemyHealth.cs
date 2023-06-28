@@ -2,10 +2,6 @@ using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.AI;
-using Invector.vCharacterController;
-using UnityEditor.EditorTools;
-using Photon.Realtime;
-using ExitGames.Client.Photon;
 
 public class EnemyHealth : MonoBehaviourPunCallbacks
 {
@@ -94,9 +90,9 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
         aiScript.attackWeapon.fireWeaponBool = false;
         aiScript.alive = false;
 
-       // enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
-       // enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
-        
+        //enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
+        //enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
+
         DestroyEnemy();
     }
 

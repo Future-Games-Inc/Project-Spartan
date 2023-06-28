@@ -50,7 +50,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 {
                     photonView.RPC("RPC_ShootAudio", RpcTarget.All);
                 }
-                GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
+                GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
                 if (this.gameObject.tag == "Enemy")
                 {
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = 2;

@@ -191,6 +191,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool stealth;
     public bool berserker;
     public bool berserkerActivated = false;
+    public bool spawnedBlade;
     public float stealthDuration = 30;
     public float aiCompanionDuration = 30;
     public float decoyDeployDuration = 30;
@@ -268,9 +269,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         CheckHealthStatus();
         CheckArmorStatus();
 
-        GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation);
-        blade.GetComponent<EnergyBladeNet>().playerHealth = this.gameObject.GetComponent<PlayerHealth>();
-        meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
+        if (!spawnedBlade && photonView.IsMine)
+        {
+            spawnedBlade = true;
+            GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation, 0, new object[] { gameObject.GetComponent<PlayerHealth>() });
+            PhotonView bladePhotonView = blade.GetComponent<PhotonView>();
+            bladePhotonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+            meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
+        }
 
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment) && (int)assignment >= 1)
             hasButtonAssignment = true;
@@ -560,10 +566,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [System.Obsolete]
     void Update()
     {
-        if(Health > maxHealth)
+        if (!photonView.IsMine)
         {
-            Health = maxHealth;
-            CheckHealthStatus();
+            foreach (GameObject obj in playerObjects)
+            {
+                obj.SetActive(false);
+            }
         }
         // Perform time-based actions
         if (reactorHeld)
@@ -1383,9 +1391,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         object primaryImplant;
         object primaryNode;
 
-        if (primaryButtonPressed && primaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant !>= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode != 1 || primaryButtonPressed && primaryPowerupTimer == true && 
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant !>= 1 &&
+        if (primaryButtonPressed && primaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant! >= 1 &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode != 1 || primaryButtonPressed && primaryPowerupTimer == true &&
+                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant! >= 1 &&
                     PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode != 1)
         {
             primaryPowerupTimer = false;
@@ -1832,7 +1840,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         berserkerEffectTimer += Time.deltaTime;
-        if(!berserkerActivated)
+        if (!berserkerActivated)
         {
             berserkerActivated = true;
             Armor = maxArmor;
