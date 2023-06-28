@@ -4,6 +4,8 @@ using UnityEngine;
 
 public enum PUNEventDatabase
 {
-    FollowAITakeDamage = 50,
-    SpawnManager1UpdateEnemyCount = 51,
+    FollowAI_TakeDamage = 50,
+    SpawnManager1_UpdateEnemyCount = 51,
+    FollowAI_StopHit = 52,
+
 }

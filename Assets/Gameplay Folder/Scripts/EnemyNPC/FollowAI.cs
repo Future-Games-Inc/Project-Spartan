@@ -346,7 +346,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         // Raise take damage event
         object[] data = new object[] { damage };
         RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAITakeDamage, data, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_TakeDamage, data, options, SendOptions.SendUnreliable);
     }
 
     public void RandomSFX()
@@ -357,7 +357,12 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void StopHit()
     {
-        photonView.RPC("RPC_StopHit", RpcTarget.All);
+        // photonView.RPC("RPC_StopHit", RpcTarget.All);
+        // Raise Event Here
+        hitEffect.SetActive(false);
+        firstHit = false;
+
+
     }
 
     public void EMPShock(GameObject Effect)
@@ -406,11 +411,16 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     // Unwrap damage event and call local Take Damage method
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == (byte)PUNEventDatabase.FollowAITakeDamage)
+        if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_TakeDamage)
         {
             object[] data = (object[])photonEvent.CustomData;
             int damage = (int)data[0];
             TakeDamageEnemy(damage);
+        }
+        if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_StopHit)
+        {
+            // Call StopHit after 3 seconds
+            Invoke("StopHit", 3f);
         }
     }
 
@@ -428,7 +438,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
             // Updates Enemy counts
             RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.SpawnManager1UpdateEnemyCount, null, options, SendOptions.SendUnreliable);
+            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount, null, options, SendOptions.SendUnreliable);
         }
 
         if (!firstHit)
@@ -436,18 +446,22 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             hitEffect.SetActive(true);
             firstHit = true;
             // Invoke StopHit after 3 seconds so no need for Coroutine
-            Invoke("StopHit", 3f);
+            //Invoke("StopHit", 3f);
+            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_StopHit, null, options, SendOptions.SendUnreliable);
         }
     }
 
-    [PunRPC]
-    void RPC_StopHit()
-    {
-        hitEffect.SetActive(false);
-        firstHit = false;
-    }
+    // --------- OLD RPC FOR StopHit ---------------
 
-    
+    //[PunRPC]
+    //void RPC_StopHit()
+    //{
+    //    hitEffect.SetActive(false);
+    //    firstHit = false;
+    //}
+
+
 
     // --------- OLD RPC FOR ENEMY TAKING DAMAGE ---------------
 
