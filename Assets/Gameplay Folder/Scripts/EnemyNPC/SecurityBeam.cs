@@ -26,7 +26,6 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         detectedPlayer = null;
         InvokeRepeating("AlarmSound", 5f, 3f);
         StartCoroutine(Lost());
-        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     private void LostPlayer()
@@ -74,6 +73,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         securityDrone.GetComponent<SecuityCamera>().enabled = false;
         securityDrone.GetComponent<NavMeshAgent>().speed = 2;
         //droneAgent.SetDestination(detectedPlayer.transform.position);
+        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
             if (enemy.TryGetComponent(out FollowAI followAi))
@@ -96,6 +96,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         securityDrone.GetComponent<WanderingAI>().enabled = true;
         securityDrone.GetComponent<SecuityCamera>().enabled = true;
         securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f;
+        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemyAI)
         {
             if (enemy.TryGetComponent(out FollowAI followAi))

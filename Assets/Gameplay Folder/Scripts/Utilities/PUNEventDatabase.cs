@@ -8,5 +8,6 @@ public enum PUNEventDatabase
     SpawnManager1_UpdateEnemyCount = 51,
     FollowAI_StopHit = 52,
     SentryDrone_TakeDamage = 53,
+    EnemyHealth_EnemyHealthEnable = 54,
 
 }

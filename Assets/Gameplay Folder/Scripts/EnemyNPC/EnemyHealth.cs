@@ -2,8 +2,10 @@ using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.AI;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
 
-public class EnemyHealth : MonoBehaviourPunCallbacks
+public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public FollowAI aiScript;
     public GameObject xpDrop;
@@ -24,13 +26,26 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
     void Start()
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        photonView.RPC("RPC_EnemyHealthEnable", RpcTarget.All);
+        RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnEnable()
     {
+        base.OnEnable();
+        if(PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+    }
 
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
+        }
     }
 
     public void KillEnemy()
@@ -77,11 +92,14 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
         PhotonNetwork.Destroy(gameObject);
     }
 
-    [PunRPC]
-    void RPC_EnemyHealthEnable()
+    public void OnEvent(EventData photonEvent)
     {
-        alive = true;
+        if (photonEvent.Code == (byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable)
+        {
+            alive = true;
+        }
     }
+
 
     [PunRPC]
     void RPC_KillEnemy()
@@ -95,6 +113,13 @@ public class EnemyHealth : MonoBehaviourPunCallbacks
 
         DestroyEnemy();
     }
+
+
+    //[PunRPC]
+    //void RPC_EnemyHealthEnable()
+    //{
+    //    alive = true;
+    //}
 
     //[PunRPC]
     //void RPC_DestroyEnemy()
