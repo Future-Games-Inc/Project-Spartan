@@ -92,11 +92,16 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.Destroy(gameObject);
     }
 
+    void EnemyHealthEnable()
+    {
+        alive = true;
+    }
+
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == (byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable)
         {
-            alive = true;
+            EnemyHealthEnable();
         }
     }
 
