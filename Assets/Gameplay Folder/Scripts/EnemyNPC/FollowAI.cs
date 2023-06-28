@@ -341,7 +341,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!alive)
             return;
         //photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
-        Debug.Log($"Enemy should take {damage} damage");
 
         // Raise take damage event
         object[] data = new object[] { damage };
