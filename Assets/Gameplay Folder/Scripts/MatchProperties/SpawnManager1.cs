@@ -223,7 +223,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     private void NetworkingClient_EventReceived(ExitGames.Client.Photon.EventData obj)
     {
-        if (obj.Code == PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT)
+        if (obj.Code == (byte)PUNEventDatabase.SpawnManager1UpdateEnemyCount)
         {
             UpdateEnemy();
             UpdateEnemyCount();

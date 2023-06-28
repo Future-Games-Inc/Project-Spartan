@@ -5,7 +5,7 @@ using System.Collections;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 
-public class FollowAI : MonoBehaviourPunCallbacks
+public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public enum States
     {
@@ -64,8 +64,9 @@ public class FollowAI : MonoBehaviourPunCallbacks
     public AudioClip[] audioClip;
 
     // Start is called before the first frame update
-    void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         if (PhotonNetwork.IsMasterClient)
         {
             InvokeRepeating("RandomSFX", 15, 20);
@@ -77,16 +78,16 @@ public class FollowAI : MonoBehaviourPunCallbacks
             Patrol();
 
             //photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
-
             //Listen to PhotonEvents
-            PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+            PhotonNetwork.AddCallbackTarget(this);
         }
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
+        base.OnDisable();
         //Stop listening to PhotonEvents
-        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void FindClosestEnemy()
@@ -340,8 +341,12 @@ public class FollowAI : MonoBehaviourPunCallbacks
         if (!alive)
             return;
         //photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
+        Debug.Log($"Enemy should take {damage} damage");
+
+        // Raise take damage event
         object[] data = new object[] { damage };
-        PhotonNetwork.RaiseEvent(PUNEventDatabase.FOLLOW_AI_TAKE_DAMAGE, data, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+        RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAITakeDamage, data, options, SendOptions.SendUnreliable);
     }
 
     public void RandomSFX()
@@ -398,15 +403,18 @@ public class FollowAI : MonoBehaviourPunCallbacks
     //    healthBar.SetMaxHealth(Health);
     //}
 
-    private void NetworkingClient_EventReceived(EventData obj)
+    // Unwrap damage event and call local Take Damage method
+    public void OnEvent(EventData photonEvent)
     {
-        if (obj.Code == PUNEventDatabase.FOLLOW_AI_TAKE_DAMAGE)
+        if (photonEvent.Code == (byte)PUNEventDatabase.FollowAITakeDamage)
         {
-            object[] data = (object[])obj.CustomData;
+            object[] data = (object[])photonEvent.CustomData;
             int damage = (int)data[0];
             TakeDamageEnemy(damage);
         }
     }
+
+    // Damages the enemy and kills it if health <= 0
     void TakeDamageEnemy(int damage)
     {
         audioSource.PlayOneShot(bulletHit);
@@ -419,7 +427,8 @@ public class FollowAI : MonoBehaviourPunCallbacks
             enemyHealth.KillEnemy();
 
             // Updates Enemy counts
-            PhotonNetwork.RaiseEvent(PUNEventDatabase.SPAWN_MANAGER_1_UPDATE_ENEMY_AMOUNT_AND_COUNT, null, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.SpawnManager1UpdateEnemyCount, null, options, SendOptions.SendUnreliable);
         }
 
         if (!firstHit)
@@ -437,6 +446,8 @@ public class FollowAI : MonoBehaviourPunCallbacks
         hitEffect.SetActive(false);
         firstHit = false;
     }
+
+    
 
     // --------- OLD RPC FOR ENEMY TAKING DAMAGE ---------------
 
@@ -461,6 +472,6 @@ public class FollowAI : MonoBehaviourPunCallbacks
     //    }
     //}
 
-   
+
 }
 
