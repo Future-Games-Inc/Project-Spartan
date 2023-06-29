@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -226,15 +227,15 @@ public class FiringRangeAI : MonoBehaviour
         {
             PatrolPauseDone = false;
             agent.isStopped = false;
-            StartCoroutine(PatrolDelay());
+            PatrolDelay();
         }
 
 
     }
     // Patrol to a point, waits a certain amount of seconds, and goes to the next point
-    private IEnumerator PatrolDelay()
+    private async void PatrolDelay()
     {
-        yield return new WaitForSeconds(3f);
+        await Task.Delay(3000);
         PatrolPauseDone = true;
         currentPatrolPointIndex = (currentPatrolPointIndex + 1) % PatrolPoints.Length;
         agent.destination = PatrolPoints[currentPatrolPointIndex].position;
@@ -244,7 +245,7 @@ public class FiringRangeAI : MonoBehaviour
     private void Follow()
     {
         // interupts any patrolling process
-        StopCoroutine(PatrolDelay());
+        PatrolDelay();
         // set agent desitnation and speed
         agent.destination = targetTransform.position;
         // running speed
@@ -253,33 +254,33 @@ public class FiringRangeAI : MonoBehaviour
 
     private void Attack()
     {
-        IEnumerator LookShootPause(float duration)
+        async void LookShootPause(int duration)
         {
             isShooting = true;
             /// LookatTarget(duration / 3, 3f);
             agent.isStopped = true;
 
-            yield return new WaitForSeconds(duration);
+            await Task.Delay(duration);
             agent.isStopped = false;
             agent.SetDestination(targetTransform.position);
             isShooting = false;
         }
 
-        IEnumerator Shoot(int amount)
+        async void Shoot(int amount)
         {
             for (int i = 0; i <= amount; i++)
             {
                 // Instantiate a new instance of the Bullet prefab
                 GameObject bulletInstance = Instantiate(Bullet, FirePoint.position, Quaternion.identity);
                 if (shootable ) shootScript.Shoot(bulletInstance, FirePoint.position);
-                yield return new WaitForSeconds(bulletInstance.GetComponent<BulletBehavior>().RateOfFire);
+                await Task.Delay((int)bulletInstance.GetComponent<BulletBehavior>().RateOfFire * 1000);
             }
         }
 
         if (!isShooting)
         {
-            StartCoroutine(LookShootPause(3f));
-            StartCoroutine(Shoot(10));
+            LookShootPause(3000);
+            Shoot(10);
         }
     }
 
@@ -304,7 +305,7 @@ public class FiringRangeAI : MonoBehaviour
             {
                 if (!firstHit)
                 {
-                    StartCoroutine(FirstHit());
+                    FirstHit();
                 }
                 audioSource.PlayOneShot(DefaultBulletHitSound);
                 Health -= damage;
@@ -316,7 +317,7 @@ public class FiringRangeAI : MonoBehaviour
             {
                 if (!firstHit)
                 {
-                    StartCoroutine(FirstHit());
+                    FirstHit();
                 }
                 audioSource.PlayOneShot(bullet.hitSound);
                 Health -= bullet.Damage;
@@ -329,7 +330,7 @@ public class FiringRangeAI : MonoBehaviour
         // Check for death
         if (Health <= 0 && alive == true)
         {
-            StartCoroutine(Death());
+            Death();
         }
     }
 
@@ -340,7 +341,7 @@ public class FiringRangeAI : MonoBehaviour
             audioSource.PlayOneShot(VoiceLines[Random.Range(0, VoiceLines.Length)]);
     }
 
-    IEnumerator Death()
+    async void Death()
     {
         alive = false;
 
@@ -352,18 +353,18 @@ public class FiringRangeAI : MonoBehaviour
             }
         }
         // wait one frame
-        yield return null;
+        await Task.Yield();
         // activate ragdoll
         ragDoll.SetActive(true);
         agent.isStopped = true;
         StopAllCoroutines();
         Destroy(gameObject, 20);
     }
-    IEnumerator FirstHit()
+    async void FirstHit()
     {
         firstHit = true;
         hitEffect.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        await Task.Delay(3000);
         hitEffect.SetActive(false);
         firstHit = false;
     }
@@ -371,7 +372,7 @@ public class FiringRangeAI : MonoBehaviour
     // This function is complete unless we want to make adjustments/refinements
     public void EMPShock(GameObject Effect)
     {
-        IEnumerator shock()
+        async void shock()
         {
             //States preState = currentState;
             SwitchStates(States.Shocked);
@@ -380,17 +381,17 @@ public class FiringRangeAI : MonoBehaviour
             animator.SetBool("ShockDone", false);
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0,1,0), Quaternion.identity), 1f);
             // apply damage
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
             agent.isStopped = true;
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
             agent.isStopped = true;
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
@@ -402,7 +403,7 @@ public class FiringRangeAI : MonoBehaviour
         }
         // if already shocked, ignore effects
         if (currentState == States.Shocked) return;
-        StartCoroutine(shock());
+        shock();
     }
 
 

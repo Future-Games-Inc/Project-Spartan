@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class SecuityCamera : MonoBehaviour
@@ -15,13 +16,13 @@ public class SecuityCamera : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(RotateCamera());
+        RotateCamera();
     }
     void Update()
     {
 
     }
-    IEnumerator RotateCamera()
+    private async void RotateCamera()
     {
         while (true)
         {
@@ -60,7 +61,7 @@ public class SecuityCamera : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(0.15f);
+            await Task.Delay(150);
         }
     }
 }

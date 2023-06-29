@@ -2,6 +2,7 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
@@ -68,7 +69,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         InvokeRepeating("RandomSFX", 15, 20f);
         photonView.RPC("RPC_OnEnable", RpcTarget.All);
         timer = wanderTimer;
-        StartCoroutine(Fire());
+        Fire();
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.AddCallbackTarget(this);
@@ -217,34 +218,34 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         isFiring = true;
     }
 
-    IEnumerator Fire()
+    private async void Fire()
     {
         while (true)
         {
             if (isFiring && ammoLeft > 0)
             {
-                yield return new WaitForSeconds(0.25f);
+                await Task.Delay(250);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
                 shootForce = (int)Random.Range(40, 75);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
                 ammoLeft--;
-                yield return new WaitForSeconds(.25f);
+                await Task.Delay(250);
             }
 
             else if (isFiring && ammoLeft <= 0)
             {
                 isFiring = false;
-                StartCoroutine(ReloadWeapon());
+                ReloadWeapon();
             }
 
-            yield return null;
+            await Task.Yield();
         }
     }
 
-    IEnumerator ReloadWeapon()
+    private async void ReloadWeapon()
     {
-        yield return new WaitForSeconds(2);
+        await Task.Delay(2000);
         ammoLeft = maxAmmo;
         isFiring = true;
     }

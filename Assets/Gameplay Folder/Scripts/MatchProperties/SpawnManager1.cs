@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Threading.Tasks;
 
 public class SpawnManager1 : MonoBehaviourPunCallbacks
 {
@@ -43,13 +44,13 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        StartCoroutine(SpawnEnemies());
-        StartCoroutine(SpawnSecurity());
-        StartCoroutine(SpawnReactor());
-        StartCoroutine(SpawnHealth());
-        StartCoroutine(SpawnBoss());
-        StartCoroutine(SpawnArtifacts());
-        StartCoroutine(SpawnBombs());
+        SpawnEnemies();
+        SpawnSecurity();
+        SpawnReactor();
+        SpawnHealth();
+        SpawnBoss();
+        SpawnArtifacts();
+        SpawnBombs();
     }
 
     public override void OnEnable()
@@ -67,13 +68,11 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     }
 
-    
-
-    private IEnumerator SpawnEnemies()
+    public async void SpawnEnemies()
     {
         while (spawnEnemy && enemyCount < enemyCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            await Task.Run(() => matchProps.startMatchBool);
 
             spawnEnemy = false;
 
@@ -82,19 +81,19 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             enemyCount++;
 
-            yield return new WaitForSeconds(10f);
+            await WaitSecondsConverter(10);
 
             spawnEnemy = true;
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
         }
     }
 
-    private IEnumerator SpawnSecurity()
+    public async void SpawnSecurity()
     {
         while (spawnSecurity && securityCount < securityCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            await Task.Run(() => matchProps.startMatchBool);
 
             spawnSecurity = false;
 
@@ -103,19 +102,19 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             securityCount++;
 
-            yield return new WaitForSeconds(15f);
+            await WaitSecondsConverter(15);
 
             spawnSecurity = true;
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
         }
     }
 
-    private IEnumerator SpawnReactor()
+    public async void SpawnReactor()
     {
         while (spawnReactor && reactorCount < reactorCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool && matchProps.spawnReactor);
+            await Task.Run(() => matchProps.startMatchBool && matchProps.spawnReactor);
 
             spawnReactor = false;
 
@@ -126,19 +125,19 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             reactorCount++;
 
-            yield return new WaitForSeconds(30f);
+            await WaitSecondsConverter(30);
 
             spawnReactor = true;
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
         }
     }
 
-    private IEnumerator SpawnBombs()
+    public async void SpawnBombs()
     {
         while (spawnBombs && bombsCount < bombsCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            await Task.Run(() => matchProps.startMatchBool);
 
             spawnBombs = false;
 
@@ -147,19 +146,21 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             bombsCount++;
 
-            yield return new WaitForSeconds(10f);
+            await WaitSecondsConverter(10);
 
             spawnBombs = true;
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
+
         }
     }
 
-    private IEnumerator SpawnArtifacts()
+
+    private async void SpawnArtifacts()
     {
         while (spawnArtifacts && artifactCount < artifactCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            await Task.Run(() => matchProps.startMatchBool);
 
             spawnArtifacts = false;
 
@@ -168,19 +169,21 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             artifactCount++;
 
-            yield return new WaitForSeconds(15f);
+            await WaitSecondsConverter(15);
 
             spawnArtifacts = true;
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
         }
     }
 
-    private IEnumerator SpawnHealth()
+ 
+
+    public async void SpawnHealth()
     {
         while (spawnHealth && healthCount < healthCountMax)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            await Task.Run(() => matchProps.startMatchBool);
 
             spawnHealth = false;
 
@@ -188,19 +191,19 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             healthCount++;
 
-            yield return new WaitForSeconds(35f);
+            await WaitSecondsConverter(35);
 
             spawnHealth = true;
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
         }
     }
 
-    private IEnumerator SpawnBoss()
+    public async void SpawnBoss()
     {
         while (spawnBoss)
         {
-            yield return new WaitUntil(() => matchProps.startMatchBool);
+            await Task.Run(() => matchProps.startMatchBool);
 
             if (enemiesKilled >= enemiesKilledForBossSpawn)
             {
@@ -211,13 +214,18 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
                 enemiesKilled = 0;
 
-                yield return new WaitForSeconds(45f);
+                await WaitSecondsConverter(45);
 
                 spawnBoss = true;
             }
 
-            yield return new WaitForSeconds(1);
+            await WaitSecondsConverter(1);
         }
+    }
+
+    private Task WaitSecondsConverter(int seconds)
+    {
+        return Task.Delay(seconds * 1000);
     }
 
     private void NetworkingClient_EventReceived(ExitGames.Client.Photon.EventData obj)
