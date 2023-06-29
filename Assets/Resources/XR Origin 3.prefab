@@ -1794,6 +1794,7 @@ GameObject:
   - component: {fileID: 439788777949049150}
   - component: {fileID: 439788777949049149}
   - component: {fileID: 4448196288769704797}
+  - component: {fileID: 234420549982385891}
   m_Layer: 8
   m_Name: RightHand
   m_TagString: RightHand
@@ -2146,6 +2147,37 @@ MonoBehaviour:
   handAnimator:
   - {fileID: 6026949384707216709}
   whichHand: Right
+--- !u!114 &234420549982385891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439788777949049146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce48e63461b5fec47b87abd116034267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 1
+  root: {fileID: 4448196289261743113}
+  animator: {fileID: 6026949384707216709}
+  fingerBones:
+  - {fileID: 4448196288973178070}
+  - {fileID: 4448196289215968610}
+  - {fileID: 4448196289289616215}
+  - {fileID: 4448196289174290249}
+  - {fileID: 4448196289533015058}
+  - {fileID: 4448196289638055305}
+  - {fileID: 4448196288784140803}
+  - {fileID: 4448196289732397240}
+  - {fileID: 4448196289627232603}
+  - {fileID: 4448196289944385155}
+  - {fileID: 4448196289206912244}
+  - {fileID: 4448196289928064279}
+  - {fileID: 4448196289280932976}
+  - {fileID: 4448196290358141668}
+  - {fileID: 4448196289221248464}
 --- !u!1 &439788778392037281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2195,6 +2227,7 @@ GameObject:
   - component: {fileID: 439788778409400105}
   - component: {fileID: 439788778409400104}
   - component: {fileID: 4448196289246613614}
+  - component: {fileID: 4492307773432733358}
   m_Layer: 8
   m_Name: LeftHand
   m_TagString: LeftHand
@@ -2547,6 +2580,37 @@ MonoBehaviour:
   handAnimator:
   - {fileID: 6026949384707216709}
   whichHand: Left
+--- !u!114 &4492307773432733358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439788778409400101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce48e63461b5fec47b87abd116034267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 0
+  root: {fileID: 4448196289237101635}
+  animator: {fileID: 6026949384707216709}
+  fingerBones:
+  - {fileID: 4448196290134548167}
+  - {fileID: 4448196289359795827}
+  - {fileID: 4448196290116636738}
+  - {fileID: 4448196289802684769}
+  - {fileID: 4448196290056250569}
+  - {fileID: 4448196289391008150}
+  - {fileID: 4448196289145234634}
+  - {fileID: 4448196290186040955}
+  - {fileID: 4448196290270176182}
+  - {fileID: 4448196289794476412}
+  - {fileID: 4448196290393830280}
+  - {fileID: 4448196289785609727}
+  - {fileID: 4448196290442447088}
+  - {fileID: 4448196290747864394}
+  - {fileID: 4448196289532413293}
 --- !u!1 &439788778509456222
 GameObject:
   m_ObjectHideFlags: 0

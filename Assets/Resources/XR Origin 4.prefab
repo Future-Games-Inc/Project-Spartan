@@ -2782,6 +2782,7 @@ GameObject:
   - component: {fileID: 439788777949049150}
   - component: {fileID: 439788777949049149}
   - component: {fileID: 4448196288769704797}
+  - component: {fileID: 3531262743448299057}
   m_Layer: 8
   m_Name: RightHand
   m_TagString: RightHand
@@ -3134,6 +3135,37 @@ MonoBehaviour:
   handAnimator:
   - {fileID: 8457894753644243594}
   whichHand: Right
+--- !u!114 &3531262743448299057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439788777949049146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce48e63461b5fec47b87abd116034267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 1
+  root: {fileID: 2383927875782732273}
+  animator: {fileID: 8457894753644243594}
+  fingerBones:
+  - {fileID: 1556024573296545341}
+  - {fileID: 8397321747103830253}
+  - {fileID: 9171283080507328743}
+  - {fileID: 2982138937364938095}
+  - {fileID: 8456078139055900934}
+  - {fileID: 8033871064005650686}
+  - {fileID: 1953176420544301018}
+  - {fileID: 4871061043115457423}
+  - {fileID: 4562298528716087604}
+  - {fileID: 8167788588947144360}
+  - {fileID: 3252459775941803737}
+  - {fileID: 3978224766681147860}
+  - {fileID: 8809010947334753430}
+  - {fileID: 1307412623851011184}
+  - {fileID: 7121206087488919590}
 --- !u!1 &439788778392037281
 GameObject:
   m_ObjectHideFlags: 0
@@ -3183,6 +3215,7 @@ GameObject:
   - component: {fileID: 439788778409400105}
   - component: {fileID: 439788778409400104}
   - component: {fileID: 4448196289246613614}
+  - component: {fileID: 6600412826212222907}
   m_Layer: 8
   m_Name: LeftHand
   m_TagString: LeftHand
@@ -3535,6 +3568,37 @@ MonoBehaviour:
   handAnimator:
   - {fileID: 8457894753644243594}
   whichHand: Left
+--- !u!114 &6600412826212222907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439788778409400101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce48e63461b5fec47b87abd116034267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 0
+  root: {fileID: 3301309343494053154}
+  animator: {fileID: 8457894753644243594}
+  fingerBones:
+  - {fileID: 6360295345135228232}
+  - {fileID: 4915228282564958731}
+  - {fileID: 6922473130179818157}
+  - {fileID: 738128799017787343}
+  - {fileID: 6389010653035094447}
+  - {fileID: 4033415334854546605}
+  - {fileID: 5435217455650163458}
+  - {fileID: 2382085006007492045}
+  - {fileID: 2825503962627782520}
+  - {fileID: 7300366158479802358}
+  - {fileID: 4745794614448026440}
+  - {fileID: 256621139247347871}
+  - {fileID: 2283510219686584031}
+  - {fileID: 4150489975763792810}
+  - {fileID: 2904275151171063256}
 --- !u!1 &439788778509456222
 GameObject:
   m_ObjectHideFlags: 0
@@ -3796,6 +3860,7 @@ GameObject:
   - component: {fileID: 2376245512485915351}
   - component: {fileID: 1561803417868357500}
   - component: {fileID: 434469140683614216}
+  - component: {fileID: 2455811829440897529}
   m_Layer: 12
   m_Name: XR Origin 4
   m_TagString: Player
@@ -4858,6 +4923,22 @@ MonoBehaviour:
   m_LocomotionProvider: {fileID: 5140085503071145464}
   m_MinHeight: 0
   m_MaxHeight: Infinity
+--- !u!114 &2455811829440897529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439788778926290553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce48e63461b5fec47b87abd116034267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 0
+  root: {fileID: 0}
+  animator: {fileID: 0}
+  fingerBones: []
 --- !u!1 &466195624355115802
 GameObject:
   m_ObjectHideFlags: 0

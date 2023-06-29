@@ -272,9 +272,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!spawnedBlade && photonView.IsMine)
         {
             spawnedBlade = true;
-            GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation, 0, new object[] { gameObject.GetComponent<PlayerHealth>() });
+            GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation, 0, null);
             PhotonView bladePhotonView = blade.GetComponent<PhotonView>();
             bladePhotonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+            blade.GetComponent<EnergyBladeNet>().playerHealth = gameObject.GetComponent<PlayerHealth>();
+            PlayerHealth localPlayerHealth = gameObject.GetComponent<PlayerHealth>();
+            meleeAttach.gameObject.SetActive(true);
             meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
         }
 
