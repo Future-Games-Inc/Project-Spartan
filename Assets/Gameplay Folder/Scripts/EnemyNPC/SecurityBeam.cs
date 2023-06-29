@@ -96,7 +96,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         securityDrone.GetComponent<WanderingAI>().enabled = true;
         securityDrone.GetComponent<SecuityCamera>().enabled = true;
         securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f;
-        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
+        enemyAI = GameObject.FindGameObjectsWithTag("Enemy"); // Look for other options
         foreach (GameObject enemy in enemyAI)
         {
             if (enemy.TryGetComponent(out FollowAI followAi))
