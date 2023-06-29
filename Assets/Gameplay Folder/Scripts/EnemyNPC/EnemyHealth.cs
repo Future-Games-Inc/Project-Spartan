@@ -4,6 +4,7 @@ using Photon.Pun;
 using UnityEngine.AI;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
+using System.Threading.Tasks;
 
 public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -83,12 +84,12 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
-        StartCoroutine(Destroy());
+        Destroy();
     }
 
-    IEnumerator Destroy()
+    private async void Destroy()
     {
-        yield return new WaitForSeconds(5f);
+        await Task.Delay(5000);
         PhotonNetwork.Destroy(gameObject);
     }
 

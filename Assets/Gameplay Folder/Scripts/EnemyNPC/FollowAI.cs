@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.Collections;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using System.Threading.Tasks;
 
 public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -256,14 +257,14 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             PatrolPauseDone = false;
             agent.isStopped = false;
-            StartCoroutine(PatrolDelay());
+            PatrolDelay();
         }
     }
 
-    private IEnumerator PatrolDelay()
+    private async void PatrolDelay()
     {
         attackWeapon.fireWeaponBool = false;
-        yield return new WaitForSeconds(3f);
+        await Task.Delay(3000);
         PatrolPauseDone = true;
         Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
         agent.SetDestination(newPos);
@@ -273,7 +274,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Follow()
     {
         attackWeapon.fireWeaponBool = false;
-        StopCoroutine(PatrolDelay());
+        PatrolDelay();
         agent.destination = targetTransform.position;
         agent.speed = 2.5f;
     }
@@ -286,7 +287,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void EMPShock()
     {
-        IEnumerator shock()
+        async void shock()
         {
             attackWeapon.fireWeaponBool = false;
             //States preState = currentState;
@@ -296,23 +297,23 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             animator.SetBool("ShockDone", false);
 
             // apply damage
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             GameObject effect = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             PhotonNetwork.Destroy(effect);
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             GameObject effect2 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             PhotonNetwork.Destroy(effect2);
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             GameObject effect3 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             PhotonNetwork.Destroy(effect3);
             // enable movement
 
@@ -323,7 +324,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         // if already shocked, ignore effects
         if (currentState == States.Shocked) return;
-        StartCoroutine(shock());
+        shock();
     }
 
     private void LookAtTarget()
@@ -366,7 +367,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void EMPShock(GameObject Effect)
     {
-        IEnumerator shock()
+        async void Shock()
         {
             attackWeapon.fireWeaponBool = false;
             //States preState = currentState;
@@ -376,17 +377,17 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             animator.SetBool("ShockDone", false);
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
             // apply damage
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
             agent.isStopped = true;
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
             agent.isStopped = true;
-            yield return new WaitForSeconds(1);
+            await Task.Delay(1000);
             TakeDamage(5);
             // play shock effect
             Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
@@ -398,7 +399,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         // if already shocked, ignore effects
         if (currentState == States.Shocked) return;
-        StartCoroutine(shock());
+        Shock();
     }
 
     //[PunRPC]

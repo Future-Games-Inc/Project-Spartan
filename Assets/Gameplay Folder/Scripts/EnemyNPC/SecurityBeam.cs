@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,7 +26,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
         beamMaterial.color = beamColor;
         detectedPlayer = null;
         InvokeRepeating("AlarmSound", 5f, 3f);
-        StartCoroutine(Lost());
+        Lost();
     }
 
     private void LostPlayer()
@@ -39,7 +40,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
 
     }
 
-    IEnumerator Lost()
+    private async void Lost()
     {
         while (true)
         {
@@ -51,7 +52,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
             lostTimer += Time.deltaTime;
             if (lostTimer >= 10 && neverFound == false)
                 LostPlayer();
-            yield return null;
+            await Task.Yield();
         }
     }
 

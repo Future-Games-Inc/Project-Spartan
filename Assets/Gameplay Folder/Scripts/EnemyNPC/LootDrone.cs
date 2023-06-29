@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -107,7 +108,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
                 // Move the drone to a new location within the randomNavSphere
                 Vector3 newPosition = RandomNavSphere(transform.position, wanderRadius, -1);
                 agent.SetDestination(newPosition);
-                StartCoroutine(PauseDelay());
+                PauseDelay();
             }
             else if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
             {
@@ -123,9 +124,9 @@ public class LootDrone : MonoBehaviourPunCallbacks
         }
     }
 
-    IEnumerator PauseDelay()
+    private async void PauseDelay()
     {
-        yield return new WaitForSeconds(2);
+        await Task.Delay(2000);
         agent.isStopped = false;
     }
 
