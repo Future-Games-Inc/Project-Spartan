@@ -8,27 +8,27 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: body
-    second: {fileID: 2100000, guid: 4f57ac025e7918544b1eb370a6cee8c9, type: 2}
+    second: {fileID: 2100000, guid: e18213771fe5030459141ea47baff103, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: clothes
-    second: {fileID: 2100000, guid: 087fd5f83ee02104bad811a78c1ea20b, type: 2}
+    second: {fileID: 2100000, guid: 26ea7f3e1f71f6e4e9b10ee83fd0c079, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: clothes_cloth
-    second: {fileID: 2100000, guid: 087fd5f83ee02104bad811a78c1ea20b, type: 2}
+    second: {fileID: 2100000, guid: 83c50f49f1b314543880bddc1dc475a8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: hair
-    second: {fileID: 2100000, guid: fe711518914e2a94984a0cf54705dd28, type: 2}
+    second: {fileID: 2100000, guid: 1b52c4e764de28b41aa9ba3288749413, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: head
-    second: {fileID: 2100000, guid: 1626e2ba97c2276408bd7d51c77d98fe, type: 2}
+    second: {fileID: 2100000, guid: 470c4580045656744b78da7d581507e2, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -532,61 +532,47 @@ ModelImporter:
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: SK_CPStreetBoy_body
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_vest
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_jacket
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_maskC
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_hair
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_leg
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_shoes
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_maskA
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_maskB
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_head
-      parentName: SK_CPStreetBoy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
-      scale: {x: 1, y: 0.99999994, z: 1}
     - name: root
       parentName: SK_CPStreetBoy(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 1, y: 1, z: 1}
+    - name: ik_foot_root
+      parentName: root
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ik_foot_l
+      parentName: ik_foot_root
+      position: {x: -0.1707627, y: 0.08072126, z: 0.13465731}
+      rotation: {x: 0.020530306, y: 0.7122334, z: -0.011723494, w: 0.70154446}
+      scale: {x: 0.99999994, y: 1.0000002, z: 1}
+    - name: ik_foot_r
+      parentName: ik_foot_root
+      position: {x: 0.17076288, y: 0.08072148, z: 0.13465573}
+      rotation: {x: 0.70154405, y: 0.011722518, z: 0.7122339, w: -0.020529367}
+      scale: {x: 1.0000011, y: 0.9999999, z: 1.0000001}
+    - name: ik_hand_root
+      parentName: root
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: ik_hand_gun
+      parentName: ik_hand_root
+      position: {x: 0.56646097, y: 0.0033539676, z: 1.1167965}
+      rotation: {x: 0.6188495, y: 0.0695411, z: -0.38913614, w: 0.6787948}
+      scale: {x: 1, y: 1, z: 1.0000001}
+    - name: ik_hand_l
+      parentName: ik_hand_gun
+      position: {x: -0.77885437, y: -0.69601935, z: 0.43869498}
+      rotation: {x: 0.6874743, y: 0.614358, z: -0.38722533, w: -0.0000004451805}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: ik_hand_r
+      parentName: ik_hand_gun
+      position: {x: 0.000000030100345, y: -0.0000002449192, z: -0.000000018775463}
+      rotation: {x: 0.000000040046874, y: -0.000000011175871, z: -0.0000000088475645,
+        w: 1}
+      scale: {x: 1, y: 0.99999994, z: 1}
     - name: pelvis
       parentName: root
       position: {x: 6.890467e-15, y: 0.010561532, z: 0.967506}
@@ -610,7 +596,7 @@ ModelImporter:
     - name: clavicle_l
       parentName: spine_03
       position: {x: -0.118836656, y: -0.027320849, z: -0.03781983}
-      rotation: {x: 0.15407078, y: -0.7262777, z: -0.06670517, w: 0.6665833}
+      rotation: {x: 0.1540708, y: -0.7262777, z: -0.066705175, w: 0.6665833}
       scale: {x: 1, y: 0.9999998, z: 0.99999994}
     - name: upperarm_l
       parentName: clavicle_l
@@ -620,7 +606,7 @@ ModelImporter:
     - name: lowerarm_l
       parentName: upperarm_l
       position: {x: -0.3033994, y: 0.00000007867813, z: -0.000000007152557}
-      rotation: {x: -0.061964788, y: 0.02963636, z: 0.027705336, w: 0.99725354}
+      rotation: {x: -0.06196478, y: 0.02963636, z: 0.027705332, w: 0.99725354}
       scale: {x: 0.99999976, y: 1, z: 1}
     - name: hand_l
       parentName: lowerarm_l
@@ -680,22 +666,22 @@ ModelImporter:
     - name: ring_02_l
       parentName: ring_01_l
       position: {x: -0.044301808, y: 0.000000030025838, z: 0}
-      rotation: {x: 0.004327832, y: 0.0045783347, z: -0.037474364, w: 0.9992777}
+      rotation: {x: 0.004327832, y: 0.004578335, z: -0.037474364, w: 0.9992778}
       scale: {x: 1.0000001, y: 1, z: 0.9999999}
     - name: ring_03_l
       parentName: ring_02_l
       position: {x: -0.034766525, y: -0.00000010475516, z: 0}
-      rotation: {x: -0.00019874753, y: -0.026258165, z: 0.112213455, w: 0.9933371}
+      rotation: {x: -0.00019874754, y: -0.026258165, z: 0.11221346, w: 0.9933371}
       scale: {x: 0.99999964, y: 0.99999964, z: 0.99999976}
     - name: thumb_01_l
       parentName: hand_l
       position: {x: -0.047620405, y: 0.023749735, z: -0.025378177}
-      rotation: {x: 0.6005165, y: -0.29970855, z: 0.18536104, w: 0.71777153}
+      rotation: {x: 0.6005165, y: -0.29970858, z: 0.18536104, w: 0.7177716}
       scale: {x: 1, y: 1.0000002, z: 1.0000002}
     - name: thumb_02_l
       parentName: thumb_01_l
       position: {x: -0.03869672, y: -0.000000011920928, z: -0.00000004529953}
-      rotation: {x: 0.0026351204, y: -0.019815005, z: -0.029708166, w: 0.9993587}
+      rotation: {x: 0.0026351204, y: -0.019815007, z: -0.029708166, w: 0.9993588}
       scale: {x: 1, y: 1, z: 1}
     - name: thumb_03_l
       parentName: thumb_02_l
@@ -705,7 +691,8 @@ ModelImporter:
     - name: lowerarm_twist_01_l
       parentName: lowerarm_l
       position: {x: -0.14000003, y: -0.000000076293944, z: 0.00000007688999}
-      rotation: {x: 0.0000000074505797, y: -0.00000004656612, z: 0.000000014901158, w: 1}
+      rotation: {x: 0.0000000074505797, y: -0.00000004656612, z: 0.000000014901158,
+        w: 1}
       scale: {x: 1.0000002, y: 1.0000001, z: 1.0000001}
     - name: upperarm_twist_01_l
       parentName: upperarm_l
@@ -750,7 +737,7 @@ ModelImporter:
     - name: middle_01_r
       parentName: hand_r
       position: {x: 0.12244112, y: -0.012937199, z: -0.005711205}
-      rotation: {x: 0.02948555, y: 0.040343076, z: -0.13031903, w: 0.9902121}
+      rotation: {x: 0.029485552, y: 0.04034308, z: -0.13031904, w: 0.99021214}
       scale: {x: 0.9999998, y: 0.99999976, z: 0.99999994}
     - name: middle_02_r
       parentName: middle_01_r
@@ -887,52 +874,67 @@ ModelImporter:
       position: {x: -0.22094245, y: -0.000000038743018, z: 0.000000090301036}
       rotation: {x: -0.04744553, y: -0.000022106033, z: 0.00049121986, w: 0.9988737}
       scale: {x: 0.99999994, y: 0.99999994, z: 0.9999999}
-    - name: ik_foot_root
-      parentName: root
+    - name: SK_CPStreetBoy_body
+      parentName: SK_CPStreetBoy(Clone)
       position: {x: -0, y: 0, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: ik_foot_l
-      parentName: ik_foot_root
-      position: {x: -0.1707627, y: 0.08072126, z: 0.13465731}
-      rotation: {x: 0.020530306, y: 0.7122334, z: -0.011723494, w: 0.70154446}
-      scale: {x: 0.99999994, y: 1.0000002, z: 1}
-    - name: ik_foot_r
-      parentName: ik_foot_root
-      position: {x: 0.17076288, y: 0.08072148, z: 0.13465573}
-      rotation: {x: 0.70154405, y: 0.011722518, z: 0.7122339, w: -0.020529367}
-      scale: {x: 1.0000011, y: 0.9999999, z: 1.0000001}
-    - name: ik_hand_root
-      parentName: root
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: ik_hand_gun
-      parentName: ik_hand_root
-      position: {x: 0.56646097, y: 0.0033539676, z: 1.1167965}
-      rotation: {x: 0.6188495, y: 0.0695411, z: -0.38913614, w: 0.6787948}
-      scale: {x: 1, y: 1, z: 1.0000001}
-    - name: ik_hand_l
-      parentName: ik_hand_gun
-      position: {x: -0.77885437, y: -0.69601935, z: 0.43869498}
-      rotation: {x: 0.6874743, y: 0.614358, z: -0.38722533, w: -0.0000004451805}
-      scale: {x: 1, y: 1.0000001, z: 1}
-    - name: ik_hand_r
-      parentName: ik_hand_gun
-      position: {x: 0.000000030100345, y: -0.0000002449192, z: -0.000000018775463}
-      rotation: {x: 0.000000040046874, y: -0.000000011175871, z: -0.0000000088475645, w: 1}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
       scale: {x: 1, y: 0.99999994, z: 1}
     - name: SK_CPStreetBoy_body_arm
       parentName: SK_CPStreetBoy(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
       scale: {x: 1, y: 0.99999994, z: 1}
-    - name: SK_CPStreetBoy_vest_arm
+    - name: SK_CPStreetBoy_hair
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_head
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_jacket
       parentName: SK_CPStreetBoy(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
       scale: {x: 1, y: 0.99999994, z: 1}
     - name: SK_CPStreetBoy_jacket_arm
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_leg
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_maskA
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_maskB
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_maskC
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_shoes
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_vest
+      parentName: SK_CPStreetBoy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: SK_CPStreetBoy_vest_arm
       parentName: SK_CPStreetBoy(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0.000000009219619, z: -0.000000011853801, w: 0.7071067}
@@ -950,7 +952,7 @@ ModelImporter:
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  autoGenerateAvatarMappingIfUnspecified: 1
+  autoGenerateAvatarMappingIfUnspecified: 0
   animationType: 3
   humanoidOversampling: 1
   avatarSetup: 1
