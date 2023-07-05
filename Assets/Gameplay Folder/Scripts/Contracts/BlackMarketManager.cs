@@ -195,7 +195,7 @@ public class BlackMarketManager : MonoBehaviour
     // Display available contracts in the UI for the player to accept
     public IEnumerator DisplayAvailableContracts()
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2.75f);
         active = true;
         if (CheckForPlayerWithinRadius())
             // Clear existing contract buttons

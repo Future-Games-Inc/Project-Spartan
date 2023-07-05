@@ -162,7 +162,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public static readonly byte EnemyGameMode = 3;
 
     [Header("Player Leaderboard Data ------------------------------------")]
-    public int leaderboardID = 10220;
+    public string leaderboardID = "react_leaderboard";
 
     [Header("Contract Tracking ------------------------------------")]
     public int bossesKilled;

@@ -10,8 +10,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     private string mapType;
 
-    public TextMeshProUGUI occupancyMultiplayer6;
-
     public TextMeshProUGUI joinAsInfo;
 
     public int mapLevel;
@@ -19,6 +17,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public string randomRoomName;
 
     public List<string> roomName = new List<string>();
+
 
     // Start is called before the first frame update
     [System.Obsolete]
@@ -50,7 +49,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        joinAsInfo.text = "Joining Room With Tag: " + PhotonNetwork.NickName;
+        joinAsInfo.text = "Joining Under REACT Alias: " + PhotonNetwork.NickName;
     }
 
     #region UI Callback Methods
@@ -68,13 +67,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         });
         mapType = MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6;
         ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
-        if (mapLevel >= 0 && mapLevel <= 2 && roomName.Contains("beginnerRoom"))
+        if (mapLevel >= 0 && mapLevel <= 10 && roomName.Contains("Low"))
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
-        else if (mapLevel > 2 && mapLevel <= 5 && roomName.Contains("easyRoom"))
+        else if (mapLevel > 10 && mapLevel <= 30 && roomName.Contains("Normal"))
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
-        else if (mapLevel > 5 && mapLevel <= 8 && roomName.Contains("mediumRoom"))
+        else if (mapLevel > 30 && mapLevel <= 50 && roomName.Contains("Medium"))
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
-        else if (mapLevel > 8 && mapLevel <= 10 && roomName.Contains("hardRoom"))
+        else if (mapLevel > 50 && mapLevel <= 70 && roomName.Contains("High"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 70 && mapLevel <= 90 && roomName.Contains("Reinforced"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 90 && mapLevel <= 110 && roomName.Contains("Chokehold"))
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
         else
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
@@ -82,7 +85,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    #region Photon Callback Methods
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         CreateAndJoinRoom();
@@ -115,12 +117,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         CreateAndJoinRoom();
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-
-    }
-
-    private readonly string[] MAP_VALUES = {MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6 };
+    private readonly string[] MAP_VALUES = { MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6 };
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
@@ -130,96 +127,34 @@ public class RoomManager : MonoBehaviourPunCallbacks
             room.CustomProperties.TryGetValue("PlayerLevelForRoom", out roomLevelSet);
             int roomLevel = (int)roomLevelSet;
             roomName.Add(randomRoomName);
-            UpdateOccupancyText(room, roomLevel);
         }
     }
 
-    private void UpdateOccupancyText(RoomInfo room, int roomLevel)
-    {
-        string occupancyText = room.PlayerCount + "/" + 10 + " Reacts Currently In This Session. World Level: " + roomLevel;
-
-        switch (roomLevel)
-        {
-            case int n when (n >= 0 && n <= 2):
-                for (int i = 0; i < MAP_VALUES.Length; i++)
-                {
-                    if (room.Name.Contains(MAP_VALUES[i]))
-                    {
-                        switch (i)
-                        {
-                            case 5:
-                                occupancyMultiplayer6.text = occupancyText;
-                                break;
-                        }
-                    }
-                }
-                break;
-
-            case int n when (n > 2 && n <= 5):
-                for (int i = 0; i < MAP_VALUES.Length; i++)
-                {
-                    if (room.Name.Contains(MAP_VALUES[i]))
-                    {
-                        switch (i)
-                        {
-                            case 5:
-                                occupancyMultiplayer6.text = occupancyText;
-                                break;
-                        }
-                    }
-                }
-                break;
-
-            case int n when (n > 5 && n <= 8):
-                for (int i = 0; i < MAP_VALUES.Length; i++)
-                {
-                    if (room.Name.Contains(MAP_VALUES[i]))
-                    {
-                        switch (i)
-                        {
-                            case 5:
-                                occupancyMultiplayer6.text = occupancyText;
-                                break;
-                        }
-                    }
-                }
-                break;
-            case int n when (n > 8):
-                for (int i = 0; i < MAP_VALUES.Length; i++)
-                {
-                    if (room.Name.Contains(MAP_VALUES[i]))
-                    {
-                        switch (i)
-                        {
-                            case 5:
-                                occupancyMultiplayer6.text = occupancyText;
-                                break;
-                        }
-                    }
-                }
-                break;
-        }
-    }
-    #endregion
-
-    #region Private Methods
     private void CreateAndJoinRoom()
     {
-        if (mapLevel >= 0 && mapLevel <= 2)
+        if (mapLevel >= 0 && mapLevel <= 10)
         {
-            randomRoomName = "beginnerRoom " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
+            randomRoomName = "Low " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
         }
-        else if ((mapLevel > 2 && mapLevel <= 5))
+        else if ((mapLevel > 10 && mapLevel <= 30))
         {
-            randomRoomName = "easyRoom " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
+            randomRoomName = "Normal " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
         }
-        else if ((mapLevel > 5 && mapLevel <= 8))
+        else if ((mapLevel > 30 && mapLevel <= 50))
         {
-            randomRoomName = "mediumRoom " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
+            randomRoomName = "Medium " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
         }
-        else if ((mapLevel > 8 && mapLevel <= 10))
+        else if ((mapLevel > 50 && mapLevel <= 70))
         {
-            randomRoomName = "hardRoom " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
+            randomRoomName = "High " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
+        }
+        else if ((mapLevel > 70 && mapLevel <= 90))
+        {
+            randomRoomName = "Reinforced " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
+        }
+        else if ((mapLevel > 90 && mapLevel <= 110))
+        {
+            randomRoomName = "Chockehold " + mapType + " " + Random.Range(0, 10000) + " " + mapLevel;
         }
 
         RoomOptions roomOptions = new RoomOptions();
@@ -237,6 +172,4 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(randomRoomName, roomOptions);
     }
-
-    #endregion
 }

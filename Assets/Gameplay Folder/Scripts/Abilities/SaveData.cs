@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using UnityEngine;
+using LootLocker.Requests;
 
 public class SaveData : MonoBehaviour
 {
@@ -13,13 +14,23 @@ public class SaveData : MonoBehaviour
     public int intelSecured;
     public int collectorsDestroyed;
 
+    public int playerLevelCurrent;
+    public int playerPrestigeCurrent;
+
+    public int currentLevelInt;
+    public int currentPrestigeLevel;
+    public int prestigeIncrement = 10;
+
+    public bool awarded;
+
     public TopReactsLeaderboard leaderboard;
     public BlackMarketManager blackMarketManager;
 
     // Start is called before the first frame update
-    [System.Obsolete]
     void Start()
     {
+        StartCoroutine(PlayerLevelRoutine());
+
         object savedCints;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out savedCints))
         {
@@ -104,15 +115,15 @@ public class SaveData : MonoBehaviour
         GuardianSave();
         IntelSave();
         CollectorSave();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    [System.Obsolete]
     public void UpdateSkills(int skills)
     {
         SkillPoints += skills;
@@ -130,7 +141,6 @@ public class SaveData : MonoBehaviour
         BossSave();
     }
 
-    [System.Obsolete]
     public void ArtifactUpdateSkills(int skills)
     {
         artifactsRecovered += skills;
@@ -148,7 +158,6 @@ public class SaveData : MonoBehaviour
         BombSave();
     }
 
-    [System.Obsolete]
     public void GuardianUpdateSkills(int skills)
     {
         guardiansDestroyed += skills;
@@ -157,7 +166,6 @@ public class SaveData : MonoBehaviour
         GuardianSave();
     }
 
-    [System.Obsolete]
     public void IntelUpdateSkills(int skills)
     {
         intelSecured += skills;
@@ -166,7 +174,6 @@ public class SaveData : MonoBehaviour
         IntelSave();
     }
 
-    [System.Obsolete]
     public void CollectorUpdateSkills(int skills)
     {
         collectorsDestroyed += skills;
@@ -175,53 +182,100 @@ public class SaveData : MonoBehaviour
         CollectorSave();
     }
 
-    [System.Obsolete]
     public void Save()
     {
         ES3.Save("SkillPoints", SkillPoints);
         StartCoroutine(SubmitScore(SkillPoints));
     }
 
-    [System.Obsolete]
     public void BossSave()
     {
         ES3.Save("bossesKilled", bossesKilled);
     }
 
-    [System.Obsolete]
     public void ArtifactSave()
     {
         ES3.Save("artifactsRecovered", artifactsRecovered);
     }
 
-    [System.Obsolete]
     public void BombSave()
     {
         ES3.Save("bombsDestroyed", bombsDestroyed);
     }
 
-    [System.Obsolete]
     public void GuardianSave()
     {
         ES3.Save("guardiansDestroyed", guardiansDestroyed);
     }
 
-    [System.Obsolete]
     public void IntelSave()
     {
         ES3.Save("intelSecured", intelSecured);
     }
 
-    [System.Obsolete]
     public void CollectorSave()
     {
         ES3.Save("collectorsDestroyed", collectorsDestroyed);
     }
 
-    [System.Obsolete]
     IEnumerator SubmitScore(int score)
     {
         yield return new WaitForSeconds(0f);
         StartCoroutine(leaderboard.SubmitScoreRoutine(score));
+    }
+
+    public void PlayerLevelSave()
+    {
+        ES3.Save("PlayerLevel", playerLevelCurrent);
+    }
+
+    public void PlayerPrestigeSave()
+    {
+        ES3.Save("PlayerPrestige", playerPrestigeCurrent);
+    }
+
+    IEnumerator PlayerLevelRoutine()
+    {
+        yield return new WaitForSeconds(2.75f);
+        LootLockerSDKManager.GetPlayerInfo((response) =>
+        {
+            currentLevelInt = (int)response.level;
+        });
+
+        currentPrestigeLevel = (currentLevelInt / prestigeIncrement) + 1;
+
+
+        object playerLevel;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerLevel, out playerLevel))
+        {
+            playerLevelCurrent = (int)playerLevel;
+            if (playerLevelCurrent != currentLevelInt)
+                playerLevelCurrent = currentLevelInt;
+
+        }
+        else
+            playerLevelCurrent = ES3.Load<int>("PlayerLevel", 0);
+
+        ExitGames.Client.Photon.Hashtable playerLevelSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerLevel, playerLevelCurrent } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerLevelSaved);
+
+        object playerPrestige;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerPrestige, out playerPrestige))
+        {
+            playerPrestigeCurrent = (int)playerPrestige;
+            if (playerPrestigeCurrent != currentPrestigeLevel)
+            {
+                playerPrestigeCurrent = currentPrestigeLevel;
+                awarded = true;
+            }
+        }
+        else
+            playerPrestigeCurrent = ES3.Load<int>("PlayerPrestige", 0);
+
+        ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
+
+        PlayerLevelSave();
+        PlayerPrestigeSave();
     }
 }

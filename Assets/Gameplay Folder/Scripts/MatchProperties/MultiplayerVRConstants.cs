@@ -10,7 +10,6 @@ public class MultiplayerVRConstants
     public const string REACTOR_EXTRACTION = "Reactor_Extraction";
     public const string TOXICITY_DAMAGE = "Toxicity_Damage";
     public const string DAMAGAE_TAKEN = "Damage_Taken";
-    //public const string SHIELD_DURATION = "Shield_Duration";
     public const string PLAYER_SPEED = "Player_Speed";
     public const string PLAYER_HEALTH = "Player_Health";
     public const string PLAYER_ARMOR = "Player_Armor";
@@ -24,9 +23,6 @@ public class MultiplayerVRConstants
     public const string LEECH = "Leech";
     public const string ACTIVE_CAMO = "Active_Camo";
     public const string STEALTH = "Stealth";
-    //public const string DOUBLE_AGENT = "Double_Agent";
-    //public const string PROXIMITY_BOMB = "Proximity_Bomb";
-    //public const string SMOKE_BOMB = "Smoke_Bomb";
     public const string EXPLOSIVE_DEATH = "Explosive_Death";
     public const string BERSERKER_FURY = "Berserker_Fury";
     public const string AI_COMPANION = "AI_Companion";
@@ -37,9 +33,6 @@ public class MultiplayerVRConstants
     public const string LEECH_SLOT = "Leech_Slot";
     public const string ACTIVE_CAMO_SLOT = "Active_Camo_Slot";
     public const string STEALTH_SLOT = "Stealth_Slot";
-    //public const string DOUBLE_AGENT_SLOT = "Double_Agent_Slot";
-    //public const string PROXIMITY_BOMB_SLOT = "Proximity_Bomb_Slot";
-    //public const string SMOKE_BOMB_SLOT = "Smoke_Bomb_Slot";
     public const string EXPLOSIVE_DEATH_SLOT = "Explosive_Death_Slot";
     public const string BERSERKER_FURY_SLOT = "Berserker_Fury_Slot";
     public const string AI_COMPANION_SLOT = "AI_Companion_Slot";
@@ -49,12 +42,6 @@ public class MultiplayerVRConstants
     public const string CINTS = "Cints";
 
     public const string BUTTON_ASSIGN = "Button_Assign";
-
-    //public const string CYBER_SK_GANG = "CyberSKGang";
-    //public const string MUERTE_DE_DIOS = "MuerteDeDios";
-    //public const string CHAOS_CARTEL = "ChaosCartel";
-    //public const string CINTSIX_CARTEL = "CintsixCartel";
-    //public const string FEDZONE_AUTHORITY = "FedzoneAuthority";
 
     public const string BossQuest = "BossEnemy";
     public const string ArtifactQuest = "Artifacts";
@@ -97,4 +84,7 @@ public class MultiplayerVRConstants
     public const string GuardianQuestCompleted = "GuardianCompleted";
     public const string IntelQuestCompleted = "IntelCompleted";
     public const string CollectorQuestCompleted = "CollectorCompleted";
+
+    public const string PlayerLevel = "PlayerLevel";
+    public const string PlayerPrestige = "PlayerPrestige";
 }

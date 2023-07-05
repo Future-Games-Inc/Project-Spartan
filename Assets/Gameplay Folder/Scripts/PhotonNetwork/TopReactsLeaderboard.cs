@@ -7,17 +7,14 @@ using UnityEngine.UI;
 
 public class TopReactsLeaderboard : MonoBehaviour
 {
-    public int leaderboardID = 9820;
-    public int leaderboardID2 = 10220;
+    public string leaderboardID = "react_leaderboard";
+    public string leaderboardID2 = "faction_leaderboard";
 
     public bool updater = true;
     public bool rewardGiven = false;
 
     public TextMeshProUGUI playerNames;
     public TextMeshProUGUI playerScores;
-
-    public TextMeshProUGUI factionNames;
-    public TextMeshProUGUI factionScores;
 
     public Slider levelSlider;
     public TextMeshProUGUI currentLevel;
@@ -48,6 +45,11 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     }
 
+    public void SubmitScore(int Score)
+    {
+        StartCoroutine(SubmitScoreRoutine(Score));
+    }
+
     public IEnumerator RewardsGiven()
     {
         while (true)
@@ -61,7 +63,6 @@ public class TopReactsLeaderboard : MonoBehaviour
         }
     }
 
-    [Obsolete]
     public IEnumerator GiveRewards()
     {
         while (true)
@@ -70,7 +71,7 @@ public class TopReactsLeaderboard : MonoBehaviour
             {
                 rewardGiven = true;
                 bool done = false;
-                LootLockerSDKManager.GetScoreListMain(leaderboardID, 1, 0, (response) =>
+                LootLockerSDKManager.GetScoreList(leaderboardID, 1, 0, (response) =>
                 {
                     if (response.success)
                     {
@@ -97,7 +98,6 @@ public class TopReactsLeaderboard : MonoBehaviour
         }
     }
 
-    [System.Obsolete]
     public IEnumerator SubmitScoreRoutine(int scoreToUpload)
     {
         yield return new WaitForSeconds(3);
@@ -117,13 +117,12 @@ public class TopReactsLeaderboard : MonoBehaviour
         yield return new WaitWhile(() => done == false);
     }
 
-    [System.Obsolete]
     public IEnumerator FetchTopHighScores()
     {
         while (updater)
         {
             bool done = false;
-            LootLockerSDKManager.GetScoreListMain(leaderboardID, 5, 0, (response) =>
+            LootLockerSDKManager.GetScoreList(leaderboardID, 5, 0, (response) =>
             {
                 if (response.success)
                 {
@@ -156,54 +155,13 @@ public class TopReactsLeaderboard : MonoBehaviour
                 }
             });
             yield return new WaitWhile(() => done == false);
-            StartCoroutine(FetchFactionScores());
             yield return new WaitForSeconds(20);
         }
     }
 
-    [System.Obsolete]
-    public IEnumerator FetchFactionScores()
-    {
-        bool done = false;
-        LootLockerSDKManager.GetScoreListMain(leaderboardID2, 5, 0, (response) =>
-        {
-            if (response.success)
-            {
-                string tempPlayerNames = "Names\n";
-                string TempPlayerScores = "Scores\n";
-
-                LootLockerLeaderboardMember[] members = response.items;
-
-                for (int i = 0; i < members.Length; i++)
-                {
-                    tempPlayerNames += members[i].rank + ". ";
-                    if (members[i].member_id != "")
-                    {
-                        tempPlayerNames += members[i].member_id;
-                    }
-                    else
-                    {
-                        tempPlayerNames += "";
-                    }
-                    TempPlayerScores += members[i].score + "\n";
-                    tempPlayerNames += "\n";
-                }
-                done = true;
-                factionNames.text = tempPlayerNames;
-                factionScores.text = TempPlayerScores;
-            }
-            else
-            {
-                done = true;
-            }
-        });
-        yield return new WaitWhile(() => done == false);
-        yield return new WaitForSeconds(20);
-    }
-
     public IEnumerator CheckLevel()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         LootLockerSDKManager.GetPlayerInfo((response) =>
         {
             currentLevelInt = (int)response.level;
