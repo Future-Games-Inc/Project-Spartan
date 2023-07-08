@@ -3,6 +3,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Threading.Tasks;
+using UnityEngine.AI;
 
 public class SpawnManager1 : MonoBehaviourPunCallbacks
 {
@@ -13,8 +14,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject[] artifacts;
     [SerializeField] private GameObject[] bombs;
-
-    [SerializeField] private Transform[] enemyDrop;
 
     [SerializeField] private MatchEffects matchProps;
 
@@ -41,6 +40,10 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     private bool spawnBoss = true;
     private bool spawnBombs = true;
     private bool spawnArtifacts = true;
+
+    public float spawnRadius = 300.0f;   // Maximum spawn radius
+
+    public NavMeshSurface navMeshSurface;
 
     private void Start()
     {
@@ -76,16 +79,25 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnEnemy = false;
 
-            GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)];
-            PhotonNetwork.InstantiateRoomObject(enemyCharacter.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            randomPosition += transform.position;
 
-            enemyCount++;
+            // Find the nearest point on the NavMesh to the random position
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            {
 
-            await WaitSecondsConverter(10);
+                GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)];
+                PhotonNetwork.InstantiateRoomObject(enemyCharacter.name, hit.position, Quaternion.identity, 0, null);
 
-            spawnEnemy = true;
+                enemyCount++;
 
-            await WaitSecondsConverter(1);
+                await WaitSecondsConverter(10);
+
+                spawnEnemy = true;
+
+                await WaitSecondsConverter(1);
+            }
         }
     }
 
@@ -97,16 +109,25 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnSecurity = false;
 
-            GameObject securityDrone = securityAI[Random.Range(0, securityAI.Length)];
-            PhotonNetwork.InstantiateRoomObject(securityDrone.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            randomPosition += transform.position;
 
-            securityCount++;
+            // Find the nearest point on the NavMesh to the random position
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            {
 
-            await WaitSecondsConverter(15);
+                GameObject securityDrone = securityAI[Random.Range(0, securityAI.Length)];
+                PhotonNetwork.InstantiateRoomObject(securityDrone.name, hit.position, Quaternion.identity, 0, null);
 
-            spawnSecurity = true;
+                securityCount++;
 
-            await WaitSecondsConverter(1);
+                await WaitSecondsConverter(15);
+
+                spawnSecurity = true;
+
+                await WaitSecondsConverter(1);
+            }
         }
     }
 
@@ -118,18 +139,27 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnReactor = false;
 
-            Vector3 spawnPosition = enemyDrop[Random.Range(0, enemyDrop.Length)].position;
-            spawnPosition += new Vector3(0f, 2f, 0f); // Add 2 to the y transform
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            randomPosition += transform.position;
 
-            PhotonNetwork.InstantiateRoomObject(reactor.name, spawnPosition, Quaternion.identity, 0, null);
+            // Find the nearest point on the NavMesh to the random position
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            {
 
-            reactorCount++;
+                Vector3 spawnPosition = hit.position;
+                spawnPosition += new Vector3(0f, 2f, 0f); // Add 2 to the y transform
 
-            await WaitSecondsConverter(30);
+                PhotonNetwork.InstantiateRoomObject(reactor.name, spawnPosition, Quaternion.identity, 0, null);
 
-            spawnReactor = true;
+                reactorCount++;
 
-            await WaitSecondsConverter(1);
+                await WaitSecondsConverter(30);
+
+                spawnReactor = true;
+
+                await WaitSecondsConverter(1);
+            }
         }
     }
 
@@ -140,17 +170,25 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             await Task.Run(() => matchProps.startMatchBool);
 
             spawnBombs = false;
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            randomPosition += transform.position;
 
-            GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
-            PhotonNetwork.InstantiateRoomObject(bombObject.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+            // Find the nearest point on the NavMesh to the random position
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            {
 
-            bombsCount++;
+                GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
+                PhotonNetwork.InstantiateRoomObject(bombObject.name, hit.position, Quaternion.identity, 0, null);
 
-            await WaitSecondsConverter(10);
+                bombsCount++;
 
-            spawnBombs = true;
+                await WaitSecondsConverter(10);
 
-            await WaitSecondsConverter(1);
+                spawnBombs = true;
+
+                await WaitSecondsConverter(1);
+            }
 
         }
     }
@@ -164,16 +202,25 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnArtifacts = false;
 
-            GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
-            PhotonNetwork.InstantiateRoomObject(artifactObject.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            randomPosition += transform.position;
 
-            artifactCount++;
+            // Find the nearest point on the NavMesh to the random position
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            {
 
-            await WaitSecondsConverter(15);
+                GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
+                PhotonNetwork.InstantiateRoomObject(artifactObject.name, hit.position, Quaternion.identity, 0, null);
 
-            spawnArtifacts = true;
+                artifactCount++;
 
-            await WaitSecondsConverter(1);
+                await WaitSecondsConverter(15);
+
+                spawnArtifacts = true;
+
+                await WaitSecondsConverter(1);
+            }
         }
     }
 
@@ -187,15 +234,24 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             spawnHealth = false;
 
-            GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            randomPosition += transform.position;
 
-            healthCount++;
+            // Find the nearest point on the NavMesh to the random position
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            {
 
-            await WaitSecondsConverter(35);
+                GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, hit.position, Quaternion.identity, 0, null);
 
-            spawnHealth = true;
+                healthCount++;
 
-            await WaitSecondsConverter(1);
+                await WaitSecondsConverter(35);
+
+                spawnHealth = true;
+
+                await WaitSecondsConverter(1);
+            }
         }
     }
 
@@ -209,14 +265,23 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             {
                 spawnBoss = false;
 
-                GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)];
-                PhotonNetwork.InstantiateRoomObject(enemyCharacterBoss.name, enemyDrop[Random.Range(0, enemyDrop.Length)].position, Quaternion.identity, 0, null);
+                Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+                randomPosition += transform.position;
 
-                enemiesKilled = 0;
+                // Find the nearest point on the NavMesh to the random position
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+                {
 
-                await WaitSecondsConverter(45);
+                    GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)];
+                    PhotonNetwork.InstantiateRoomObject(enemyCharacterBoss.name, hit.position, Quaternion.identity, 0, null);
 
-                spawnBoss = true;
+                    enemiesKilled = 0;
+
+                    await WaitSecondsConverter(45);
+
+                    spawnBoss = true;
+                }
             }
 
             await WaitSecondsConverter(1);
