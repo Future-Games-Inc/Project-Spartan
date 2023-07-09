@@ -30,7 +30,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         activationSlider.gameObject.SetActive(true);
-        StartCoroutine(NoContact());
+        //StartCoroutine(NoContact());
     }
     IEnumerator PlayAudioLoop()
     {
@@ -84,26 +84,26 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         }
     }
 
-    IEnumerator Destroy()
-    {
-        yield return new WaitForSeconds(.75f);
-        matchProps.lastSpawnTime = Time.time;
-        matchProps.spawned = false;
-        PhotonNetwork.Destroy(gameObject);
-    }
+    //IEnumerator Destroy()
+    //{
+    //    yield return new WaitForSeconds(.75f);
+    //    matchProps.lastSpawnTime = Time.time;
+    //    matchProps.spawned = false;
+    //    PhotonNetwork.Destroy(gameObject);
+    //}
 
-    IEnumerator NoContact()
-    {
-        yield return new WaitForSeconds(30);
-        if (contact == false)
-        {
-            matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
-            matchProps.lastSpawnTime = Time.time;
-            matchProps.spawned = false;
-            yield return new WaitForSeconds(2);
-            PhotonNetwork.Destroy(gameObject);
-        }
-    }
+    //IEnumerator NoContact()
+    //{
+    //    yield return new WaitForSeconds(30);
+    //    if (contact == false)
+    //    {
+    //        matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
+    //        matchProps.lastSpawnTime = Time.time;
+    //        matchProps.spawned = false;
+    //        yield return new WaitForSeconds(2);
+    //        PhotonNetwork.Destroy(gameObject);
+    //    }
+    //}
 
     [PunRPC]
     void RPC_InstantiateWeapons()
@@ -124,7 +124,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     void RPC_Trigger()
     {
         InstantiateWeapons();
-        StartCoroutine(Destroy());
+        //StartCoroutine(Destroy());
         contact = true;
     }
 

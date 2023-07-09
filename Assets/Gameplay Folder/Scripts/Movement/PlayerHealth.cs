@@ -1663,7 +1663,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         model.SetActive(false);
-        player.transform.position = spawnManager.spawnPosition.position;
+        player.transform.position = spawnManager.respawnPosition.position;
         playerLives -= 1;
         Armor = 125;
         Health = 125;

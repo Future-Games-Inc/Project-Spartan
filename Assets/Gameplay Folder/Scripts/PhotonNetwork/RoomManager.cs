@@ -27,13 +27,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
         StartCoroutine(MapLevel());
     }
 
-    [System.Obsolete]
     IEnumerator MapLevel()
     {
         while (true)
         {
             bool done = false;
-            LootLockerSDKManager.GetXpAndLevel((response) =>
+            LootLockerSDKManager.GetPlayerInfo((response) =>
                 {
                     if (response.success)
                     {
@@ -58,14 +57,37 @@ public class RoomManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom();
     }
 
-    [System.Obsolete]
     public void OnEnterButtonClicked_Multiplayer6()
     {
-        LootLockerSDKManager.GetXpAndLevel((response) =>
+        LootLockerSDKManager.GetPlayerInfo((response) =>
         {
             mapLevel = (int)response.level;
         });
         mapType = MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6;
+        ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
+        if (mapLevel >= 0 && mapLevel <= 10 && roomName.Contains("Low"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 10 && mapLevel <= 30 && roomName.Contains("Normal"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 30 && mapLevel <= 50 && roomName.Contains("Medium"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 50 && mapLevel <= 70 && roomName.Contains("High"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 70 && mapLevel <= 90 && roomName.Contains("Reinforced"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else if (mapLevel > 90 && mapLevel <= 110 && roomName.Contains("Chokehold"))
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+        else
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+    }
+
+    public void OnEnterButtonClicked_DropZone1()
+    {
+        LootLockerSDKManager.GetPlayerInfo((response) =>
+        {
+            mapLevel = (int)response.level;
+        });
+        mapType = MultiplayerVRConstants.MAP_TYPE_VALUE_DROPZONE1;
         ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.MAP_TYPE_KEY, mapType } };
         if (mapLevel >= 0 && mapLevel <= 10 && roomName.Contains("Low"))
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
@@ -108,6 +130,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 {
                     PhotonNetwork.LoadLevel("Playground");
                 }
+                else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_DROPZONE1)
+                {
+                    PhotonNetwork.LoadLevel("DZ1");
+                }
             }
         }
     }
@@ -117,7 +143,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         CreateAndJoinRoom();
     }
 
-    private readonly string[] MAP_VALUES = { MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6 };
+    private readonly string[] MAP_VALUES = { MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6, MultiplayerVRConstants.MAP_TYPE_VALUE_DROPZONE1 };
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
@@ -162,6 +188,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         roomOptions.BroadcastPropsChangeToAll = true;
         roomOptions.IsVisible = true;
         if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_MULTIPLAYER6)
+            roomOptions.MaxPlayers = 10;
+        else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_DROPZONE1)
             roomOptions.MaxPlayers = 10;
 
         string[] roomPropsInLobby = { MultiplayerVRConstants.MAP_TYPE_KEY, "PlayerLevelForRoom" };

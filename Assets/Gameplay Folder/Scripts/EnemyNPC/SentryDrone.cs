@@ -55,6 +55,8 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     public float ammoLeft;
     public float maxAmmo = 10f;
 
+    public LayerMask obstacleMask;
+
     public enum States
     {
         Patrol,
@@ -152,7 +154,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             if (patrolling)
                 timer += Time.deltaTime;
 
-            if (distanceToPlayer <= AttackRange)
+            if (distanceToPlayer <= AttackRange && CheckForPlayer())
             {
                 SwitchStates(States.Attack);
                 LookatTarget(1, 3f);
@@ -192,6 +194,32 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             TakeDamage(300);
         }
     }
+
+    private bool CheckForPlayer()
+    {
+        Transform playerPOS = targetTransform;
+        if (playerPOS == null)
+            return false;
+
+        if (Vector3.Distance(transform.position, playerPOS.position) > DetectRange)
+            return false;
+
+        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
+            return false;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, DetectRange, obstacleMask))
+        {
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {
         TurnSpeed = RotationSpeed;

@@ -22,18 +22,18 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioSource audioSource;
     public AudioClip[] countdownClips;
     public AudioClip matchBegan;
-    public AudioClip supplyShip1;
-    public AudioClip supplyShip2;
+    //public AudioClip supplyShip1;
+    //public AudioClip supplyShip2;
 
-    public GameObject supplyDropShipPrefab;
-    public float spawnInterval; // 5 minutes in seconds
-    public float lastSpawnTime;
-    public Transform spawnLocation;
+    //public GameObject supplyDropShipPrefab;
+    //public float spawnInterval; // 5 minutes in seconds
+    //public float lastSpawnTime;
+    //public Transform spawnLocation;
 
     public bool startMatchBool = false;
     public bool spawnReactor = false;
-    public bool spawned = false;
-    public bool DE_supplyDrop;
+    //public bool spawned = false;
+    //public bool DE_supplyDrop;
 
     public string numSequence;
 
@@ -82,13 +82,13 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Update()
     {
-        if (Time.time > lastSpawnTime + spawnInterval && spawned == false && DE_supplyDrop == true)
-        {
-            lastSpawnTime = Time.time;
-            PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0, null);
-            StartCoroutine(SupplyShipAudio());
-            spawned = true;
-        }
+        //if (Time.time > lastSpawnTime + spawnInterval && spawned == false && DE_supplyDrop == true)
+        //{
+        //    lastSpawnTime = Time.time;
+        //    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0, null);
+        //    StartCoroutine(SupplyShipAudio());
+        //    spawned = true;
+        //}
     }
 
     IEnumerator SupplyShipAudio()
@@ -182,18 +182,18 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(countdownClips[clipIndex]);
     }
 
-    [PunRPC]
-    void PlaySupplyDropAudio()
-    {
-        audioSource.PlayOneShot(supplyShip1);
-        StartCoroutine(PlaySupplyDropAudioDelayed());
-    }
+    //[PunRPC]
+    //void PlaySupplyDropAudio()
+    //{
+    //    audioSource.PlayOneShot(supplyShip1);
+    //    StartCoroutine(PlaySupplyDropAudioDelayed());
+    //}
 
-    IEnumerator PlaySupplyDropAudioDelayed()
-    {
-        yield return new WaitForSeconds(supplyShip1.length);
-        audioSource.PlayOneShot(supplyShip2);
-    }
+    //IEnumerator PlaySupplyDropAudioDelayed()
+    //{
+    //    yield return new WaitForSeconds(supplyShip1.length);
+    //    audioSource.PlayOneShot(supplyShip2);
+    //}
 
     [PunRPC]
     void AudioStart()

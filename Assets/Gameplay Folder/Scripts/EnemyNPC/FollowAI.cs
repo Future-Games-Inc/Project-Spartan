@@ -163,7 +163,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
                     return;
                 }
                 // if in range of attacks
-                if (distanceToPlayer <= AttackRange)
+                if (distanceToPlayer <= AttackRange && CheckForPlayer())
                 {
                     SwitchStates(States.Attack);
                     LookatTarget(1, 3f);
@@ -222,8 +222,8 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
             return false;
 
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, DetectRange, obstacleMask);
-        foreach (RaycastHit hit in hits)
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, DetectRange, obstacleMask))
         {
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
             {
@@ -327,16 +327,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         shock();
     }
 
-    private void LookAtTarget()
-    {
-        Vector3 lookDirection = directionToTarget;
-        lookDirection.y = 0f;
-
-        Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
-
-        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * agent.angularSpeed);
-    }
-
     public void TakeDamage(int damage)
     {
         if (!alive)
@@ -361,8 +351,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         // Raise Event Here
         hitEffect.SetActive(false);
         firstHit = false;
-
-
     }
 
     public void EMPShock(GameObject Effect)
