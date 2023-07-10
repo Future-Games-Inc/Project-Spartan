@@ -6948,7 +6948,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 2.4, y: 27.703629}
+  m_AnchoredPosition: {x: 2.4, y: 27.703093}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &134752720
@@ -9624,8 +9624,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2086006748}
   m_HandleRect: {fileID: 2086006746}
   m_Direction: 2
-  m_Value: -0.0000035089734
-  m_Size: 0.4043214
+  m_Value: -0.0000004527708
+  m_Size: 0.4043206
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13365,9 +13365,9 @@ MonoBehaviour:
   - {fileID: 439788778926290553, guid: 2528bcc39dfbf8f4b901b753674e2c1c, type: 3}
   gameOver: 0
   winnerPlayer: {fileID: 0}
-  spawnRadius: 50
+  spawnRadius: 100
   navMeshSurface: {fileID: 952625869}
-  respawnPosition: {fileID: 0}
+  respawnPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &249521453
 Transform:
   m_ObjectHideFlags: 0
@@ -21325,7 +21325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00018119812, y: 15.601351}
+  m_AnchoredPosition: {x: 21.181976, y: 15.600619}
   m_SizeDelta: {x: -21.181211, y: 198.6}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &405506198
@@ -21623,8 +21623,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2043186912}
   m_HandleRect: {fileID: 2043186910}
   m_Direction: 2
-  m_Value: -0.0000036787635
-  m_Size: 0.40432173
+  m_Value: 0.00000016978909
+  m_Size: 0.4043196
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25095,7 +25095,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 2.4, y: 27.703644}
+  m_AnchoredPosition: {x: 2.4, y: 27.703152}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &485396585
@@ -26841,7 +26841,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 2.4, y: 27.703707}
+  m_AnchoredPosition: {x: 2.4, y: 27.703224}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &522195850
@@ -27063,7 +27063,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000102996826, y: 15.601006}
+  m_AnchoredPosition: {x: 0.000102996826, y: 15.600574}
   m_SizeDelta: {x: -21.181211, y: 198.6}
   m_Pivot: {x: 0, y: 1}
 --- !u!4 &525989734 stripped
@@ -31170,17 +31170,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 073c025e6babcb84f9192ea478632b99, type: 3}
   - {fileID: 8300000, guid: 8b2d63efda391de4c8504015705b9d3d, type: 3}
   matchBegan: {fileID: 8300000, guid: 035f3e011ef2b5a40be97ea5633810e9, type: 3}
-  supplyShip1: {fileID: 8300000, guid: e77c2ae3e47a62c4bb8886e479c669e8, type: 3}
-  supplyShip2: {fileID: 8300000, guid: 73008e4528100214bafca919ce17e0a2, type: 3}
-  supplyDropShipPrefab: {fileID: 4365929583561579328, guid: b93565f3599da7746ad7ed7444e8cf95,
-    type: 3}
-  spawnInterval: 35
-  lastSpawnTime: 0
-  spawnLocation: {fileID: 1304440914}
   startMatchBool: 0
   spawnReactor: 0
-  spawned: 0
-  DE_supplyDrop: 0
   numSequence: 
   nexusCodePanel: {fileID: 10004696}
 --- !u!82 &602118814
@@ -34258,7 +34249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00016593933, y: 15.600822}
+  m_AnchoredPosition: {x: 0.00016593933, y: 15.60027}
   m_SizeDelta: {x: -21.181211, y: 198.6}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &664734093
@@ -49385,7 +49376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &972798659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49427,7 +49418,7 @@ MonoBehaviour:
   enemiesKilledForBossSpawn: 5
   bombsCountMax: 10
   artifactCountMax: 10
-  spawnRadius: 50
+  spawnRadius: 100
   navMeshSurface: {fileID: 952625869}
 --- !u!4 &972798660
 Transform:
@@ -55349,7 +55340,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 150824356}
   m_Direction: 2
   m_Value: -0.0000035655685
-  m_Size: 0.40432167
+  m_Size: 0.4043151
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -55537,7 +55528,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00055122375, y: 15.601154}
+  m_AnchoredPosition: {x: -0.00055122375, y: 15.600516}
   m_SizeDelta: {x: -21.181211, y: 198.6}
   m_Pivot: {x: 0, y: 1}
 --- !u!1001 &1084287395
@@ -62050,7 +62041,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 2.4, y: 27.703611}
+  m_AnchoredPosition: {x: 2.4, y: 27.703453}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1221282704
@@ -66398,7 +66389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000017166138, y: 15.601324}
+  m_AnchoredPosition: {x: 0.000017166138, y: 15.601153}
   m_SizeDelta: {x: -21.181211, y: 198.6}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1299346959
@@ -95476,7 +95467,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 2.4, y: 27.703459}
+  m_AnchoredPosition: {x: 2.4, y: 27.703592}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1927267496
@@ -99098,8 +99089,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 386531494}
   m_HandleRect: {fileID: 386531492}
   m_Direction: 2
-  m_Value: -0.0000034523757
-  m_Size: 0.40432134
+  m_Value: 0.0000009621375
+  m_Size: 0.40432033
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -100001,8 +99992,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 843617119}
   m_HandleRect: {fileID: 843617117}
   m_Direction: 2
-  m_Value: -0.0000035655653
-  m_Size: 0.40432146
+  m_Value: -0.0000003961739
+  m_Size: 0.40431845
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

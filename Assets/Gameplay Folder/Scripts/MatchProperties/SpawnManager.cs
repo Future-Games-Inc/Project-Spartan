@@ -12,7 +12,8 @@ public class SpawnManager : MonoBehaviour
     public float spawnRadius = 300.0f;   // Maximum spawn radius
 
     public NavMeshSurface navMeshSurface;
-    public Transform respawnPosition;
+    Vector3 spawnPosition;
+    public Vector3 respawnPosition;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -57,8 +58,8 @@ public class SpawnManager : MonoBehaviour
         // If there are valid positions, choose one randomly for spawning the enemy
         if (validPositionsCount > 0)
         {
-            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
-            respawnPosition.position = spawnPosition;
+            spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+            respawnPosition = spawnPosition;
 
             object avatarSelectionNumber;
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))

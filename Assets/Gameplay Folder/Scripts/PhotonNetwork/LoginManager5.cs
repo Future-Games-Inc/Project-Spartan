@@ -25,9 +25,15 @@ public class LoginManager5 : MonoBehaviourPunCallbacks
     {
         roomManager.OnEnterButtonClicked_Multiplayer6();
     }
+
     public void EnterRoom2()
     {
         roomManager.OnEnterButtonClicked_DropZone1();
+    }
+
+    public void EnterRoom3()
+    {
+        roomManager.OnEnterButtonClicked_DropZone2();
     }
 }
 
