@@ -163,7 +163,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
                     return;
                 }
                 // if in range of attacks
-                if (distanceToPlayer <= AttackRange && CheckForPlayer())
+                if (distanceToPlayer <= AttackRange)
                 {
                     SwitchStates(States.Attack);
                     LookatTarget(1, 3f);
@@ -222,8 +222,8 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
             return false;
 
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, DetectRange, obstacleMask))
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, DetectRange, obstacleMask);
+        foreach (RaycastHit hit in hits)
         {
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
             {
@@ -282,7 +282,24 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Attack()
     {
         transform.LookAt(targetTransform);
-        attackWeapon.fireWeaponBool = true;
+        if (IsLineOfSightClear(targetTransform))
+            attackWeapon.fireWeaponBool = true;
+    }
+
+    private bool IsLineOfSightClear(Transform target)
+    {
+        Vector3 directionToTarget = target.position - transform.position;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
+        {
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void EMPShock()

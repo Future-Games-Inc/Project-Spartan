@@ -154,7 +154,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             if (patrolling)
                 timer += Time.deltaTime;
 
-            if (distanceToPlayer <= AttackRange && CheckForPlayer())
+            if (distanceToPlayer <= AttackRange)
             {
                 SwitchStates(States.Attack);
                 LookatTarget(1, 3f);
@@ -194,22 +194,12 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             TakeDamage(300);
         }
     }
-
-    private bool CheckForPlayer()
+    private bool IsLineOfSightClear(Transform target)
     {
-        Transform playerPOS = targetTransform;
-        if (playerPOS == null)
-            return false;
-
-        if (Vector3.Distance(transform.position, playerPOS.position) > DetectRange)
-            return false;
-
-        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
-        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
-            return false;
+        Vector3 directionToTarget = target.position - transform.position;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, DetectRange, obstacleMask))
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
             {
@@ -250,7 +240,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         while (true)
         {
-            if (isFiring && ammoLeft > 0)
+            if (isFiring && ammoLeft > 0 && IsLineOfSightClear(targetTransform))
             {
                 await Task.Delay(250);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);

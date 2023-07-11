@@ -7,18 +7,21 @@ using Photon.Realtime;
 public class PlayerManagerLootLocker : MonoBehaviour
 {
     public TopReactsLeaderboard leaderboard;
+    public WhiteLabelManager whiteLabelManager;
     const string playerNamePrefKey = "PlayerName";
 
     // Start is called before the first frame update
-    [System.Obsolete]
     void Start()
+    {
+
+    }
+
+    public void LoginPlayer()
     {
         StartCoroutine(LoginRoutine());
     }
 
-
-    [System.Obsolete]
-    IEnumerator LoginRoutine()
+    public IEnumerator LoginRoutine()
     {
         bool done = false;
         LootLockerSDKManager.StartGuestSession((response) =>
@@ -26,6 +29,7 @@ public class PlayerManagerLootLocker : MonoBehaviour
             if (response.success)
             {
                 PlayerPrefs.SetString("PlayerID", response.player_id.ToString());
+                whiteLabelManager.playerID = response.player_id.ToString();
                 done = true;
             }
             else
@@ -33,7 +37,7 @@ public class PlayerManagerLootLocker : MonoBehaviour
                 done = true;
             }
         });
-        yield return new WaitWhile (() => done == false);
+        yield return new WaitWhile(() => done == false);
 
         string playerID = PlayerPrefs.GetString("PlayerID");
         AuthenticationValues authValues = new AuthenticationValues(playerID);
