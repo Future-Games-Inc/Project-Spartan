@@ -163,6 +163,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Leaderboard Data ------------------------------------")]
     public string leaderboardID = "react_leaderboard";
+    public string progressionKey = "cent_prog";
 
     [Header("Contract Tracking ------------------------------------")]
     public int bossesKilled;
@@ -1572,7 +1573,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public IEnumerator GetXP(int XP)
     {
         yield return new WaitForSeconds(0);
-        LootLockerSDKManager.SubmitXp((XP), (response) =>
+        LootLockerSDKManager.AddPointsToPlayerProgression(progressionKey, (ulong)XP, response =>
         {
         });
     }

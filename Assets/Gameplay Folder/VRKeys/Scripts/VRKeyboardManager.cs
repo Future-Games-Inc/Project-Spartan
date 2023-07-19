@@ -142,7 +142,6 @@ public class VRKeyboardManager : MonoBehaviour
 
 	public void HandleCancel()
 	{
-		Debug.Log("Cancelled keyboard input!");
 		DisableVRKeyboard();
 
 		var eventSystem = EventSystem.current;
@@ -151,12 +150,9 @@ public class VRKeyboardManager : MonoBehaviour
 
 	public void OnSelectEnter()
 	{
-		Debug.Log("Entered");
 	}
 
 	public void OnSelectExit()
 	{
-		Debug.Log("Exited");
-
 	}
 }

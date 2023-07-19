@@ -1,11 +1,14 @@
+using LootLocker.Requests;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(InputField))]
 public class NicknameSave : MonoBehaviour
 
 {
+    public TMP_InputField _inputField;
     #region Private Constants
 
 
@@ -22,19 +25,9 @@ public class NicknameSave : MonoBehaviour
     /// <summary>
     /// MonoBehaviour method called on GameObject by Unity during initialization phase.
     /// </summary>
-    void Start()
+    void OnEnable()
     {
-        string defaultName = string.Empty;
-        InputField _inputField = this.GetComponent<InputField>();
-        if (_inputField != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                _inputField.text = defaultName;
-            }
-        }
-        PhotonNetwork.NickName = defaultName;
+
     }
 
 
@@ -53,9 +46,11 @@ public class NicknameSave : MonoBehaviour
         // #Important
         if (string.IsNullOrEmpty(value))
         {
-            Debug.LogError("Player Name is null or empty");
             return;
         }
+        LootLockerSDKManager.SetPlayerName(value, (response) =>
+        {
+        });
         PhotonNetwork.NickName = value;
         PlayerPrefs.SetString(playerNamePrefKey, value);
     }

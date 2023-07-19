@@ -10,15 +10,15 @@ public class ConnectToPhoton : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        string defaultName = string.Empty;
-        if (playerNameInput != null)
-        {
-            if (PlayerPrefs.HasKey(playerNamePrefKey))
-            {
-                defaultName = PlayerPrefs.GetString(playerNamePrefKey);
-                playerNameInput.text = defaultName;
-            }
-        }
+        //string defaultName = string.Empty;
+        //if (playerNameInput != null)
+        //{
+        //    if (PlayerPrefs.HasKey(playerNamePrefKey))
+        //    {
+        //        defaultName = PlayerPrefs.GetString(playerNamePrefKey);
+        //        playerNameInput.text = defaultName;
+        //    }
+        //}
     }
 
     public void ConnectPlayer()

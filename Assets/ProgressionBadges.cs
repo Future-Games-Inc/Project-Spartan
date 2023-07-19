@@ -26,7 +26,7 @@ public class ProgressionBadges : MonoBehaviour
 
     public IEnumerator UpdateBadges()
     {
-        yield return new WaitForSeconds(2.75f);
+        yield return new WaitForSeconds(.25f);
         int playerLevel;
 
         if (int.TryParse(levelText.text, out playerLevel))

@@ -3,6 +3,7 @@ using TMPro;
 using System;
 using UnityEngine.UI;
 using LootLocker.Requests;
+using Photon.Pun;
 
 public class WhiteLabelManager : MonoBehaviour
 {
@@ -25,6 +26,13 @@ public class WhiteLabelManager : MonoBehaviour
 
     public TopReactsLeaderboard topReactsLeaderboard;
     public string playerID;
+    public GameObject inputField;
+    public GameObject returningScreens;
+
+    public TMP_InputField _inputField;
+
+    // Store the PlayerPref Key to avoid typos
+    const string playerNamePrefKey = "PlayerName";
 
     // Called when pressing "LOGIN" on the login-page
     public void Login()
@@ -36,12 +44,7 @@ public class WhiteLabelManager : MonoBehaviour
             if (!response.success)
             {
                 // Error
-                Debug.Log("error while logging in");
                 return;
-            }
-            else
-            {
-                Debug.Log("Player was logged in succesfully");
             }
 
             LootLockerSDKManager.StartWhiteLabelSession((response) =>
@@ -49,14 +52,32 @@ public class WhiteLabelManager : MonoBehaviour
                 if (!response.success)
                 {
                     // Error
-
-                    Debug.Log("error starting LootLocker session");
-                    return;
                 }
                 else
                 {
                     // Session was succesfully started;
-                    Debug.Log("session started successfully");
+                    string defaultName = string.Empty;
+                    if (_inputField != null)
+                    {
+                        LootLockerSDKManager.GetPlayerName((response) =>
+                        {
+                            if (response.success)
+                            {
+                                defaultName = response.name.ToString();
+                                _inputField.text = defaultName.ToString();
+                            }
+                            else
+                            {
+                                Debug.Log("No Name Found");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
+                    }
+                    PhotonNetwork.NickName = defaultName;
+                    PlayerPrefs.SetString(playerNamePrefKey, defaultName);
                     playerID = response.player_id.ToString();
                     StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
                 }
@@ -74,13 +95,10 @@ public class WhiteLabelManager : MonoBehaviour
         {
             if (!response.success)
             {
-                Debug.Log("Error signing up:" + response.Error);
                 return;
             }
             else
             {
-                // Succesful response
-                Debug.Log("Account created");
             }
         });
     }
@@ -134,13 +152,33 @@ public class WhiteLabelManager : MonoBehaviour
                         if (response.success)
                         {
                             // It was succeful, log in
-
+                            playerID = response.player_id.ToString();
+                            string defaultName = string.Empty;
+                            if (_inputField != null)
+                            {
+                                LootLockerSDKManager.GetPlayerName((response) =>
+                                {
+                                    if (response.success)
+                                    {
+                                        defaultName = response.name.ToString();
+                                        _inputField.text = defaultName.ToString();
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("No Name Found");
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
+                            }
+                            PhotonNetwork.NickName = defaultName;
+                            PlayerPrefs.SetString(playerNamePrefKey, defaultName);
                         }
                         else
                         {
                             // Error
-
-                            Debug.Log("error starting LootLocker session");
                             // set the remember me bool to false here, so that the next time the player press login
                             // they will get to the login screen
                             rememberMeToggle.isOn = false;
@@ -167,11 +205,8 @@ public class WhiteLabelManager : MonoBehaviour
         {
             if (!response.success)
             {
-                Debug.Log("error requesting password reset");
                 return;
             }
-
-            Debug.Log("requested password reset successfully");
         });
     }
 
@@ -183,6 +218,17 @@ public class WhiteLabelManager : MonoBehaviour
             if (response.success)
             {
                 // Email was sent!
+            }
+        });
+    }
+
+    public void LogOut()
+    {
+        LootLockerSDKManager.EndSession((response) =>
+        { 
+            if(response.success)
+            {
+                PlayerPrefs.SetInt("rememberMe", 0);
             }
         });
     }

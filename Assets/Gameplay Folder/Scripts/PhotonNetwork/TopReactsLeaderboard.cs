@@ -4,12 +4,12 @@ using System;
 using LootLocker.Requests;
 using TMPro;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 
 public class TopReactsLeaderboard : MonoBehaviour
 {
     public string leaderboardID = "react_leaderboard";
     public string leaderboardID2 = "faction_leaderboard";
+    public string progressionKey = "cent_prog";
 
     public bool updater = true;
     public bool rewardGiven = false;
@@ -107,7 +107,7 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator SubmitScoreRoutine(int scoreToUpload)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1f);
         bool done = false;
         playerID = whiteLabelManager.playerID;
         LootLockerSDKManager.SubmitScore(playerID, scoreToUpload, leaderboardID, (response) =>
@@ -169,24 +169,25 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator CheckLevel()
     {
-        yield return new WaitForSeconds(.75f);
-        LootLockerSDKManager.GetPlayerInfo((response) =>
+        yield return new WaitForSeconds(.5f);
+        LootLockerSDKManager.GetPlayerProgression(progressionKey, (response) =>
         {
-            currentLevelInt = (int)response.level;
-            currentLevel.text = response.level.ToString();
-            nextLevel.text = (response.level + 1).ToString();
-            currentXPText.text = response.xp.ToString() + " / " + response.level_thresholds.next.ToString();
+            currentLevel.text = response.step.ToString();
+            currentLevelInt = (int)response.step;
+            nextLevel.text = (response.step + 1).ToString();
+            currentXPText.text = response.points + " / " + (response.step * 100);
 
             if (levelSlider.value == levelSlider.maxValue)
             {
-                levelSlider.maxValue = (float)(response.level_thresholds.next - response.xp);
+                levelSlider.maxValue = (float)(response.next_threshold);
                 levelSlider.value = 0;
             }
             else
             {
-                levelSlider.value = (float)response.xp - response.level_thresholds.current;
+                levelSlider.maxValue = (float)(response.next_threshold);
+                levelSlider.value = (float)response.points;
             }
-            roomManager.mapLevel = (int)response.level;
+            roomManager.mapLevel = (int)response.step;
         });
         StartCoroutine(SetScore());
     }
