@@ -38,7 +38,6 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
         // audioSource.PlayOneShot(clip);
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)

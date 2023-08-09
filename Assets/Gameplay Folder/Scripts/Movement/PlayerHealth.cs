@@ -1150,7 +1150,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         reactorTimer = 0;
     }
 
-    [System.Obsolete]
     public void EnemyKilled(string type)
     {
         if (type == "Normal")
@@ -1204,7 +1203,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    [System.Obsolete]
     public void PlayersKilled()
     {
         playersKilled++;

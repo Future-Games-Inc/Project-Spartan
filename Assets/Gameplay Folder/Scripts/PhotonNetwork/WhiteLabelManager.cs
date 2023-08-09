@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using LootLocker.Requests;
 using Photon.Pun;
+using JetBrains.Annotations;
 
 public class WhiteLabelManager : MonoBehaviour
 {
@@ -30,6 +31,9 @@ public class WhiteLabelManager : MonoBehaviour
     public GameObject returningScreens;
 
     public TMP_InputField _inputField;
+
+    public GameObject returning;
+    public GameObject inputFieldText;
 
     // Store the PlayerPref Key to avoid typos
     const string playerNamePrefKey = "PlayerName";
@@ -66,10 +70,6 @@ public class WhiteLabelManager : MonoBehaviour
                                 defaultName = response.name.ToString();
                                 _inputField.text = defaultName.ToString();
                             }
-                            else
-                            {
-                                Debug.Log("No Name Found");
-                            }
                         });
                     }
                     else
@@ -80,6 +80,8 @@ public class WhiteLabelManager : MonoBehaviour
                     PlayerPrefs.SetString(playerNamePrefKey, defaultName);
                     playerID = response.player_id.ToString();
                     StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
+                    returning.SetActive(false);
+                    inputFieldText.SetActive(true);
                 }
             });
         });
@@ -163,10 +165,6 @@ public class WhiteLabelManager : MonoBehaviour
                                         defaultName = response.name.ToString();
                                         _inputField.text = defaultName.ToString();
                                     }
-                                    else
-                                    {
-                                        Debug.Log("No Name Found");
-                                    }
                                 });
                             }
                             else
@@ -175,6 +173,8 @@ public class WhiteLabelManager : MonoBehaviour
                             }
                             PhotonNetwork.NickName = defaultName;
                             PlayerPrefs.SetString(playerNamePrefKey, defaultName);
+                            playerID = response.player_id.ToString();
+                            StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
                         }
                         else
                         {

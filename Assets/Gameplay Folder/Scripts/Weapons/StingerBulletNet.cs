@@ -39,7 +39,6 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         }
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)

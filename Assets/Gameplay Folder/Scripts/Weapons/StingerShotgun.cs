@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
-using UnityEngine.XR.Interaction.Toolkit;
 using TMPro;
 
 public class StingerShotgun : MonoBehaviourPunCallbacks
@@ -39,10 +38,6 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     void OnEnable()
     {
         durability = 5;
-        rotatorScript = GetComponent<Rotator>();
-        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
-        grabbable.activated.AddListener(StartFireBullet);
-        grabbable.deactivated.AddListener(StopFireBullet);
         photonView.RPC("RPC_StingerStart", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -62,13 +57,13 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
 
     }
 
-    public void StartFireBullet(ActivateEventArgs arg)
+    public void StartFireBullet()
     {
         isFiring = true;
         StartCoroutine(FireBullet());
     }
 
-    public void StopFireBullet(DeactivateEventArgs arg)
+    public void StopFireBullet()
     {
         isFiring = false;
         StopCoroutine(FireBullet());

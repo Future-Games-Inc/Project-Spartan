@@ -1,3 +1,4 @@
+using BNG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,21 +31,19 @@ public class SocketedObjectController : MonoBehaviour
         }
     }
 
-    [System.Obsolete]
     private void OnObjectUnsocketed(XRBaseInteractable interactable)
     {
         currentSocketedObject = null;
         returnCoroutine = StartCoroutine(ReturnToSocketAfterDelay());
     }
 
-    [System.Obsolete]
     private IEnumerator ReturnToSocketAfterDelay()
     {
         yield return new WaitForSeconds(returnDelay);
         if (currentSocketedObject == null)
         {
-            XRGrabInteractable grabInteractable = targetSocketedObject.GetComponent<XRGrabInteractable>();
-            if (grabInteractable == null || !grabInteractable.isSelected)
+            Grabbable grabInteractable = targetSocketedObject.GetComponent<Grabbable>();
+            if (grabInteractable == null || !grabInteractable.IsGrabbable())
             {
                 // Get the socket transform and move the object to that position
                 Transform socketTransform = socketInteractor.attachTransform;

@@ -55,9 +55,6 @@ namespace BNG {
             if(vrKeyboard != null) {
                 vrKeyboard.PressKey(key);
             }
-            else {
-                Debug.Log("Pressed key " + key + ", but no keyboard was found");
-            }
         }
     }
 }

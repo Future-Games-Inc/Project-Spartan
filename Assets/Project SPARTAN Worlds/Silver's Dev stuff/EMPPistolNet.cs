@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.InputSystem;
 using Photon.Pun;
 using TMPro;
 
@@ -38,9 +36,6 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
-        grabbable.activated.AddListener(StartFireBullet);
-        grabbable.deactivated.AddListener(StopFireBullet);
         photonView.RPC("RPC_EMPStart", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -60,13 +55,13 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
 
     }
 
-    public void StartFireBullet(ActivateEventArgs arg)
+    public void StartFireBullet()
     {
         isFiring = true;
         StartCoroutine(FireBullet());
     }
 
-    public void StopFireBullet(DeactivateEventArgs arg)
+    public void StopFireBullet()
     {
         isFiring = false;
         StopCoroutine(FireBullet());

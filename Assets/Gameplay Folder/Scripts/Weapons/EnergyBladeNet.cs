@@ -39,7 +39,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
@@ -120,34 +119,37 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
         else if (other.CompareTag("Player"))
         {
-            if (bladeVelocity >= 3f) // Check if blade is moving fast enough
+            if (playerHealth.gameObject != other.gameObject)
             {
-                // Calculate damage and apply to enemy
-                int Damage = baseDamage + bleedStacks * bleedDamage;
-                PlayerHealth enemyDamageReg = other.GetComponent<PlayerHealth>();
-                if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
+                if (bladeVelocity >= 3f) // Check if blade is moving fast enough
                 {
-                    playerHealth.PlayersKilled();
-                }
-                enemyDamageReg.TakeDamage(Damage);
-
-                // Apply hit effect
-                PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
-
-                // Apply bleed effect
-                if (!isBleeding)
-                {
-                    isBleeding = true;
-                    bleedStacks = 1;
-                    bleedTimer = bleedDuration;
-                }
-                else
-                {
-                    bleedStacks++;
-                    bleedTimer = bleedDuration;
-                    if (bleedStacks > 3)
+                    // Calculate damage and apply to enemy
+                    int Damage = baseDamage + bleedStacks * bleedDamage;
+                    PlayerHealth enemyDamageReg = other.GetComponent<PlayerHealth>();
+                    if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
                     {
-                        Damage += (bleedStacks - 1) * bleedIncrease;
+                        playerHealth.PlayersKilled();
+                    }
+                    enemyDamageReg.TakeDamage(Damage);
+
+                    // Apply hit effect
+                    PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
+
+                    // Apply bleed effect
+                    if (!isBleeding)
+                    {
+                        isBleeding = true;
+                        bleedStacks = 1;
+                        bleedTimer = bleedDuration;
+                    }
+                    else
+                    {
+                        bleedStacks++;
+                        bleedTimer = bleedDuration;
+                        if (bleedStacks > 3)
+                        {
+                            Damage += (bleedStacks - 1) * bleedIncrease;
+                        }
                     }
                 }
             }
@@ -233,6 +235,11 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     void RPC_BladeNormal()
     {
         Blade.GetComponent<Renderer>().material = normal;
+    }
+
+    public void rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }
 
