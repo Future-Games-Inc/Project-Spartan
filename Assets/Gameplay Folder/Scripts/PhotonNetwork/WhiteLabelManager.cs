@@ -34,6 +34,7 @@ public class WhiteLabelManager : MonoBehaviour
 
     public GameObject returning;
     public GameObject inputFieldText;
+    public GameObject[] keyboards;
 
     // Store the PlayerPref Key to avoid typos
     const string playerNamePrefKey = "PlayerName";
@@ -80,8 +81,6 @@ public class WhiteLabelManager : MonoBehaviour
                     PlayerPrefs.SetString(playerNamePrefKey, defaultName);
                     playerID = response.player_id.ToString();
                     StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
-                    returning.SetActive(false);
-                    inputFieldText.SetActive(true);
                 }
             });
         });
@@ -173,8 +172,12 @@ public class WhiteLabelManager : MonoBehaviour
                             }
                             PhotonNetwork.NickName = defaultName;
                             PlayerPrefs.SetString(playerNamePrefKey, defaultName);
+                            foreach (GameObject keys in keyboards)
+                                keys.SetActive(false);
                             playerID = response.player_id.ToString();
                             StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
+                            returning.SetActive(false);
+                            inputFieldText.SetActive(true);
                         }
                         else
                         {

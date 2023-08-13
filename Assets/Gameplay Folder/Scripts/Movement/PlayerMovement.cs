@@ -7,17 +7,13 @@ using Photon.Pun;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Speed")]
-    public float minSpeed = 3f;
-    public float maxSpeed = 8f;
+    public float minSpeed = 6f;
     public float accelerationTime = 10f; // Time it takes to reach maxSpeed
     public float currentSpeed;
-    private float velocity;
 
     [Header("Controller Movement")]
     public XRNode inputSource;
     public XROrigin rig;
-    private CharacterController characterController;
-    private Vector3 previousPosition;
 
     [Header("Ground Floor & Gravity ")]
     public float gravity = -9.81f;
@@ -56,37 +52,17 @@ public class PlayerMovement : MonoBehaviour
         object storedPlayerSpeed;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_SPEED, out storedPlayerSpeed) && (int)storedPlayerSpeed >= 1)
         {
-            maxSpeed = (8f + ((int)storedPlayerSpeed / 10));
+            currentSpeed = (minSpeed + ((int)storedPlayerSpeed / 10));
         }
         else
-            maxSpeed = 8f;
+            currentSpeed = minSpeed;
 
-        currentSpeed = minSpeed;
         playerCamera = rig.Camera.GetComponent<Camera>();
-        previousPosition = character.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Check if the player is moving
-        bool isMoving = character.transform.position != previousPosition;
-
-        // Update player speed based on movement
-        if (isMoving)
-        {
-            // Increase speed gradually to maxSpeed
-            currentSpeed = Mathf.SmoothDamp(currentSpeed, maxSpeed, ref velocity, accelerationTime);
-        }
-        else
-        {
-            // Reset speed to minSpeed when the player stops moving
-            currentSpeed = minSpeed;
-        }
-
-        // Update the previous position variable for the next frame
-        previousPosition = character.transform.position;
-
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
 
@@ -131,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // tells us if we are on the ground
         Vector3 rayStart = transform.TransformPoint(character.center);
-        float rayLength = character.center.y + 0.01f;
+        float rayLength = character.center.y + 0.05f;
         bool hasHit = Physics.SphereCast(rayStart, character.radius, Vector3.down, out RaycastHit hitInfo, rayLength, groundLayer);
         return hasHit;
     }
@@ -160,13 +136,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void Boost(float buff)
     {
-        maxSpeed *= buff;
+        currentSpeed *= buff;
         accelerationTime = 0.25f;
     }
 
     public void ResetBoost(float buff)
     {
-        maxSpeed /= buff;
+        currentSpeed /= buff;
         accelerationTime = 1f;
     }
 }

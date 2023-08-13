@@ -281,6 +281,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
 
             explosionEffect.SetActive(true);
+            explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
 
             agent.enabled = false;
             GetComponent<Rigidbody>().isKinematic = false;

@@ -10,6 +10,7 @@ namespace BNG {
         [Header("Starting / Held Item")]
         [Tooltip("The currently held item. Set this in the editor to equip on Start().")]
         public Grabbable HeldItem;
+        public Grabbable lastHeldItem;
 
         [Tooltip("TSet this in the editor to equip on Start().")]
         public Grabbable StartingItem;
@@ -129,7 +130,6 @@ namespace BNG {
 
             // Keep snapped to us or drop
             if (HeldItem != null) {
-
                 // Something picked this up or changed transform parent
                 if (HeldItem.BeingHeld || HeldItem.transform.parent != transform) {
                     ReleaseAll();

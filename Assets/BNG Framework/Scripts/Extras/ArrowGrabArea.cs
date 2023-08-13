@@ -9,11 +9,11 @@ namespace BNG {
     /// </summary>
     public class ArrowGrabArea : MonoBehaviour {
 
-        Bow theBow;
+        BowNet theBow;
 
         // Start is called before the first frame update
         void Start() {
-            theBow = transform.parent.GetComponent<Bow>();
+            theBow = transform.parent.GetComponent<BowNet>();
         }
 
         void OnTriggerEnter(Collider other) {
@@ -31,7 +31,7 @@ namespace BNG {
                 // Holding an arrow
                 else if(grabObject.HoldingItem && grabObject.HeldGrabbable != null) {
                     // A held Arrow entered the grab area but has not yet been knocked
-                    Arrow arrowObject = grabObject.HeldGrabbable.GetComponent<Arrow>();
+                    ArrowNet arrowObject = grabObject.HeldGrabbable.GetComponent<ArrowNet>();
                     if (arrowObject != null && theBow.GrabbedArrow == null) {
                         theBow.GrabArrow(arrowObject);
                     }

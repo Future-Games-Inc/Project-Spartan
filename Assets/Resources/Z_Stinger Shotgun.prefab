@@ -34495,13 +34495,14 @@ GameObject:
   - component: {fileID: 1622295053002393214}
   - component: {fileID: 1622295053002393200}
   - component: {fileID: 1017881006}
+  - component: {fileID: 6983726093403791887}
   m_Layer: 22
   m_Name: Z_Stinger Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1559237215124015170
 Transform:
   m_ObjectHideFlags: 0
@@ -34936,6 +34937,21 @@ MonoBehaviour:
   onSnapZoneExit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6983726093403791887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622295053002393203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b5b1b54556836a49948cf0f09394c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RingOnValidPickup: 1
+  RingOnValidRemotePickup: 1
+  RingHelperScale: 0.2
 --- !u!1 &2877738116174067327
 GameObject:
   m_ObjectHideFlags: 0

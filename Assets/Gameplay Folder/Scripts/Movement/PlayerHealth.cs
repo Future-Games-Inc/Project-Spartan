@@ -80,7 +80,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject deathToken;
     public GameObject bombDeath;
     public GameObject model;
-    public GameObject energyBlade;
     public Transform meleeAttach;
 
     public Transform bombDropLocation;
@@ -192,7 +191,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool stealth;
     public bool berserker;
     public bool berserkerActivated = false;
-    public bool spawnedBlade;
     public float stealthDuration = 30;
     public float aiCompanionDuration = 30;
     public float decoyDeployDuration = 30;
@@ -269,18 +267,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         CheckHealthStatus();
         CheckArmorStatus();
-
-        if (!spawnedBlade && photonView.IsMine)
-        {
-            spawnedBlade = true;
-            GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation, 0, null);
-            PhotonView bladePhotonView = blade.GetComponent<PhotonView>();
-            bladePhotonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            blade.GetComponent<EnergyBladeNet>().playerHealth = gameObject.GetComponent<PlayerHealth>();
-            PlayerHealth localPlayerHealth = gameObject.GetComponent<PlayerHealth>();
-            meleeAttach.gameObject.SetActive(true);
-            meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
-        }
 
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment) && (int)assignment >= 1)
             hasButtonAssignment = true;
@@ -1847,7 +1833,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             berserkerActivated = true;
             Armor = maxArmor;
             Health = maxHealth;
-            movement.currentSpeed = movement.maxSpeed;
+            movement.currentSpeed += 4;
             bulletModifier = startingBulletModifier * 2;
         }
     }

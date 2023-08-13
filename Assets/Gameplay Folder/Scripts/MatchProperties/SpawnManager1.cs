@@ -449,20 +449,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         healthCount--;
     }
 
-    //[PunRPC]
-    //public void RPC_UpdateEnemy()
-    //{
-    //    enemyCount--;
-    //}
-
-    //[PunRPC]
-    //public void RPC_UpdateEnemyCount()
-    //{
-    //    enemiesKilled++;
-    //}
-
-
-
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         // Check if this is the object's current owner and if the new master client exists

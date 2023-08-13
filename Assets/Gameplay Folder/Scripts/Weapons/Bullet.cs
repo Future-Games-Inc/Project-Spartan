@@ -22,7 +22,6 @@ public class Bullet : MonoBehaviourPunCallbacks
             StartCoroutine(DestroyBulletCollision());
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)

@@ -167,7 +167,6 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     {
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
-        GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
     }
 
@@ -175,5 +174,10 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     void RPC_EMPDestroy()
     {
         explosionObject.SetActive(true);
+    }
+
+    public void Rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }

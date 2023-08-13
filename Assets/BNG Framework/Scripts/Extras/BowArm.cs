@@ -9,7 +9,7 @@ namespace BNG {
     /// </summary>
     public class BowArm : MonoBehaviour {
 
-        public Bow BowItem;
+        public BowNet BowItem;
 
         /// <summary>
         /// When to modify the rotation : 0-1;
