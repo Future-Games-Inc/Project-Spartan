@@ -34,9 +34,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
-        grabbable.activated.AddListener(StartFireBullet);
-        grabbable.deactivated.AddListener(StopFireBullet);
         photonView.RPC("RPC_Start", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -53,16 +50,17 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        if (ammoLeft <= 0)
+            ammoLeft = 0;
     }
 
-    public void StartFireBullet(ActivateEventArgs arg)
+    public void StartFireBullet()
     {
         isFiring = true;
         StartCoroutine(FireBullet());
     }
 
-    public void StopFireBullet(DeactivateEventArgs arg)
+    public void StopFireBullet()
     {
         isFiring = false;
         StopCoroutine(FireBullet());

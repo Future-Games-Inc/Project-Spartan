@@ -54,7 +54,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        if (ammoLeft <= 0)
+            ammoLeft = 0;
     }
 
     public void StartFireBullet()
