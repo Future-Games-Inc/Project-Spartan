@@ -178,4 +178,9 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     {
         explosionObject.SetActive(true);
     }
+
+    public void Rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
+    }
 }

@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.InputSystem;
 using Photon.Pun;
 using TMPro;
+using BNG;
 
 public class PulseARNet : MonoBehaviourPunCallbacks
 {
@@ -39,19 +38,19 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     public bool reloadingWeapon = false;
 
     [Header("Keybinds ------------------------------------")]
-    public InputActionProperty triggerL;
-    public InputActionProperty triggerR;
     [HideInInspector]
     public bool isDual = false;
     [HideInInspector]
     public bool isTriggerSingle = false;
+
+    public Grabbable grabbable;
+    public GrabbableUnityEvents grabbableEvents;
 
     // Start is called before the first frame update
     void OnEnable()
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
         photonView.RPC("RPC_PulseStart", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -67,57 +66,30 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        checkForInputs();
-        // check for durablity
         if (durability <= 0)
-            StartCoroutine(DestroyWeapon());
+            StartCoroutine(DestroyWeapon()); ;
     }
 
-    private void checkForInputs()
+    public void StartFireBullet()
     {
-        // ignore if the gun is not being held
-        if (!isTriggerSingle) return;
-
-        // hold down trigger R for fire (works on left hand as well)
-        if ((triggerR.action.ReadValue<float>() > 0.8f || triggerL.action.ReadValue<float>() > 0.8f))
+        if (grabbable.BeingHeldWithTwoHands)
         {
-            // if both trigger held down then do pulse fire
-            if (triggerL.action.ReadValue<float>() > 0.8f && isDual)
-            {
-                // pulse fire
-                if (!isFiring)
-                {
-                    isFiring = true;
-                    StartCoroutine(FireBullet(true));
-                }
-            }
-            else
-            {
-                // normal fire
-                if (!isFiring)
-                {
-                    isFiring = true;
-                    StartCoroutine(FireBullet());
-                }
-            }
+            isFiring = true;
+            StartCoroutine(FireBullet(true));
         }
-
-        if (triggerL.action.ReadValue<float>() < 0.8f && isDual)
+        else
         {
-            if (isFiring)
-                isFiring = false;
-        }
-        else if (triggerL.action.ReadValue<float>() < 0.8f && !isDual || triggerR.action.ReadValue<float>() < 0.8f && !isDual)
-        {
-            if (isFiring)
-                isFiring = false;
+            isFiring = true;
+            StartCoroutine(FireBullet());
         }
     }
 
-    public void setDual(bool state)
+    public void StopFireBullet()
     {
-        isDual = state;
+        isFiring = false;
+        StopCoroutine(FireBullet());
     }
+
 
     public void setHeld(bool state)
     {
@@ -268,5 +240,10 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     void RPC_PulseDestroy()
     {
         explosionObject.SetActive(true);
+    }
+
+    public void Rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }

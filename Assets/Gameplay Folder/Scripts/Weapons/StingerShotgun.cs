@@ -181,4 +181,10 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     {
         explosionObject.SetActive(true);
     }
+
+    public void Rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
+    }
+
 }
