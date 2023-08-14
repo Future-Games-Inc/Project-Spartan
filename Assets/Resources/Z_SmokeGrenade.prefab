@@ -25,7 +25,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8951794830780912159
 Transform:
   m_ObjectHideFlags: 0
@@ -40,6 +40,8 @@ Transform:
   m_Children:
   - {fileID: 396433852941838436}
   - {fileID: 4319530778615059305}
+  - {fileID: 5392718028881742671}
+  - {fileID: 7042969605411830109}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -244,6 +246,7 @@ MonoBehaviour:
   throwForce: 20
   throwUpwardForce: 5
   audioSource: {fileID: 7388016243665074244}
+  renderer: {fileID: 6807825215859833766}
 --- !u!114 &2326166443540755834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,6 +363,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7404052725865799327}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onBecomesClosestGrabbable:
     m_PersistentCalls:
       m_Calls: []
@@ -438,7 +453,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 396433852941838436}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &418921215283220985
 TrailRenderer:
@@ -6104,12 +6119,12 @@ Transform:
   m_GameObject: {fileID: 2296808242285592759}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10.073097, y: 10.073097, z: 10.073097}
+  m_LocalScale: {x: 2.5008726, y: 2.5008726, z: 2.5008726}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9159805078856986315}
-  m_Father: {fileID: 396433852941838436}
-  m_RootOrder: 2
+  m_Father: {fileID: 8951794830780912159}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &1619486001170735472
 ParticleSystem:
@@ -6186,7 +6201,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 1
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -39587,9 +39602,7 @@ Transform:
   m_LocalScale: {x: 0.09927433, y: 0.09927433, z: 0.09927433}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5392718028881742671}
   - {fileID: 577802408727966781}
-  - {fileID: 7042969605411830109}
   m_Father: {fileID: 8951794830780912159}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -39669,13 +39682,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7404052725865799327}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.78, z: 0.00000011920929}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.17670834, z: 0}
+  m_LocalScale: {x: 0.09927433, y: 0.09927433, z: 0.09927433}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4754520859648422604}
-  m_Father: {fileID: 396433852941838436}
-  m_RootOrder: 0
+  m_Father: {fileID: 8951794830780912159}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5775860951220800723
 MonoBehaviour:

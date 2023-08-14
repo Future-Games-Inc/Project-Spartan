@@ -1,7 +1,8 @@
 using BNG;
+using Photon.Pun;
 using UnityEngine;
 
-public class FabricatorAction : MonoBehaviour
+public class FabricatorAction : MonoBehaviourPunCallbacks
 {
     public SnapZone snapZone;
     public GameObject pistolUpgrader;
@@ -155,8 +156,8 @@ public class FabricatorAction : MonoBehaviour
     {
         if (snapZone.HeldItem.gameObject.name == "Z_Pistol")
         {
-            Destroy(snapZone.HeldItem.gameObject);
-            GameObject newEmpPistol = Instantiate(empPistol, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
+            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
+            GameObject newEmpPistol = PhotonNetwork.Instantiate(empPistol.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newEmpPistol.gameObject.name = "Z_EMPPistol";
             newEmpPistol.SetActive(true);
             EMPPistolNet pistol = newEmpPistol.GetComponent<EMPPistolNet>();
@@ -168,8 +169,8 @@ public class FabricatorAction : MonoBehaviour
         }
         else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
         {
-            Destroy(snapZone.HeldItem.gameObject);
-            GameObject newStingerShotgun = Instantiate(stingerShotgun, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
+            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
+            GameObject newStingerShotgun = PhotonNetwork.Instantiate(stingerShotgun.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newStingerShotgun.gameObject.name = "Z_Stinger Shotgun";
             newStingerShotgun.SetActive(true);
             StingerShotgun stinger = newStingerShotgun.GetComponent<StingerShotgun>();
@@ -181,8 +182,8 @@ public class FabricatorAction : MonoBehaviour
         }
         else if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
         {
-            Destroy(snapZone.HeldItem.gameObject);
-            GameObject newPulseAR = Instantiate(pulseAR, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
+            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
+            GameObject newPulseAR = PhotonNetwork.Instantiate(pulseAR.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newPulseAR.gameObject.name = "Z_PulseAR";
             newPulseAR.SetActive(true);
             PulseARNet AR = newPulseAR.GetComponent<PulseARNet>();

@@ -66,8 +66,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (durability <= 0)
-            StartCoroutine(DestroyWeapon()); ;
+        if (ammoLeft <= 0)
+            ammoLeft = 0;
     }
 
     public void StartFireBullet()
@@ -115,7 +115,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseDualFire", RpcTarget.All);
-                    yield return new WaitForSeconds(PulseBullet.GetComponent<BulletBehavior>().RateOfFire);
+                    yield return new WaitForSeconds(0.5f);
                 }
 
             }
@@ -135,7 +135,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseSingleFire", RpcTarget.All);
-                    yield return new WaitForSeconds(playerBullet.GetComponent<BulletBehaviorNet>().RateOfFire);
+                    yield return new WaitForSeconds(0.2f);
                 }
             }
         }
@@ -181,7 +181,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_RPC_PulseDualFire()
+    void RPC_PulseDualFire()
     {
         ammoLeft -= 3;
 
@@ -193,7 +193,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_RPC_PulseSingleFire()
+    void RPC_PulseSingleFire()
     {
         ammoLeft--;
 
@@ -207,6 +207,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseReload()
     {
+        StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
         durability--;
@@ -214,7 +215,6 @@ public class PulseARNet : MonoBehaviourPunCallbacks
         if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
-            GetComponent<XRGrabNetworkInteractable>().enabled = false;
             StartCoroutine(DestroyWeapon());
         }
     }
@@ -232,7 +232,6 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     {
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
-        GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
     }
 

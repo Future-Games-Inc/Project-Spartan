@@ -155,7 +155,6 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
         if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
-            GetComponent<XRGrabNetworkInteractable>().enabled = false;
             StartCoroutine(DestroyWeapon());
         }
     }

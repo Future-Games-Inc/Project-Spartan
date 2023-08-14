@@ -176,7 +176,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_PLAYGROUND)
                 {
-                    PhotonNetwork.LoadLevel("Playground");
+                    PhotonNetwork.LoadLevel("WeaponTest");
                 }
                 else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_DROPZONE1)
                 {

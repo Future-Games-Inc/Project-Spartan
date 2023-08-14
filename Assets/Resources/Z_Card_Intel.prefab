@@ -247,7 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 1, b: 0.84705883, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -323,7 +323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5197660655120443912
 Transform:
   m_ObjectHideFlags: 0
@@ -370,7 +370,7 @@ MonoBehaviour:
   ParentHandModel: 0
   SnapHandModel: 1
   CanBeDropped: 1
-  CanBeSnappedToSnapZone: 1
+  CanBeSnappedToSnapZone: 0
   ForceDisableKinematicOnDrop: 1
   InstantMovement: 1
   MakeChildCollidersGrabbable: 1
@@ -439,7 +439,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 0
   m_CollisionDetection: 2
 --- !u!114 &3484855332053286851
 MonoBehaviour:
@@ -522,9 +522,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5197660655120443913}
+        m_TargetAssemblyTypeName: UnityEngine.Rigidbody, UnityEngine
+        m_MethodName: set_isKinematic
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onRelease:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1815718550214080283}
+        m_TargetAssemblyTypeName: IntelScript, Assembly-CSharp
+        m_MethodName: FreezeConstraints
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onBecomesClosestGrabbable:
     m_PersistentCalls:
       m_Calls: []
@@ -619,6 +643,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 2402466818767048137}
   pickupClip: {fileID: 8300000, guid: fffd065b51473d349b5e0240ddff6e6e, type: 3}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  grabbable: {fileID: 5197660655120443915}
 --- !u!82 &2402466818767048137
 AudioSource:
   m_ObjectHideFlags: 0
@@ -740,7 +768,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5197660655381215094}
   m_LocalRotation: {x: 0.09565256, y: 0.85662717, z: 0.49815, w: -0.09427179}
-  m_LocalPosition: {x: 0.0704, y: -0.0491, z: 0.0264}
+  m_LocalPosition: {x: 0.0755, y: -0.1161, z: -0.0164}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -887,7 +915,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 1, b: 0.84705883, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

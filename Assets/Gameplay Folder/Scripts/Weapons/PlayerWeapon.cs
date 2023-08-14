@@ -151,7 +151,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
-            GetComponent<XRGrabNetworkInteractable>().enabled = false;
             StartCoroutine(DestroyWeapon());
         }
     }
@@ -169,7 +168,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     {
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
-        GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
     }
 

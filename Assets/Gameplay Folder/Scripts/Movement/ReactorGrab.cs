@@ -101,4 +101,17 @@ public class ReactorGrab : MonoBehaviourPunCallbacks
         ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
     }
+
+    public void UnfreezeTransforms()
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.None;
+    }
+
+
+    public void FreezeConstraints()
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+    }
 }

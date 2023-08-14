@@ -447,14 +447,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5791585103471184983}
-  m_LocalRotation: {x: -0.122446194, y: 0.7060895, z: 0.0792011, w: 0.6929443}
-  m_LocalPosition: {x: -0.048, y: 0.077, z: 0.02}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0594, y: 0, z: -0.0518}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5401799927820340988}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -16.352, y: 91.619, z: -3.774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6073293801891866850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,14 +503,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6817471449741384428}
-  m_LocalRotation: {x: -0.122446194, y: 0.7060895, z: 0.0792011, w: 0.6929443}
-  m_LocalPosition: {x: -0.0708, y: 0.013288617, z: -0.0482}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0062, y: 0, z: -0.0555}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5401799927820340988}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -16.352, y: 91.619, z: -3.774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8829359516787048116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,6 +708,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4549698258488079522}
+        m_TargetAssemblyTypeName: ReactorGrab, Assembly-CSharp
+        m_MethodName: UnfreezeTransforms
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onRelease:
     m_PersistentCalls:
       m_Calls:
@@ -715,6 +727,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 4549698258488079522}
+        m_TargetAssemblyTypeName: ReactorGrab, Assembly-CSharp
+        m_MethodName: FreezeConstraints
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

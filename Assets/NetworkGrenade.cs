@@ -34,6 +34,8 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
 
     public AudioSource audioSource;
 
+    public GameObject renderer;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
@@ -157,6 +159,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
 
     IEnumerator Destroy(float delay)
     {
+        renderer.SetActive(false);
         yield return new WaitForSeconds(delay);
         PhotonNetwork.Destroy(gameObject);
     }
