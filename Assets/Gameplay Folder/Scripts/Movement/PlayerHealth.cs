@@ -1588,7 +1588,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_TakeDamage(int damage)
+    void RPC_TakeDamage(int damage) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1623,7 +1623,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_GainHealth(int health)
+    void RPC_GainHealth(int health) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1633,7 +1633,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
     [PunRPC]
-    void RPC_GainArmor(int armor)
+    void RPC_GainArmor(int armor) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1659,7 +1659,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_SetMaxHealth(int Health)
+    void RPC_SetMaxHealth(int Health) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1736,7 +1736,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_HealthRegen()
+    void RPC_HealthRegen() // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
