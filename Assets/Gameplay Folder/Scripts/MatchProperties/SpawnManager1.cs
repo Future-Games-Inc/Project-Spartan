@@ -50,8 +50,8 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         SpawnReactor();
         SpawnHealth();
         SpawnBoss();
-        SpawnArtifacts();
-        SpawnBombs();
+        //SpawnArtifacts();
+        //SpawnBombs();
     }
 
     public override void OnEnable()
@@ -209,102 +209,102 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         }
     }
 
-    public async void SpawnBombs()
-    {
-        while (spawnBombs && bombsCount < bombsCountMax)
-        {
-            await Task.Run(() => matchProps.startMatchBool);
+    //public async void SpawnBombs()
+    //{
+    //    while (spawnBombs && bombsCount < bombsCountMax)
+    //    {
+    //        await Task.Run(() => matchProps.startMatchBool);
 
-            spawnBombs = false;
+    //        spawnBombs = false;
 
-            // Create an array to store the valid positions
-            Vector3[] spawnPositions = new Vector3[10];
-            int validPositionsCount = 0;
-
-
-            // Generate multiple random positions within the spawn radius
-            for (int i = 0; i < spawnPositions.Length; i++)
-            {
-                Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-                randomPosition += transform.position;
-
-                // Find the nearest point on the NavMesh to the random position
-                NavMeshHit hit;
-                if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-                {
-                    // Add the valid position to the array
-                    spawnPositions[validPositionsCount] = hit.position;
-                    validPositionsCount++;
-                }
-            }
-
-            // If there are valid positions, choose one randomly for spawning the enemy
-            if (validPositionsCount > 0)
-            {
-                Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
-
-                GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
-                PhotonNetwork.InstantiateRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
-
-                bombsCount++;
-
-                await WaitSecondsConverter(10);
-
-                spawnBombs = true;
-
-                await WaitSecondsConverter(1);
-            }
-
-        }
-    }
-
-    private async void SpawnArtifacts()
-    {
-        while (spawnArtifacts && artifactCount < artifactCountMax)
-        {
-            await Task.Run(() => matchProps.startMatchBool);
-
-            spawnArtifacts = false;
-
-            // Create an array to store the valid positions
-            Vector3[] spawnPositions = new Vector3[10];
-            int validPositionsCount = 0;
+    //        // Create an array to store the valid positions
+    //        Vector3[] spawnPositions = new Vector3[10];
+    //        int validPositionsCount = 0;
 
 
-            // Generate multiple random positions within the spawn radius
-            for (int i = 0; i < spawnPositions.Length; i++)
-            {
-                Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-                randomPosition += transform.position;
+    //        // Generate multiple random positions within the spawn radius
+    //        for (int i = 0; i < spawnPositions.Length; i++)
+    //        {
+    //            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+    //            randomPosition += transform.position;
 
-                // Find the nearest point on the NavMesh to the random position
-                NavMeshHit hit;
-                if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-                {
-                    // Add the valid position to the array
-                    spawnPositions[validPositionsCount] = hit.position;
-                    validPositionsCount++;
-                }
-            }
+    //            // Find the nearest point on the NavMesh to the random position
+    //            NavMeshHit hit;
+    //            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+    //            {
+    //                // Add the valid position to the array
+    //                spawnPositions[validPositionsCount] = hit.position;
+    //                validPositionsCount++;
+    //            }
+    //        }
 
-            // If there are valid positions, choose one randomly for spawning the enemy
-            if (validPositionsCount > 0)
-            {
-                Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+    //        // If there are valid positions, choose one randomly for spawning the enemy
+    //        if (validPositionsCount > 0)
+    //        {
+    //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
 
-                GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
-                PhotonNetwork.InstantiateRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
+    //            GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
+    //            PhotonNetwork.InstantiateRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
 
-                artifactCount++;
+    //            bombsCount++;
 
-                await WaitSecondsConverter(15);
+    //            await WaitSecondsConverter(10);
 
-                spawnArtifacts = true;
+    //            spawnBombs = true;
 
-                await WaitSecondsConverter(1);
-            }
-        }
-    }
+    //            await WaitSecondsConverter(1);
+    //        }
+
+    //    }
+    //}
+
+    //private async void SpawnArtifacts()
+    //{
+    //    while (spawnArtifacts && artifactCount < artifactCountMax)
+    //    {
+    //        await Task.Run(() => matchProps.startMatchBool);
+
+    //        spawnArtifacts = false;
+
+    //        // Create an array to store the valid positions
+    //        Vector3[] spawnPositions = new Vector3[10];
+    //        int validPositionsCount = 0;
+
+
+    //        // Generate multiple random positions within the spawn radius
+    //        for (int i = 0; i < spawnPositions.Length; i++)
+    //        {
+    //            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+    //            randomPosition += transform.position;
+
+    //            // Find the nearest point on the NavMesh to the random position
+    //            NavMeshHit hit;
+    //            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+    //            {
+    //                // Add the valid position to the array
+    //                spawnPositions[validPositionsCount] = hit.position;
+    //                validPositionsCount++;
+    //            }
+    //        }
+
+    //        // If there are valid positions, choose one randomly for spawning the enemy
+    //        if (validPositionsCount > 0)
+    //        {
+    //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+
+    //            GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
+    //            PhotonNetwork.InstantiateRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
+
+    //            artifactCount++;
+
+    //            await WaitSecondsConverter(15);
+
+    //            spawnArtifacts = true;
+
+    //            await WaitSecondsConverter(1);
+    //        }
+    //    }
+    //}
 
     public async void SpawnHealth()
     {

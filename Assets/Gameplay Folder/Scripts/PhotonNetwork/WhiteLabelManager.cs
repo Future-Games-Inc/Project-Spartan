@@ -4,7 +4,6 @@ using System;
 using UnityEngine.UI;
 using LootLocker.Requests;
 using Photon.Pun;
-using JetBrains.Annotations;
 
 public class WhiteLabelManager : MonoBehaviour
 {
@@ -36,14 +35,31 @@ public class WhiteLabelManager : MonoBehaviour
     public GameObject inputFieldText;
     public GameObject[] keyboards;
 
+    public GameObject invalidLogin;
+    public GameObject loggingIn;
+    public GameObject accountCreated;
+    public GameObject invalidAccount;
+    public GameObject loggedOut;
+
     // Store the PlayerPref Key to avoid typos
     const string playerNamePrefKey = "PlayerName";
 
+    private void OnEnable()
+    {
+        existingUserEmailInputField.enabled = true;
+        existingUserPasswordInputField.enabled = true;
+        loggingIn.SetActive(false);
+        loggedOut.SetActive(false);
+        invalidAccount.SetActive(false);
+        invalidLogin.SetActive(false);
+        accountCreated.SetActive(false);
+    }
     // Called when pressing "LOGIN" on the login-page
     public void Login()
     {
         string email = existingUserEmailInputField.text;
         string password = existingUserPasswordInputField.text;
+        loggedOut.SetActive(false);
         LootLockerSDKManager.WhiteLabelLogin(email, password, Convert.ToBoolean(rememberMe), response =>
         {
             if (!response.success)
@@ -52,14 +68,20 @@ public class WhiteLabelManager : MonoBehaviour
                 return;
             }
 
+            loggingIn.SetActive(true);
+            existingUserEmailInputField.enabled = false;
+            existingUserPasswordInputField.enabled = false;
             LootLockerSDKManager.StartWhiteLabelSession((response) =>
             {
                 if (!response.success)
                 {
                     // Error
+                    invalidLogin.SetActive(true);
+                    loggingIn.SetActive(false);
                 }
                 else
                 {
+                    invalidLogin.SetActive(false);
                     // Session was succesfully started;
                     string defaultName = string.Empty;
                     if (_inputField != null)
@@ -91,15 +113,20 @@ public class WhiteLabelManager : MonoBehaviour
     {
         string email = newUserEmailInputField.text;
         string password = newUserPasswordInputField.text;
-
+        loggedOut.SetActive(false);
         LootLockerSDKManager.WhiteLabelSignUp(email, password, (response) =>
         {
             if (!response.success)
             {
+                invalidAccount.SetActive(true);
+                loggingIn.SetActive(false);
                 return;
             }
             else
             {
+                invalidAccount.SetActive(false);
+                accountCreated.SetActive(true);
+                Clear();
             }
         });
     }
@@ -107,6 +134,7 @@ public class WhiteLabelManager : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
+        loggingIn.SetActive(false);
         // See if we should log in the player automatically
         rememberMe = PlayerPrefs.GetInt("rememberMe", 0);
         if (rememberMe == 0)
@@ -129,6 +157,7 @@ public class WhiteLabelManager : MonoBehaviour
 
     public void AutoLogin()
     {
+        loggedOut.SetActive(false);
         // Does the user want to automatically log in?
         if (Convert.ToBoolean(rememberMe) == true)
         {
@@ -144,60 +173,62 @@ public class WhiteLabelManager : MonoBehaviour
                     // set the remember me bool to false here, so that the next time the player press login
                     // they will get to the login screen
                     rememberMeToggle.isOn = false;
+                    loggingIn.SetActive(false);
                 }
                 else
                 {
+                    loggingIn.SetActive(true);
+                    existingUserEmailInputField.enabled = false;
+                    existingUserPasswordInputField.enabled = false;
                     // Session is valid, start game session
                     LootLockerSDKManager.StartWhiteLabelSession((response) =>
-                    {
-                        if (response.success)
-                        {
-                            // It was succeful, log in
-                            playerID = response.player_id.ToString();
-                            string defaultName = string.Empty;
-                            if (_inputField != null)
-                            {
-                                LootLockerSDKManager.GetPlayerName((response) =>
-                                {
-                                    if (response.success)
                                     {
-                                        defaultName = response.name.ToString();
-                                        _inputField.text = defaultName.ToString();
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
-                            }
-                            PhotonNetwork.NickName = defaultName;
-                            PlayerPrefs.SetString(playerNamePrefKey, defaultName);
-                            foreach (GameObject keys in keyboards)
-                                keys.SetActive(false);
-                            playerID = response.player_id.ToString();
-                            StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
-                            returning.SetActive(false);
-                            inputFieldText.SetActive(true);
-                        }
-                        else
-                        {
-                            // Error
-                            // set the remember me bool to false here, so that the next time the player press login
-                            // they will get to the login screen
-                            rememberMeToggle.isOn = false;
+                                        if (response.success)
+                                        {
+                                            // It was succeful, log in
+                                            playerID = response.player_id.ToString();
+                                            string defaultName = string.Empty;
+                                            if (_inputField != null)
+                                            {
+                                                LootLockerSDKManager.GetPlayerName((response) =>
+                                                {
+                                                    if (response.success)
+                                                    {
+                                                        defaultName = response.name.ToString();
+                                                        _inputField.text = defaultName.ToString();
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
+                                            }
+                                            PhotonNetwork.NickName = defaultName;
+                                            PlayerPrefs.SetString(playerNamePrefKey, defaultName);
+                                            foreach (GameObject keys in keyboards)
+                                                keys.SetActive(false);
+                                            playerID = response.player_id.ToString();
+                                            StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
+                                            returning.SetActive(false);
+                                            inputFieldText.SetActive(true);
+                                        }
+                                        else
+                                        {
+                                            // Error
+                                            // set the remember me bool to false here, so that the next time the player press login
+                                            // they will get to the login screen
+                                            rememberMeToggle.isOn = false;
+                                            invalidLogin.SetActive(true);
+                                            loggingIn.SetActive(false);
 
-                            return;
-                        }
+                                            return;
+                                        }
 
-                    });
+                                    });
 
                 }
 
             });
-        }
-        else if (Convert.ToBoolean(rememberMe) == false)
-        {
-
         }
     }
 
@@ -228,11 +259,21 @@ public class WhiteLabelManager : MonoBehaviour
     public void LogOut()
     {
         LootLockerSDKManager.EndSession((response) =>
-        { 
-            if(response.success)
+        {
+            if (response.success)
             {
+                loggedOut.SetActive(true);
                 PlayerPrefs.SetInt("rememberMe", 0);
+                Clear();
             }
         });
+    }
+
+    public void Clear()
+    {
+        newUserPasswordInputField.text = "";
+        newUserEmailInputField.text = "";
+        existingUserPasswordInputField.text = "";
+        existingUserEmailInputField.text = "";
     }
 }

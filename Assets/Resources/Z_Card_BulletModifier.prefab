@@ -96,7 +96,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 20
+  RemoteGrabDistance: 5
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
@@ -244,6 +244,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pickupData: {fileID: 11400000, guid: dda050576ffd9d04cb9b6889c3a48623, type: 2}
   spawnManager: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  grabbable: {fileID: 0}
 --- !u!114 &489929594591823538
 MonoBehaviour:
   m_ObjectHideFlags: 0

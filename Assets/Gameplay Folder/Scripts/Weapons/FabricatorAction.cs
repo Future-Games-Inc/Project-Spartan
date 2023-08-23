@@ -110,42 +110,36 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
         if (snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol")
         {
             EMPPistolNet pistol = snapZone.lastHeldItem.gameObject.GetComponent<EMPPistolNet>();
-            pistol.reloadingScreen.SetActive(true);
             pistol.durabilityText.enabled = true;
             pistol.ammoText.enabled = true;
         }
         else if (snapZone.lastHeldItem.gameObject.name == "Z_Pistol")
         {
             PlayerWeapon pistol = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
-            pistol.reloadingScreen.SetActive(true);
             pistol.durabilityText.enabled = true;
             pistol.ammoText.enabled = true;
         }
         else if (snapZone.lastHeldItem.gameObject.name == "Z_Shotgun")
         {
             PlayerWeapon shotgun = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
-            shotgun.reloadingScreen.SetActive(true);
             shotgun.durabilityText.enabled = true;
             shotgun.ammoText.enabled = true;
         }
         else if (snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun")
         {
             StingerShotgun stinger = snapZone.HeldItem.gameObject.GetComponent<StingerShotgun>();
-            stinger.reloadingScreen.SetActive(true);
             stinger.durabilityText.enabled = true;
             stinger.ammoText.enabled = true;
         }
         else if (snapZone.lastHeldItem.gameObject.name == "Z_Rifle")
         {
             PlayerWeapon rifle = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
-            rifle.reloadingScreen.SetActive(true);
             rifle.durabilityText.enabled = true;
             rifle.ammoText.enabled = true;
         }
         else if (snapZone.lastHeldItem.gameObject.name == "Z_PulseAR")
         {
             PulseARNet pulseAR = snapZone.HeldItem.gameObject.GetComponent<PulseARNet>();
-            pulseAR.reloadingScreen.SetActive(true);
             pulseAR.durabilityText.enabled = true;
             pulseAR.ammoText.enabled = true;
         }
@@ -159,7 +153,6 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
             GameObject newEmpPistol = PhotonNetwork.Instantiate(empPistol.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newEmpPistol.gameObject.name = "Z_EMPPistol";
-            newEmpPistol.SetActive(true);
             EMPPistolNet pistol = newEmpPistol.GetComponent<EMPPistolNet>();
             pistol.reloadingScreen.SetActive(false);
             pistol.durabilityText.enabled = false;
@@ -172,7 +165,6 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
             GameObject newStingerShotgun = PhotonNetwork.Instantiate(stingerShotgun.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newStingerShotgun.gameObject.name = "Z_Stinger Shotgun";
-            newStingerShotgun.SetActive(true);
             StingerShotgun stinger = newStingerShotgun.GetComponent<StingerShotgun>();
             stinger.reloadingScreen.SetActive(false);
             stinger.durabilityText.enabled = false;
@@ -185,7 +177,6 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
             GameObject newPulseAR = PhotonNetwork.Instantiate(pulseAR.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newPulseAR.gameObject.name = "Z_PulseAR";
-            newPulseAR.SetActive(true);
             PulseARNet AR = newPulseAR.GetComponent<PulseARNet>();
             AR.reloadingScreen.SetActive(false);
             AR.durabilityText.enabled = false;

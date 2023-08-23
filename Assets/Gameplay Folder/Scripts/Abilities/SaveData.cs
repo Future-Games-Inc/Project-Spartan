@@ -266,17 +266,33 @@ public class SaveData : MonoBehaviour
             playerPrestigeCurrent = (int)playerPrestige;
             if (playerPrestigeCurrent != currentPrestigeLevel)
             {
-                playerPrestigeCurrent = currentPrestigeLevel;
                 awarded = true;
             }
         }
         else
+        {
             playerPrestigeCurrent = ES3.Load<int>("PlayerPrestige", 0);
+
+            ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
+            PlayerPrestigeSave();
+        }
+
+        PlayerLevelSave();
+    }
+
+    public void PlayerPrestige()
+    {
+        object playerPrestige;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerPrestige, out playerPrestige))
+        {
+            playerPrestigeCurrent = (int)playerPrestige;
+            playerPrestigeCurrent = currentPrestigeLevel;
+        }
 
         ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
 
-        PlayerLevelSave();
         PlayerPrestigeSave();
     }
 }

@@ -8,7 +8,7 @@ using TMPro;
 public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 {
 
-    public int matchCountdown;
+    public int matchCountdown = 10;
     public int currentMatchTime;
     public GameObject spawnManager;
     public GameObject uiCanvas;

@@ -129,8 +129,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             if (!alive) return;
             // calculates the distance from NPC to player
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
-            // Debug.Log(distanceToPlayer);
-            // match the animator Aggro with the NPC aggro
             animator.SetBool("Agro", Agro);
 
             if (currentState == States.Shocked)
@@ -142,6 +140,15 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             if (distanceToPlayer <= DetectRange && CheckForPlayer())
             {
                 Agro = true;
+            }
+
+            // If the enemy has detected the player but doesn't have a clear line of sight
+            if (Agro && !IsLineOfSightClear(targetTransform))
+            {
+                SwitchStates(States.Follow);
+                agent.isStopped = false;
+                agent.destination = targetTransform.position; // Move towards the player
+                return; // Don't proceed to other behaviors until we have a clear line of sight
             }
             // if it is not agro, then patrol like normal
             // else then see if the player is in the valid agro range (bigger than detect range) then give chase
