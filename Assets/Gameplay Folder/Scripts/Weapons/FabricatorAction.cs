@@ -37,7 +37,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
 
     public void EnterFabricator()
     {
-        if (snapZone.HeldItem.gameObject.name == "Z_Pistol" || snapZone.HeldItem.gameObject.name == "Z_EMPPistol")
+        if (snapZone.HeldItem.gameObject.name == "Z_Pistol" /*|| snapZone.HeldItem.gameObject.name == "Z_EMPPistol"*/)
         {
             if (snapZone.HeldItem.gameObject.name == "Z_Pistol")
             {
@@ -48,18 +48,18 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
                 pistol.durabilityText.enabled = false;
                 pistol.ammoText.enabled = false;
             }
-            else if (snapZone.HeldItem.gameObject.name == "Z_EMPPistol")
-            {
-                empUpgrader.SetActive(true);
-                pistolUpgrader.SetActive(false);
-                EMPPistolNet pistol = snapZone.HeldItem.gameObject.GetComponent<EMPPistolNet>();
-                pistol.reloadingScreen.SetActive(false);
-                pistol.durabilityText.enabled = false;
-                pistol.ammoText.enabled = false;
-            }
+            //else if (snapZone.HeldItem.gameObject.name == "Z_EMPPistol")
+            //{
+            //    empUpgrader.SetActive(true);
+            //    pistolUpgrader.SetActive(false);
+            //    EMPPistolNet pistol = snapZone.HeldItem.gameObject.GetComponent<EMPPistolNet>();
+            //    pistol.reloadingScreen.SetActive(false);
+            //    pistol.durabilityText.enabled = false;
+            //    pistol.ammoText.enabled = false;
+            //}
         }
 
-        else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun" || snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun")
+        else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun" /*|| snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun"*/)
         {
             if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
             {
@@ -70,18 +70,18 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
                 shotgun.durabilityText.enabled = false;
                 shotgun.ammoText.enabled = false;
             }
-            else if (snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun")
-            {
-                stingerUpgrader.SetActive(true);
-                shotgunUpgrader.SetActive(false);
-                StingerShotgun stinger = snapZone.HeldItem.gameObject.GetComponent<StingerShotgun>();
-                stinger.reloadingScreen.SetActive(false);
-                stinger.durabilityText.enabled = false;
-                stinger.ammoText.enabled = false;
-            }
+            //else if (snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun")
+            //{
+            //    stingerUpgrader.SetActive(true);
+            //    shotgunUpgrader.SetActive(false);
+            //    StingerShotgun stinger = snapZone.HeldItem.gameObject.GetComponent<StingerShotgun>();
+            //    stinger.reloadingScreen.SetActive(false);
+            //    stinger.durabilityText.enabled = false;
+            //    stinger.ammoText.enabled = false;
+            //}
         }
 
-        else if (snapZone.HeldItem.gameObject.name == "Z_Rifle" || snapZone.HeldItem.gameObject.name == "Z_PulseAR")
+        else if (snapZone.HeldItem.gameObject.name == "Z_Rifle" /*|| snapZone.HeldItem.gameObject.name == "Z_PulseAR"*/)
         {
             if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
             {
@@ -92,15 +92,15 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
                 rifle.durabilityText.enabled = false;
                 rifle.ammoText.enabled = false;
             }
-            else if (snapZone.HeldItem.gameObject.name == "Z_PulseAR")
-            {
-                pulseUpgrader.SetActive(true);
-                rifleUpgrader.SetActive(false);
-                PulseARNet pulseAR = snapZone.HeldItem.gameObject.GetComponent<PulseARNet>();
-                pulseAR.reloadingScreen.SetActive(false);
-                pulseAR.durabilityText.enabled = false;
-                pulseAR.ammoText.enabled = false;
-            }
+            //else if (snapZone.HeldItem.gameObject.name == "Z_PulseAR")
+            //{
+            //    pulseUpgrader.SetActive(true);
+            //    rifleUpgrader.SetActive(false);
+            //    PulseARNet pulseAR = snapZone.HeldItem.gameObject.GetComponent<PulseARNet>();
+            //    pulseAR.reloadingScreen.SetActive(false);
+            //    pulseAR.durabilityText.enabled = false;
+            //    pulseAR.ammoText.enabled = false;
+            //}
         }
         snapZone.lastHeldItem = snapZone.HeldItem;
     }
