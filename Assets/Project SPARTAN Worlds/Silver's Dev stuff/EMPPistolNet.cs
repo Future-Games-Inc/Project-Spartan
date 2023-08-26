@@ -115,6 +115,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPStart()
     {
+        if (!photonView.IsMine)
+            return;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -123,6 +125,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPText()
     {
+        if (!photonView.IsMine)
+            return;
         ammoText.text = ammoLeft.ToString();
         durabilityText.text = durability.ToString();
     }
@@ -130,6 +134,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft--;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -142,6 +148,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPReload()
     {
+        if (!photonView.IsMine)
+            return;
         StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
@@ -157,6 +165,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPReload2()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
@@ -165,6 +175,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPTrigger()
     {
+        if (!photonView.IsMine)
+            return;
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
@@ -173,11 +185,15 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPDestroy()
     {
+        if (!photonView.IsMine)
+            return;
         explosionObject.SetActive(true);
     }
 
     public void Rescale()
     {
+        if (!photonView.IsMine)
+            return;
         this.gameObject.transform.localScale = Vector3.one;
     }
 }

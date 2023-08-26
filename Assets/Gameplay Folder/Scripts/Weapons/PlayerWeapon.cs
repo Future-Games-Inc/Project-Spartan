@@ -188,6 +188,8 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Start()
     {
+        if (!photonView.IsMine)
+            return;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -196,6 +198,8 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Trigger()
     {
+        if (!photonView.IsMine)
+            return;
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
@@ -204,6 +208,8 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Destroy()
     {
+        if (!photonView.IsMine)
+            return;
         explosionObject.SetActive(true);
     }
 

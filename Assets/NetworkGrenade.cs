@@ -34,7 +34,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
 
     public AudioSource audioSource;
 
-    public GameObject renderer;
+    public GameObject objectRenderer;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -64,6 +64,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     [PunRPC]
     void GrenadeSound()
     {
+        if (!photonView.IsMine) return;
         audioSource.Play();
     }
 
@@ -159,7 +160,7 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
 
     IEnumerator Destroy(float delay)
     {
-        renderer.SetActive(false);
+        objectRenderer.SetActive(false);
         yield return new WaitForSeconds(delay);
         PhotonNetwork.Destroy(gameObject);
     }

@@ -140,7 +140,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (other.CompareTag("Player") && other != bulletOwner)
+        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
         {
             float criticalChance = 10f;
 

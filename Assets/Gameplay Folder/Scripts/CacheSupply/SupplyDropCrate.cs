@@ -108,6 +108,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_InstantiateWeapons()
     {
+        if (!photonView.IsMine)
+            return;
         int count = Random.Range(1, weaponPrefabs.Length + 1);
         for (int i = 0; i < count; i++)
         {
@@ -123,6 +125,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Trigger()
     {
+        if (!photonView.IsMine)
+            return;
         InstantiateWeapons();
         //StartCoroutine(Destroy());
         contact = true;
@@ -131,6 +135,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Update()
     {
+        if (!photonView.IsMine)
+            return;
         if (!isActive)
         {
             elapsedTime += Time.deltaTime;
@@ -153,6 +159,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Update2()
     {
+        if (!photonView.IsMine)
+            return;
         foreach (GameObject vfx in effects)
         {
             vfx.SetActive(true);
@@ -162,6 +170,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Color()
     {
+        if (!photonView.IsMine)
+            return;
         if (activationSlider.value <= (activationTime * 0.75) && activationSlider.value > (activationTime * 0.25))
             sliderImage.color = Color.yellow;
         if (activationSlider.value <= (activationTime * 0.25))

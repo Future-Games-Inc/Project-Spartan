@@ -43,7 +43,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [HideInInspector]
     public bool isTriggerSingle = false;
 
-    public Grabbable grabbable;
+    public NetworkedGrabbable grabbable;
     public GrabbableUnityEvents grabbableEvents;
 
     // Start is called before the first frame update
@@ -115,8 +115,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseDualFire", RpcTarget.All);
-                    yield return new WaitForSeconds(0.5f);
                 }
+                yield return new WaitForSeconds(0.5f);
 
             }
 
@@ -135,8 +135,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseSingleFire", RpcTarget.All);
-                    yield return new WaitForSeconds(0.2f);
                 }
+                yield return new WaitForSeconds(0.2f);
             }
         }
     }
@@ -168,6 +168,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseStart()
     {
+        if (!photonView.IsMine)
+            return;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -183,6 +185,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseDualFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft -= 3;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -195,6 +199,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseSingleFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft--;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -207,6 +213,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseReload()
     {
+        if (!photonView.IsMine)
+            return;
         StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
@@ -222,6 +230,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseReload2()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
@@ -230,6 +240,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseTrigger()
     {
+        if (!photonView.IsMine)
+            return;
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
@@ -238,6 +250,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseDestroy()
     {
+        if (!photonView.IsMine)
+            return;
         explosionObject.SetActive(true);
     }
 

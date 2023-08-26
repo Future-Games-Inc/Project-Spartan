@@ -51,7 +51,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
                 {
                     droneAgent.SetDestination(detectedPlayer.transform.position);
                 }
-                else
+                else if (!droneAgent.isOnNavMesh)
                 {
                     // If droneAgent is not on NavMesh, find the nearest point and warp there
                     NavMeshHit hit;
@@ -78,6 +78,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_TriggerEnter()
     {
+        if (!photonView.IsMine) return;
         lostTimer = 0;
         lost = false;
         neverFound = false;
@@ -101,6 +102,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_LostPlayer()
     {
+        if (!photonView.IsMine) return;
         lost = true;
         neverFound = true;
 

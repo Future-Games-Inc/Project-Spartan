@@ -329,6 +329,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_OnEnable()
     {
+        if (!photonView.IsMine) return;
         explosionEffect.SetActive(false);
         //healthBar.SetMaxHealth(Health);
         alive = true;
@@ -337,6 +338,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_PlayAudio()
     {
+        if (!photonView.IsMine) return;
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }

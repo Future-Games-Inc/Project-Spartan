@@ -12,27 +12,27 @@ namespace BNG {
         /// <summary>
         /// All grabbables in trigger that are considered valid
         /// </summary>
-        public Dictionary<Collider, Grabbable> NearbyGrabbables;
+        public Dictionary<Collider, NetworkedGrabbable> NearbyGrabbables;
 
         /// <summary>
         /// All nearby Grabbables that are considered valid. I.e. Not being held, within range, etc.
         /// </summary>
-        public Dictionary<Collider, Grabbable> ValidGrabbables;
+        public Dictionary<Collider, NetworkedGrabbable> ValidGrabbables;
 
         /// <summary>
         /// The closest valid grabbable. If grab button is pressed this is the object that will be grabbed.
         /// </summary>
-        public Grabbable ClosestGrabbable;
+        public NetworkedGrabbable ClosestGrabbable;
 
         /// <summary>
         /// All grabbables in trigger that are considered valid
         /// </summary>
-        public Dictionary<Collider, Grabbable> ValidRemoteGrabbables;
+        public Dictionary<Collider, NetworkedGrabbable> ValidRemoteGrabbables;
 
         /// <summary>
         /// Closest Valid Remote Grabbable may be highlighted
         /// </summary>
-        public Grabbable ClosestRemoteGrabbable;
+        public NetworkedGrabbable ClosestRemoteGrabbable;
 
         /// <summary>
         /// Should we call events on grabbables
@@ -61,18 +61,18 @@ namespace BNG {
 
 
         // Cache these variables for GC
-        private Grabbable _closest;
+        private NetworkedGrabbable _closest;
         private float _lastDistance;
         private float _thisDistance;
-        private Dictionary<Collider, Grabbable> _valids;
-        private Dictionary<Collider, Grabbable> _filtered;
+        private Dictionary<Collider, NetworkedGrabbable> _valids;
+        private Dictionary<Collider, NetworkedGrabbable> _filtered;
         private Transform _eyeTransform;
 
 
         void Start() {
-            NearbyGrabbables = new Dictionary<Collider, Grabbable>();
-            ValidGrabbables = new Dictionary<Collider, Grabbable>();
-            ValidRemoteGrabbables = new Dictionary<Collider, Grabbable>();
+            NearbyGrabbables = new Dictionary<Collider, NetworkedGrabbable>();
+            ValidGrabbables = new Dictionary<Collider, NetworkedGrabbable>();
+            ValidRemoteGrabbables = new Dictionary<Collider, NetworkedGrabbable>();
 
             // Used to check if an object is between the eye and this object if RemoteGrabbablesMustBeVisible is true
             if (Camera.main != null) {
@@ -110,7 +110,7 @@ namespace BNG {
             }
         }
 
-        public virtual Grabbable GetClosestGrabbable(Dictionary<Collider, Grabbable> grabbables, bool remoteOnly = false, bool raycastCheck = false) {
+        public virtual NetworkedGrabbable GetClosestGrabbable(Dictionary<Collider, NetworkedGrabbable> grabbables, bool remoteOnly = false, bool raycastCheck = false) {
             _closest = null;
             _lastDistance = 9999f;
 
@@ -165,7 +165,7 @@ namespace BNG {
         /// Check if there is an object / collision between the starting transform (our Grabber) and the grabbable object
         /// </summary>        
         /// <returns>True if there is an object between the starting position and the grabbable position</returns>
-        public virtual bool CheckObjectBetweenGrabbable(Vector3 startingPosition, Grabbable theGrabbable) {
+        public virtual bool CheckObjectBetweenGrabbable(Vector3 startingPosition, NetworkedGrabbable theGrabbable) {
             RaycastHit hit;
             if (Physics.Linecast(startingPosition, theGrabbable.transform.position, out hit, RemoteCollisionLayers, QueryTriggerInteraction.Ignore)) {
 
@@ -185,8 +185,8 @@ namespace BNG {
             return false;
         }
 
-        public Dictionary<Collider, Grabbable> GetValidGrabbables(Dictionary<Collider, Grabbable> grabs) {
-            _valids = new Dictionary<Collider, Grabbable>();
+        public Dictionary<Collider, NetworkedGrabbable> GetValidGrabbables(Dictionary<Collider, NetworkedGrabbable> grabs) {
+            _valids = new Dictionary<Collider, NetworkedGrabbable>();
 
             if (grabs == null) {
                 return _valids;
@@ -202,7 +202,7 @@ namespace BNG {
             return _valids;
         }
 
-        protected virtual bool isValidGrabbable(Collider col, Grabbable grab) {
+        protected virtual bool isValidGrabbable(Collider col, NetworkedGrabbable grab) {
 
             // Object has been deactivated. Remove it
             if (col == null || grab == null || !grab.isActiveAndEnabled || !col.enabled) {
@@ -227,8 +227,8 @@ namespace BNG {
             return true;
         }
 
-        public virtual Dictionary<Collider, Grabbable> SanitizeGrabbables(Dictionary<Collider, Grabbable> grabs) {
-            _filtered = new Dictionary<Collider, Grabbable>();
+        public virtual Dictionary<Collider, NetworkedGrabbable> SanitizeGrabbables(Dictionary<Collider, NetworkedGrabbable> grabs) {
+            _filtered = new Dictionary<Collider, NetworkedGrabbable>();
 
             if (grabs == null) {
                 return _filtered;
@@ -250,10 +250,10 @@ namespace BNG {
             return _filtered;
         }
 
-        public virtual void AddNearbyGrabbable(Collider col, Grabbable grabObject) {
+        public virtual void AddNearbyGrabbable(Collider col, NetworkedGrabbable grabObject) {
 
             if(NearbyGrabbables == null) {
-                NearbyGrabbables = new Dictionary<Collider, Grabbable>();
+                NearbyGrabbables = new Dictionary<Collider, NetworkedGrabbable>();
             }
 
             if (grabObject != null && !NearbyGrabbables.ContainsKey(col)) {
@@ -261,13 +261,13 @@ namespace BNG {
             }
         }
 
-        public virtual void RemoveNearbyGrabbable(Collider col, Grabbable grabObject) {
+        public virtual void RemoveNearbyGrabbable(Collider col, NetworkedGrabbable grabObject) {
             if (grabObject != null && NearbyGrabbables != null && NearbyGrabbables.ContainsKey(col)) {
                 NearbyGrabbables.Remove(col);
             }
         }
 
-        public virtual void RemoveNearbyGrabbable(Grabbable grabObject) {
+        public virtual void RemoveNearbyGrabbable(NetworkedGrabbable grabObject) {
             if (grabObject != null) {
 
                 foreach (var x in NearbyGrabbables) {
@@ -279,7 +279,7 @@ namespace BNG {
             }
         }
 
-        public virtual void AddValidRemoteGrabbable(Collider col, Grabbable grabObject) {
+        public virtual void AddValidRemoteGrabbable(Collider col, NetworkedGrabbable grabObject) {
             
             // Sanity check
             if(col == null || grabObject == null) {
@@ -288,7 +288,7 @@ namespace BNG {
 
             // Ensure our collection has been initialized
             if (ValidRemoteGrabbables == null) {
-                ValidRemoteGrabbables = new Dictionary<Collider, Grabbable>();
+                ValidRemoteGrabbables = new Dictionary<Collider, NetworkedGrabbable>();
             }
 
             try {
@@ -302,7 +302,7 @@ namespace BNG {
             }
         }
 
-        public virtual void RemoveValidRemoteGrabbable(Collider col, Grabbable grabObject) {
+        public virtual void RemoveValidRemoteGrabbable(Collider col, NetworkedGrabbable grabObject) {
             if (grabObject != null && ValidRemoteGrabbables != null && ValidRemoteGrabbables.ContainsKey(col)) {
                 ValidRemoteGrabbables.Remove(col);
             }
@@ -311,7 +311,7 @@ namespace BNG {
         void OnTriggerEnter(Collider other) {
 
             // Check for standard Grabbables first
-            Grabbable g = other.GetComponent<Grabbable>();
+            NetworkedGrabbable g = other.GetComponent<NetworkedGrabbable>();
             if (g != null) {
                 AddNearbyGrabbable(other, g);
                 return;
@@ -326,7 +326,7 @@ namespace BNG {
         }
 
         void OnTriggerExit(Collider other) {
-            Grabbable g = other.GetComponent<Grabbable>();
+            NetworkedGrabbable g = other.GetComponent<NetworkedGrabbable>();
             if (g != null) {
                 RemoveNearbyGrabbable(other, g);
                 return;

@@ -8,7 +8,7 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
     public SpawnManager1 spawnManager;
     public LayerMask groundLayer;
     private Rigidbody rb;
-    public Grabbable grabbable;
+    public NetworkedGrabbable grabbable;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -124,5 +124,10 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                 rb.constraints &= RigidbodyConstraints.FreezePositionZ;
             }
         }
+    }
+
+    public void rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }

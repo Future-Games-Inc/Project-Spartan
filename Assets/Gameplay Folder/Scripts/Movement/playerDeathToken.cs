@@ -40,12 +40,16 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_TokenActivated()
     {
+        if (!photonView.IsMine)
+            return;
         tokenActivated = true;       
     }
 
     [PunRPC]
     void RPC_DestroyToken()
     {
+        if (!photonView.IsMine)
+            return;
         player.UpdateSkills(tokenValue);
         tokenValue = 0;
         //if (faction.ToString() != player.characterFaction.ToString())

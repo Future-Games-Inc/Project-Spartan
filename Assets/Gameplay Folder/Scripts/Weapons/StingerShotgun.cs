@@ -120,6 +120,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerStart()
     {
+        if (!photonView.IsMine)
+            return;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -128,6 +130,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerTextUpdate()
     {
+        if (!photonView.IsMine)
+            return;
         ammoText.text = ammoLeft.ToString();
         durabilityText.text = durability.ToString();
     }
@@ -135,6 +139,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft--;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -147,6 +153,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerReload()
     {
+        if (!photonView.IsMine)
+            return;
         StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
@@ -162,6 +170,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerReload2()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
@@ -170,6 +180,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerTrigger()
     {
+        if (!photonView.IsMine)
+            return;
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
@@ -178,6 +190,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StingerDestroy()
     {
+        if (!photonView.IsMine)
+            return;
         explosionObject.SetActive(true);
     }
 

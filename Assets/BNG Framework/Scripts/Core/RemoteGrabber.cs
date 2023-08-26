@@ -78,7 +78,7 @@ namespace BNG {
 
             _lastColliderHit = colliderHit;
 
-            if (_lastColliderHit.gameObject.TryGetComponent(out Grabbable grabObject)) {
+            if (_lastColliderHit.gameObject.TryGetComponent(out NetworkedGrabbable grabObject)) {
                 ParentGrabber.AddValidRemoteGrabbable(_lastColliderHit, grabObject);
                 return;
             }
@@ -93,7 +93,7 @@ namespace BNG {
         public void RemovePreviousHitObject() {
             if (_lastColliderHit == null) return;
 
-            if (_lastColliderHit.TryGetComponent(out Grabbable grabObject)) {
+            if (_lastColliderHit.TryGetComponent(out NetworkedGrabbable grabObject)) {
                 ParentGrabber.RemoveValidRemoteGrabbable(_lastColliderHit, grabObject);
                 return;
             }
@@ -120,7 +120,7 @@ namespace BNG {
             }
 
             //  We will let this grabber know we have remote objects available           
-            Grabbable grabObject = other.GetComponent<Grabbable>();
+            NetworkedGrabbable grabObject = other.GetComponent<NetworkedGrabbable>();
             if(grabObject != null && ParentGrabber != null) {
                 ParentGrabber.AddValidRemoteGrabbable(other, grabObject);
                 return;
@@ -141,7 +141,7 @@ namespace BNG {
                 return;
             }
 
-            Grabbable grabObject = other.GetComponent<Grabbable>();
+            NetworkedGrabbable grabObject = other.GetComponent<NetworkedGrabbable>();
             if (grabObject != null && ParentGrabber != null) {
                 ParentGrabber.RemoveValidRemoteGrabbable(other, grabObject);
                 return;

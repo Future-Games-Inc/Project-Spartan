@@ -21,7 +21,7 @@ namespace BNG {
         // How long we've been waiting
         float currentDelay = 0;
 
-        Grabbable grab;
+        NetworkedGrabbable grab;
         Rigidbody rigid;
         bool useGravityInitial;
 
@@ -29,7 +29,7 @@ namespace BNG {
         public float SnapDistance = 0.05f;
 
         void Start() {
-            grab = GetComponent<Grabbable>();
+            grab = GetComponent<NetworkedGrabbable>();
             rigid = GetComponent<Rigidbody>();
             useGravityInitial = rigid.useGravity;
         }

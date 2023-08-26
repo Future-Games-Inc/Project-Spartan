@@ -17,7 +17,7 @@ namespace BNG {
         AudioSource impactSound;
 
         float flightTime = 0f;
-        float destroyTime = 10f; // Time in seconds to destroy arrow
+        float destroyTime = 5f; // Time in seconds to destroy arrow
         Coroutine queueDestroy;
 
         public Projectile ProjectileObject;
@@ -109,6 +109,28 @@ namespace BNG {
 
         private void OnCollisionEnter(Collision collision) 
         {
+            float zVel = System.Math.Abs(transform.InverseTransformDirection(rb.velocity).z);
+            bool doStick = true;
+            // Check to stick to object
+            if (!rb.isKinematic && Flying)
+            {
+                if (zVel > 0.02f)
+                {
+                    if (grab != null && grab.BeingHeld)
+                    {
+                        grab.DropItem(false, false);
+                    }
+                    if (doStick)
+                    {
+                        tryStickArrow(collision);
+                    }
+
+                    Flying = false;
+
+                    playSoundInterval(2.462f, 2.68f);
+                }
+            }
+
             StartCoroutine(Destroy(destroyTime));
         }
 
@@ -121,39 +143,51 @@ namespace BNG {
         }
 
         // Attach to collider
-        void tryStickArrow(Collision collision) {
+        void tryStickArrow(Collision collision)
+        {
 
             Rigidbody colRigid = collision.collider.GetComponent<Rigidbody>();
             transform.parent = null; // Start out with arrow being in World space
 
             // If the collider is static then we don't need to do anything. Just stop it.
-            if (collision.gameObject.isStatic) {
+            if (collision.gameObject.isStatic)
+            {
                 rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
                 rb.isKinematic = true;
             }
-            // Next try attaching to rigidbody via FixedJoint
-            else if (colRigid != null && !colRigid.isKinematic) {
-                FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-                joint.connectedBody = colRigid;
-                joint.enableCollision = false;
-                joint.breakForce = float.MaxValue;
-                joint.breakTorque = float.MaxValue;
+            // If the object has a Rigidbody
+            else if (colRigid != null)
+            {
+                // Attach to non-kinematic rigidbody via FixedJoint
+                if (!colRigid.isKinematic)
+                {
+                    FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+                    joint.connectedBody = colRigid;
+                    joint.enableCollision = false;
+                    joint.breakForce = float.MaxValue;
+                    joint.breakTorque = float.MaxValue;
+                }
+                // Parent to kinematic rigidbody if scale is (1,1,1)
+                else if (colRigid.isKinematic && collision.transform.localScale == Vector3.one)
+                {
+                    transform.SetParent(collision.transform);
+                    rb.useGravity = false;
+                    rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+                    rb.isKinematic = true;
+                    rb.constraints = RigidbodyConstraints.FreezeAll;
+                    rb.WakeUp();
+                }
             }
-            else if (colRigid != null && colRigid.isKinematic && collision.transform.localScale == Vector3.one) {
-                transform.SetParent(collision.transform);
-                rb.useGravity = false;
-                rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
-                rb.isKinematic = true;
-                rb.constraints = RigidbodyConstraints.FreezeAll;
-                rb.WakeUp();
-            }
-            // Finally, try parenting or just setting the arrow to kinematic
-            else {
-                if (collision.transform.localScale == Vector3.one) {
+            // If the object lacks a Rigidbody
+            else
+            {
+                if (collision.transform.localScale == Vector3.one)
+                {
                     transform.SetParent(collision.transform);
                     rb.constraints = RigidbodyConstraints.FreezeAll;
                 }
-                else {
+                else
+                {
                     rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
                     rb.useGravity = false;
                     rb.isKinematic = true;

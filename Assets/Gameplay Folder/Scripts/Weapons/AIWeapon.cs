@@ -148,12 +148,16 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_ShootAudio()
     {
+        if (!photonView.IsMine) 
+            return;
         audioSource.PlayOneShot(weaponFire);
     }
 
     [PunRPC]
     void RPC_Reload1()
     {
+        if (!photonView.IsMine)
+            return;
         audioSource2.PlayOneShot(weaponReload);
     }
 }

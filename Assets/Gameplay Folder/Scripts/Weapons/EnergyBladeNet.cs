@@ -58,7 +58,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     {
         if (bladeVelocity < 0.2f)
         {
-            Debug.Log("Not fast enough");
             return;  // Check if blade is not moving fast enough
         }
         int Damage = baseDamage + bleedStacks * bleedDamage;
@@ -70,7 +69,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
                 HandleFollowAIDamage(Damage, enemyDamageReg, other);
 
             ApplyEffects(Damage, other.transform.position);
-            Debug.Log("Hit");
         }
 
         else if(other.CompareTag("Player"))
@@ -80,7 +78,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
                 HandlePlayerDamage(Damage, playerDamage);
 
             ApplyEffects(Damage, other.transform.position);
-            Debug.Log("Hit");
         }
 
         else if (other.CompareTag("Security"))
@@ -95,7 +92,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
                     sentryDrone.TakeDamage(Damage);
             }
             ApplyEffects(Damage, other.transform.position);
-            Debug.Log("Hit");
         }
     }
 
@@ -173,25 +169,21 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
         if (bleedStacks > 3)
         {
             bleedIcon.SetActive(true);
-            photonView.RPC("RPC_BladeBleeding", RpcTarget.All);
+            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, bleed);
         }
         else
         {
             bleedIcon.SetActive(false);
-            photonView.RPC("RPC_BladeNormal", RpcTarget.All);
+            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, normal);
         }
     }
 
     [PunRPC]
-    void RPC_BladeBleeding()
+    void RPC_BladeMaterial(Material material)
     {
-        Blade.GetComponent<Renderer>().material = bleed;
-    }
-
-    [PunRPC]
-    void RPC_BladeNormal()
-    {
-        Blade.GetComponent<Renderer>().material = normal;
+        if (!photonView.IsMine)
+            return;
+        Blade.GetComponent<Renderer>().material = material;
     }
 
     public void rescale()

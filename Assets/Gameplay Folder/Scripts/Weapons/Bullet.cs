@@ -172,7 +172,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         }
 
 
-        else if (other.CompareTag("Player"))
+        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
         {
             float criticalChance = 10f;
 

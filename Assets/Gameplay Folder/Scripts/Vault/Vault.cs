@@ -41,62 +41,60 @@ public class Vault : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (photonView.IsMine)
+        // Check for player within radius and synchronize activation timer and slider value
+        bool playerWithinRadius = CheckForPlayerWithinRadius();
+        UpdateVaultActivation(playerWithinRadius);
+
+        if (activated && hasBeenActivated) // Only move if the vault has been activated before
         {
-            // Check for player within radius and synchronize activation timer and slider value
-            bool playerWithinRadius = CheckForPlayerWithinRadius();
-            photonView.RPC("RPC_UpdateVaultActivation", RpcTarget.All, playerWithinRadius);
 
-            if (activated && hasBeenActivated) // Only move if the vault has been activated before
+            photonView.RPC("RPC_VaultMaterial", RpcTarget.All, activatedMaterial);
+            if (isMovingUp && isHolding)
             {
+                radius = 10f;
+                // Move the object up
+                transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 
-                photonView.RPC("RPC_VaultOpenMaterial", RpcTarget.All);
-                if (isMovingUp && isHolding)
+                // Check if the object has reached the end position
+                if (transform.position.y >= endY)
                 {
-                    radius = 10f;
-                    // Move the object up
-                    transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
-
-                    // Check if the object has reached the end position
-                    if (transform.position.y >= endY)
-                    {
-                        isMovingUp = false;
-                        holdTimer = 0f;
-                    }
+                    isMovingUp = false;
+                    holdTimer = 0f;
                 }
-                else if (isHolding)
-                {
-                    radius = 10f;
-                    // Increment the hold timer
-                    holdTimer += Time.deltaTime;
+            }
+            else if (isHolding)
+            {
+                radius = 10f;
+                // Increment the hold timer
+                holdTimer += Time.deltaTime;
 
-                    // Check if hold duration has elapsed
-                    if (holdTimer >= holdDuration)
-                    {
-                        isHolding = false;
-                    }
+                // Check if hold duration has elapsed
+                if (holdTimer >= holdDuration)
+                {
+                    isHolding = false;
                 }
-                else
-                {
-                    radius = 4f;
-                    photonView.RPC("RPC_VaultClosedMaterial", RpcTarget.All);
-                    // Move the object down
-                    transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
+            }
+            else
+            {
+                radius = 4f;
+                photonView.RPC("RPC_VaultMaterial", RpcTarget.All, deactivatedMaterial);
+                // Move the object down
+                transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
 
-                    // Check if the object has reached the start position
-                    if (transform.position.y <= startY)
-                    {
-                        activated = false;
-                        elapsedTime = 0f;
-                        holdTimer = 0f;
-                    }
+                // Check if the object has reached the start position
+                if (transform.position.y <= startY)
+                {
+                    activated = false;
+                    activationSlider.maxValue = activationTime;
+                    activationSlider.value = activationTime;
+                    elapsedTime = 0f;
+                    holdTimer = 0f;
                 }
             }
         }
     }
 
-    [PunRPC]
-    void RPC_UpdateVaultActivation(bool playerWithinRadius)
+    void UpdateVaultActivation(bool playerWithinRadius)
     {
         if (!activated && playerWithinRadius && matchProps.startMatchBool)
         {
@@ -121,15 +119,11 @@ public class Vault : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_VaultOpenMaterial()
+    void RPC_VaultMaterial(Material material)
     {
-        keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
-    }
-
-    [PunRPC]
-    void RPC_VaultClosedMaterial()
-    {
-        keycardObject.GetComponent<MeshRenderer>().material = lootedMaterial;
+        if (!photonView.IsMine)
+            return;
+        keycardObject.GetComponent<MeshRenderer>().material = material;
     }
 
     public bool CheckForPlayerWithinRadius()

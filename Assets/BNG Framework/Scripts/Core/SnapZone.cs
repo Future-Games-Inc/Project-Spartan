@@ -9,11 +9,11 @@ namespace BNG {
 
         [Header("Starting / Held Item")]
         [Tooltip("The currently held item. Set this in the editor to equip on Start().")]
-        public Grabbable HeldItem;
-        public Grabbable lastHeldItem;
+        public NetworkedGrabbable HeldItem;
+        public NetworkedGrabbable lastHeldItem;
 
         [Tooltip("TSet this in the editor to equip on Start().")]
-        public Grabbable StartingItem;
+        public NetworkedGrabbable StartingItem;
 
         [Header("Options")]
         /// <summary>
@@ -92,11 +92,11 @@ namespace BNG {
 
         Rigidbody heldItemRigid;
         bool heldItemWasKinematic;
-        Grabbable trackedItem; // If we can't drop the item, track it separately
+        NetworkedGrabbable trackedItem; // If we can't drop the item, track it separately
 
         // Closest Grabbable in our trigger
         [HideInInspector]
-        public Grabbable ClosestGrabbable;
+        public NetworkedGrabbable ClosestGrabbable;
 
         SnapZoneOffset offset;
 
@@ -153,9 +153,9 @@ namespace BNG {
             }
         }
 
-        Grabbable getClosestGrabbable() {
+        NetworkedGrabbable getClosestGrabbable() {
 
-            Grabbable closest = null;
+            NetworkedGrabbable closest = null;
             float lastDistance = 9999f;
 
             if (gZone == null || gZone.NearbyGrabbables == null) {
@@ -231,7 +231,7 @@ namespace BNG {
             return closest;
         }
 
-        public virtual void GrabGrabbable(Grabbable grab) {
+        public virtual void GrabGrabbable(NetworkedGrabbable grab) {
 
             // Grab is already in Snap Zone
             if (grab.transform.parent != null && grab.transform.parent.GetComponent<SnapZone>() != null) {
@@ -352,7 +352,7 @@ namespace BNG {
 
                         // Instantiate the object before it is grabbed
                         GameObject go = Instantiate(g.gameObject, transform.position, Quaternion.identity) as GameObject;
-                        Grabbable grab = go.GetComponent<Grabbable>();
+                        NetworkedGrabbable grab = go.GetComponent<NetworkedGrabbable>();
 
                         // Ok to attach it to snap zone now
                         this.GrabGrabbable(grab);

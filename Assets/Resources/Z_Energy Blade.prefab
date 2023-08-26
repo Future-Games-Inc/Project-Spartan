@@ -479,13 +479,14 @@ GameObject:
   m_Component:
   - component: {fileID: 9017398016391809628}
   - component: {fileID: 9017398016391809630}
-  - component: {fileID: 9017398016391809631}
+  - component: {fileID: 8884035279163742586}
   - component: {fileID: 9017398016391809637}
   - component: {fileID: 9017398016391809636}
   - component: {fileID: 9017398016391809627}
   - component: {fileID: 9017398016391809625}
   - component: {fileID: 4358438308007332923}
   - component: {fileID: 1176569027415575546}
+  - component: {fileID: -2210270528898385246}
   m_Layer: 0
   m_Name: Z_Energy Blade
   m_TagString: Untagged
@@ -527,7 +528,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &9017398016391809631
+--- !u!114 &8884035279163742586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -536,7 +537,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9017398016391809619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
+  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -547,7 +548,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 20
+  RemoteGrabDistance: 5
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
@@ -729,6 +730,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 8884035279163742586}
   - {fileID: 9017398016391809636}
   sceneViewId: 0
   InstantiationId: 0
@@ -784,6 +786,25 @@ MonoBehaviour:
   RingOnValidPickup: 1
   RingOnValidRemotePickup: 1
   RingHelperScale: 0.2
+--- !u!114 &-2210270528898385246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9017398016391809619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HapticsOnValidPickup: 1
+  HapticsOnValidRemotePickup: 0
+  HapticsOnCollision: 0
+  HapticsOnGrab: 1
+  VibrateFrequency: 0.3
+  VibrateAmplitude: 0.1
+  VibrateDuration: 0.1
 --- !u!1 &9017398016734198744
 GameObject:
   m_ObjectHideFlags: 0

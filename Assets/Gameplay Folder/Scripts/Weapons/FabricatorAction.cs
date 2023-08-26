@@ -157,7 +157,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             pistol.reloadingScreen.SetActive(false);
             pistol.durabilityText.enabled = false;
             pistol.ammoText.enabled = false;
-            Grabbable newGrabbable = empPistol.GetComponent<Grabbable>();
+            NetworkedGrabbable newGrabbable = empPistol.GetComponent<NetworkedGrabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
         else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
@@ -169,7 +169,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             stinger.reloadingScreen.SetActive(false);
             stinger.durabilityText.enabled = false;
             stinger.ammoText.enabled = false;
-            Grabbable newGrabbable = newStingerShotgun.GetComponent<Grabbable>();
+            NetworkedGrabbable newGrabbable = newStingerShotgun.GetComponent<NetworkedGrabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
         else if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
@@ -181,7 +181,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             AR.reloadingScreen.SetActive(false);
             AR.durabilityText.enabled = false;
             AR.ammoText.enabled = false;
-            Grabbable newGrabbable = newPulseAR.GetComponent<Grabbable>();
+            NetworkedGrabbable newGrabbable = newPulseAR.GetComponent<NetworkedGrabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
     }

@@ -110,6 +110,9 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_KillEnemy()
     {
+        if (!photonView.IsMine)
+            return;
+
         alive = false;
         aiScript.attackWeapon.fireWeaponBool = false;
         aiScript.alive = false;

@@ -529,7 +529,7 @@ namespace BNG {
                     // Make child Grabbable if it isn't already
                     if (cols[x].GetComponent<Grabbable>() == null && cols[x].GetComponent<GrabbableChild>() == null) {
                         var gc = cols[x].gameObject.AddComponent<GrabbableChild>();
-                        gc.ParentGrabbable = this;
+                        //gc.ParentGrabbable = this;
                     }
                 }
             }
