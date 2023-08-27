@@ -374,11 +374,11 @@ MonoBehaviourPunCallbacks, IPunObservable, IPunOwnershipCallbacks
         }
 
         public void OnOwnershipTransfered(PhotonView targetView, Player requestingPlayer) {
-            // Debug.Log("OnOwnershipTransfered to Player " + requestingPlayer);
+            // //Debug.Log("OnOwnershipTransfered to Player " + requestingPlayer);
         }
 
         public void OnOwnershipTransferFailed(PhotonView targetView, Player requestingPlayer) {
-            // Debug.Log("OnOwnershipTransferFailed for Player " + requestingPlayer);
+            // //Debug.Log("OnOwnershipTransferFailed for Player " + requestingPlayer);
         }
 
 #endif

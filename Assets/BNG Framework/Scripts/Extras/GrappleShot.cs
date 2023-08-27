@@ -77,7 +77,7 @@ namespace BNG {
                 playerRigid = player.GetComponent<Rigidbody>();
             }
             else {
-                Debug.Log("No player object found.");
+                //Debug.Log("No player object found.");
             }
 
             audioSource = GetComponent<AudioSource>();

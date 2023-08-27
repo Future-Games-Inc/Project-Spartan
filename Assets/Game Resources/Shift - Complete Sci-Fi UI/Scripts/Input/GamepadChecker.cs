@@ -40,7 +40,7 @@ namespace Michsky.UI.Shift
                 catch
                 {
                     this.enabled = false;
-                    Debug.LogWarning("<b>[Gamepad Checker]</b> There is no Virtual Cursor component attached.", this);
+                    //Debug.LogWarning("<b>[Gamepad Checker]</b> There is no Virtual Cursor component attached.", this);
                 }
             }
 
@@ -49,13 +49,13 @@ namespace Michsky.UI.Shift
             if (alwaysSearch == false)
             {
                 this.enabled = false;
-                Debug.Log("<b>[Gamepad Checker]</b> Always Search is off. Input device won't be updated in case of disconnecting/connecting.");
+                //Debug.Log("<b>[Gamepad Checker]</b> Always Search is off. Input device won't be updated in case of disconnecting/connecting.");
             }
 
             else
             {
                 this.enabled = true;
-                Debug.Log("<b>[Gamepad Checker]</b> Always Search is on. Input device will be updated in case of disconnecting/connecting.");
+                //Debug.Log("<b>[Gamepad Checker]</b> Always Search is on. Input device will be updated in case of disconnecting/connecting.");
             }
 
             string[] names = Input.GetJoystickNames();

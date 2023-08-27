@@ -119,7 +119,7 @@ namespace ShellanderGames.WeaponWheel
 				if (inputAction == null)
 				{
 					doIgnore = true;
-					Debug.Log("Ignoring input action: " + name);
+					//Debug.Log("Ignoring input action: " + name);
 				}
 				else
 				{

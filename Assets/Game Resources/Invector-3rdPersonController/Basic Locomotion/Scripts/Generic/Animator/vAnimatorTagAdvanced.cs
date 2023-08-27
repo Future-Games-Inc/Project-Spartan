@@ -32,7 +32,7 @@ namespace Invector.vEventSystems
                 if (!isEnter && !inExit && tagType != vAnimatorEventTriggerType.EnterStateExitByNormalized &&
                                      tagType != vAnimatorEventTriggerType.EnterStateExitState && normalizedTimeClamped >= this.normalizedTime.x )
                 {
-                    if (debug) Debug.Log("ADD TAG " + tagName + " in  " + normalizedTime);
+                    if (debug) //Debug.Log("ADD TAG " + tagName + " in  " + normalizedTime);
 
                     AddTag(stateInfos, layer);
                 }
@@ -41,7 +41,7 @@ namespace Invector.vEventSystems
                                                tagType != vAnimatorEventTriggerType.EnterStateExitState && (normalizedTimeClamped >= this.normalizedTime.y || inExit))
                 {
                     RemoveTag(stateInfos, layer);
-                    if (debug) Debug.Log("REMOVE TAG " + tagName + " in  " + normalizedTime);
+                    if (debug) //Debug.Log("REMOVE TAG " + tagName + " in  " + normalizedTime);
                 }
               
                 if (looping && normalizedTime > loopCount + 1)
@@ -91,10 +91,10 @@ namespace Invector.vEventSystems
                 for (int i = 0; i < tags.Count; i++)
                 {
                     tags[i].Init(stateInfos,layerIndex);
-                    if (debug) Debug.Log("Init " + tags[i].tagName + " OnStateEnter  ");
+                    if (debug) //Debug.Log("Init " + tags[i].tagName + " OnStateEnter  ");
                     if (tags[i].tagType == vAnimatorEventTriggerType.EnterStateExitState || tags[i].tagType == vAnimatorEventTriggerType.EnterStateExitByNormalized)
                     {
-                        if (debug) Debug.Log("ADD TAG " + tags[i].tagName + " OnStateEnter  ");
+                        if (debug) //Debug.Log("ADD TAG " + tags[i].tagName + " OnStateEnter  ");
                         tags[i].AddTag(stateInfos, layerIndex);
                     }
                     else
@@ -130,7 +130,7 @@ namespace Invector.vEventSystems
                 {
                     if (tags[i].tagType == vAnimatorEventTriggerType.EnterStateExitState || tags[i].tagType == vAnimatorEventTriggerType.EnterByNormalizedExitState)
                     {
-                        if (debug) Debug.Log("REMOVE TAG " + tags[i].tagName + " OnStateExit  ");
+                        if (debug) //Debug.Log("REMOVE TAG " + tags[i].tagName + " OnStateExit  ");
                         tags[i].RemoveTag(stateInfos, layerIndex);
                     }
                     else

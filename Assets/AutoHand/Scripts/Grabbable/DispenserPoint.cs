@@ -139,7 +139,7 @@ namespace Autohand {
             if(grab != null && isKinematic && grab.body != null)
                 grab.body.isKinematic = false;
 
-            Debug.Log("Placed: " + grab.body.isKinematic);
+            //Debug.Log("Placed: " + grab.body.isKinematic);
 
             Dispense();
         }

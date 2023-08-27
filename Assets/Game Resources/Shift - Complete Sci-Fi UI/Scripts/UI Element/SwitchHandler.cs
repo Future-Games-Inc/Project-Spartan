@@ -11,7 +11,7 @@ namespace Michsky.UI.Shift
             if (switchSource == null)
             {
                 try { switchSource = gameObject.GetComponent<SwitchManager>(); }
-                catch { Debug.Log("Switch Source is not assigned.", this); }
+                catch { //Debug.Log("Switch Source is not assigned.", this); }
             }
         }
 

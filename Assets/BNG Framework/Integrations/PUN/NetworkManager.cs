@@ -76,7 +76,7 @@ MonoBehaviourPunCallbacks
         void Update() {
             // Show Loading Progress
             if (PhotonNetwork.LevelLoadingProgress > 0 && PhotonNetwork.LevelLoadingProgress < 1) {
-                Debug.Log(PhotonNetwork.LevelLoadingProgress);
+                //Debug.Log(PhotonNetwork.LevelLoadingProgress);
             }
         }
 
@@ -86,7 +86,7 @@ MonoBehaviourPunCallbacks
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message) {
-            Debug.Log("OnJoinRandomFailed Failed, Error : " + message);
+            //Debug.Log("OnJoinRandomFailed Failed, Error : " + message);
         }
 
         public override void OnConnectedToMaster() {
@@ -154,7 +154,7 @@ MonoBehaviourPunCallbacks
                 DebugText.text += "\n" + message;
             }
 
-            Debug.Log(message);
+            //Debug.Log(message);
         }
 
 #endif

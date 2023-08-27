@@ -214,7 +214,7 @@ public class TagsMain : MonoBehaviour {
 					_info.CompassTargetTag.gameObject.transform.position = pf.ReferenceGO.transform.position;
 				else
 					if(pf.ReferenceGO == null)
-						Debug.LogWarning("Can't move "+ pf.PrefabOrder + " [" + pf.Name +"] to Reference GO position because there is no GameObject selected");
+						//Debug.LogWarning("Can't move "+ pf.PrefabOrder + " [" + pf.Name +"] to Reference GO position because there is no GameObject selected");
 
 
 
@@ -330,22 +330,22 @@ public class TagsMain : MonoBehaviour {
 				// Check Values On Play DEBUG
 				if (CheckOnUpdate)
 				{
-			//		Debug.Log("# " + pf.PrefabOrder + pf.Name + " has " + _lodlevels + " LOD Levels");
+			//		//Debug.Log("# " + pf.PrefabOrder + pf.Name + " has " + _lodlevels + " LOD Levels");
 					if (_lodlevels == 3)
-						Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " LOD Triangle Count: LOD0[" + _lod0 + "] - LOD1[" + _lod1 + "] - LOD2[" + _lod2 + "]");
+						//Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " LOD Triangle Count: LOD0[" + _lod0 + "] - LOD1[" + _lod1 + "] - LOD2[" + _lod2 + "]");
 					else
 						if (_lodlevels == 2)
-							Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " LOD Triangle Count: LOD0[" + _lod0 + "] - LOD1[" + _lod1 + "]");
+							//Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " LOD Triangle Count: LOD0[" + _lod0 + "] - LOD1[" + _lod1 + "]");
 						else
 							if (_lodlevels == 1)
-							Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " Mesh Triangle Count: [" + _lod0 + "]");
+							//Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " Mesh Triangle Count: [" + _lod0 + "]");
 							else
 								if (_lodlevels == 0)
-									Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " has no mesh info alocated");
+									//Debug.Log("Prefab #" + pf.PrefabOrder + " " + pf.Name + " has no mesh info alocated");
 					if (pf.ReferenceGO == null)
-						Debug.LogWarning("Reference object for PrefabTag#" + pf.PrefabOrder + " " + pf.Name + " has not been asigned.");
+						//Debug.LogWarning("Reference object for PrefabTag#" + pf.PrefabOrder + " " + pf.Name + " has not been asigned.");
 					if (pf.AssetPrefab == null)
-						Debug.LogWarning("Asset Prefab for PrefabTag#" + pf.PrefabOrder + " " + pf.Name + " has not been asigned.");
+						//Debug.LogWarning("Asset Prefab for PrefabTag#" + pf.PrefabOrder + " " + pf.Name + " has not been asigned.");
 
 				}
 

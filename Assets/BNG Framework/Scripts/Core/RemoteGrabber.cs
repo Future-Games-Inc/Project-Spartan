@@ -34,7 +34,7 @@ namespace BNG {
 
         void Start() {
             if(PhysicsCheckType == RemoteGrabType.Trigger && GetComponent<Collider>() == null) {
-                Debug.LogWarning("Remote Grabber set to 'Trigger', but no Trigger Collider was found. You may need to add a collider, or switch to a different physics check type.");
+                //Debug.LogWarning("Remote Grabber set to 'Trigger', but no Trigger Collider was found. You may need to add a collider, or switch to a different physics check type.");
             }
 
             // Add a raycast check if we're using a trigger type. Trigger types don't check collision.

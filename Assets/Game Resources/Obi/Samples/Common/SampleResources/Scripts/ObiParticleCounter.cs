@@ -46,7 +46,7 @@ public class ObiParticleCounter : MonoBehaviour {
 
         particles.ExceptWith(currentParticles);
         counter += particles.Count;
-		particles = currentParticles;Debug.Log(counter);
+		particles = currentParticles;//Debug.Log(counter);
     }
 
 }

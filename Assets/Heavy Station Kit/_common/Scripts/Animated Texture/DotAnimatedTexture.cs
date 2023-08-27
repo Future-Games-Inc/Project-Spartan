@@ -163,7 +163,7 @@ namespace DotTeam.HSK
         {
             if (showWarnings && (prevWarning != warn_id))
             {
-                Debug.LogWarning("DotAnimatedTexture (" + transform.name + "): " + msg);
+                //Debug.LogWarning("DotAnimatedTexture (" + transform.name + "): " + msg);
                 prevWarning = warn_id;
             }
         }

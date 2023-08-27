@@ -24,7 +24,7 @@ namespace DotTeam.HSK
             if (panelScript == null)
             {
 #if UNITY_EDITOR
-                Debug.LogWarning("Panel canvas element script (DotFPCElevator2ConControlItems) not found!");
+                //Debug.LogWarning("Panel canvas element script (DotFPCElevator2ConControlItems) not found!");
 #endif
             }
             else
@@ -37,7 +37,7 @@ namespace DotTeam.HSK
                 else
                 {
 #if UNITY_EDITOR
-                    Debug.LogWarning("Panel canvas component not found!");
+                    //Debug.LogWarning("Panel canvas component not found!");
 #endif
                 }
             }

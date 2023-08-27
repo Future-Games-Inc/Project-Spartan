@@ -28,7 +28,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
 
         public override void DoAction(vIFSMBehaviourController fsmBehaviour, vFSMComponentExecutionType executionType = vFSMComponentExecutionType.OnStateUpdate)
         {
-            Debug.Log("FSM Calling 'MoveToTargetExample' ");
+            //Debug.Log("FSM Calling 'MoveToTargetExample' ");
             fsmBehaviour.aiController.MoveToTargetExample(speed);            
         }
     }

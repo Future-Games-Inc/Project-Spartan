@@ -11,7 +11,7 @@ public class OnTriggerActivator : MonoBehaviour
 
     void OnTriggerEnter(Collider Col)
     {
-        Debug.Log(Col + " y luego " + Activator);
+        //Debug.Log(Col + " y luego " + Activator);
         // check collider is target and task is undone
         if ((Col.GetComponent<Collider>() == Activator) && (!done))
         {

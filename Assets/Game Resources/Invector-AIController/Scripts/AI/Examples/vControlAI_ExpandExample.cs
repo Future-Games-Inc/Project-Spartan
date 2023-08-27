@@ -55,11 +55,11 @@ namespace Invector.vCharacterController.AI
                 // Here we simple call the method MoveTo from the original vControlAI script
 
                 MoveTo(myTarget.transform.position, speed);
-                Debug.Log("Controller Calling 'MoveTo' ");
+                //Debug.Log("Controller Calling 'MoveTo' ");
             }
             else
             {
-                Debug.Log("Controller Calling 'MoveTo' but a 'myTarget' is not assigned");
+                //Debug.Log("Controller Calling 'MoveTo' but a 'myTarget' is not assigned");
             }
         }
 

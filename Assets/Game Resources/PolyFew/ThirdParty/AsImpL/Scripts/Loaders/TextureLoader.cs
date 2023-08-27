@@ -65,7 +65,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             }
             else
             {
-                Debug.Log("texture not supported : " + fileName);
+                //Debug.Log("texture not supported : " + fileName);
             }
             return null;
         }
@@ -109,13 +109,13 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 if (DXTType == 49)
                 {
                     textureFormat = TextureFormat.DXT1;
-                    //	Debug.Log ("DXT1");
+                    //	//Debug.Log ("DXT1");
                 }
 
                 if (DXTType == 53)
                 {
                     textureFormat = TextureFormat.DXT5;
-                    //	Debug.Log ("DXT5");
+                    //	//Debug.Log ("DXT5");
                 }
                 int DDS_HEADER_SIZE = 128;
                 byte[] dxtBytes = new byte[ddsBytes.Length - DDS_HEADER_SIZE];
@@ -131,7 +131,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             }
             catch (System.Exception ex)
             {
-                Debug.LogError("Could not load DDS: " + ex);
+                //Debug.LogError("Could not load DDS: " + ex);
                 return new Texture2D(8, 8);
             }
         }
@@ -219,7 +219,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             catch (Exception e)
             {
                 // let everything else load even if this TGA loading failed
-                Debug.LogWarning(e);
+                //Debug.LogWarning(e);
                 return null;
             }
         }
@@ -244,7 +244,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             th.height = r.ReadUInt16();
             th.bits = r.ReadByte();
             th.descriptor = r.ReadByte();
-            Debug.LogFormat("TGA descriptor = {0}", th.descriptor);
+            //Debug.LogFormat("TGA descriptor = {0}", th.descriptor);
             // check if the image contains no data
             if (th.imageType == 0) new Exception("TGA image contains no data."); // GV_IMG_ERROR_NO_DATA;
 

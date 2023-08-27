@@ -77,7 +77,7 @@ namespace BNG {
             text = GetComponent<Text>();
 
             if(text == null) {
-                Debug.LogWarning("No Text Component Found on RingHelper");
+                //Debug.LogWarning("No Text Component Found on RingHelper");
                 return;
             }
 

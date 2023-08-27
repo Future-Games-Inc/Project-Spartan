@@ -184,7 +184,7 @@ namespace BrainFailProductions.PolyFew
 
                         if ((skinnedMeshRenderer != null && skinnedMeshRenderer.sharedMesh == null) || (meshFilter != null && meshFilter.sharedMesh == null))
                         {
-                            Debug.LogWarning("Mesh Filter on GameObject " + gameObject.name + " does not have a mesh and was skipped");
+                            //Debug.LogWarning("Mesh Filter on GameObject " + gameObject.name + " does not have a mesh and was skipped");
                             continue;
                         }
 
@@ -237,14 +237,14 @@ namespace BrainFailProductions.PolyFew
 
                             if (skipGameObject)
                             {
-                                Debug.LogWarning("Renderer on GameObject " + gameObject.name + " does not have any material associated with any of the submeshes and was skipped");
+                                //Debug.LogWarning("Renderer on GameObject " + gameObject.name + " does not have any material associated with any of the submeshes and was skipped");
                                 continue;
                             }
                         }
 
                         else if ((meshRenderer != null && meshRenderer.sharedMaterial == null) || (skinnedMeshRenderer != null && skinnedMeshRenderer.sharedMaterial == null))
                         {
-                            Debug.LogWarning("Renderer on GameObject " + gameObject.name + " does not have a material and was skipped");
+                            //Debug.LogWarning("Renderer on GameObject " + gameObject.name + " does not have a material and was skipped");
                             continue;
                         }
 
@@ -281,7 +281,7 @@ namespace BrainFailProductions.PolyFew
                                 // Don't log warning for forcefully added nonfeasible materials
                                 if (!tempAdded.Contains(material))
                                 {
-                                    Debug.LogWarning($"The material \"{material.name}\" on GameObject \"{renderer.gameObject.name}\" has a Non Standard Shader \"{material.shader.name}\". The material won't be combined.");
+                                    //Debug.LogWarning($"The material \"{material.name}\" on GameObject \"{renderer.gameObject.name}\" has a Non Standard Shader \"{material.shader.name}\". The material won't be combined.");
                                 }
 
                                 continue;
@@ -374,7 +374,7 @@ namespace BrainFailProductions.PolyFew
                                     nonFeasibleMaterials.Add(nfm);
                                 }
 
-                                Debug.LogWarning($"The material \"{material.name}\" on GameObject \"{renderer.gameObject.name}\" has no textures. The material won't be combined.");
+                                //Debug.LogWarning($"The material \"{material.name}\" on GameObject \"{renderer.gameObject.name}\" has no textures. The material won't be combined.");
                                 continue;
                             }
 
@@ -471,7 +471,7 @@ namespace BrainFailProductions.PolyFew
                             AssetDatabase.CreateFolder(parentPath, folderName);
                         }
 
-                        Debug.LogWarning($"The save path: \"{originalSavePath}\" is not valid or does not exist. A default path \"{savePath}\" will be used to save the combined assets.");
+                        //Debug.LogWarning($"The save path: \"{originalSavePath}\" is not valid or does not exist. A default path \"{savePath}\" will be used to save the combined assets.");
 
                         savePath += "/";
 
@@ -1488,7 +1488,7 @@ namespace BrainFailProductions.PolyFew
                     // Change back the meshes readibility State
                     foreach (var mesh in meshesChangedToReadible)
                     {
-                        Debug.LogWarning($"Mesh \"{mesh.name}\" was not readible so we marked it readible for the mesh combining process to complete and changed it back to non-readible after completion. This process can slow down LOD generation. You may want to mark this mesh Read/Write enabled in the model import settings, so that next time LOD generation on this model can be faster.");
+                        //Debug.LogWarning($"Mesh \"{mesh.name}\" was not readible so we marked it readible for the mesh combining process to complete and changed it back to non-readible after completion. This process can slow down LOD generation. You may want to mark this mesh Read/Write enabled in the model import settings, so that next time LOD generation on this model can be faster.");
                         UtilityServices.ChangeMeshReadability(mesh, false, false);
                     }
 
@@ -1499,7 +1499,7 @@ namespace BrainFailProductions.PolyFew
 
                 catch (Exception ex)
                 {
-                    Debug.LogError(ex.StackTrace);
+                    //Debug.LogError(ex.StackTrace);
                     // Change back the meshes readibility State
                     foreach (var mesh in meshesChangedToReadible)
                     {
@@ -1884,7 +1884,7 @@ namespace BrainFailProductions.PolyFew
             {
                 if (srcTexture.width != destTexture.width || srcTexture.height != destTexture.height)
                 {
-                    Debug.LogError("Failed to copy color channel, textures are of different resolution.");
+                    //Debug.LogError("Failed to copy color channel, textures are of different resolution.");
                     return;
                 }
 
@@ -1919,11 +1919,11 @@ namespace BrainFailProductions.PolyFew
 
                 if (toWrite.width != dstTextureArray.width || toWrite.height != dstTextureArray.height)
                 {
-                    Debug.LogError("Cannot copy Texture to Texture Array. Resolution mismatch");
+                    //Debug.LogError("Cannot copy Texture to Texture Array. Resolution mismatch");
                 }
                 if (toWrite.format != dstTextureArray.format)
                 {
-                    Debug.LogError("Cannot copy Texture to Texture Array. Format Mismatch " + toWrite.format + " != " + dstTextureArray.format);
+                    //Debug.LogError("Cannot copy Texture to Texture Array. Format Mismatch " + toWrite.format + " != " + dstTextureArray.format);
                 }
                 for (int mip = 0; mip < mipCount; ++mip)
                 {
@@ -2241,7 +2241,7 @@ namespace BrainFailProductions.PolyFew
 
                 catch (Exception ex)
                 {
-                    Debug.LogWarning("Failed to restore nfms");
+                    //Debug.LogWarning("Failed to restore nfms");
                 }
 
             }

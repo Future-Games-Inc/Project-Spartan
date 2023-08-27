@@ -73,7 +73,7 @@ namespace Invector.vShooter
                 {
                     if (debugHittedObject)
                     {
-                        Debug.Log(hitInfo.collider.gameObject.name, hitInfo.collider);
+                        //Debug.Log(hitInfo.collider.gameObject.name, hitInfo.collider);
                     }
 
                     onCastCollider.Invoke(hitInfo);

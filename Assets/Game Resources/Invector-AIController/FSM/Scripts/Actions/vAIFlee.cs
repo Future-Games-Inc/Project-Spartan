@@ -47,7 +47,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                         {
                             if (Vector3.Distance(fsmBehaviour.aiController.targetDestination, fsmBehaviour.aiController.transform.position) < fleeDistance * 0.25f + fsmBehaviour.aiController.stopingDistance || fsmBehaviour.aiController.isInDestination)
                             {
-                                if (debugMode) Debug.Log("Fleeing from damage sender");
+                                if (debugMode) //Debug.Log("Fleeing from damage sender");
                                 var threatPoint = fsmBehaviour.aiController.receivedDamage.lastSender.position;
                                 var fleeDir = fsmBehaviour.aiController.transform.position - threatPoint;
                                 fleeDir = Quaternion.Euler(0, Random.Range(-(5 * i), 5 * i), 0) * fleeDir.normalized;
@@ -72,7 +72,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                     {
                         if (Vector3.Distance(fsmBehaviour.aiController.targetDestination, fsmBehaviour.aiController.transform.position) < fleeDistance * 0.25f + fsmBehaviour.aiController.stopingDistance || fsmBehaviour.aiController.isInDestination)
                         {
-                            if (debugMode) Debug.Log("Fleeing from a target");
+                            if (debugMode) //Debug.Log("Fleeing from a target");
                             var threatPoint = fsmBehaviour.aiController.currentTarget.transform.position;
                             var fleeDir = fsmBehaviour.aiController.transform.position - threatPoint;
                             fleeDir = Quaternion.Euler(0, Random.Range(-(5 * i), 5 * i), 0) * fleeDir.normalized;
@@ -94,7 +94,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                     {
                         if (Vector3.Distance(fsmBehaviour.aiController.targetDestination, fsmBehaviour.aiController.transform.position) < fleeDistance * 0.25f + fsmBehaviour.aiController.stopingDistance || fsmBehaviour.aiController.isInDestination)
                         {
-                            if (debugMode) Debug.Log("Fleeing without target or damage sender");
+                            if (debugMode) //Debug.Log("Fleeing without target or damage sender");
                             var fleeDir = fsmBehaviour.aiController.transform.forward;
                             fleeDir = Quaternion.Euler(0, Random.Range(-(10 * i), 10 * (i)), 0) * fleeDir.normalized;
                             if (debugFleeDirection) Debug.DrawRay(fsmBehaviour.aiController.transform.position, fleeDir * fleeDistance, Color.yellow, 10f);                   

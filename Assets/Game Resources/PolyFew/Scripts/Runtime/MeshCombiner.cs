@@ -569,14 +569,14 @@ namespace BrainFailProductions.PolyFewRuntime
                 var meshFilter = renderer.GetComponent<MeshFilter>();
                 if (meshFilter == null)
                 {
-                    Debug.LogWarning("A renderer was missing a mesh filter and was ignored.", renderer);
+                    //Debug.LogWarning("A renderer was missing a mesh filter and was ignored.", renderer);
                     continue;
                 }
 
                 var mesh = meshFilter.sharedMesh;
                 if (mesh == null)
                 {
-                    Debug.LogWarning("A renderer was missing a mesh and was ignored.", renderer);
+                    //Debug.LogWarning("A renderer was missing a mesh and was ignored.", renderer);
                     continue;
                 }
 
@@ -603,7 +603,7 @@ namespace BrainFailProductions.PolyFewRuntime
                 var mesh = renderer.sharedMesh;
                 if (mesh == null)
                 {
-                    Debug.LogWarning("A renderer was missing a mesh and was ignored.", renderer);
+                    //Debug.LogWarning("A renderer was missing a mesh and was ignored.", renderer);
                     continue;
                 }
 
@@ -740,7 +740,7 @@ namespace BrainFailProductions.PolyFewRuntime
             // Warn about renderers without a mesh
             foreach (var renderer in renderersWithoutMesh)
             {
-                Debug.LogWarning("A renderer was missing a mesh and was ignored.", renderer);
+                //Debug.LogWarning("A renderer was missing a mesh and was ignored.", renderer);
             }
 
 
@@ -872,7 +872,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (!isUniformScale)
                 {
-                    Debug.LogWarning($"The GameObject \"{rendererTransform.name}\" has non uniform scaling applied. This might cause the combined mesh normals to be incorrectly calculated resulting in slight variation in lighting.");
+                    //Debug.LogWarning($"The GameObject \"{rendererTransform.name}\" has non uniform scaling applied. This might cause the combined mesh normals to be incorrectly calculated resulting in slight variation in lighting.");
                 }
 
                 normalsTransforms[i] = Tuple.Create(rootTransform.localToWorldMatrix * rendererTransform.localToWorldMatrix, !isUniformScale); //baw did
@@ -959,7 +959,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (!isUniformScale)
                 {
-                    Debug.LogWarning($"The GameObject \"{rendererTransform.name}\" has non uniform scaling applied. This might cause the combined mesh normals to be incorrectly calculated resulting in slight variation in lighting.");
+                    //Debug.LogWarning($"The GameObject \"{rendererTransform.name}\" has non uniform scaling applied. This might cause the combined mesh normals to be incorrectly calculated resulting in slight variation in lighting.");
                 }
 
 
@@ -976,7 +976,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
                     if (m != null)
                     {
-                        Debug.LogWarning($"You have a static mesh attached to the bone:\"{t.name}\". The mesh combination logic will not deal with this properly, since that would require it to modify the original game object hierarchy. You might get erroneous results on mesh combination.");
+                        //Debug.LogWarning($"You have a static mesh attached to the bone:\"{t.name}\". The mesh combination logic will not deal with this properly, since that would require it to modify the original game object hierarchy. You might get erroneous results on mesh combination.");
                     }
                 }
 

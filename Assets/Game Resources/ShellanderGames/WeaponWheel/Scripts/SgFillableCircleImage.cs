@@ -171,7 +171,7 @@ namespace ShellanderGames.WeaponWheel
 			var size = activeSprite == null ? Vector2.zero : new Vector2(activeSprite.rect.width, activeSprite.rect.height);
 
 			Rect r = GetPixelAdjustedRect();
-			// Debug.Log(string.Format("r:{2}, size:{0}, padding:{1}", size, padding, r));
+			// //Debug.Log(string.Format("r:{2}, size:{0}, padding:{1}", size, padding, r));
 
 			int spriteW = Mathf.RoundToInt(size.x);
 			int spriteH = Mathf.RoundToInt(size.y);

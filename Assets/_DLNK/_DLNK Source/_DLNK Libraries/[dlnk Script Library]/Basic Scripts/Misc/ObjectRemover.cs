@@ -6,7 +6,7 @@ public class ObjectRemover : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-    Debug.Log("Trigger Entered");
+    //Debug.Log("Trigger Entered");
         // Check if the collided object has the specified script attached
         if (other.gameObject.TryGetComponent(scriptToRemove.GetType(), out var scriptComponent))
         {

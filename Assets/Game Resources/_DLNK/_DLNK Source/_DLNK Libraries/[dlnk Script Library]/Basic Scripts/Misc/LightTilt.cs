@@ -75,7 +75,7 @@ public class LightTilt : MonoBehaviour {
 			TiltMovz = (((Mathf.Sin (Mathf.Sin(Tmp))) * MovFluct))+ (Random.Range(-PositionRandom,PositionRandom));
 			this.GetComponent<Light>().transform.position = new Vector3(OriginalPos.x + TiltMovx,OriginalPos.y + TiltMovy,OriginalPos.z + TiltMovz);
 			this.GetComponent<Light>().range= (OriginalRan + ((Mathf.Sin (Tmp)) * RangeFluct));
-		//	Debug.Log();
+		//	//Debug.Log();
 
 				}
 

@@ -1646,7 +1646,7 @@ public class AutomaticLOD : MonoBehaviour
 
       if (currentCamera == null)
       {
-        Debug.LogWarning("Can't get vertex count of a LODGroup without knowing which camera is rendering");
+        //Debug.LogWarning("Can't get vertex count of a LODGroup without knowing which camera is rendering");
         return 0;
       }
 

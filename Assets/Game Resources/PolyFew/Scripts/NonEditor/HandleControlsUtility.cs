@@ -152,18 +152,18 @@ namespace BrainFailProductions.PolyFew
                 case HandleControls.yAxisMoveHandle:
                 case HandleControls.zAxisMoveHandle:
                 case HandleControls.allAxisMoveHandle:
-                    Debug.Log("Pos selected");
+                    //Debug.Log("Pos selected");
                     return HandleType.position;
 
                 case HandleControls.xAxisRotateHandle:
                 case HandleControls.yAxisRotateHandle:
                 case HandleControls.zAxisRotateHandle:
                 case HandleControls.allAxisRotateHandle:
-                    Debug.Log("Rot selected");
+                    //Debug.Log("Rot selected");
                     return HandleType.rotation;
 
                 default:
-                    Debug.Log("None selected");
+                    //Debug.Log("None selected");
                     return HandleType.none;
             }
         }

@@ -127,7 +127,10 @@ namespace Autohand {
                     if(hit.rigidbody != grabbable.body)
                         OnHit(hit);
                     else
-                        Debug.LogError("Gun is shooting itself, make sure the shootforward transform is not inside a collider", this);
+                    {
+                        //Debug.LogError("Gun is shooting itself, make sure the shootforward transform is not inside a collider", this);
+
+                    }
                 }
 
                 lastFireTime = Time.fixedTime;

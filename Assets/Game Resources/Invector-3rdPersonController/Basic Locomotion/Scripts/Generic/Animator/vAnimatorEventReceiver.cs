@@ -27,7 +27,7 @@ namespace Invector.vEventSystems
             {
                 if (debug)
                 {
-                    Debug.Log("<color=green><b>Event " + eventName + " was called</b></color>");
+                    //Debug.Log("<color=green><b>Event " + eventName + " was called</b></color>");
                 }
 
                 onTriggerEvent.Invoke(eventName);
@@ -80,7 +80,7 @@ namespace Invector.vEventSystems
                                 behaviours[i].RegisterEvents(animatorEvents[a].eventName, animatorEvents[a].OnTriggerEvent);
                                 if (animatorEvents[a].debug)
                                 {
-                                    Debug.Log("<color=green>" + gameObject.name + " Register event : " + animatorEvents[a].eventName + "</color> in the " + animator.gameObject.name, gameObject);
+                                    //Debug.Log("<color=green>" + gameObject.name + " Register event : " + animatorEvents[a].eventName + "</color> in the " + animator.gameObject.name, gameObject);
                                 }
 
                                 hasValidBehaviours = true;
@@ -89,13 +89,13 @@ namespace Invector.vEventSystems
                         }
                         if (!hasEvent && animatorEvents[a].debug)
                         {
-                            Debug.LogWarning(animator.gameObject.name + " Animator doesn't have Event with name: " + animatorEvents[a].eventName, gameObject);
+                            //Debug.LogWarning(animator.gameObject.name + " Animator doesn't have Event with name: " + animatorEvents[a].eventName, gameObject);
                         }
                     }
                 }
                 else
                 {
-                    Debug.LogWarning("Can't Find Animator to register Events in " + gameObject.name + (getAnimatorInParent ? " Parent" : ""), gameObject);
+                    //Debug.LogWarning("Can't Find Animator to register Events in " + gameObject.name + (getAnimatorInParent ? " Parent" : ""), gameObject);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Invector.vEventSystems
                                 behaviours[i].RemoveEvents(animatorEvents[a].eventName, animatorEvents[a].OnTriggerEvent);
                                 if (animatorEvents[a].debug)
                                 {
-                                    Debug.Log("<color=red>" + gameObject.name + " Remove event : " + animatorEvents[a].eventName + "</color> Of the " + animator.gameObject.name, gameObject);
+                                    //Debug.Log("<color=red>" + gameObject.name + " Remove event : " + animatorEvents[a].eventName + "</color> Of the " + animator.gameObject.name, gameObject);
                                 }
                             }
                         }

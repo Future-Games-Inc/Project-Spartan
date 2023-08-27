@@ -96,7 +96,7 @@ public class FiringRangeAI : MonoBehaviour
         if (!alive) return;
         // calculates the distance from NPC to player
         float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
-        // Debug.Log(distanceToPlayer);
+        // //Debug.Log(distanceToPlayer);
         // match the animator Aggro with the NPC aggro
         animator.SetBool("Agro", Agro);
 

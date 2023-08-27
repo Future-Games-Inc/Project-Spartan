@@ -173,11 +173,11 @@ namespace BNG {
                 float hitDistance = Vector3.Distance(startingPosition, hit.point);
                 if (hit.collider.gameObject != theGrabbable.gameObject) {
                     if(hitDistance > 0.09f) {
-                        // Debug.Log("Something in-between : " + hit.collider.gameObject.name + " At Distance : " + hitDistance);
+                        // //Debug.Log("Something in-between : " + hit.collider.gameObject.name + " At Distance : " + hitDistance);
                         return true;
                     }
                     else {
-                        // Debug.Log("Something in between but very close : " + hit.collider.gameObject.name);
+                        // //Debug.Log("Something in between but very close : " + hit.collider.gameObject.name);
                     }
                 }
             }
@@ -298,7 +298,7 @@ namespace BNG {
                 }
             }
             catch(System.Exception e) {
-                Debug.Log("Could not add Collider " + col.transform.name + " " + e.Message);
+                //Debug.Log("Could not add Collider " + col.transform.name + " " + e.Message);
             }
         }
 

@@ -87,7 +87,7 @@ namespace Invector
                 onTriggerEnter.Invoke(other);
                 if (debugMode)
                 {
-                    Debug.Log(other.gameObject.name + "TriggerEnter");
+                    //Debug.Log(other.gameObject.name + "TriggerEnter");
                 }
 
                 if (this.enabled && gameObject.activeInHierarchy)
@@ -105,7 +105,7 @@ namespace Invector
                 onTriggerExit.Invoke(other);
                 if (debugMode)
                 {
-                    Debug.Log(other.gameObject.name + "TriggerExit");
+                    //Debug.Log(other.gameObject.name + "TriggerExit");
                 }
 
                 this.other = null;
@@ -143,7 +143,7 @@ namespace Invector
                     onTriggerStay.Invoke(other);
                     if (debugMode)
                     {
-                        Debug.Log(other.gameObject.name + "TriggerStay");
+                        //Debug.Log(other.gameObject.name + "TriggerStay");
                     }
 
                 }

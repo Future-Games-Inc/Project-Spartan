@@ -251,7 +251,7 @@ namespace InfimaGames.LowPolyShooterPack
                 return scopeBehaviour.GetFieldOfViewMultiplierAim();
             
             //Error.
-            Debug.LogError("Weapon has no scope equipped!");
+            //Debug.LogError("Weapon has no scope equipped!");
   
             //Return.
             return 1.0f;
@@ -266,7 +266,7 @@ namespace InfimaGames.LowPolyShooterPack
                 return scopeBehaviour.GetFieldOfViewMultiplierAimWeapon();
             
             //Error.
-            Debug.LogError("Weapon has no scope equipped!");
+            //Debug.LogError("Weapon has no scope equipped!");
   
             //Return.
             return 1.0f;

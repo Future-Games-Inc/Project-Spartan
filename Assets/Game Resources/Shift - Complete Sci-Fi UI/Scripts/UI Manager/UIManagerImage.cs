@@ -31,7 +31,7 @@ namespace Michsky.UI.Shift
             if (UIManagerAsset == null)
             {
                 try { UIManagerAsset = Resources.Load<UIManager>("Shift UI Manager"); }
-                catch { Debug.Log("No UI Manager found. Assign it manually, otherwise it won't work properly.", this); }
+                catch { //Debug.Log("No UI Manager found. Assign it manually, otherwise it won't work properly.", this); }
             }
         }
 

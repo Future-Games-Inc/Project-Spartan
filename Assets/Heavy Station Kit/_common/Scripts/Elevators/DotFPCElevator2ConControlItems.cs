@@ -48,7 +48,7 @@ namespace DotTeam.HSK
             if (consoleButtons.Length == 0)
             {
 #if UNITY_EDITOR
-                Debug.LogWarning("Control Buttons not found!");
+                //Debug.LogWarning("Control Buttons not found!");
 #endif
                 return;
             }
@@ -56,7 +56,7 @@ namespace DotTeam.HSK
             if ((controlScript == null) || (controlScript.elevator2 == null))
             {
 #if UNITY_EDITOR
-                Debug.LogWarning((controlScript == null) ? "DotFPCElevator2ConControl script not attached" : "Elevator2 not attached");
+                //Debug.LogWarning((controlScript == null) ? "DotFPCElevator2ConControl script not attached" : "Elevator2 not attached");
 #endif
                 return;
             }

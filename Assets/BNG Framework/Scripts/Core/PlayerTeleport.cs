@@ -190,13 +190,13 @@ namespace BNG {
             }
 
             if (CollisionLayers == 0) {
-                Debug.Log("Teleport layer not set. Setting Default.");
+                //Debug.Log("Teleport layer not set. Setting Default.");
                 CollisionLayers = 1;
             }
 
             // HTC Uses a Trackpad that is recognized as a Thumbstick. Force to Hold Downmode
             if (ControlType == TeleportControls.ThumbstickRotate && input.IsHTCDevice) {
-                Debug.Log("HTC Device detected, switching Teleport Mode to Thumbstick Down");
+                //Debug.Log("HTC Device detected, switching Teleport Mode to Thumbstick Down");
                 ControlType = TeleportControls.ThumbstickDown;
             }
 

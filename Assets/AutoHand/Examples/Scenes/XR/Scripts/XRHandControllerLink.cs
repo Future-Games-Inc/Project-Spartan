@@ -49,7 +49,7 @@ namespace Autohand.Demo{
 
         private void Start(){
             if(grabButton == squeezeButton) {
-                Debug.LogError("AUTOHAND: You are using the same button for grab and squeeze on HAND CONTROLLER LINK, this may create conflict or errors", this);
+                //Debug.LogError("AUTOHAND: You are using the same button for grab and squeeze on HAND CONTROLLER LINK, this may create conflict or errors", this);
             }
 
             if(hand.left)
