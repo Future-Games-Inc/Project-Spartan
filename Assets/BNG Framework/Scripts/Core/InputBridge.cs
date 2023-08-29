@@ -470,13 +470,13 @@ namespace BNG {
 
             // Warn that input source has not been set, even though the SteamVR SDK is present.
             if(InputSource != XRInputSource.SteamVR) {
-                Debug.Log("SteamVR SDK detected, but not set as source on InputBridge. Recommend switching input Source from " + InputSource.ToString() + " to SteamVR.");
+                //Debug.Log("SteamVR SDK detected, but not set as source on InputBridge. Recommend switching input Source from " + InputSource.ToString() + " to SteamVR.");
             }
 
             // Set the default action set if not provided
             SteamVR_ActivateActionSetOnLoad VRIFLoader = FindObjectOfType<SteamVR_ActivateActionSetOnLoad>();
             if (VRIFLoader == null) {
-                Debug.Log("SteamVR_ActivateActionSetOnLoad component not found - adding VRIF custom actions default.");
+                //Debug.Log("SteamVR_ActivateActionSetOnLoad component not found - adding VRIF custom actions default.");
                 VRIFLoader = gameObject.AddComponent<SteamVR_ActivateActionSetOnLoad>();
                 VRIFLoader.actionSet = SteamVR_Actions.VRIF;
             }
@@ -1553,15 +1553,15 @@ namespace BNG {
                     for (int x = 0; x < subSystemsCount; x++) {
                         if (subsystems[x].TrySetTrackingOriginMode(trackingOrigin)) {
                             setTrackingOrigin = true;
-                            // Debug.Log("Successfully set TrackingOriginMode to " + trackingOrigin);
+                            // //Debug.Log("Successfully set TrackingOriginMode to " + trackingOrigin);
                         }
                         else {
-                            Debug.LogWarning("Failed to set TrackingOriginMode to " + trackingOrigin);
+                            //Debug.LogWarning("Failed to set TrackingOriginMode to " + trackingOrigin);
                         }
                     }
                 }
                 else {
-                    // Debug.LogWarning("No subsystems detected. Unable to set Tracking Origin to " + trackingOrigin);
+                    // //Debug.LogWarning("No subsystems detected. Unable to set Tracking Origin to " + trackingOrigin);
                 }
             }
         }

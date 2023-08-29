@@ -120,6 +120,7 @@ public class DroneCompanion : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(droneBullet.name, droneBulletSpawn.position, Quaternion.identity, 0, null);
+        spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
         spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(1, 4);
         spawnedBullet.GetComponent<Bullet>().bulletOwner = player;
         spawnedBullet.GetComponent<Bullet>().playerBullet = true;

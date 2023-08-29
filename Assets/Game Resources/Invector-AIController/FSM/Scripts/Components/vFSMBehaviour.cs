@@ -165,7 +165,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                     if (d.GetType().Equals(typeof(vFSMState)) || d.GetType().IsSubclassOf(typeof(vFSMState)) || d is vFSMState)
                         if (!states.Contains(d as vFSMState))
                         {
-                            Debug.Log("Delet " + d.name + " of " + this.name);
+                            //Debug.Log("Delet " + d.name + " of " + this.name);
                             DestroyImmediate(d as vFSMState,true);
                         }
 

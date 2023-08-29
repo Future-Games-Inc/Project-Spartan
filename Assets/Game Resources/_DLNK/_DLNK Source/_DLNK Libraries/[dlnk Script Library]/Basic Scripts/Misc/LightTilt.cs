@@ -47,7 +47,7 @@ public class LightTilt : MonoBehaviour {
 		OriginalPos = (this.GetComponent<Light>().transform.position);
 		OriginalColor = (this.GetComponent<Light>().color);
 		OriginalRan = (this.GetComponent<Light>().range);
-		//Debug.Log (OriginalPos);
+		////Debug.Log (OriginalPos);
 	
 	}
 
@@ -57,13 +57,13 @@ public class LightTilt : MonoBehaviour {
 	void Update () {
 
 		Tmp = (Tmp + ((Time.deltaTime)*Tempo));
-		//Debug.Log (Tmp);
+		////Debug.Log (Tmp);
 
 			// LIGHT INTENSITY
 		if (EnableIntensity) {
 			TiltInt = ((OriginalInt + ((Mathf.Sin (Tmp)) * Fluctuation))+ (Random.Range(0,RandomIntensity)));
 			this.GetComponent<Light>().intensity = TiltInt;
-			//Debug.Log (TiltInt);
+			////Debug.Log (TiltInt);
 	
 				}
 
@@ -75,7 +75,7 @@ public class LightTilt : MonoBehaviour {
 			TiltMovz = (((Mathf.Sin (Mathf.Sin(Tmp))) * MovFluct))+ (Random.Range(-PositionRandom,PositionRandom));
 			this.GetComponent<Light>().transform.position = new Vector3(OriginalPos.x + TiltMovx,OriginalPos.y + TiltMovy,OriginalPos.z + TiltMovz);
 			this.GetComponent<Light>().range= (OriginalRan + ((Mathf.Sin (Tmp)) * RangeFluct));
-		//	Debug.Log();
+		//	//Debug.Log();
 
 				}
 

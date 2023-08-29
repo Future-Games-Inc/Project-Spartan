@@ -113,7 +113,7 @@ namespace VRKeys {
 		}
 
 		public void HandleCancel () {
-			Debug.Log ("Cancelled keyboard input!");
+			//Debug.Log ("Cancelled keyboard input!");
 		}
 
 		/// <summary>

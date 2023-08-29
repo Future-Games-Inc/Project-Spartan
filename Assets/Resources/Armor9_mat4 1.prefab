@@ -3145,9 +3145,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 20
-  AttackRange: 15
-  AgroRange: 25
+  DetectRange: 50
+  AttackRange: 20
+  AgroRange: 30
   wanderRadius: 500
   Health: 200
   obstacleMask:
@@ -3177,6 +3177,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ef284a975ac96fa4aa8c355a3f78c397, type: 3}
   - {fileID: 8300000, guid: 8e41edeaedfb5414abda99244ca7f775, type: 3}
   - {fileID: 8300000, guid: 717e1ce862156564ea0a052ba007e3a1, type: 3}
+  enemyCounter: {fileID: 0}
+  hitbox: {fileID: 4261834905359773967}
+  ragdoll: {fileID: 4847406465161416308}
 --- !u!114 &7339452733834057934
 MonoBehaviour:
   m_ObjectHideFlags: 0

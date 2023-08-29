@@ -274,7 +274,7 @@ public class PSMeshRendererUpdater : MonoBehaviour
         skinnedMaterials.Clear();
         if (go == null)
         {
-            Debug.Log("You need set a gameObject");
+            //Debug.Log("You need set a gameObject");
             return;
         }
         MeshObject = go;

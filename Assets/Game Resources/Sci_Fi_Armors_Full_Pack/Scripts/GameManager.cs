@@ -11,7 +11,7 @@ public static string currentName;
 		GameObject current = Instantiate(Resources.Load("Armor1")) as GameObject;
 	string start = "Armor1";
 	SetCurrent(start);
-	 Debug.Log("Current model set to "+start);
+	 //Debug.Log("Current model set to "+start);
 	}
 	
 	public static string GetCurrent()

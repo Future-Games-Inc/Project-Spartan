@@ -1,5 +1,6 @@
-using CSCore;
 using Photon.Pun;
+using Photon.Realtime;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,13 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public AudioClip audioClip;
 
+    public Animator animator;
+    public string animationName;
+
+    public Transform spawn1;
+    public Transform spawn2;
+    public Transform spawn3;
+
     private float elapsedTime;
     public float activationTime = 15;
     public float radius = 4;
@@ -24,13 +32,17 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     private bool contact = false;
     public bool playAudio = true;
 
+    public static readonly byte SupplyShipArrive = 30;
+    public static readonly byte SupplyShipDestroy = 31;
+
     private void OnEnable()
     {
+        photonView.RPC("RaiseEvent1", RpcTarget.All, SupplyDropShip.SupplyShipArrive, null);
         StartCoroutine(PlayAudioLoop());
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         activationSlider.gameObject.SetActive(true);
-        //StartCoroutine(NoContact());
+        StartCoroutine(NoContact());
     }
     IEnumerator PlayAudioLoop()
     {
@@ -49,13 +61,48 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     {
         if (CheckForPlayerWithinRadius() == true)
         {
-            photonView.RPC("RPC_Update", RpcTarget.All);
+            if (!isActive)
+            {
+                animator.enabled = true;
+                elapsedTime += Time.deltaTime;
+                float remainingTime = activationTime - elapsedTime;
+                activationSlider.value = remainingTime;
+
+                // Calculate the progress of the activation based on elapsedTime and activationTime.
+                float activationProgress = elapsedTime / activationTime;
+
+                // Play the animation according to this progress.
+                animator.Play(animationName, 0, activationProgress);
+
+                // Since you're manually controlling the playback progress of the animation, 
+                // set the animator speed to 0 so that the animation doesn't play on its own.
+                animator.speed = 0;
+
+                if (elapsedTime >= activationTime)
+                {
+                    isActive = true;
+                    activationSlider.gameObject.SetActive(false);
+                    InstantiateWeapons();
+                    contact = true;
+                }
+
+                foreach (GameObject vfx in effects)
+                {
+                    vfx.SetActive(false);
+                }
+            }
         }
         else
         {
-            photonView.RPC("RPC_Update2", RpcTarget.All);
+            foreach (GameObject vfx in effects)
+            {
+                vfx.SetActive(true);
+            }
         }
-        photonView.RPC("RPC_Color", RpcTarget.All);
+        if (activationSlider.value <= (activationTime * 0.75) && activationSlider.value > (activationTime * 0.25))
+            sliderImage.color = Color.yellow;
+        if (activationSlider.value <= (activationTime * 0.25))
+            sliderImage.color = Color.red;
     }
 
     bool CheckForPlayerWithinRadius()
@@ -73,108 +120,69 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
 
     void InstantiateWeapons()
     {
-        photonView.RPC("RPC_InstantiateWeapons", RpcTarget.All);
+        // Shuffle the weaponPrefabs array
+        GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
+
+        // Instantiate a weapon for each spawn point
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0].name, spawn1.position, spawn1.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[1].name, spawn2.position, spawn2.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2].name, spawn3.position, spawn3.rotation, 0, null);
+
+        StartCoroutine(Destroy());
     }
 
-    void OnTriggerEnter(Collider other)
+    // Fisher-Yates shuffle algorithm
+    GameObject[] ShuffleArray(GameObject[] array)
     {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player") && isActive == true)
+        GameObject[] shuffledArray = (GameObject[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
         {
-            photonView.RPC("RPC_Trigger", RpcTarget.All);
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            GameObject temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
         }
+
+        return shuffledArray;
     }
 
-    //IEnumerator Destroy()
-    //{
-    //    yield return new WaitForSeconds(.75f);
-    //    matchProps.lastSpawnTime = Time.time;
-    //    matchProps.spawned = false;
-    //    PhotonNetwork.Destroy(gameObject);
-    //}
-
-    //IEnumerator NoContact()
-    //{
-    //    yield return new WaitForSeconds(30);
-    //    if (contact == false)
-    //    {
-    //        matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
-    //        matchProps.lastSpawnTime = Time.time;
-    //        matchProps.spawned = false;
-    //        yield return new WaitForSeconds(2);
-    //        PhotonNetwork.Destroy(gameObject);
-    //    }
-    //}
-
-    [PunRPC]
-    void RPC_InstantiateWeapons()
+    IEnumerator Destroy()
     {
-        if (!photonView.IsMine)
-            return;
-        int count = Random.Range(1, weaponPrefabs.Length + 1);
-        for (int i = 0; i < count; i++)
+        photonView.RPC("RaiseEvent2", RpcTarget.All, SupplyDropShip.SupplyShipDestroy, null);
+        yield return new WaitForSeconds(.75f);
+        matchProps.lastSpawnTime = Time.time;
+        matchProps.spawned = false;
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(30);
+        if (contact == false)
         {
-            Vector3 randomPosition = transform.position + Random.onUnitSphere * radius;
-            GameObject weaponPrefab = weaponPrefabs[Random.Range(0, weaponPrefabs.Length)];
-            PhotonNetwork.Instantiate(weaponPrefab.name, randomPosition, Quaternion.identity, 0);
-            Rigidbody rb = weaponPrefab.GetComponent<Rigidbody>();
-            rb.isKinematic = false;
-            rb.useGravity = true;
-        }
-    }
-
-    [PunRPC]
-    void RPC_Trigger()
-    {
-        if (!photonView.IsMine)
-            return;
-        InstantiateWeapons();
-        //StartCoroutine(Destroy());
-        contact = true;
-    }
-
-    [PunRPC]
-    void RPC_Update()
-    {
-        if (!photonView.IsMine)
-            return;
-        if (!isActive)
-        {
-            elapsedTime += Time.deltaTime;
-            float remainingTime = activationTime - elapsedTime;
-            activationSlider.value = remainingTime;
-            if (elapsedTime >= activationTime)
-            {
-                isActive = true;
-                activationSlider.gameObject.SetActive(false);
-                openText.gameObject.SetActive(true);
-            }
-
-            foreach (GameObject vfx in effects)
-            {
-                vfx.SetActive(false);
-            }
+            photonView.RPC("RaiseEvent2", RpcTarget.All, SupplyDropShip.SupplyShipDestroy, null);
+            matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
+            matchProps.lastSpawnTime = Time.time;
+            matchProps.spawned = false;
+            yield return new WaitForSeconds(.75f);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 
     [PunRPC]
-    void RPC_Update2()
+    void RaiseEvent1(byte eventCode, object content, PhotonMessageInfo info)
     {
-        if (!photonView.IsMine)
-            return;
-        foreach (GameObject vfx in effects)
-        {
-            vfx.SetActive(true);
-        }
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
     }
 
     [PunRPC]
-    void RPC_Color()
+    void RaiseEvent2(byte eventCode, object content, PhotonMessageInfo info)
     {
-        if (!photonView.IsMine)
-            return;
-        if (activationSlider.value <= (activationTime * 0.75) && activationSlider.value > (activationTime * 0.25))
-            sliderImage.color = Color.yellow;
-        if (activationSlider.value <= (activationTime * 0.25))
-            sliderImage.color = Color.red;
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
     }
 }

@@ -18,9 +18,9 @@ public class ShowCase : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(Mathf.Floor(Time.time));
+        ////Debug.Log(Mathf.Floor(Time.time));
         int index = (int)Mathf.Floor(Time.time * speed);
-        //Debug.Log(this.gameObject.transform.GetChild(index).name);
+        ////Debug.Log(this.gameObject.transform.GetChild(index).name);
         for (int i = 0; i < childc; i++)
         {
             if (i == index)

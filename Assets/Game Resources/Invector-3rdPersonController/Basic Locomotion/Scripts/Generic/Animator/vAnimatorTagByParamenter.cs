@@ -113,14 +113,14 @@ namespace Invector.vEventSystems
             switch (compare)
             {
                 case NumberCompare.Equals:
-                    Debug.Log($"{b} == {a}");
+                    //Debug.Log($"{b} == {a}");
                     return b == a;
                   
                 case NumberCompare.Greater:
-                    Debug.Log($"{b} > {a}");
+                    //Debug.Log($"{b} > {a}");
                     return b > a;
                 case NumberCompare.Less:
-                    Debug.Log($"{b} < {a}");
+                    //Debug.Log($"{b} < {a}");
                     return b < a;
             }
             return false;

@@ -42,13 +42,13 @@ namespace BNG {
             // New Input Save
             if (SaveInput != null && SaveInput.triggered) {
                 handPoser.CreateUniquePose(SaveNamePrefix);
-                Debug.Log("Created Hand Pose with prefix " + SaveNamePrefix);
+                //Debug.Log("Created Hand Pose with prefix " + SaveNamePrefix);
             }
 #elif ENABLE_LEGACY_INPUT_MANAGER
             // Legacy Save
             if (Input.GetKeyDown(SaveKey)) {
                 handPoser.CreateUniquePose(SaveNamePrefix);
-                Debug.Log("Created Hand Pose with prefix " + SaveNamePrefix);
+                //Debug.Log("Created Hand Pose with prefix " + SaveNamePrefix);
             }
 #endif
         }

@@ -59,19 +59,19 @@ public class vDebugUtils : MonoBehaviour
 
     public void PrintMessage(string message)
     {
-        Debug.Log(message);
+        //Debug.Log(message);
         debugMessages.Add(new DebugMessage(message,Time.time,displayMessageTime, MessageType.Normal));
         scrool.y = lastRectPosition;
     }
     public void PrintMessageWarning(string message)
     {
-        Debug.LogWarning(message);
+        //Debug.LogWarning(message);
         debugMessages.Add(new DebugMessage(message, Time.time, displayMessageTime, MessageType.Warning));
         scrool.y = lastRectPosition;
     }
     public void PrintMessageError(string message)
     {
-        Debug.LogError(message);
+        //Debug.LogError(message);
         debugMessages.Add(new DebugMessage(message, Time.time , displayMessageTime, MessageType.Error));
         scrool.y = lastRectPosition;
     }

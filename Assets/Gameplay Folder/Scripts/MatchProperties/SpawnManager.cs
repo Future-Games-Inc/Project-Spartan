@@ -34,7 +34,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPlayer()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.5f);
         // Create an array to store the valid positions
         Vector3[] spawnPositions = new Vector3[10];
         int validPositionsCount = 0;

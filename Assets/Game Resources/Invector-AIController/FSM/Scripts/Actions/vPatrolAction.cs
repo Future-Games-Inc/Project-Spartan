@@ -71,13 +71,13 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                                 fsmBehaviour.aiController.targetWaypoint.Exit(fsmBehaviour.aiController.transform);
                                 fsmBehaviour.aiController.visitedWaypoints.Clear();
                                 fsmBehaviour.aiController.NextWayPoint();
-                                if (debugMode) Debug.Log("Sort new Waypoint");
+                                if (debugMode) //Debug.Log("Sort new Waypoint");
                                 fsmBehaviour.aiController.Stop();
                                 fsmBehaviour.SetTimer("Patrol", 0);
                             }
                             else if (timer < fsmBehaviour.aiController.targetWaypoint.timeToStay)
                             {
-                                if (debugMode) Debug.Log("Stay");
+                                if (debugMode) //Debug.Log("Stay");
                                 if (fsmBehaviour.aiController.targetWaypoint.rotateTo)
                                 {
                                     fsmBehaviour.aiController.Stop();
@@ -101,7 +101,8 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                            
                         else
                             fsmBehaviour.aiController.MoveTo(fsmBehaviour.aiController.targetWaypoint.position, patrolSpeed);
-                        if (debugMode) Debug.Log("Go to new Waypoint");
+                        if (debugMode) //Debug.Log("Go to new Waypoint");
+                            ;
                     }
                 }
             }

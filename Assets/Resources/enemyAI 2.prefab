@@ -2467,9 +2467,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 20
-  AttackRange: 15
-  AgroRange: 25
+  DetectRange: 50
+  AttackRange: 20
+  AgroRange: 30
   wanderRadius: 500
   Health: 100
   obstacleMask:
@@ -2499,6 +2499,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 26a38f12d90a57b4eac4377adb22c1a4, type: 3}
   - {fileID: 8300000, guid: 6ade14af1c3dcaf4a821f86364261089, type: 3}
   - {fileID: 8300000, guid: 264fe4bb7390e59418b538742b798fb4, type: 3}
+  enemyCounter: {fileID: 0}
+  hitbox: {fileID: 8769594364263036113}
+  ragdoll: {fileID: 752450017151313163}
 --- !u!114 &1132709372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4372,7 +4375,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5894185528883808934}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.824, z: -0.074}
+  m_LocalPosition: {x: 0, y: 3.824, z: -0.074}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []

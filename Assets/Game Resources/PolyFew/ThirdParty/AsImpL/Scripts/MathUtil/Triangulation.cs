@@ -100,7 +100,7 @@ namespace BrainFailProductions.PolyFew.AsImpL.MathUtil
                 }
                 if (earVertices.Count == 0)
                 {
-                    Debug.LogWarningFormat("Cannot find a proper reprojection for mesh '{0}'. Using fallback polygon triangulation.", meshName);
+                    //Debug.LogWarningFormat("Cannot find a proper reprojection for mesh '{0}'. Using fallback polygon triangulation.", meshName);
                     Vertex earVertex = vertices[0];
                     Triangle newTriangle = ClipTriangle(earVertex, vertices);
                     triangles.Add(newTriangle);

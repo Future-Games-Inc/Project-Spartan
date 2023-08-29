@@ -14,6 +14,8 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
 
     [Header("Bullet Effects ---------------------------------------------------")]
     public float explosionRadius = 2.0f;
+    public AudioSource audioSource;
+    public AudioClip clip;
 
     public void SetTarget(Transform target, float lifetime)
     {
@@ -36,7 +38,6 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
         }
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)

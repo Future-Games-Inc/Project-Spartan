@@ -51,7 +51,7 @@ public class RandomObjectSpawner : MonoBehaviour
         // Check if the object list is empty
         if (objectList.Count == 0)
         {
-            Debug.LogWarning("No game objects in the list!");
+            //Debug.LogWarning("No game objects in the list!");
             return;
         }
 

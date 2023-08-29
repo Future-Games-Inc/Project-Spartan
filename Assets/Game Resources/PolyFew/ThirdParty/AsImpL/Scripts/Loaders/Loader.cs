@@ -164,7 +164,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             objLoadingProgress.fileName = fileName;
             objLoadingProgress.error = false;
             objLoadingProgress.message = "Loading " + fileName + "...";
-            //Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
+            ////Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
 
             await Task.Yield();
             //yield return null;
@@ -175,7 +175,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             // if the model was already loaded duplicate the existing object
             if (buildOptions != null && buildOptions.reuseLoaded && loadedModels.ContainsKey(absolutePath) && loadedModels[absolutePath] != null)
             {
-                Debug.LogFormat("File {0} already loaded, creating instance.", absolutePath);
+                //Debug.LogFormat("File {0} already loaded, creating instance.", absolutePath);
                 instanceCount[absolutePath]++;
                 if (name == null || name == "") objName = objName + "_" + instanceCount[absolutePath];
                 objLoadingProgress.message = "Instantiating " + objName + "...";
@@ -232,7 +232,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             loadStats.buildTime = Time.realtimeSinceStartup - lastTime;
             loadStats.totalTime = Time.realtimeSinceStartup - startTime;
             /*
-            Debug.Log("Done: " + objName
+            //Debug.Log("Done: " + objName
                 + "\n  Loaded in " + loadStats.totalTime + " seconds"
                 + "\n  Model data parsed in " + loadStats.modelParseTime + " seconds"
                 + "\n  Material data parsed in " + loadStats.materialsParseTime + " seconds"
@@ -262,7 +262,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             objLoadingProgress.fileName = fileName;
             objLoadingProgress.error = false;
             objLoadingProgress.message = "Loading " + fileName + "...";
-            //Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
+            ////Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
 
             await Task.Yield();
 
@@ -332,7 +332,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             loadStats.buildTime = Time.realtimeSinceStartup - lastTime;
             loadStats.totalTime = Time.realtimeSinceStartup - startTime;
             /*
-            Debug.Log("Done: " + objName
+            //Debug.Log("Done: " + objName
                 + "\n  Loaded in " + loadStats.totalTime + " seconds"
                 + "\n  Model data parsed in " + loadStats.modelParseTime + " seconds"
                 + "\n  Material data parsed in " + loadStats.materialsParseTime + " seconds"
@@ -363,7 +363,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             objLoadingProgress.fileName = fileName;
             objLoadingProgress.error = false;
             objLoadingProgress.message = "Loading " + fileName + "...";
-            //Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
+            ////Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
 
 
             loadedModels[objURL] = null; // define a key for the dictionary
@@ -415,7 +415,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             loadStats.buildTime = Time.realtimeSinceStartup - lastTime;
             loadStats.totalTime = Time.realtimeSinceStartup - startTime;
             /*
-            Debug.Log("Done: " + objName
+            //Debug.Log("Done: " + objName
                 + "\n  Loaded in " + loadStats.totalTime + " seconds"
                 + "\n  Model data parsed in " + loadStats.modelParseTime + " seconds"
                 + "\n  Material data parsed in " + loadStats.materialsParseTime + " seconds"
@@ -1135,7 +1135,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             FileInfo textFileInfo = new FileInfo(texturePath);
             string texpath = altTexPath + textFileInfo.Name;
             texpath = texpath.Replace("//", "/");
-            Debug.LogFormat("Loading texture asset '{0}'", texpath);
+            //Debug.LogFormat("Loading texture asset '{0}'", texpath);
             return AssetDatabase.LoadAssetAtPath<Texture2D>(texpath);
         }
 #endif
@@ -1195,7 +1195,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             else
             {
-                Debug.LogWarning("Failed to load texture at path  " + textPath + "   BasePath  " + basePath + "  path  " + path);
+                //Debug.LogWarning("Failed to load texture at path  " + textPath + "   BasePath  " + basePath + "  path  " + path);
             }
 
 
@@ -1224,7 +1224,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     ObjectImporter.activeDownloads -= 1;
                     isWorking = false;
-                    Debug.LogWarning("Failed to load the associated texture file." + error);
+                    //Debug.LogWarning("Failed to load the associated texture file." + error);
                 }));
 
             }
@@ -1257,7 +1257,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             else
             {
-                Debug.LogWarning("Failed to load texture.");
+                //Debug.LogWarning("Failed to load texture.");
             }
 
 
@@ -1287,7 +1287,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     ObjectImporter.activeDownloads -= 1;
                     isWorking = false;
-                    Debug.LogWarning("Failed to load the associated texture file." + error);
+                    //Debug.LogWarning("Failed to load the associated texture file." + error);
                 }));
 
             }
@@ -1313,7 +1313,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (loadedTexture == null)
             {
-                Debug.LogWarning("Failed to load texture.");
+                //Debug.LogWarning("Failed to load texture.");
             }
 
 
@@ -1348,12 +1348,12 @@ namespace BrainFailProductions.PolyFew.AsImpL
             }
             else
             {
-                Debug.LogWarning("Unsupported texture format: " + ext);
+                //Debug.LogWarning("Unsupported texture format: " + ext);
             }
 
             if (tex == null)
             {
-                Debug.LogErrorFormat("Failed to load texture {0}", loader.url);
+                //Debug.LogErrorFormat("Failed to load texture {0}", loader.url);
             }
             else
             {
@@ -1386,7 +1386,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
         public IEnumerator DownloadFile(string url, ReferencedNumeric<float> downloadProgress, Action<byte[]> DownloadComplete, Action<string> OnError)
         {
-            //Debug.Log("Into the DownloadFile Coroutine");
+            ////Debug.Log("Into the DownloadFile Coroutine");
             UnityWebRequest webrequest = null;
             float oldProgress = downloadProgress.Value;
 
@@ -1434,7 +1434,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
-                        //Debug.Log("Calling Download Complete");
+                        ////Debug.Log("Calling Download Complete");
 
                         downloadProgress.Value = oldProgress + 1;
                         DownloadComplete(webrequest.downloadHandler.data);
@@ -1452,7 +1452,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             StopCoroutine(progress);
 
             webrequest.Dispose();
-            //Debug.Log("End of File Download Coroutine.");
+            ////Debug.Log("End of File Download Coroutine.");
 
         }
 
@@ -1473,7 +1473,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 if(webrequest.downloadHandler.isDone && string.IsNullOrWhiteSpace(webrequest.error))
                 {
                     downloadProgress.Value = oldProgress + webrequest.downloadProgress;
-                    Debug.Log("Progress  " + webrequest.downloadProgress);
+                    //Debug.Log("Progress  " + webrequest.downloadProgress);
                 }
 
             }

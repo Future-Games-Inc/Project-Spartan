@@ -174,7 +174,7 @@ namespace Autohand {
             if (Selection.activeGameObject == gameObject)
             {
                 Selection.activeGameObject = null;
-                Debug.Log("Auto Hand: highlighting hand component in the inspector can cause lag and quality reduction at runtime in VR. (Automatically deselecting at runtime) Remove this code at any time.", this);
+                //Debug.Log("Auto Hand: highlighting hand component in the inspector can cause lag and quality reduction at runtime in VR. (Automatically deselecting at runtime) Remove this code at any time.", this);
                 editorSelected = true;
             }
 
@@ -834,7 +834,7 @@ namespace Autohand {
             {
                 if (copyFromHand.fingers.Length != fingers.Length)
                 {
-                    Debug.LogError("Cannot copy pose because hand reference does not have the same number of fingers attached as this hand");
+                    //Debug.LogError("Cannot copy pose because hand reference does not have the same number of fingers attached as this hand");
 
                 }
                 else
@@ -846,13 +846,13 @@ namespace Autohand {
 #endif
                         fingers[i].CopyPose(copyFromHand.fingers[i]);
                     }
-                    Debug.Log("Auto Hand: Copied Hand Pose!");
+                    //Debug.Log("Auto Hand: Copied Hand Pose!");
                 }
 
             }
             else
             {
-                Debug.LogError("Cannot copy pose because hand reference to copy from is not set");
+                //Debug.LogError("Cannot copy pose because hand reference to copy from is not set");
             }
         }
 
@@ -865,7 +865,7 @@ namespace Autohand {
 #endif
                 finger.SetMinPose();
             }
-            Debug.Log("Auto Hand: Saved Open Hand Pose!");
+            //Debug.Log("Auto Hand: Saved Open Hand Pose!");
         }
 
 
@@ -877,7 +877,7 @@ namespace Autohand {
 #endif
                 finger.SetMaxPose();
             }
-            Debug.Log("Auto Hand: Saved Closed Hand Pose!");
+            //Debug.Log("Auto Hand: Saved Closed Hand Pose!");
         }
 
 

@@ -83,7 +83,7 @@ namespace BrainFailProductions.PolyFew
 
                 if (pinfo.CanWrite)
                 {
-                    //Debug.Log("Propery Name:  " + pinfo.Name);
+                    ////Debug.Log("Propery Name:  " + pinfo.Name);
                     try
                     {
                         pinfo.SetValue(copyTo, pinfo.GetValue(copyFrom, null), null);
@@ -97,7 +97,7 @@ namespace BrainFailProductions.PolyFew
 
             foreach (var finfo in finfos)
             {
-                //Debug.Log("Field Name:  " + finfo.Name);
+                ////Debug.Log("Field Name:  " + finfo.Name);
 
                 finfo.SetValue(copyTo, finfo.GetValue(copyFrom));
             }

@@ -52,17 +52,17 @@ namespace BNG {
         }                    
         
         public void Log(string msg) {
-            Debug.Log(msg, gameObject);
+            //Debug.Log(msg, gameObject);
             VRDebugLog(msg, LogTextColor);
         }
 
         public void Warn(string msg) {
-            Debug.LogWarning(msg, gameObject);
+            //Debug.LogWarning(msg, gameObject);
             VRDebugLog(msg, WarnTextColor);
         }
 
         public void Error(string msg) {
-            Debug.LogError(msg, gameObject);
+            //Debug.LogError(msg, gameObject);
             VRDebugLog(msg, ErrTextColor);
         }
 

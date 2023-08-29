@@ -49,7 +49,7 @@ public class PushTrigger : MonoBehaviour {
     {
         // get player collider
         _activator = ManagerScript.PlayerCollider;
-        //Debug.Log(trig.name + "has entered the door trigger");
+        ////Debug.Log(trig.name + "has entered the door trigger");
         // check if Key pressed and collider hit was from correct target
         if (trig.GetComponent<Collider>() == _activator)
         {
@@ -62,7 +62,7 @@ public class PushTrigger : MonoBehaviour {
         // set the door out of reach
         _iscolliding = false;
         //debug
-        Debug.Log(trig.name + "has exit the door trigger");
+        //Debug.Log(trig.name + "has exit the door trigger");
     }
 
     // Update is called once per frame
@@ -76,7 +76,7 @@ public class PushTrigger : MonoBehaviour {
             if (Input.GetKey(UnlockKey) || (auto))
             {
                 _ismoving = true;
-                Debug.Log("Door Unlocked");
+                //Debug.Log("Door Unlocked");
             }
         }
         if (_ismoving)
@@ -90,7 +90,7 @@ public class PushTrigger : MonoBehaviour {
             else
             _percentage = (1-(_timer / Duration));
             // debug
-           // Debug.Log("Movement done: " + (_percentage * 100) + "%");
+           // //Debug.Log("Movement done: " + (_percentage * 100) + "%");
 
             //stop movement when time is over.
             if (_percentage > (Percentage * 0.01f))
@@ -100,7 +100,7 @@ public class PushTrigger : MonoBehaviour {
                 _timer = 0f;
                 opened = true;
                 // debug
-                Debug.Log("Door Opened");
+                //Debug.Log("Door Opened");
             }
             else
                 if (_percentage < 0f)
@@ -110,7 +110,7 @@ public class PushTrigger : MonoBehaviour {
                 _timer = 0f;
                 opened = false;
                 // debug
-                Debug.Log("Door Closed");
+                //Debug.Log("Door Closed");
             }
             // Move position
             DoorHinge.transform.localPosition = (_percentage * XYZDisplacement );
@@ -118,7 +118,7 @@ public class PushTrigger : MonoBehaviour {
             DoorHinge.transform.localRotation = new Quaternion(Rotation.x * _percentage, Rotation.y * _percentage, Rotation.z * _percentage, Rotation.w);
 
             //debug
-            Debug.Log(DoorHinge + " is moved: " + (XYZDisplacement  * _percentage) + "and rotated: " + (Rotation) + " degrees from original position");
+            //Debug.Log(DoorHinge + " is moved: " + (XYZDisplacement  * _percentage) + "and rotated: " + (Rotation) + " degrees from original position");
         }
 
     }

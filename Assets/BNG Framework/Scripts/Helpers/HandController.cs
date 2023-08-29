@@ -245,7 +245,7 @@ namespace BNG {
                         }
                     }
                     else {
-                        // Debug.Log("No Selected Hand Pose was found.");
+                        // //Debug.Log("No Selected Hand Pose was found.");
                     }
                 }
             }
@@ -516,7 +516,7 @@ namespace BNG {
             // No HandPoser is found, we should just exit
             if (handPoser == null) {
                 return false;
-                // Debug.Log("Adding Hand Poser to " + transform.name);
+                // //Debug.Log("Adding Hand Poser to " + transform.name);
                 // handPoser = this.gameObject.AddComponent<HandPoser>();
             }
 
@@ -629,7 +629,7 @@ namespace BNG {
                 UpdateCurrentHandPose();
             }
             else if(grabbed.handPoseType == HandPoseType.HandPose && grabbed.SelectedHandPose == null) {
-                // Debug.Log("No HandPose selected for object '" + grabbed.transform.name + "'. Falling back to default hand pose.");
+                // //Debug.Log("No HandPose selected for object '" + grabbed.transform.name + "'. Falling back to default hand pose.");
 
                 // Fall back to the closed pose if no selected hand pose was found
                 grabbed.SelectedHandPose = GetDefaultClosedPose();

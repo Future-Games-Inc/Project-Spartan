@@ -14,7 +14,7 @@ namespace BNG {
         void Start() {
 
             if(CombineMaterial == null) {
-                Debug.Log("No material specified for mesh combine. Forget to assign it in the inspector?");
+                //Debug.Log("No material specified for mesh combine. Forget to assign it in the inspector?");
                 return;
             }
 

@@ -207,7 +207,7 @@ namespace Autohand
 #if UNITY_EDITOR
 
         public static void TextDebug(this Vector3 vector3, string name = "") {
-            Debug.Log(name + ": " + vector3.x + ", " + vector3.y + ", " + vector3.z);
+            //Debug.Log(name + ": " + vector3.x + ", " + vector3.y + ", " + vector3.z);
         }
 
         public static GUIStyle LabelStyle(TextAnchor textAnchor = TextAnchor.MiddleLeft, FontStyle fontStyle = FontStyle.Normal, int fontSize = 13) {

@@ -183,7 +183,7 @@ namespace Photon.Voice.Unity.Demos.DemoVoiceUI
             string savedNick = PlayerPrefs.GetString("vNick");
             if (!string.IsNullOrEmpty(savedNick))
             {
-                //Debug.LogFormat("Saved nick = {0}", savedNick);
+                ////Debug.LogFormat("Saved nick = {0}", savedNick);
                 this.localNicknameText.text = savedNick;
                 this.voiceConnection.Client.NickName = savedNick;
             }
@@ -392,7 +392,7 @@ namespace Photon.Voice.Unity.Demos.DemoVoiceUI
                 return;
             }
 
-            //Debug.LogFormat("UpdateSyncedNickname() name: {0}", nickname);
+            ////Debug.LogFormat("UpdateSyncedNickname() name: {0}", nickname);
             this.voiceConnection.Client.LocalPlayer.NickName = nickname;
             PlayerPrefs.SetString("vNick", nickname);
         }

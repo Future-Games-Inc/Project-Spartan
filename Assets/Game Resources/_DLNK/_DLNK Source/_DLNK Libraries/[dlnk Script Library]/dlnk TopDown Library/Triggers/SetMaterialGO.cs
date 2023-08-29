@@ -43,7 +43,7 @@ public class SetMaterialGO : MonoBehaviour
     {
         // get player collider
         _activator = ManagerScript.PlayerCollider;
-        //Debug.Log(trig.name + "has entered the activator trigger");
+        ////Debug.Log(trig.name + "has entered the activator trigger");
         // check if Key pressed and collider hit was from correct target
         if (trig.GetComponent<Collider>() == _activator)
         {
@@ -56,7 +56,7 @@ public class SetMaterialGO : MonoBehaviour
         // set the door out of reach
         _iscolliding = false;
         //debug
-        Debug.Log(trig.name + "has exit the activator trigger");
+        //Debug.Log(trig.name + "has exit the activator trigger");
     }
 
     // Update is called once per frame

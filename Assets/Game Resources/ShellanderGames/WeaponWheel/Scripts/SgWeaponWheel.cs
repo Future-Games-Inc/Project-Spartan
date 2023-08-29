@@ -190,7 +190,7 @@ namespace ShellanderGames.WeaponWheel
 		{
 			if (logSelectionEvents)
 			{
-				Debug.Log(this.name + ": " + wheelEvent);
+				//Debug.Log(this.name + ": " + wheelEvent);
 			}
 			foreach (Action<SgWeaponWheelEvent> action in m_EventCallbacks)
 			{
@@ -277,7 +277,7 @@ namespace ShellanderGames.WeaponWheel
 			long timeTakenMs = SgMiscUtil.CurrentTimeMs() - t0;
 			if (enableLogging)
 			{
-				Debug.Log("Weapon wheel generated in " + timeTakenMs + " milliseconds");
+				//Debug.Log("Weapon wheel generated in " + timeTakenMs + " milliseconds");
 			}
 		}
 
@@ -301,7 +301,7 @@ namespace ShellanderGames.WeaponWheel
 
 			if (enableLogging && message != null)
 			{
-				Debug.LogWarning(message);
+				//Debug.LogWarning(message);
 			}
 
 			return message == null;

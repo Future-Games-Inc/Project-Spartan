@@ -32811,7 +32811,7 @@ GameObject:
   - component: {fileID: 602118816}
   m_Layer: 0
   m_Name: MatchEffects
-  m_TagString: Untagged
+  m_TagString: Props
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32828,7 +32828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783053d50686a314ab8b9f4d6a023074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchCountdown: 30
+  matchCountdown: 10
   currentMatchTime: 0
   spawnManager: {fileID: 972798658}
   uiCanvas: {fileID: 523125582}
@@ -32841,9 +32841,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 073c025e6babcb84f9192ea478632b99, type: 3}
   - {fileID: 8300000, guid: 8b2d63efda391de4c8504015705b9d3d, type: 3}
   matchBegan: {fileID: 8300000, guid: 035f3e011ef2b5a40be97ea5633810e9, type: 3}
+  supplyShip1: {fileID: 8300000, guid: 80e2da84e7836a54b90ce5c6c375c477, type: 3}
+  supplyShip2: {fileID: 8300000, guid: 73008e4528100214bafca919ce17e0a2, type: 3}
+  supplyDropShipPrefab: {fileID: 5013620648127742661, guid: ee849b97449b0ae4092b531ba0f0529b,
+    type: 3}
+  spawnInterval: 20
+  lastSpawnTime: 0
   startMatchBool: 0
   spawnReactor: 0
+  spawned: 0
+  DE_supplyDrop: 1
   numSequence: 
+  spawnRadius: 300
   nexusCodePanel: {fileID: 10004696}
 --- !u!82 &602118814
 AudioSource:
@@ -47652,7 +47661,7 @@ MonoBehaviour:
     initialSize: 10
     initialiseOnStart: 1
     isPoolingEnabled: 1
-    logMessages: 0
+    logMessages: 2
     notificationMode: 1
     dontDestroyOnLoad: 1
     instantiateWhenEmpty: 1
@@ -51490,7 +51499,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 29
+  m_RootOrder: 30
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &952625871
 MonoBehaviour:
@@ -52208,7 +52217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &972798659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52252,6 +52261,8 @@ MonoBehaviour:
   artifactCountMax: 10
   spawnRadius: 100
   navMeshSurface: {fileID: 952625869}
+  spawnPositions: []
+  validPositionsCount: 0
 --- !u!4 &972798660
 Transform:
   m_ObjectHideFlags: 0
@@ -52260,7 +52271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972798658}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.1675491, y: 1.849575, z: 2.3480244}
+  m_LocalPosition: {x: -1.1675491, y: 2.64, z: 2.3480244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -78999,7 +79010,7 @@ PrefabInstance:
     - target: {fileID: 7681437982492315926, guid: 897b2b6a52e0c094f9f9b7b8745f8f33,
         type: 3}
       propertyPath: m_RootOrder
-      value: 30
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 7681437982492315926, guid: 897b2b6a52e0c094f9f9b7b8745f8f33,
         type: 3}

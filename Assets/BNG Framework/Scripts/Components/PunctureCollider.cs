@@ -310,7 +310,7 @@ namespace BNG {
             Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, contact.normal);
             float collisionForce = collision.impulse.magnitude / Time.fixedDeltaTime;
 
-            // Debug.Log("Collision Force : " + collisionForce);
+            // //Debug.Log("Collision Force : " + collisionForce);
 
             // Do puncture
             if (collisionForce > FRequiredPenetrationForce && CanPunctureObject(collision.collider.gameObject) && !HasPunctured) {

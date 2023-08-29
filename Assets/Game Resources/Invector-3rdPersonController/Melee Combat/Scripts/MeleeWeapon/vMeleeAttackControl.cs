@@ -39,20 +39,21 @@ namespace Invector.vMelee
                 mFighter.OnEnableAttack();
 
             if (debug)
-                Debug.Log("Enter " + damageType);
+                ;
+                //Debug.Log("Enter " + damageType);
         }
 
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (stateInfo.normalizedTime % 1 >= startDamage && stateInfo.normalizedTime % 1 <= endDamage && !isActive)
             {
-                if (debug) Debug.Log(animator.name + " attack " + damageType + " enable damage in " + System.Math.Round(stateInfo.normalizedTime % 1, 2));
+                if (debug) //Debug.Log(animator.name + " attack " + damageType + " enable damage in " + System.Math.Round(stateInfo.normalizedTime % 1, 2));
                 isActive = true;
                 ActiveDamage(animator, true);
             }
             else if (stateInfo.normalizedTime % 1 > endDamage && isActive)
             {
-                if (debug) Debug.Log(animator.name + " attack " + damageType + " disable damage in " + System.Math.Round(stateInfo.normalizedTime % 1, 2));
+                if (debug) //Debug.Log(animator.name + " attack " + damageType + " disable damage in " + System.Math.Round(stateInfo.normalizedTime % 1, 2));
                 isActive = false;
                 ActiveDamage(animator, false);
             }
@@ -75,13 +76,13 @@ namespace Invector.vMelee
         override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (debug)
-                Debug.Log("Exit " + damageType);
+                //Debug.Log("Exit " + damageType);
 
-            if (isActive)
-            {
-                isActive = false;
-                ActiveDamage(animator, false);
-            }
+                if (isActive)
+                {
+                    isActive = false;
+                    ActiveDamage(animator, false);
+                }
 
             if (isAttacking)
             {
@@ -92,7 +93,8 @@ namespace Invector.vMelee
             if (mFighter != null && resetAttackTrigger)
                 mFighter.ResetAttackTriggers();
 
-            if (debug) Debug.Log(animator.name + " attack " + damageType + " stateExit");
+            if (debug) //Debug.Log(animator.name + " attack " + damageType + " stateExit");
+                ; 
         }
 
         void ActiveDamage(Animator animator, bool value)

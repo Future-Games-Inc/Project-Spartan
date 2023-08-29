@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviourPunCallbacks
     public PlayerHealth playerHealth;
     public bool playerBullet = false;
     public int bulletModifier;
+    public AudioSource audioSource;
+    public AudioClip clip;
 
     // Start is called before the first frame update
     void OnEnable()

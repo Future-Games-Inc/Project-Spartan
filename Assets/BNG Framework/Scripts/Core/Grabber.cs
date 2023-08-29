@@ -390,7 +390,7 @@ namespace BNG {
                 }
 
                 //if(HandSide == ControllerHand.Left && InputBridge.Instance.LeftTrigger > 0.9f) {
-                //    Debug.Log("Trigger Down");
+                //    //Debug.Log("Trigger Down");
                 //}
 
                 return grabInput;
@@ -414,7 +414,7 @@ namespace BNG {
             // Inherit isn't a value in itself. Use "hold down" instead and warn the user
             if (closestHoldType == HoldType.Inherit) {
                 closestHoldType = HoldType.HoldDown;
-                Debug.LogWarning("Inherit found on both Grabber and Grabbable. Consider updating the Grabber's DefaultHoldType");
+                //Debug.LogWarning("Inherit found on both Grabber and Grabbable. Consider updating the Grabber's DefaultHoldType");
             }
 
             return closestHoldType;
@@ -431,7 +431,7 @@ namespace BNG {
             // Inherit isn't a value in itself. Use "Grip" instead and warn the user
             if (grabButton == GrabButton.Inherit) {
                 grabButton = GrabButton.Grip;
-                Debug.LogWarning("Inherit found on both Grabber and Grabbable. Consider updating the Grabber's DefaultHoldType");
+                //Debug.LogWarning("Inherit found on both Grabber and Grabbable. Consider updating the Grabber's DefaultHoldType");
             }
 
             return grabButton;

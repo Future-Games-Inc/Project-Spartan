@@ -213,7 +213,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 return;
             }
             loader.buildOptions = buildOptions;
-            Debug.Log("Loading: " + absolutePath);
+            //Debug.Log("Loading: " + absolutePath);
             float startTotTime = Time.realtimeSinceStartup;
             float startTime = Time.realtimeSinceStartup;
 
@@ -229,7 +229,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (importAssets)
             {
-                Debug.LogFormat("Importing assets from {0}...", absolutePath);
+                //Debug.LogFormat("Importing assets from {0}...", absolutePath);
                 importMessage = "Creating folders...";
                 FileInfo fileInfo = new FileInfo(absolutePath);
                 string fileName = fileInfo.Name;
@@ -262,7 +262,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     string dest = destBasePath + "/Textures/" + texFileInfo.Name;
                     importMessage = "Copying texture " + source + "...";
                     File.Copy(source, dest, true);
-                    Debug.LogFormat("Texture {0} copied to {1}", source, dest);
+                    //Debug.LogFormat("Texture {0} copied to {1}", source, dest);
                 }
                 AssetDatabase.Refresh();
                 AssetDatabase.StartAssetEditing();
@@ -280,7 +280,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
                 importMessage = "Updating assets...";
                 AssetDatabase.Refresh();
-                Debug.LogFormat("Texture files imported in {0} seconds", Time.realtimeSinceStartup - startTime);
+                //Debug.LogFormat("Texture files imported in {0} seconds", Time.realtimeSinceStartup - startTime);
                 startTime = Time.realtimeSinceStartup;
 
                 importMessage = "Loading OBJ file...";
@@ -295,7 +295,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 importMessage = "Refreshing assets...";
                 AssetDatabase.Refresh();
 
-                Debug.LogFormat("OBJ files loaded in {0} seconds", Time.realtimeSinceStartup - startTime);
+                //Debug.LogFormat("OBJ files loaded in {0} seconds", Time.realtimeSinceStartup - startTime);
                 startTime = Time.realtimeSinceStartup;
                 GameObject loadedObj = Loader.GetModelByPath(absolutePath);
 
@@ -339,7 +339,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 PrefabUtility.CreatePrefab(prefabName, loadedObj, ReplacePrefabOptions.ConnectToPrefab);
 #endif
                 //GameObject. objObject.GetComponent<OBJ>();
-                Debug.LogFormat("Assets created in {0} seconds", Time.realtimeSinceStartup - startTime);
+                //Debug.LogFormat("Assets created in {0} seconds", Time.realtimeSinceStartup - startTime);
                 importPhase = ImportPhase.Done;
             }
             else
@@ -347,7 +347,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 importPhase = ImportPhase.ObjLoad;
                 await loader.Load(newName, absolutePath, parentObject);
             }
-            Debug.LogFormat("OBJ files imported in {0} seconds", Time.realtimeSinceStartup - startTotTime);
+            //Debug.LogFormat("OBJ files imported in {0} seconds", Time.realtimeSinceStartup - startTotTime);
         }
 #endif
 
@@ -400,7 +400,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     // TODO: add mode formats here...
                     default:
                         throw new System.InvalidOperationException($"File format not supported ({ext})");
-                        //Debug.LogErrorFormat("File format not supported ({0})", ext);
+                        ////Debug.LogErrorFormat("File format not supported ({0})", ext);
                         //return null;
                 }
             }

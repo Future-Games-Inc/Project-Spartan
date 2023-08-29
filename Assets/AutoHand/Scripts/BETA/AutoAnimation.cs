@@ -71,13 +71,13 @@ namespace Autohand
         [NaughtyAttributes.Button("Save Start"), ContextMenu("Save Start")]
         public void SaveAnimationStart()
         {
-            Debug.Log("Saved Start Pose");
+            //Debug.Log("Saved Start Pose");
             SaveAnimation(AnimationPoint.start);
         }
 
         [NaughtyAttributes.Button("Save End"), ContextMenu("Save End")]
         public void SaveAnimationEnd() {
-            Debug.Log("Saved End Pose");
+            //Debug.Log("Saved End Pose");
             SaveAnimation(AnimationPoint.end);
         }
 

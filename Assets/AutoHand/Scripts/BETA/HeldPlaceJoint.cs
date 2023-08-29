@@ -53,7 +53,7 @@ namespace Autohand {
 
         public override void Place(Grabbable placeObj) {
 
-            Debug.Log("Place");
+            //Debug.Log("Place");
             Dictionary<Hand, Transform> grabPoint = new Dictionary<Hand, Transform>();
             var hands = new Hand[(placeObj.GetHeldBy().Count)];
             placeObj.GetHeldBy().CopyTo(hands, 0);
@@ -105,7 +105,7 @@ namespace Autohand {
         }
 
         public override void Remove(Grabbable placeObj) {
-            Debug.Log("Remove");
+            //Debug.Log("Remove");
             if(heldJoint != null) {
                 Destroy(heldJoint);
                 heldJoint = null;

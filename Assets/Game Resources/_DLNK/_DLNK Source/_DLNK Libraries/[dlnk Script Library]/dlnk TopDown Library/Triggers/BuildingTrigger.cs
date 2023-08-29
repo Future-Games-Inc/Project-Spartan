@@ -45,24 +45,24 @@ public class BuildingTrigger : MonoBehaviour {
         // Set the correct character collider that will interact with this trigger.
         Activator = TownManagerScript.PlayerCollider;
         //LOG
-        Debug.Log("Collision in course. Object: " + trig.name + ". Activator for this trigger [" + Activator + "] This floor is " + Building.ActualFloor + "Target floor is " + TargetFloor);
+        //Debug.Log("Collision in course. Object: " + trig.name + ". Activator for this trigger [" + Activator + "] This floor is " + Building.ActualFloor + "Target floor is " + TargetFloor);
         // Set the Player Location at this building
         TownManagerScript.PlayerLocation = Building.BuildingName;
         // LOG
-        Debug.Log("[Fase 1] Target floor is: " + TargetFloor);
+        //Debug.Log("[Fase 1] Target floor is: " + TargetFloor);
         // Test if the colliders is from activator target (character)
         if (trig.GetComponent<Collider>() == Activator)
         {
             //If the result is possitive and the player did hit the trigger then we set the current floor to the one where the collider is located. Now we know where we are in the main script.
             Building.ActualFloor = FloorLevel;
             // LOG
-            Debug.Log("[Fase 2] Target floor is: " + TargetFloor);
+            //Debug.Log("[Fase 2] Target floor is: " + TargetFloor);
             //test if we're working with Direction or with target.
             if (Dynamic)
             {
                 //test if we're rising up, down, or stand and change floor values.
                 //LOG
-                Debug.Log("Dynamic mode on");
+                //Debug.Log("Dynamic mode on");
                 switch (this.FloorMovement)
                 {
                     case Direction.RiseUpFloor:
@@ -78,12 +78,12 @@ public class BuildingTrigger : MonoBehaviour {
             else
             {
                 // LOG
-                Debug.Log("[Fase 1] Target floor is: " + TargetFloor);
+                //Debug.Log("[Fase 1] Target floor is: " + TargetFloor);
                 Building.ActualFloor = TargetFloor;
             }
         }
         TownManagerScript.ActualFloor = Building.ActualFloor;
         //LOG
-        Debug.Log("Script finished. Building script Floor now is " + Building.ActualFloor);
+        //Debug.Log("Script finished. Building script Floor now is " + Building.ActualFloor);
     }
 }   

@@ -21,7 +21,7 @@ public class MovementController : MonoBehaviour
             {
                 if (positionVector.magnitude > 0.20f)
                 {
-                    //Debug.Log(positionVector);
+                    ////Debug.Log(positionVector);
                     Move(positionVector);
                 }
 

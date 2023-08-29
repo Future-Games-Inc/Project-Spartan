@@ -103,7 +103,7 @@ namespace BrainFailProductions.PolyFew
             object threadLock2 = new object();
 
             //if(applyForReduceDeep)
-            //Debug.Log("reduce deep was checked so executing like slider changed val");
+            ////Debug.Log("reduce deep was checked so executing like slider changed val");
 
             if (runOnThreads)
             {
@@ -243,7 +243,7 @@ namespace BrainFailProductions.PolyFew
                                 /*
                                 meshAssignments.Add(() =>
                                 {
-                                    //Debug.Log("reduced for  " + gameObject.name);
+                                    ////Debug.Log("reduced for  " + gameObject.name);
 
                                     var reducedMesh = meshSimplifier.ToMesh();
 
@@ -298,8 +298,8 @@ namespace BrainFailProductions.PolyFew
                 }
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
-                //Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
+                ////Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
+                ////Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
 
             }
 
@@ -562,7 +562,7 @@ namespace BrainFailProductions.PolyFew
             object threadLock2 = new object();
 
             //if(applyForReduceDeep)
-            //Debug.Log("reduce deep was checked so executing like slider changed val");
+            ////Debug.Log("reduce deep was checked so executing like slider changed val");
 
 
             Tuple<Mesh[], Mesh[], MeshFilter[], SkinnedMeshRenderer[]>[] allLevelsReducedMeshes;
@@ -1017,7 +1017,7 @@ namespace BrainFailProductions.PolyFew
                 else
                 {
                     rootPath = LOD_ASSETS_DEFAULT_SAVE_PATH + "/" + forObject.name + "_LOD_Meshes";
-                    Debug.LogWarning($"The save path: \"{AutoLODSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the LOD mesh assets.");
+                    //Debug.LogWarning($"The save path: \"{AutoLODSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the LOD mesh assets.");
                 }
 
             }
@@ -1025,7 +1025,7 @@ namespace BrainFailProductions.PolyFew
             else
             {
                 rootPath = LOD_ASSETS_DEFAULT_SAVE_PATH + "/" + forObject.name + "_LOD_Meshes";
-                Debug.LogWarning($"The save path: \"{AutoLODSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the LOD mesh assets.");
+                //Debug.LogWarning($"The save path: \"{AutoLODSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the LOD mesh assets.");
             }
 
 
@@ -1192,7 +1192,7 @@ namespace BrainFailProductions.PolyFew
                                     levels.combineMeshes = false;
                                 }
 
-                                Debug.LogWarning($"No meshes under GameObject \"{forObject.name}\" will be combined. The combined mesh exceeds the maximum vertex count of 65534. This is a limitation in older versions of Unity (2017.2 and Below).");
+                                //Debug.LogWarning($"No meshes under GameObject \"{forObject.name}\" will be combined. The combined mesh exceeds the maximum vertex count of 65534. This is a limitation in older versions of Unity (2017.2 and Below).");
 
                                 break;
                             }
@@ -1226,7 +1226,7 @@ namespace BrainFailProductions.PolyFew
                                     levels.combineMeshes = false;
                                 }
 
-                                Debug.LogWarning($"No meshes under GameObject \"{forObject.name}\" will be combined. The combined mesh exceeds the maximum vertex count of 65534. This is a limitation in older versions of Unity (2017.2 and Below).");
+                                //Debug.LogWarning($"No meshes under GameObject \"{forObject.name}\" will be combined. The combined mesh exceeds the maximum vertex count of 65534. This is a limitation in older versions of Unity (2017.2 and Below).");
 
                                 break;
                             }
@@ -1291,7 +1291,7 @@ namespace BrainFailProductions.PolyFew
                 // Change back the meshes readibility State
                 foreach(var mesh in meshesChangedToReadible)
                 {
-                    Debug.LogWarning($"Mesh \"{mesh.name}\" was not readible so we marked it readible for the mesh combining process to complete and changed it back to non-readible after completion. This process can slow down LOD generation. You may want to mark this mesh Read/Write enabled in the model import settings, so that next time LOD generation on this model can be faster.");
+                    //Debug.LogWarning($"Mesh \"{mesh.name}\" was not readible so we marked it readible for the mesh combining process to complete and changed it back to non-readible after completion. This process can slow down LOD generation. You may want to mark this mesh Read/Write enabled in the model import settings, so that next time LOD generation on this model can be faster.");
                     ChangeMeshReadability(mesh, false, false);
                 }
 
@@ -1785,7 +1785,7 @@ namespace BrainFailProductions.PolyFew
                 else
                 {
                     rootPath = BATCHFEW_ASSETS_DEFAULT_SAVE_PATH + "/" + combinedBaseName + (combinedBaseName.EndsWith("_") ? "Combined_Meshes" : "_Combined_Meshes");
-                    Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the combined mesh assets.");
+                    //Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the combined mesh assets.");
                 }
 
             }
@@ -1793,7 +1793,7 @@ namespace BrainFailProductions.PolyFew
             else
             {
                 rootPath = BATCHFEW_ASSETS_DEFAULT_SAVE_PATH + "/" + combinedBaseName + (combinedBaseName.EndsWith("_") ? "Combined_Meshes" : "_Combined_Meshes");
-                Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the combined mesh assets.");
+                //Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the combined mesh assets.");
             }
 
 
@@ -2193,7 +2193,7 @@ namespace BrainFailProductions.PolyFew
             // Change back the meshes readibility State
             foreach (var mesh in meshesChangedToReadible)
             {
-                Debug.LogWarning($"Mesh \"{mesh.name}\" was not readible so we marked it readible for the mesh combining process to complete and changed it back to non-readible after completion. This process can slow down mesh combining. You may want to mark this mesh Read/Write enabled in the model import settings, so that next time mesh combining on this model can be faster.");
+                //Debug.LogWarning($"Mesh \"{mesh.name}\" was not readible so we marked it readible for the mesh combining process to complete and changed it back to non-readible after completion. This process can slow down mesh combining. You may want to mark this mesh Read/Write enabled in the model import settings, so that next time mesh combining on this model can be faster.");
                 ChangeMeshReadability(mesh, false, false);
             }
 
@@ -2492,7 +2492,7 @@ namespace BrainFailProductions.PolyFew
                 else
                 {
                     rootPath = BATCHFEW_ASSETS_DEFAULT_SAVE_PATH + "/" + folderBaseName + "_Skinned_Converted_Meshes";
-                    Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the converted mesh assets.");
+                    //Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the converted mesh assets.");
                 }
 
             }
@@ -2500,7 +2500,7 @@ namespace BrainFailProductions.PolyFew
             else
             {
                 rootPath = BATCHFEW_ASSETS_DEFAULT_SAVE_PATH + "/" + folderBaseName + "_Skinned_Converted_Meshes";
-                Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the converted mesh assets.");
+                //Debug.LogWarning($"The save path: \"{BatchFewSavePath}\" is not valid or does not exist. A default path \"{rootPath}\" will be used to save the converted mesh assets.");
             }
 
 
@@ -2940,7 +2940,7 @@ namespace BrainFailProductions.PolyFew
                 var meshRenderer = renderer as MeshRenderer;
                 var skinnedMeshRenderer = renderer as SkinnedMeshRenderer;
 
-                //Debug.Log($"Deleting LOD Asset {a + 1}/{renderers.Length}   Progress   " + (float)a / renderers.Length);
+                ////Debug.Log($"Deleting LOD Asset {a + 1}/{renderers.Length}   Progress   " + (float)a / renderers.Length);
                 EditorUtility.DisplayProgressBar("Destroying LODS", $"Deleting LOD Asset {a + 1}/{renderers.Length}", (float)a / renderers.Length);
                 a++;
 
@@ -3359,7 +3359,7 @@ namespace BrainFailProductions.PolyFew
                     catch (Exception ex)
                     {
                         EditorUtility.ClearProgressBar();
-                        Debug.LogError(ex);
+                        //Debug.LogError(ex);
                         return false;
                     }
 
@@ -3401,7 +3401,7 @@ namespace BrainFailProductions.PolyFew
                     catch (Exception ex)
                     {
                         EditorUtility.ClearProgressBar();
-                        Debug.LogError(ex);
+                        //Debug.LogError(ex);
                         return false;
                     }
 
@@ -3490,7 +3490,7 @@ namespace BrainFailProductions.PolyFew
                         {
                             if (UtilityServices.HasUV2(mesh))
                             {
-                                Debug.LogWarning($"Mesh \"{mesh.name}\" already had a secondary uv set so we didn't generate a new one. For performance reasons you should disable \"Generate UV2\" option for meshes that already contain the secondary uv set.");
+                                //Debug.LogWarning($"Mesh \"{mesh.name}\" already had a secondary uv set so we didn't generate a new one. For performance reasons you should disable \"Generate UV2\" option for meshes that already contain the secondary uv set.");
                             }
                             else
                             {
@@ -3511,7 +3511,7 @@ namespace BrainFailProductions.PolyFew
                 catch (Exception ex)
                 {
                     EditorUtility.ClearProgressBar();
-                    Debug.LogError(ex);
+                    //Debug.LogError(ex);
                     return false;
                 }
 
@@ -3628,7 +3628,7 @@ namespace BrainFailProductions.PolyFew
 
             catch (Exception ex)
             {
-                Debug.LogError($"Error  {ex}");
+                //Debug.LogError($"Error  {ex}");
                 return false;
             }
         }
@@ -3660,7 +3660,7 @@ namespace BrainFailProductions.PolyFew
 
             catch (Exception ex)
             {
-                Debug.LogError($"Error  {ex}");
+                //Debug.LogError($"Error  {ex}");
                 return false;
             }
         }
@@ -3684,7 +3684,7 @@ namespace BrainFailProductions.PolyFew
 
             catch (Exception ex)
             {
-                Debug.LogError($"Error  {ex}");
+                //Debug.LogError($"Error  {ex}");
                 return false;
             }
         }
@@ -3702,7 +3702,7 @@ namespace BrainFailProductions.PolyFew
             {
                 foreach (var mesh in staticMeshes)
                 {
-                    //Debug.Log("Static Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
+                    ////Debug.Log("Static Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
 
                     if (!IsMeshSavedAsAsset(mesh)) { return false; }
                 }
@@ -3712,7 +3712,7 @@ namespace BrainFailProductions.PolyFew
             {
                 foreach (var mesh in skinnedMeshes)
                 {
-                    //Debug.Log("Skinned Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
+                    ////Debug.Log("Skinned Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
 
                     if (!IsMeshSavedAsAsset(mesh)) { return false; }
                 }
@@ -4095,7 +4095,7 @@ namespace BrainFailProductions.PolyFew
                     {
                         if (includeInbuilt)
                         {
-                            //Debug.Log("Adding From Mesh Filter   "+ filter.sharedMesh.name + "  for gameobject  "+ filter.gameObject.name);
+                            ////Debug.Log("Adding From Mesh Filter   "+ filter.sharedMesh.name + "  for gameobject  "+ filter.gameObject.name);
                             DataContainer.MeshRendererPair meshRendererPair = new DataContainer.MeshRendererPair(true, filter.sharedMesh);
                             objectMeshPairs.Add(filter.gameObject, meshRendererPair);
                         }
@@ -4282,7 +4282,8 @@ namespace BrainFailProductions.PolyFew
 
                             if (filter == null) { continue; }
 
-                            //Debug.Log("Is attached to meshfilter  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + filter.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ////Debug.Log("Is attached to meshfilter  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + filter.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ;
 
                             filter.sharedMesh = meshRendererPair.mesh;
                         }
@@ -4293,20 +4294,26 @@ namespace BrainFailProductions.PolyFew
 
                             if (sRenderer == null) { continue; }
 
-                            //Debug.Log("Is attached to SkinnedMeshRendere  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + sRenderer.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ////Debug.Log("Is attached to SkinnedMeshRendere  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + sRenderer.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ///
+                            ;
 
                             sRenderer.sharedMesh = meshRendererPair.mesh;
                         }
                     }
                     else
                     {
-                        Debug.Log("Invalid reference to gameobnejct");
+                        //Debug.Log("Invalid reference to gameobnejct");
+                        ;
                     }
 
                 }
             }
 
-            else { Debug.LogError("Object mesh pairs is null"); }
+            else
+            { //Debug.LogError("Object mesh pairs is null"); }
+                ;
+            }
 
         }
 
@@ -5047,7 +5054,7 @@ namespace BrainFailProductions.PolyFew
                         if (selectedObjectMesh.vertexCount >= 2000)
                         {
 
-                            Debug.Log("<b><i><color=#008000ff> PLEASE WAIT... while the convex property on the mesh collider does some calculations.The editor won't be usable until the MeshCollider finishes its calculations.</color></i></b>");
+                            //Debug.Log("<b><i><color=#008000ff> PLEASE WAIT... while the convex property on the mesh collider does some calculations.The editor won't be usable until the MeshCollider finishes its calculations.</color></i></b>");
                             new UtilityServices().RunAfter(() => { meshColl.convex = true; }, new WaitForSeconds(0.2f));
                         }
 
@@ -5121,7 +5128,7 @@ namespace BrainFailProductions.PolyFew
             {
                 if (Mathf.Approximately((Mathf.Sin(angle1) * Mathf.Deg2Rad), (Mathf.Sin(angle2) * Mathf.Deg2Rad)))
                 {
-                    //Debug.Log("equal");
+                    ////Debug.Log("equal");
                     return true;
                 }
             }
@@ -5720,7 +5727,7 @@ namespace BrainFailProductions.PolyFew
                 //init stuff
                 Dictionary<string, bool> materialCache = new Dictionary<string, bool>();
 
-                //Debug.Log("Exporting OBJ. Please wait.. Starting to export.");
+                ////Debug.Log("Exporting OBJ. Please wait.. Starting to export.");
 
 
                 InitializeExporter(toExport, exportPath, exportOptions);
@@ -5955,7 +5962,7 @@ namespace BrainFailProductions.PolyFew
 
             string ExportTexture(Texture2D t, string exportPath)
             {
-                //Debug.Log($"Exporting texture:  {t.name} to path: {exportPath}");
+                ////Debug.Log($"Exporting texture:  {t.name} to path: {exportPath}");
 
                 string textureName = t.name;
 
@@ -5985,7 +5992,7 @@ namespace BrainFailProductions.PolyFew
 
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning("Could not export texture : " + t.name + ". is it readable?");
+                    //Debug.LogWarning("Could not export texture : " + t.name + ". is it readable?");
                     return "null";
                 }
 

@@ -38,7 +38,7 @@ namespace InfimaGames.LowPolyShooterPack
             Internal_Log(message, LogType.Error);
         }
 
-        public static void oopsie(Exception oopsie, UnityEngine.Object context = default(UnityEngine.Object)) { Debug.LogException(oopsie, context); }
+        public static void oopsie(Exception oopsie, UnityEngine.Object context = default(UnityEngine.Object)) { /*Debug.LogException(oopsie, context);*/ }
 
         /// <summary>
         /// Throws a reference error. We have this as a specific function so we don't have to repeat it
@@ -62,13 +62,13 @@ namespace InfimaGames.LowPolyShooterPack
             switch (type)
             {
                 case LogType.Log:
-                    Debug.Log(message);
+                    //Debug.Log(message);
                     break;
                 case LogType.Warning:
-                    Debug.LogWarning(message);
+                    //Debug.LogWarning(message);
                     break;
                 case LogType.Error:
-                    Debug.LogError(message);
+                    //Debug.LogError(message);
                     break;
                 case LogType.Assert:
                     break;

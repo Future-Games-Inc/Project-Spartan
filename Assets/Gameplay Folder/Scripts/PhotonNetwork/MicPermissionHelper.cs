@@ -25,7 +25,7 @@ public class MicPermissionHelper : MonoBehaviour
 
             Permission.RequestUserPermission(Permission.Microphone);
 
-            //dialog = new GameObject(); } #endif Debug.Log(Microphone.devices.ToString()); }
+            //dialog = new GameObject(); } #endif //Debug.Log(Microphone.devices.ToString()); }
 
         }
 #endif

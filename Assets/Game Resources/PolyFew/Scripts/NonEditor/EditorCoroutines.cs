@@ -152,7 +152,7 @@ namespace BrainFailProductions.PolyFew
 				.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			if (methodInfo == null)
 			{
-				Debug.LogError("Coroutine '" + methodName + "' couldn't be started, the method doesn't exist!");
+				//Debug.LogError("Coroutine '" + methodName + "' couldn't be started, the method doesn't exist!");
 			}
 			object returnValue;
 
@@ -172,7 +172,7 @@ namespace BrainFailProductions.PolyFew
 			}
 			else
 			{
-				Debug.LogError("Coroutine '" + methodName + "' couldn't be started, the method doesn't return an IEnumerator!");
+				//Debug.LogError("Coroutine '" + methodName + "' couldn't be started, the method doesn't return an IEnumerator!");
 			}
 
 			return null;
@@ -257,7 +257,7 @@ namespace BrainFailProductions.PolyFew
 		{
 			if (routine == null)
 			{
-				Debug.LogException(new Exception("IEnumerator is null!"), null);
+				//Debug.LogException(new Exception("IEnumerator is null!"), null);
 			}
 			EditorCoroutine coroutine = CreateCoroutine(routine, thisReference);
 			GoStartCoroutine(coroutine);
@@ -382,9 +382,9 @@ namespace BrainFailProductions.PolyFew
 			}
 			else
 			{
-				Debug.LogException(
-					new Exception("<" + coroutine.MethodName + "> yielded an unknown or unsupported type! (" + current.GetType() + ")"),
-					null);
+				////Debug.LogException(
+				//	new Exception("<" + coroutine.MethodName + "> yielded an unknown or unsupported type! (" + current.GetType() + ")"),
+				//	null);
 				coroutine.currentYield = new YieldDefault();
 			}
 			return true;

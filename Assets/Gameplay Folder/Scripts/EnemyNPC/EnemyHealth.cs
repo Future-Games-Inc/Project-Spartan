@@ -26,27 +26,25 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
-        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
+
     }
 
     public override void OnEnable()
     {
         base.OnEnable();
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.AddCallbackTarget(this);
+            enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
         }
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.RemoveCallbackTarget(this);
-        }
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void KillEnemy()

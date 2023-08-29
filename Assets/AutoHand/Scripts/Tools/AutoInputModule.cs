@@ -40,7 +40,7 @@ namespace Autohand
                         {
                             if (!inputModule[i].gameObject.GetComponent<AutoInputModule>())
                                 Destroy(inputModule[i]);
-                            Debug.LogWarning("AUTO HAND:  REMOVING ADDITIONAL EVENT SYSTEMS FROM THE SCENE");
+                            //Debug.LogWarning("AUTO HAND:  REMOVING ADDITIONAL EVENT SYSTEMS FROM THE SCENE");
                         }
                     }
 
@@ -51,7 +51,7 @@ namespace Autohand
                         {
                             if (!system[i].gameObject.GetComponent<AutoInputModule>())
                                 Destroy(system[i]);
-                            Debug.LogWarning("AUTO HAND:  REMOVING ADDITIONAL EVENT SYSTEMS FROM THE SCENE");
+                            //Debug.LogWarning("AUTO HAND:  REMOVING ADDITIONAL EVENT SYSTEMS FROM THE SCENE");
                         }
                     }
 

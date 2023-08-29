@@ -212,13 +212,13 @@ namespace BNG {
 
             // Check Elevation based on Character Controller height
             if(characterController != null && (characterController.transform.position.y < MinElevation || characterController.transform.position.y > MaxElevation)) {
-                Debug.Log("Player out of bounds; Returning to initial position.");
+                //Debug.Log("Player out of bounds; Returning to initial position.");
                 characterController.transform.position = _initialPosition;
             }
 			
             // Check Elevation based on Character Controller height
             if(playerRigid != null && (playerRigid.transform.position.y < MinElevation || playerRigid.transform.position.y > MaxElevation)) {
-                Debug.Log("Player out of bounds; Returning to initial position.");
+                //Debug.Log("Player out of bounds; Returning to initial position.");
                 playerRigid.transform.position = _initialPosition;
             }			
         }
@@ -402,7 +402,7 @@ namespace BNG {
 
             // Cast capsule shape at the desired position to see if it is about to hit anything
             if (Physics.SphereCast(movePosition, capsuleRadius, transform.up, out hit, playerCapsule.height / 2, GroundedLayers, QueryTriggerInteraction.Ignore)) {
-                Debug.Log(hit.collider);
+                //Debug.Log(hit.collider);
                 noCollision = false;
             }
 

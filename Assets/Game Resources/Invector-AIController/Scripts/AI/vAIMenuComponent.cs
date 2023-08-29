@@ -33,8 +33,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vAICompanion>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/Player Companion Control")]
@@ -42,8 +42,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject)
                 Selection.activeGameObject.AddComponent<vAICompanionControl>();
-            else
-                Debug.Log("Please select a object to add the component.");
+            else;
+                //Debug.Log("Please select a object to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI Throw")]
@@ -51,8 +51,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vAIThrowObject>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI Cover")]
@@ -60,8 +60,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vAICover>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI MeleeManager")]
@@ -69,8 +69,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vMelee.vMeleeManager>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI ShooterManager")]
@@ -78,8 +78,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vAIShooterManager>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI Headtrack")]
@@ -87,8 +87,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vAIHeadtrack>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI MessageReceiver")]
@@ -96,8 +96,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject && Selection.activeGameObject.GetComponent<vControlAI>() != null)
                 Selection.activeGameObject.AddComponent<vMessageReceiver>();
-            else
-                Debug.Log("Please select a FSM AI to add the component.");
+            else;
+                //Debug.Log("Please select a FSM AI to add the component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI Spawn System")]
@@ -118,8 +118,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject)
                 Selection.activeGameObject.AddComponent<vSimpleHolder>();
-            else
-                Debug.Log("Please select a GameObject to add this component.");
+            else;
+                //Debug.Log("Please select a GameObject to add this component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI Noise Listener")]
@@ -127,8 +127,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject)
                 Selection.activeGameObject.AddComponent<vAINoiseListener>();
-            else
-                Debug.Log("Please select a GameObject to add this component.");
+            else;
+                //Debug.Log("Please select a GameObject to add this component.");
         }
 
         [MenuItem("Invector/FSM AI/Components/AI Move to Position")]
@@ -136,8 +136,8 @@ namespace Invector.vCharacterController.AI
         {
             if (Selection.activeGameObject)
                 Selection.activeGameObject.AddComponent<vAIMoveToPosition>();
-            else
-                Debug.Log("Please select a GameObject to add this component.");
+            else;
+                //Debug.Log("Please select a GameObject to add this component.");
         }        
 
     }

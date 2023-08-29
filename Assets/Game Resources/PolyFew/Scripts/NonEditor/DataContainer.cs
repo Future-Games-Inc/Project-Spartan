@@ -221,11 +221,11 @@ namespace BrainFailProductions.PolyFew
                 {
                     if (isUndo)
                     {
-                        //Debug.Log("Last undo operation was reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
+                        ////Debug.Log("Last undo operation was reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
                     }
                     else
                     {
-                        //Debug.Log("Last redo operation was reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
+                        ////Debug.Log("Last redo operation was reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
                     }
                 }
 
@@ -233,11 +233,11 @@ namespace BrainFailProductions.PolyFew
                 {
                     if (isUndo)
                     {
-                        //Debug.Log("Last undo operation was NOT reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
+                        ////Debug.Log("Last undo operation was NOT reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
                     }
                     else
                     {
-                        //Debug.Log("Last redo operation was NOT reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
+                        ////Debug.Log("Last redo operation was NOT reduce deep   ObjectMeshPair count  " + lastOp.objectMeshPairs.Count);
                     }
                 }
 

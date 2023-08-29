@@ -31,7 +31,7 @@ namespace Invector.vCharacterController
             healthControl = transform.GetComponentInParent<vHealthController>();
             if (healthControl == null)
             {
-                Debug.LogWarning("The character must have a ICharacter Interface");
+                //Debug.LogWarning("The character must have a ICharacter Interface");
                 Destroy(this.gameObject);
             }
             healthControl.onReceiveDamage.AddListener(Damage);

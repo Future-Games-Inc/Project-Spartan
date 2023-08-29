@@ -88,18 +88,20 @@ namespace Autohand{
 
         [ContextMenu("SAVE RIGHT")]
         public void EditorSavePoseRight() {
-            if(editorHand != null)
+            if (editorHand != null)
                 EditorSaveGrabPose(editorHand, false);
             else
-                Debug.Log("Editor Hand must be assigned");
+                //Debug.Log("Editor Hand must be assigned");
+                ;
         }
 
         [ContextMenu("SAVE LEFT")]
         public void EditorSavePoseLeft() {
-            if(editorHand != null)
+            if (editorHand != null)
                 EditorSaveGrabPose(editorHand, true);
             else
-                Debug.Log("Editor Hand must be assigned");
+                //Debug.Log("Editor Hand must be assigned");
+                ;
         }
 
         public void SaveScriptable(){
@@ -188,7 +190,7 @@ namespace Autohand{
             if(left){
                 leftPose = pose;
                 leftPoseSet = true;
-                Debug.Log("Pose Saved - Left");
+                //Debug.Log("Pose Saved - Left");
                 if (poseScriptable != null)
                     if (!poseScriptable.leftSaved)
                         poseScriptable.SaveLeftPose(leftPose);
@@ -196,7 +198,7 @@ namespace Autohand{
             else{
                 rightPose = pose;
                 rightPoseSet = true;
-                Debug.Log("Pose Saved - Right");
+                //Debug.Log("Pose Saved - Right");
                 if (poseScriptable != null)
                     if (!poseScriptable.rightSaved)
                         poseScriptable.SaveRightPose(rightPose);

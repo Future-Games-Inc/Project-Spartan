@@ -43,7 +43,7 @@ public class Elevator : MonoBehaviour
                     shouldReturn = false;
                 }
             }
-          //  Debug.Log("Current floor is "+currentFloor);
+          //  //Debug.Log("Current floor is "+currentFloor);
         }
     }
 

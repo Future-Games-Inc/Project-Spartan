@@ -65,7 +65,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
             if (!validAimAngle || !combat.isAiming || !combat.animatorStateInfos.HasTag("Upperbody Pose") || combat.animator.IsInTransition(aimLayer) || combat.animator.GetCurrentAnimatorStateInfo(aimLayer).normalizedTime < 0.9f) return;
             if (debug)
             {
-                Debug.Log("Trigger Shooter Attack");
+                //Debug.Log("Trigger Shooter Attack");
                 fsmBehaviour.SendDebug("Trigger Shooter Attack", this);
             }
             combat.Attack(forceCanAttack: forceCanAttack);

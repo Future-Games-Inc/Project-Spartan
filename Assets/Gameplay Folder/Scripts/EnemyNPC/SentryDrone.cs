@@ -69,7 +69,9 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
-        photonView.RPC("RPC_OnEnable", RpcTarget.All);
+        explosionEffect.SetActive(false);
+        //healthBar.SetMaxHealth(Health);
+        alive = true;
         timer = wanderTimer;
         Fire();
         if (PhotonNetwork.IsMasterClient)
@@ -244,6 +246,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 await Task.Delay(250);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
+                spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                 shootForce = (int)Random.Range(40, 75);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
@@ -313,7 +316,9 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void RandomSFX()
     {
-        photonView.RPC("RPC_PlayAudio", RpcTarget.All);
+        if (!photonView.IsMine) return;
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
     public void OnEvent(EventData photonEvent)
@@ -324,23 +329,6 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             int damage = (int)data[0];
             TakeDamage(damage);
         }
-    }
-
-    [PunRPC]
-    void RPC_OnEnable()
-    {
-        if (!photonView.IsMine) return;
-        explosionEffect.SetActive(false);
-        //healthBar.SetMaxHealth(Health);
-        alive = true;
-    }
-
-    [PunRPC]
-    void RPC_PlayAudio()
-    {
-        if (!photonView.IsMine) return;
-        if (!audioSource.isPlaying)
-            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
     //[PunRPC]

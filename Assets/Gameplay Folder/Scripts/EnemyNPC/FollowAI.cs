@@ -63,6 +63,10 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     private Animator animator;
     public AudioClip bulletHit;
     public AudioClip[] audioClip;
+    public SpawnManager1 enemyCounter;
+
+    public HitBox hitbox;
+    public Ragdoll ragdoll;
 
     // Start is called before the first frame update
     public override void OnEnable()
@@ -72,7 +76,10 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             InvokeRepeating("RandomSFX", 15, 20);
             animator = GetComponent<Animator>();
+            hitbox.ApplyTagRecursively(gameObject.transform);
+            ragdoll.SetUp();
 
+            enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
             agent.SetDestination(newPos);
 
@@ -80,8 +87,8 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
             //photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
             //Listen to PhotonEvents
-            PhotonNetwork.AddCallbackTarget(this);
         }
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     public override void OnDisable()
@@ -198,10 +205,11 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             animator.SetFloat("Speed", agent.velocity.magnitude);
         }
 
-        //if (agent != null && !agent.isOnNavMesh)
-        //{
-        //    TakeDamage(300);
-        //}
+        if (agent != null && !agent.isOnNavMesh)
+        {
+            TakeDamage(300);
+            enemyCounter.enemiesKilled--;
+        }
     }
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)

@@ -153,7 +153,8 @@ namespace ProceduralWorlds.SceneOptimizer
                     }
                     else
                     {
-                        PWDebug.LogWarning("FPS Tester Prefab is Missing!");
+                        //Debug.LogWarning("FPS Tester Prefab is Missing!");
+                        ;
                     }
                 }
                 

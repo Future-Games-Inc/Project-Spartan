@@ -15,7 +15,7 @@ public class PUNNetworkPlayerSpawner : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        Debug.Log("Joined");
+        //Debug.Log("Joined");
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
         {
             spawnPlayerPrefab = PhotonNetwork.Instantiate("Scavenger", transform.position, transform.rotation);

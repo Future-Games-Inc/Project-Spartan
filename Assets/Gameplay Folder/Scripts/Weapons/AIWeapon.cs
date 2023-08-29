@@ -14,7 +14,6 @@ public class AIWeapon : MonoBehaviourPunCallbacks
 
     public AudioSource audioSource;
     public AudioSource audioSource2;
-    public AudioClip weaponFire;
     public AudioClip weaponReload;
 
     public bool fireWeaponBool = false;
@@ -43,13 +42,16 @@ public class AIWeapon : MonoBehaviourPunCallbacks
             enemyType = EnemyType.BossEnemy;
         }
         ammoLeft = maxAmmo;
-        Fire();
+        StartCoroutine(Fire());
     }
 
-    async void Fire()
+    IEnumerator Fire()
     {
         while (true)
         {
+            while (!fireWeaponBool)
+                yield return null;
+
             if (ammoLeft <= 0)
             {
                 canShoot = false;
@@ -59,12 +61,9 @@ public class AIWeapon : MonoBehaviourPunCallbacks
 
             if (fireWeaponBool)
             {
-                await Task.Delay(250);
-                if (!audioSource.isPlaying)
-                {
-                    photonView.RPC("RPC_ShootAudio", RpcTarget.All);
-                }
+                yield return new WaitForSeconds(0.25f);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
+                spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
 
                 // Check with cached enemy type to save performance
                 if (enemyType.Equals(EnemyType.Enemy))
@@ -79,9 +78,8 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
                 ammoLeft--;
-                await Task.Delay(250);
-
-            }      
+                yield return new WaitForSeconds(0.25f);
+            }
         }
     }
 
@@ -127,6 +125,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     async void ReloadWeapon()
     {
         await Task.Delay(2000);
+        audioSource2.PlayOneShot(weaponReload);
         ammoLeft = maxAmmo;
         canShoot = true;
     }
@@ -144,20 +143,4 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     //    ammoLeft = maxAmmo;
     //    canShoot = true;
     //}
-
-    [PunRPC]
-    void RPC_ShootAudio()
-    {
-        if (!photonView.IsMine) 
-            return;
-        audioSource.PlayOneShot(weaponFire);
-    }
-
-    [PunRPC]
-    void RPC_Reload1()
-    {
-        if (!photonView.IsMine)
-            return;
-        audioSource2.PlayOneShot(weaponReload);
-    }
 }

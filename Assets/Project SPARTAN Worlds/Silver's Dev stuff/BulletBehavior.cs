@@ -45,7 +45,7 @@ public class BulletBehavior : MonoBehaviour
 
     private void collisionAndTriggerCheck(Collider other)
     {
-        Debug.Log("hit:" + other.tag + " : " + other.name);
+        //Debug.Log("hit:" + other.tag + " : " + other.name);
         // if break on impact
         if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact == true) Destroy(gameObject);
         if ((other.CompareTag("Enemy") || other.CompareTag("BossEnemy")))

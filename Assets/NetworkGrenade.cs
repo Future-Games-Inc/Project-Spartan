@@ -51,28 +51,13 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
         Camera cam = player.GetComponentInChildren<Camera>();
         Vector3 forceToAdd = cam.transform.forward * throwForce * throwUpwardForce;
         rb.AddForce(forceToAdd);
-        photonView.RPC("GrenadeSound", RpcTarget.All);
+        audioSource.Play();
         StartCoroutine(ExplodeDelayed());
     }
 
     public IEnumerator ExplodeDelayed()
     {
         yield return new WaitForSeconds(explosionDelay);
-        photonView.RPC("Explode", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void GrenadeSound()
-    {
-        if (!photonView.IsMine) return;
-        audioSource.Play();
-    }
-
-    [PunRPC]
-    void Explode()
-    {
-        if (!photonView.IsMine) return; // Ensure only the owner can explode
-
         explosionEffect.SetActive(true);
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);

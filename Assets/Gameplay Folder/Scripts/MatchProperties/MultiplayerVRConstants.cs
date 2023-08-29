@@ -6,6 +6,7 @@ public class MultiplayerVRConstants
     public const string MAP_TYPE_VALUE_DROPZONE1 = "DropZone1";
     public const string MAP_TYPE_VALUE_DROPZONE2 = "DropZone2";
     public const string MAP_TYPE_VALUE_DROPZONE3 = "DropZone3";
+    public const string MAP_TYPE_VALUE_WeaponTest = "WeaponTest";
 
     public const string AVATAR_SELECTION_NUMBER = "Avatar_Selection_Number";
 

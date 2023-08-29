@@ -312,13 +312,13 @@ namespace BNG {
             UnityEditor.EditorUtility.SetDirty(poseObject);
 
             if (exists) {
-                Debug.Log("Updated Hand Pose : " + poseName);
+                //Debug.Log("Updated Hand Pose : " + poseName);
             }
             else {
-                Debug.Log("Created new Hand Pose : " + poseName);
+                //Debug.Log("Created new Hand Pose : " + poseName);
             }
 #else
-    Debug.Log("Scriptable Objects can only be saved from within the Unity Editor. Consider storing in another format like JSON instead.");
+    //Debug.Log("Scriptable Objects can only be saved from within the Unity Editor. Consider storing in another format like JSON instead.");
 #endif
         }
 

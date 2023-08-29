@@ -108,7 +108,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 // remove this progress to let complete the total loading process
                 //return;
             }
-            //Debug.LogFormat("Parsing geometry data in {0}...", www.url);
+            ////Debug.LogFormat("Parsing geometry data in {0}...", www.url);
             ParseGeometryData(loadedText);
         }
 
@@ -149,7 +149,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             while (isWorking)
             {
-                //Debug.Log("Stuck in ISWORKING WHILE LOOP");
+                ////Debug.Log("Stuck in ISWORKING WHILE LOOP");
                 ObjectImporter.downloadProgress.Value = (individualProgress.Value / ObjectImporter.activeDownloads) * 100f;
                 await Task.Delay(1);
             }
@@ -176,7 +176,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 // remove this progress to let complete the total loading process
                 //return;
             }
-            //Debug.LogFormat("Parsing geometry data in {0}...", www.url);
+            ////Debug.LogFormat("Parsing geometry data in {0}...", www.url);
 
             try
             {
@@ -253,7 +253,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 totalProgress.singleProgress.Remove(objLoadingProgress);
                 throw new InvalidOperationException("Failed to load data from the downloaded obj file. The file might be empty or non readable.");
             }
-            //Debug.LogFormat("Parsing geometry data in {0}...", www.url);
+            ////Debug.LogFormat("Parsing geometry data in {0}...", www.url);
 
             try
             {
@@ -314,7 +314,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             else
             {
-                Debug.LogWarning("Cannot find the associated material file at the path   " + basePath + mtlLib);
+                //Debug.LogWarning("Cannot find the associated material file at the path   " + basePath + mtlLib);
             }
 
             //yield return LoadOrDownloadText(mtlPath,false);
@@ -324,7 +324,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     mtlLib = Path.GetFileName(mtlLib);
                     mtlPath = "file:///" + basePath + mtlLib;
-                    Debug.LogWarningFormat("Material library {0} loaded from the same directory as the OBJ file.\n", mtlLib);
+                    //Debug.LogWarningFormat("Material library {0} loaded from the same directory as the OBJ file.\n", mtlLib);
 
                     yield return LoadOrDownloadText(mtlPath);
                 }
@@ -332,7 +332,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (!string.IsNullOrWhiteSpace(loadedText))
             {
-                //Debug.LogFormat("Parsing material libray {0}...", loader.url);
+                ////Debug.LogFormat("Parsing material libray {0}...", loader.url);
                 objLoadingProgress.message = "Parsing material library...";
                 ParseMaterialData(loadedText);
             }
@@ -360,7 +360,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     ObjectImporter.activeDownloads -= 1;
                     isWorking = false;
-                    Debug.LogWarning("Failed to load the associated material file." + error);
+                    //Debug.LogWarning("Failed to load the associated material file." + error);
                 }));
             }
 
@@ -393,7 +393,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (!string.IsNullOrWhiteSpace(loadedText))
             {
-                //Debug.LogFormat("Parsing material libray {0}...", loader.url);
+                ////Debug.LogFormat("Parsing material libray {0}...", loader.url);
                 objLoadingProgress.message = "Parsing material library...";
                 ParseMaterialData(loadedText);
             }
@@ -420,7 +420,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             {
                 ObjectImporter.activeDownloads -= 1;
                 isWorking = false;
-                Debug.LogWarning("Failed to load the associated material file." + error);
+                //Debug.LogWarning("Failed to load the associated material file." + error);
             }));
  
 
@@ -438,7 +438,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (!string.IsNullOrWhiteSpace(loadedText))
             {
-                //Debug.LogFormat("Parsing material libray {0}...", loader.url);
+                ////Debug.LogFormat("Parsing material libray {0}...", loader.url);
                 objLoadingProgress.message = "Parsing material library...";
                 ParseMaterialData(loadedText);
             }
@@ -808,17 +808,17 @@ namespace BrainFailProductions.PolyFew.AsImpL
                         case "map_kA":
                             if (!string.IsNullOrEmpty(parameters))
                             {
-                                Debug.Log("Map not supported:" + line);
+                                //Debug.Log("Map not supported:" + line);
                             }
                             break;
                         default:
-                            //Debug.Log("this line was not processed :" + line);
+                            ////Debug.Log("this line was not processed :" + line);
                             break;
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogErrorFormat("Error at line {0} in mtl file: {1}", i + 1, e);
+                    //Debug.LogErrorFormat("Error at line {0} in mtl file: {1}", i + 1, e);
                 }
             }
         }
@@ -887,7 +887,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 }
                 if (isOptionNotEnough)
                 {
-                    Debug.Log("bump variable value not enough for option:" + optionName + " of material:" + mtlData.materialName);
+                    //Debug.Log("bump variable value not enough for option:" + optionName + " of material:" + mtlData.materialName);
                     continue;
                 }
                 for (; i < def.valueNumMax && pos < param.Length; i++, pos++)
@@ -903,7 +903,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     args.Add(param[pos]);
                 }
                 // TODO: some processing of options
-                Debug.Log("found option: " + optionName + " of material: " + mtlData.materialName + " args: " + string.Concat(args.ToArray()));
+                //Debug.Log("found option: " + optionName + " of material: " + mtlData.materialName + " args: " + string.Concat(args.ToArray()));
             }
             // set the file name, if found
             // TODO: other parsed parameters are not used for now
@@ -931,7 +931,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             {
                 if (notifyErrors)
                 {
-                    Debug.LogError(uwr.error);
+                    //Debug.LogError(uwr.error);
                 }
             }
             else
@@ -946,7 +946,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             {
                 if (notifyErrors)
                 {
-                    Debug.LogError("Error loading " + url + "\n" + www.error);
+                    //Debug.LogError("Error loading " + url + "\n" + www.error);
                 }
             }
             else

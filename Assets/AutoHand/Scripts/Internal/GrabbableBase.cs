@@ -128,17 +128,18 @@ namespace Autohand {
 
 
             if(body == null){
-                if(GetComponent<Rigidbody>())
+                if (GetComponent<Rigidbody>())
                     body = GetComponent<Rigidbody>();
                 else
-                    Debug.LogError("RIGIDBODY MISSING FROM GRABBABLE: " + transform.name + " \nPlease add/attach a rigidbody", this);
+                    //Debug.LogError("RIGIDBODY MISSING FROM GRABBABLE: " + transform.name + " \nPlease add/attach a rigidbody", this);
+                    ;
             }
 
 
     #if UNITY_EDITOR
             if (Selection.activeGameObject == gameObject){
                 Selection.activeGameObject = null;
-                Debug.Log("Auto Hand (EDITOR ONLY): Selecting the grabbable in the inspector can cause lag and quality reduction at runtime. (Automatically deselecting at runtime) Remove this code at any time.", this);
+                //Debug.Log("Auto Hand (EDITOR ONLY): Selecting the grabbable in the inspector can cause lag and quality reduction at runtime. (Automatically deselecting at runtime) Remove this code at any time.", this);
                 editorSelected = true;
             }
 

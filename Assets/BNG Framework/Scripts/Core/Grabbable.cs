@@ -574,7 +574,7 @@ namespace BNG {
 
                     // Should we drop the item if it's too far away?
                     if (!recentlyTeleported && BreakDistance > 0 && Vector3.Distance(grabPosition, g.transform.position) > BreakDistance) {
-                        Debug.Log("Break Distance Exceeded. Dropping item.");
+                        //Debug.Log("Break Distance Exceeded. Dropping item.");
                         DropItem(g, true, true);
                         break;
                     }
