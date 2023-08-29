@@ -64,11 +64,11 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     {
                         shaderName = "Mobile/Particles/Alpha Blended";
                     }
-                    Debug.Log("No material library defined. Using vertex colors.");
+                    //Debug.Log("No material library defined. Using vertex colors.");
                 }
                 else
                 {
-                    Debug.LogWarning("No material library defined. Using a default material.");
+                    //Debug.LogWarning("No material library defined. Using a default material.");
                 }
                 currMaterials.Add("default", new Material(Shader.Find(shaderName)));
             }
@@ -84,7 +84,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
         {
             if (materialData == null)
             {
-                Debug.LogWarning("No material library defined.");
+                //Debug.LogWarning("No material library defined.");
                 return false;
             }
             if (info.materialsLoaded >= materialData.Count)
@@ -95,7 +95,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             info.materialsLoaded++;
             if (currMaterials.ContainsKey(matData.materialName))
             {
-                Debug.LogWarning("Duplicate material found: " + matData.materialName + ". Repeated occurence ignored");
+                //Debug.LogWarning("Duplicate material found: " + matData.materialName + ". Repeated occurence ignored");
             }
             else
             {
@@ -149,22 +149,22 @@ namespace BrainFailProductions.PolyFew.AsImpL
         {
             if (origMesh.uv == null || origMesh.uv.Length == 0)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - texture coordinates not defined.");
+                //Debug.LogWarning("Unable to compute tangent space vectors - texture coordinates not defined.");
                 return;
             }
             if (origMesh.vertices == null || origMesh.vertices.Length == 0)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - vertices not defined.");
+                //Debug.LogWarning("Unable to compute tangent space vectors - vertices not defined.");
                 return;
             }
             if (origMesh.normals == null || origMesh.normals.Length == 0)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - normals not defined.");
+                //Debug.LogWarning("Unable to compute tangent space vectors - normals not defined.");
                 return;
             }
             if (origMesh.triangles == null || origMesh.triangles.Length == 0)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - triangles not defined.");
+                //Debug.LogWarning("Unable to compute tangent space vectors - triangles not defined.");
                 return;
             }
             Vector3[] vertices = origMesh.vertices;
@@ -182,17 +182,17 @@ namespace BrainFailProductions.PolyFew.AsImpL
             }
             if (vertices.Length <= maxVertIdx)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - not enough vertices: " + vertices.Length.ToString());
+                //Debug.LogWarning("Unable to compute tangent space vectors - not enough vertices: " + vertices.Length.ToString());
                 return;
             }
             if (normals.Length <= maxVertIdx)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - not enough normals.");
+                //Debug.LogWarning("Unable to compute tangent space vectors - not enough normals.");
                 return;
             }
             if (texcoords.Length <= maxVertIdx)
             {
-                Debug.LogWarning("Unable to compute tangent space vectors - not enough UVs.");
+                //Debug.LogWarning("Unable to compute tangent space vectors - not enough UVs.");
                 return;
             }
 
@@ -377,7 +377,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     // split the group across more objects
                     splitGrp = true;
                     buildStatus.grpFaceIdx = f;
-                    Debug.LogWarningFormat("Maximum vertex number for a mesh exceeded.\nSplitting object {0} (group {1}, starting from index {2})...", grp.name, buildStatus.grpIdx, f);
+                    //Debug.LogWarningFormat("Maximum vertex number for a mesh exceeded.\nSplitting object {0} (group {1}, starting from index {2})...", grp.name, buildStatus.grpIdx, f);
                     break;
                 }
                 DataSet.FaceIndices fi = objData.faceGroups[buildStatus.grpIdx].faces[f];
@@ -420,9 +420,9 @@ namespace BrainFailProductions.PolyFew.AsImpL
             GameObject subobj = ImportSubObject(buildStatus.subObjParent, subObjData, mats);
             if (subobj == null)
             {
-                Debug.LogWarningFormat("Error loading sub object n.{0}.", buildStatus.subObjCount);
+                //Debug.LogWarningFormat("Error loading sub object n.{0}.", buildStatus.subObjCount);
             }
-            //else Debug.LogFormat( "Imported face indices: {0} to {1}", buildStatus.totFaceIdxCount - sub_od.AllFaces.Count, buildStatus.totFaceIdxCount );
+            //else //Debug.LogFormat( "Imported face indices: {0} to {1}", buildStatus.totFaceIdxCount - sub_od.AllFaces.Count, buildStatus.totFaceIdxCount );
 
             buildStatus.subObjCount++;
 
@@ -430,7 +430,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             {
                 if (buildStatus.totFaceIdxCount != objData.allFaces.Count)
                 {
-                    Debug.LogWarningFormat("Imported face indices: {0} of {1}", buildStatus.totFaceIdxCount, objData.allFaces.Count);
+                    //Debug.LogWarningFormat("Imported face indices: {0} of {1}", buildStatus.totFaceIdxCount, objData.allFaces.Count);
                     return false;
                 }
                 buildStatus.objCount++;
@@ -576,11 +576,11 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     material = mats["default"];
                     renderer.sharedMaterial = material;
-                    Debug.LogWarning("Material: " + matName + " not found. Using the default material.");
+                    //Debug.LogWarning("Material: " + matName + " not found. Using the default material.");
                 }
                 else
                 {
-                    Debug.LogError("Material: " + matName + " not found.");
+                    //Debug.LogError("Material: " + matName + " not found.");
                 }
             }
 
@@ -891,7 +891,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             //        {
             //            string path = alternateTexPath + "../Materials/" + m.name + ".mat";
             //            path = path.Replace("Textures/../", "");
-            //            Debug.LogFormat("Creating material asset in {0}", path);
+            //            //Debug.LogFormat("Creating material asset in {0}", path);
             //            AssetDatabase.CreateAsset(m, path);
             //        m = AssetDatabase.LoadAssetAtPath<Material>(path);
             //        }

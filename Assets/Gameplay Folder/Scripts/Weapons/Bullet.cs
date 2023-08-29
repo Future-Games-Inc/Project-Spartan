@@ -22,7 +22,6 @@ public class Bullet : MonoBehaviourPunCallbacks
             StartCoroutine(DestroyBulletCollision());
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)
@@ -173,7 +172,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         }
 
 
-        else if (other.CompareTag("Player"))
+        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
         {
             float criticalChance = 10f;
 

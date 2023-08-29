@@ -56,7 +56,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                         }
                     }
                     if (!contains)
-                        Debug.Log("REQUIRED TYPE OF CONTROLLER IS " + state.requiredType.Name);
+                        //Debug.Log("REQUIRED TYPE OF CONTROLLER IS " + state.requiredType.Name);
                 }
             }
             bool isRunningInPlayMode = fsmBehaviour != null && Application.isPlaying && fsmBehaviour.fsmBehaviour && fsmBehaviour.fsmBehaviour.states.Contains(state) && fsmBehaviour.fsmBehaviour.states.IndexOf(state) == fsmBehaviour.indexOffCurrentState;

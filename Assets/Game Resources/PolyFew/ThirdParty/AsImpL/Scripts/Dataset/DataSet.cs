@@ -248,7 +248,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     stats += "\n    " + gd.name + " has " + gd.faces.Count + " faces(s)";
                 }
             }
-            Debug.Log(stats);
+            //Debug.Log(stats);
         }
 
 

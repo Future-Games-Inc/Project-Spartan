@@ -146,7 +146,7 @@ namespace Photon.Chat.Demo
 
             if (!appIdPresent)
             {
-                Debug.LogError("You need to set the chat app ID in the PhotonServerSettings file in order to continue.");
+                //Debug.LogError("You need to set the chat app ID in the PhotonServerSettings file in order to continue.");
             }
         }
 
@@ -162,7 +162,7 @@ namespace Photon.Chat.Demo
             this.chatClient.ConnectUsingSettings(this.chatAppSettings);
 
             this.ChannelToggleToInstantiate.gameObject.SetActive(false);
-            Debug.Log("Connecting as: " + this.UserName);
+            //Debug.Log("Connecting as: " + this.UserName);
 
             this.ConnectingLabel.SetActive(true);
         }
@@ -252,7 +252,7 @@ namespace Photon.Chat.Demo
                 string[] splitNames = this.selectedChannelName.Split(new char[] { ':' });
                 privateChatTarget = splitNames[1];
             }
-            //UnityEngine.Debug.Log("selectedChannelName: " + selectedChannelName + " doingPrivateChat: " + doingPrivateChat + " privateChatTarget: " + privateChatTarget);
+            //UnityEngine.//Debug.Log("selectedChannelName: " + selectedChannelName + " doingPrivateChat: " + doingPrivateChat + " privateChatTarget: " + privateChatTarget);
 
 
             if (inputLine[0].Equals('\\'))
@@ -341,7 +341,7 @@ namespace Photon.Chat.Demo
                 #endif
                 else
                 {
-                    Debug.Log("The command '" + tokens[0] + "' is invalid.");
+                    //Debug.Log("The command '" + tokens[0] + "' is invalid.");
                 }
             }
             else
@@ -366,15 +366,15 @@ namespace Photon.Chat.Demo
         {
             if (level == ExitGames.Client.Photon.DebugLevel.ERROR)
             {
-                Debug.LogError(message);
+                //Debug.LogError(message);
             }
             else if (level == ExitGames.Client.Photon.DebugLevel.WARNING)
             {
-                Debug.LogWarning(message);
+                //Debug.LogWarning(message);
             }
             else
             {
-                Debug.Log(message);
+                //Debug.Log(message);
             }
         }
 
@@ -418,7 +418,7 @@ namespace Photon.Chat.Demo
 
         public void OnDisconnected()
         {
-            Debug.Log("OnDisconnected()");
+            //Debug.Log("OnDisconnected()");
             this.ConnectingLabel.SetActive(false);
         }
 
@@ -444,7 +444,7 @@ namespace Photon.Chat.Demo
                 }
             }
 
-            Debug.Log("OnSubscribed: " + string.Join(", ", channels));
+            //Debug.Log("OnSubscribed: " + string.Join(", ", channels));
 
             /*
             // select first subscribed channel in alphabetical order
@@ -473,14 +473,14 @@ namespace Photon.Chat.Demo
         /// <inheritdoc />
         public void OnSubscribed(string channel, string[] users, Dictionary<object, object> properties)
         {
-            Debug.LogFormat("OnSubscribed: {0}, users.Count: {1} Channel-props: {2}.", channel, users.Length, properties.ToStringFull());
+            //Debug.LogFormat("OnSubscribed: {0}, users.Count: {1} Channel-props: {2}.", channel, users.Length, properties.ToStringFull());
         }
 
         private void InstantiateChannelButton(string channelName)
         {
             if (this.channelToggles.ContainsKey(channelName))
             {
-                Debug.Log("Skipping creation for an existing channel toggle.");
+                //Debug.Log("Skipping creation for an existing channel toggle.");
                 return;
             }
 
@@ -517,7 +517,7 @@ namespace Photon.Chat.Demo
 
                     this.channelToggles.Remove(channelName);
 
-                    Debug.Log("Unsubscribed from channel '" + channelName + "'.");
+                    //Debug.Log("Unsubscribed from channel '" + channelName + "'.");
 
                     // Showing another channel if the active channel is the one we unsubscribed from before
                     if (channelName == this.selectedChannelName && this.channelToggles.Count > 0)
@@ -532,7 +532,7 @@ namespace Photon.Chat.Demo
                 }
                 else
                 {
-                    Debug.Log("Can't unsubscribe from channel '" + channelName + "' because you are currently not subscribed to it.");
+                    //Debug.Log("Can't unsubscribe from channel '" + channelName + "' because you are currently not subscribed to it.");
                 }
             }
         }
@@ -555,7 +555,7 @@ namespace Photon.Chat.Demo
             byte[] msgBytes = message as byte[];
             if (msgBytes != null)
             {
-                Debug.Log("Message with byte[].Length: "+ msgBytes.Length);
+                //Debug.Log("Message with byte[].Length: "+ msgBytes.Length);
             }
             if (this.selectedChannelName.Equals(channelName))
             {
@@ -574,7 +574,7 @@ namespace Photon.Chat.Demo
         public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
         {
 
-            Debug.LogWarning("status: " + string.Format("{0} is {1}. Msg:{2}", user, status, message));
+            //Debug.LogWarning("status: " + string.Format("{0} is {1}. Msg:{2}", user, status, message));
 
             if (this.friendListItemLUT.ContainsKey(user))
             {
@@ -585,29 +585,29 @@ namespace Photon.Chat.Demo
 
         public void OnUserSubscribed(string channel, string user)
         {
-            Debug.LogFormat("OnUserSubscribed: channel=\"{0}\" userId=\"{1}\"", channel, user);
+            //Debug.LogFormat("OnUserSubscribed: channel=\"{0}\" userId=\"{1}\"", channel, user);
         }
 
         public void OnUserUnsubscribed(string channel, string user)
         {
-            Debug.LogFormat("OnUserUnsubscribed: channel=\"{0}\" userId=\"{1}\"", channel, user);
+            //Debug.LogFormat("OnUserUnsubscribed: channel=\"{0}\" userId=\"{1}\"", channel, user);
         }
 
         /// <inheritdoc />
         public void OnChannelPropertiesChanged(string channel, string userId, Dictionary<object, object> properties)
         {
-            Debug.LogFormat("OnChannelPropertiesChanged: {0} by {1}. Props: {2}.", channel, userId, Extensions.ToStringFull(properties));
+            //Debug.LogFormat("OnChannelPropertiesChanged: {0} by {1}. Props: {2}.", channel, userId, Extensions.ToStringFull(properties));
         }
 
         public void OnUserPropertiesChanged(string channel, string targetUserId, string senderUserId, Dictionary<object, object> properties)
         {
-            Debug.LogFormat("OnUserPropertiesChanged: (channel:{0} user:{1}) by {2}. Props: {3}.", channel, targetUserId, senderUserId, Extensions.ToStringFull(properties));
+            //Debug.LogFormat("OnUserPropertiesChanged: (channel:{0} user:{1}) by {2}. Props: {3}.", channel, targetUserId, senderUserId, Extensions.ToStringFull(properties));
         }
 
         /// <inheritdoc />
         public void OnErrorInfo(string channel, string error, object data)
         {
-            Debug.LogFormat("OnErrorInfo for channel {0}. Error: {1} Data: {2}", channel, error, data);
+            //Debug.LogFormat("OnErrorInfo for channel {0}. Error: {1} Data: {2}", channel, error, data);
         }
 
         public void AddMessageToSelectedChannel(string msg)
@@ -616,7 +616,7 @@ namespace Photon.Chat.Demo
             bool found = this.chatClient.TryGetChannel(this.selectedChannelName, out channel);
             if (!found)
             {
-                Debug.Log("AddMessageToSelectedChannel failed to find channel: " + this.selectedChannelName);
+                //Debug.Log("AddMessageToSelectedChannel failed to find channel: " + this.selectedChannelName);
                 return;
             }
 
@@ -639,13 +639,13 @@ namespace Photon.Chat.Demo
             bool found = this.chatClient.TryGetChannel(channelName, out channel);
             if (!found)
             {
-                Debug.Log("ShowChannel failed to find channel: " + channelName);
+                //Debug.Log("ShowChannel failed to find channel: " + channelName);
                 return;
             }
 
             this.selectedChannelName = channelName;
             this.CurrentChannelText.text = channel.ToStringMessages();
-            Debug.Log("ShowChannel: " + this.selectedChannelName);
+            //Debug.Log("ShowChannel: " + this.selectedChannelName);
 
             foreach (KeyValuePair<string, Toggle> pair in this.channelToggles)
             {

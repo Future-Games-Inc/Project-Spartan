@@ -9,6 +9,7 @@ public class TopReactsLeaderboard : MonoBehaviour
 {
     public string leaderboardID = "react_leaderboard";
     public string leaderboardID2 = "faction_leaderboard";
+    public string progressionKey = "cent_prog";
 
     public bool updater = true;
     public bool rewardGiven = false;
@@ -27,16 +28,22 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public String isLocalPlayer;
     public String firstPlayerID;
+    string playerID;
 
     public int currentLevelInt;
+    public int Score;
+
+    public BlackMarketManager blackMarketManager;
+    public ProgressionBadges progressionBadges;
+    public SaveData saveData;
+    public WhiteLabelManager whiteLabelManager;
 
     // Start is called before the first frame update
-    [Obsolete]
     void Start()
     {
-        StartCoroutine(CheckLevel());
-        StartCoroutine(GiveRewards());
-        StartCoroutine(RewardsGiven());
+        //StartCoroutine(CheckLevel());
+        //StartCoroutine(GiveRewards());
+        //StartCoroutine(RewardsGiven());
     }
 
     // Update is called once per frame
@@ -50,59 +57,59 @@ public class TopReactsLeaderboard : MonoBehaviour
         StartCoroutine(SubmitScoreRoutine(Score));
     }
 
-    public IEnumerator RewardsGiven()
-    {
-        while (true)
-        {
-            if (timeTracker.rewarded == false)
-            {
-                rewardIcon.color = Color.black;
-                rewardGiven = false;
-            }
-            yield return null;
-        }
-    }
+    //public IEnumerator RewardsGiven()
+    //{
+    //    while (true)
+    //    {
+    //        if (timeTracker.rewarded == false)
+    //        {
+    //            rewardIcon.color = Color.black;
+    //            rewardGiven = false;
+    //        }
+    //        yield return null;
+    //    }
+    //}
 
-    public IEnumerator GiveRewards()
-    {
-        while (true)
-        {
-            if (timeTracker.rewarded == true && rewardGiven == false)
-            {
-                rewardGiven = true;
-                bool done = false;
-                LootLockerSDKManager.GetScoreList(leaderboardID, 1, 0, (response) =>
-                {
-                    if (response.success)
-                    {
-                        LootLockerLeaderboardMember[] members = response.items;
+    //public IEnumerator GiveRewards()
+    //{
+    //    while (true)
+    //    {
+    //        if (timeTracker.rewarded == true && rewardGiven == false)
+    //        {
+    //            rewardGiven = true;
+    //            bool done = false;
+    //            LootLockerSDKManager.GetScoreList(leaderboardID, 1, 0, (response) =>
+    //            {
+    //                if (response.success)
+    //                {
+    //                    LootLockerLeaderboardMember[] members = response.items;
 
-                        for (int i = 0; i < members.Length; i++)
-                        {
-                            firstPlayerID = members[i].player.name.ToString();
-                            LootLockerSDKManager.GetPlayerName((response) =>
-                            {
-                                isLocalPlayer = response.name.ToString();
-                                done = true;
-                            });
-                        }
-                    }
-                });
-                yield return new WaitWhile(() => done == false);
-                if (firstPlayerID.ToString() == isLocalPlayer.ToString())
-                {
-                    rewardIcon.color = Color.white;
-                }
-            }
-            yield return null;
-        }
-    }
+    //                    for (int i = 0; i < members.Length; i++)
+    //                    {
+    //                        firstPlayerID = members[i].player.name.ToString();
+    //                        LootLockerSDKManager.GetPlayerName((response) =>
+    //                        {
+    //                            isLocalPlayer = response.name.ToString();
+    //                            done = true;
+    //                        });
+    //                    }
+    //                }
+    //            });
+    //            yield return new WaitWhile(() => done == false);
+    //            if (firstPlayerID.ToString() == isLocalPlayer.ToString())
+    //            {
+    //                rewardIcon.color = Color.white;
+    //            }
+    //        }
+    //        yield return null;
+    //    }
+    //}
 
     public IEnumerator SubmitScoreRoutine(int scoreToUpload)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1f);
         bool done = false;
-        string playerID = PlayerPrefs.GetString("PlayerID");
+        playerID = whiteLabelManager.playerID;
         LootLockerSDKManager.SubmitScore(playerID, scoreToUpload, leaderboardID, (response) =>
         {
             if (response.success)
@@ -155,30 +162,52 @@ public class TopReactsLeaderboard : MonoBehaviour
                 }
             });
             yield return new WaitWhile(() => done == false);
+            StartCoroutine(CheckLevel());
             yield return new WaitForSeconds(20);
         }
     }
 
     public IEnumerator CheckLevel()
     {
-        yield return new WaitForSeconds(2);
-        LootLockerSDKManager.GetPlayerInfo((response) =>
+        yield return new WaitForSeconds(.5f);
+        LootLockerSDKManager.GetPlayerProgression(progressionKey, (response) =>
         {
-            currentLevelInt = (int)response.level;
-            currentLevel.text = response.level.ToString();
-            nextLevel.text = (response.level + 1).ToString();
-            currentXPText.text = response.xp.ToString() + " / " + response.level_thresholds.next.ToString();
+            currentLevel.text = response.step.ToString();
+            currentLevelInt = (int)response.step;
+            nextLevel.text = (response.step + 1).ToString();
+            currentXPText.text = response.points + " / " + (response.step * 100);
 
             if (levelSlider.value == levelSlider.maxValue)
             {
-                levelSlider.maxValue = (float)(response.level_thresholds.next - response.xp);
+                levelSlider.maxValue = (float)(response.next_threshold);
                 levelSlider.value = 0;
             }
             else
             {
-                levelSlider.value = (float)response.xp - response.level_thresholds.current;
+                levelSlider.maxValue = (float)(response.next_threshold);
+                levelSlider.value = (float)response.points;
             }
-            roomManager.mapLevel = (int)response.level;
+            roomManager.mapLevel = (int)response.step;
         });
+        StartCoroutine(SetScore());
+    }
+
+    public IEnumerator SetScore()
+    {
+        playerID = whiteLabelManager.playerID;
+        LootLockerSDKManager.GetMemberRank(leaderboardID, playerID, (response) =>
+        {
+            if (response.success)
+            {
+                Score = response.score;
+            }
+            else
+            {
+
+            }
+        });
+        yield return blackMarketManager.DisplayAvailableContracts();
+        yield return saveData.PlayerLevelRoutine();
+        yield return progressionBadges.UpdateBadges();
     }
 }

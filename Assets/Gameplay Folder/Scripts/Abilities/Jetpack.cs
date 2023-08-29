@@ -111,7 +111,7 @@ public class Jetpack : MonoBehaviour
         if (character.isGrounded)
         {
             slowFall = false;
-            Debug.Log("slowFall value set to: " + slowFall);
+            //Debug.Log("slowFall value set to: " + slowFall);
 
             time = 0.0f;
             fuel = true;

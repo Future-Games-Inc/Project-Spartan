@@ -69,7 +69,7 @@ namespace Invector.vMelee
 
                     if(member.attackObject==null)
                     {
-                        Debug.LogWarning("Can't find the attack Object " + member.bodyPart);
+                        //Debug.LogWarning("Can't find the attack Object " + member.bodyPart);
                         continue;
                     }
                 }

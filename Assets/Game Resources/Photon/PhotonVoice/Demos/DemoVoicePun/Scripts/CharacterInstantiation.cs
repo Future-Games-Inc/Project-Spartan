@@ -122,7 +122,7 @@ namespace ExitGames.Demos.DemoPunVoice
             }
             else
             {
-                Debug.LogError("Failed to allocate a ViewId.");
+                //Debug.LogError("Failed to allocate a ViewId.");
 
                 Destroy(player);
             }

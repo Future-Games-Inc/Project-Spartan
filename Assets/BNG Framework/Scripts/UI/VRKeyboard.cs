@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
 
 namespace BNG {
     public class VRKeyboard : MonoBehaviour {
 
-        public UnityEngine.UI.InputField AttachedInputField;
+        public TMP_InputField AttachedInputField;
 
         public bool UseShift = false;
 
@@ -26,13 +27,13 @@ namespace BNG {
                 UpdateInputField(key);
             }
             else {
-                Debug.Log("Pressed Key : " + key);
+                //Debug.Log("Pressed Key : " + key);
             }
         }
 
         public void UpdateInputField(string key) {
             string currentText = AttachedInputField.text;
-            int caretPosition = AttachedInputField.caretPosition;
+            int caretPosition = AttachedInputField.text.Length;
             int textLength = currentText.Length;
             bool caretAtEnd = AttachedInputField.isFocused == false || caretPosition == textLength;
             
@@ -57,7 +58,7 @@ namespace BNG {
                 }
             }
             else if (formattedKey.ToLower() == "enter") {
-                // Debug.Log("Pressed Enter");
+                // //Debug.Log("Pressed Enter");
                 // UnityEngine.EventSystems.ExecuteEvents.Execute(AttachedInputField.gameObject, null, UnityEngine.EventSystems.ExecuteEvents.submitHandler);
             }
             else if (formattedKey.ToLower() == "shift") {
@@ -130,7 +131,7 @@ namespace BNG {
             AttachedInputField.ForceLabelUpdate();
         }
 
-        public void AttachToInputField(UnityEngine.UI.InputField inputField) {
+        public void AttachToInputField(TMP_InputField inputField) {
             AttachedInputField = inputField;
         }
     }

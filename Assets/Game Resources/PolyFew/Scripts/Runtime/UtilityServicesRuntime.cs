@@ -52,13 +52,13 @@ namespace BrainFailProductions.PolyFewRuntime
 
             if (skipInactiveChildObjects && !forObject.gameObject.activeSelf)
             {
-                Debug.LogWarning($"No Renderers under the GameObject \"{forObject.name}\" combined because the object was inactive and was skipped entirely.");
+                //Debug.LogWarning($"No Renderers under the GameObject \"{forObject.name}\" combined because the object was inactive and was skipped entirely.");
                 return null;
             }
 
             if (forObject.GetComponent<LODGroup>() != null)
             {
-                Debug.LogWarning($"No Renderers under the GameObject \"{forObject.name}\" combined because the object had LOD groups and was skipped entirely.");
+                //Debug.LogWarning($"No Renderers under the GameObject \"{forObject.name}\" combined because the object had LOD groups and was skipped entirely.");
                 return null;
             }
 
@@ -132,14 +132,14 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (skipInactiveChildObjects && !childTransform.gameObject.activeSelf)
                 {
-                    Debug.LogWarning($"No Renderers under the GameObject \"{transform.name}\" combined because the object was inactive and was skipped entirely.");
+                    //Debug.LogWarning($"No Renderers under the GameObject \"{transform.name}\" combined because the object was inactive and was skipped entirely.");
                     continue;
                 }
 
                 // Skip children that has a LOD Group
                 if (childTransform.GetComponent<LODGroup>() != null)
                 {
-                    Debug.LogWarning($"No Renderers under the GameObject \"{transform.name}\" combined because the object had LOD groups and was skipped entirely.");
+                    //Debug.LogWarning($"No Renderers under the GameObject \"{transform.name}\" combined because the object had LOD groups and was skipped entirely.");
                     continue;
                 }
 
@@ -330,7 +330,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (Application.platform == RuntimePlatform.WebGLPlayer)
                 {
-                    Debug.LogWarning("The function cannot run on WebGL player. As web apps cannot read from or write to local file system.");
+                    //Debug.LogWarning("The function cannot run on WebGL player. As web apps cannot read from or write to local file system.");
                     return;
                 }
 
@@ -613,7 +613,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 catch (System.Exception ex)
                 {
-                    Debug.Log("Could not export texture : " + t.name + ". is it readable?");
+                    //Debug.Log("Could not export texture : " + t.name + ". is it readable?");
                     return "null";
                 }
 
@@ -690,7 +690,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (Application.platform == RuntimePlatform.WebGLPlayer)
                 {
-                    Debug.LogWarning("The function cannot run on WebGL player. As web apps cannot read from or write to local file system.");
+                    //Debug.LogWarning("The function cannot run on WebGL player. As web apps cannot read from or write to local file system.");
                     return;
                 }
 
@@ -723,12 +723,12 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (!string.IsNullOrWhiteSpace(texturesFolderPath) && !System.IO.Directory.Exists(texturesFolderPath))
                 {
-                    Debug.LogWarning("The directory pointed to by the given path for textures is non-existant.");
+                    //Debug.LogWarning("The directory pointed to by the given path for textures is non-existant.");
                 }
 
                 if (!string.IsNullOrWhiteSpace(materialsFolderPath) && !System.IO.Directory.Exists(materialsFolderPath))
                 {
-                    Debug.LogWarning("The directory pointed to by the given path for materials is non-existant.");
+                    //Debug.LogWarning("The directory pointed to by the given path for materials is non-existant.");
                 }
 
 
@@ -787,12 +787,12 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (String.IsNullOrWhiteSpace(diffuseTexURL))
                 {
-                    Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying texture file.");
+                    //Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying texture file.");
                 }
 
                 if (String.IsNullOrWhiteSpace(materialURL))
                 {
-                    Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying material file.");
+                    //Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying material file.");
                 }
 
                 if(downloadProgress == null)
@@ -839,12 +839,12 @@ namespace BrainFailProductions.PolyFewRuntime
 
                 if (String.IsNullOrWhiteSpace(diffuseTexURL))
                 {
-                    Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying texture file.");
+                    //Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying texture file.");
                 }
 
                 if (String.IsNullOrWhiteSpace(materialURL))
                 {
-                    Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying material file.");
+                    //Debug.LogWarning("Cannot download from empty URL. Please provide a direct URL to the accompanying material file.");
                 }
 
                 if (downloadProgress == null)

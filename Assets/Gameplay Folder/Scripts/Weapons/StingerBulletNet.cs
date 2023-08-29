@@ -39,7 +39,6 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         }
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)
@@ -141,7 +140,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
             }
         }
 
-        else if (other.CompareTag("Player") && other != bulletOwner)
+        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
         {
             float criticalChance = 10f;
 

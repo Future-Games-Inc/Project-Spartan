@@ -62,7 +62,7 @@ public class OrbitCamera2 : MonoBehaviour
     public void turnSpeedf(float speed)
     {
         turnSpeed = speed;
-        Debug.Log(turnSpeed);
+        //Debug.Log(turnSpeed);
     }
 
 	
@@ -70,7 +70,7 @@ public class OrbitCamera2 : MonoBehaviour
     {
         if (state)
         {
-            Debug.Log(mainSlider.value);
+            //Debug.Log(mainSlider.value);
             Vector3 targetPosition = target.position + targetOffset;
             transform.RotateAround(targetPosition, Vector3.up, mainSlider.value * Time.deltaTime);
         }

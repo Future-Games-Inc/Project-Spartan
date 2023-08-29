@@ -91,7 +91,7 @@ namespace Invector.vEventSystems
            
             if (debug)
             {
-                Debug.Log($"Listeners Registered", animator);
+                //Debug.Log($"Listeners Registered", animator);
             }
         }
 
@@ -106,7 +106,7 @@ namespace Invector.vEventSystems
                 }
                 if (debug)
                 {
-                    Debug.Log($"Listeners Removed", animator);
+                    //Debug.Log($"Listeners Removed", animator);
                 }
             }
         }
@@ -140,7 +140,7 @@ namespace Invector.vEventSystems
             }
             if (debug)
             {
-                Debug.Log($"<color=green>Add tag : <b><i>{tag}</i></b></color>,in the animator layer :{layer}", animator);
+                //Debug.Log($"<color=green>Add tag : <b><i>{tag}</i></b></color>,in the animator layer :{layer}", animator);
             }
         }
         /// <summary>
@@ -178,7 +178,7 @@ namespace Invector.vEventSystems
                     }
                     if (debug)
                     {
-                        Debug.Log($"<color=red>Remove tag : <b><i>{tag}</i></b></color>, in the animator layer :{layer}", animator);
+                        //Debug.Log($"<color=red>Remove tag : <b><i>{tag}</i></b></color>, in the animator layer :{layer}", animator);
                     }
                 }
             }

@@ -16,7 +16,7 @@ namespace Michsky.UI.Shift
         void Start()
         {
             try { scrollbarObject = gameObject.GetComponent<Scrollbar>(); }
-            catch { Debug.LogWarning("Scrollbar is missing. Scrolling via gamepad won't work."); }
+            catch { //Debug.LogWarning("Scrollbar is missing. Scrolling via gamepad won't work."); }
         }
 
         void Update()

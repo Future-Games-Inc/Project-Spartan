@@ -667,7 +667,7 @@ namespace BrainFailProductions.PolyFew
 
                     catch (Exception ex)
                     {
-                        Debug.LogWarning(ex);
+                        //Debug.LogWarning(ex);
                         callback(bytes, ex.ToString(), httpResponse.StatusCode);
                     }
 
@@ -727,13 +727,13 @@ namespace BrainFailProductions.PolyFew
             /*
             if (Regex.IsMatch(response, regexPatterns.netError, RegexOptions.Compiled))
             {
-                Debug.Log("No internet connection or system services are down");
+                //Debug.Log("No internet connection or system services are down");
                 if (callback != null) { callback(false); }
             }
 
             else
             {
-                Debug.Log("Connection to the internet exists");
+                //Debug.Log("Connection to the internet exists");
                 if (callback != null) { callback(true); }
             }
             */
@@ -768,13 +768,13 @@ namespace BrainFailProductions.PolyFew
             /*
             if (Regex.IsMatch(response, regexPatterns.netError, RegexOptions.Compiled))
             {
-                Debug.Log("No internet connection or system services are down");
+                //Debug.Log("No internet connection or system services are down");
                 if (callback != null) { callback(false); }
             }
 
             else
             {
-                Debug.Log("Connection to the internet exists");
+                //Debug.Log("Connection to the internet exists");
                 if (callback != null) { callback(true); }
             }
             */
@@ -984,7 +984,7 @@ namespace BrainFailProductions.PolyFew
 
                 }
 
-                if (data == null) { Debug.Log("Failed encoding"); }
+                if (data == null) { //Debug.Log("Failed encoding"); }
                 if (path.EndsWith("/") || path.EndsWith("\\")) { path += fileName; }
                 else { path += "/" + fileName; }
 
@@ -994,7 +994,7 @@ namespace BrainFailProductions.PolyFew
                 }
 
                 callback("");
-                Debug.Log(data.Length / 1024 + "Kb was saved as: " + path);
+                //Debug.Log(data.Length / 1024 + "Kb was saved as: " + path);
 
             }
 
@@ -1026,7 +1026,7 @@ namespace BrainFailProductions.PolyFew
                 }
 
                 callback("");
-                Debug.Log(data.Length / 1024 + "Kb was saved as: " + fullPath);
+                //Debug.Log(data.Length / 1024 + "Kb was saved as: " + fullPath);
 
             }
 

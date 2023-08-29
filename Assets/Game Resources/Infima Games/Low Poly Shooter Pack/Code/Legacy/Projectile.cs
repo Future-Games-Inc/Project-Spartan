@@ -53,7 +53,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 			// if (collision.gameObject.CompareTag("Player")) 
 			// {
 			// 	//Physics.IgnoreCollision (collision.collider);
-			// 	Debug.LogWarning("Collides with player");
+			// 	//Debug.LogWarning("Collides with player");
 			// 	//Physics.IgnoreCollision(GetComponent<Collider>(), GetComponent<Collider>());
 			//
 			// 	//Ignore player character collision, otherwise this moves it, which is quite odd, and other weird stuff happens!

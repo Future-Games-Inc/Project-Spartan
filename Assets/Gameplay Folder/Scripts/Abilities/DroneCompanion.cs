@@ -1,10 +1,7 @@
-using Invector.vCharacterController.AI;
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class DroneCompanion : MonoBehaviour
 {
@@ -21,8 +18,11 @@ public class DroneCompanion : MonoBehaviour
 
     public GameObject[] enemies;
     public GameObject[] bosses;
+    public GameObject[] security;
     public GameObject[] allEnemies;
-    public GameObject droneBullet;   
+    public GameObject droneBullet;
+
+    public GameObject player;
 
     public bool inSight;
 
@@ -61,7 +61,8 @@ public class DroneCompanion : MonoBehaviour
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         bosses = GameObject.FindGameObjectsWithTag("BossEnemy");
-        allEnemies = enemies.Concat(bosses).ToArray();
+        security = GameObject.FindGameObjectsWithTag("Security");
+        allEnemies = enemies.Concat(bosses).Concat(security).ToArray();
 
         GameObject closest = null;
         float distance = Mathf.Infinity;
@@ -86,7 +87,7 @@ public class DroneCompanion : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, directionToTarget.normalized, out hitInfo))
         {
-            inSight = hitInfo.transform.CompareTag("Enemy") || hitInfo.transform.CompareTag("BossEnemy");
+            inSight = hitInfo.transform.CompareTag("Enemy") || hitInfo.transform.CompareTag("BossEnemy") || hitInfo.transform.CompareTag("Security");
         }
 
         if (directionToTarget.magnitude <= shootDistance && inSight)
@@ -118,8 +119,10 @@ public class DroneCompanion : MonoBehaviour
     IEnumerator FireWeapon()
     {
         yield return new WaitForSeconds(2);
-        GameObject spawnedBullet = PhotonNetwork.Instantiate(droneBullet.name, droneBulletSpawn.position, Quaternion.identity);
+        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(droneBullet.name, droneBulletSpawn.position, Quaternion.identity, 0, null);
         spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(1, 4);
+        spawnedBullet.GetComponent<Bullet>().bulletOwner = player;
+        spawnedBullet.GetComponent<Bullet>().playerBullet = true;
         shootForce = (int)Random.Range(40, 75);
         spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce;
     }

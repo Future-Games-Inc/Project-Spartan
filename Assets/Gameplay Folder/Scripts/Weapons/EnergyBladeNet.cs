@@ -25,169 +25,118 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     public int baseDamage = 10;
     public int bleedDamage = 2;
     public int bleedIncrease = 2;
-    private int bleedStacks = 0;
 
     private bool isBleeding = false;
 
     private float bleedTimer = 0.0f;
     public float bleedDuration = 5.0f;
 
+    private int _bleedStacks = 0;
+    public int bleedStacks
+    {
+        get
+        {
+            return _bleedStacks;
+        }
+        set
+        {
+            if (_bleedStacks != value)
+            {
+                _bleedStacks = value;
+                UpdateBleedStatus();
+            }
+        }
+    }
+
     void OnEnable()
     {
         bladeTransform = transform;
         previousPosition = bladeTransform.localPosition;
-
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (bladeVelocity < 0.2f)
         {
-            if (bladeVelocity >= 3f) // Check if blade is moving fast enough
-            {
-                // Calculate damage and apply to enemy
-                int Damage = baseDamage + bleedStacks * bleedDamage;
-                FollowAI enemyDamageReg = other.GetComponent<FollowAI>();
-                if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.EnemyKilled("Normal");
-                    enemyDamageReg.TakeDamage(Damage);
-                }
-                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    enemyDamageReg.TakeDamage(Damage);
-                }
-                // Apply hit effect
-                PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
+            return;  // Check if blade is not moving fast enough
+        }
+        int Damage = baseDamage + bleedStacks * bleedDamage;
 
-                // Apply bleed effect
-                if (!isBleeding)
-                {
-                    isBleeding = true;
-                    bleedStacks = 1;
-                    bleedTimer = bleedDuration;
-                }
-                else
-                {
-                    bleedStacks++;
-                    bleedTimer = bleedDuration;
-                    if (bleedStacks > 3)
-                    {
-                        Damage += (bleedStacks - 1) * bleedIncrease;
-                    }
-                }
-            }
+        if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
+        {
+            FollowAI enemyDamageReg = other.GetComponent<FollowAI>();
+            if (enemyDamageReg != null)
+                HandleFollowAIDamage(Damage, enemyDamageReg, other);
+
+            ApplyEffects(Damage, other.transform.position);
         }
 
-        else if (other.CompareTag("BossEnemy"))
+        else if(other.CompareTag("Player"))
         {
-            if (bladeVelocity >= 3f) // Check if blade is moving fast enough
-            {
-                // Calculate damage and apply to enemy
-                int Damage = baseDamage + bleedStacks * bleedDamage;
-                FollowAI enemyDamageReg = other.GetComponent<FollowAI>();
-                if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.EnemyKilled("Boss");
-                    enemyDamageReg.TakeDamage(Damage);
-                }
-                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    enemyDamageReg.TakeDamage(Damage);
-                }
-                // Apply hit effect
-                PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
+            PlayerHealth playerDamage = other.GetComponent<PlayerHealth>();
+            if (playerDamage != null)
+                HandlePlayerDamage(Damage, playerDamage);
 
-                // Apply bleed effect
-                if (!isBleeding)
-                {
-                    isBleeding = true;
-                    bleedStacks = 1;
-                    bleedTimer = bleedDuration;
-                }
-                else
-                {
-                    bleedStacks++;
-                    bleedTimer = bleedDuration;
-                    if (bleedStacks > 3)
-                    {
-                        Damage += (bleedStacks - 1) * bleedIncrease;
-                    }
-                }
-            }
-        }
-
-        else if (other.CompareTag("Player"))
-        {
-            if (bladeVelocity >= 3f) // Check if blade is moving fast enough
-            {
-                // Calculate damage and apply to enemy
-                int Damage = baseDamage + bleedStacks * bleedDamage;
-                PlayerHealth enemyDamageReg = other.GetComponent<PlayerHealth>();
-                if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.PlayersKilled();
-                }
-                enemyDamageReg.TakeDamage(Damage);
-
-                // Apply hit effect
-                PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
-
-                // Apply bleed effect
-                if (!isBleeding)
-                {
-                    isBleeding = true;
-                    bleedStacks = 1;
-                    bleedTimer = bleedDuration;
-                }
-                else
-                {
-                    bleedStacks++;
-                    bleedTimer = bleedDuration;
-                    if (bleedStacks > 3)
-                    {
-                        Damage += (bleedStacks - 1) * bleedIncrease;
-                    }
-                }
-            }
+            ApplyEffects(Damage, other.transform.position);
         }
 
         else if (other.CompareTag("Security"))
         {
-            if (bladeVelocity >= 3f) // Check if blade is moving fast enough
+            DroneHealth droneHealth = other.GetComponent<DroneHealth>();
+            if (droneHealth != null)
+                droneHealth.TakeDamage(Damage);
+            else
             {
-                // Calculate damage and apply to enemy
-                int Damage = baseDamage + bleedStacks * bleedDamage;
-                DroneHealth enemyDamageReg = other.GetComponent<DroneHealth>();
-                if (enemyDamageReg != null)
-                    enemyDamageReg.TakeDamage(Damage);
-                else
-                {
-                    SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
-                    enemyDamageReg2.TakeDamage(Damage);
-                }
-
-                // Apply hit effect
-                PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, other.transform.position, Quaternion.identity, 0, null);
-
-                // Apply bleed effect
-                if (!isBleeding)
-                {
-                    isBleeding = true;
-                    bleedStacks = 1;
-                    bleedTimer = bleedDuration;
-                }
-                else
-                {
-                    bleedStacks++;
-                    bleedTimer = bleedDuration;
-                    if (bleedStacks > 3)
-                    {
-                        Damage += (bleedStacks - 1) * bleedIncrease;
-                    }
-                }
+                SentryDrone sentryDrone = other.GetComponent<SentryDrone>();
+                if (sentryDrone != null)
+                    sentryDrone.TakeDamage(Damage);
             }
+            ApplyEffects(Damage, other.transform.position);
+        }
+    }
+
+    private void HandleFollowAIDamage(int Damage, FollowAI enemyDamageReg, Collider other)
+    {
+        if (playerHealth == null) return;
+
+        if (enemyDamageReg.Health <= Damage && enemyDamageReg.alive)
+        {
+            string type = other.CompareTag("BossEnemy") ? "Boss" : "Normal";
+            playerHealth.EnemyKilled(type);
+        }
+        else if (enemyDamageReg.Health > 10 && enemyDamageReg.alive)
+        {
+            enemyDamageReg.TakeDamage(Damage);
+        }
+    }
+
+    private void HandlePlayerDamage(int Damage, PlayerHealth enemyDamageReg)
+    {
+        if (playerHealth == null || playerHealth.gameObject == enemyDamageReg.gameObject) return;
+
+        if (enemyDamageReg.Health <= Damage && enemyDamageReg.alive)
+            playerHealth.PlayersKilled();
+
+        enemyDamageReg.TakeDamage(Damage);
+    }
+
+    private void ApplyEffects(int Damage, Vector3 position)
+    {
+        // Apply hit effect
+        PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, position, Quaternion.identity, 0, null);
+
+        // Apply bleed effect
+        if (!isBleeding)
+        {
+            bleedStacks++;
+            bleedTimer = bleedDuration;
+        }
+        else
+        {
+            bleedStacks++;
+            bleedTimer = bleedDuration;
+            if (bleedStacks > 3)
+                Damage += (bleedStacks - 1) * bleedIncrease;
         }
     }
 
@@ -198,6 +147,9 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
         bladeVelocity = displacement.magnitude / Time.deltaTime;
         previousPosition = bladeTransform.localPosition;
 
+        if (bleedStacks > 3)
+            isBleeding = true;
+
         // Update bleed effect timer
         if (isBleeding)
         {
@@ -205,34 +157,37 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
             if (bleedTimer <= 0.0f)
             {
                 isBleeding = false;
-                bleedStacks = 0;
+                bleedStacks = 0; // This triggers UpdateBleedStatus via the property setter
             }
-        }
-
-        if (bleedStacks > 3)
-        {
-            bleedIcon.SetActive(true);
-            photonView.RPC("RPC_BladeBleeding", RpcTarget.All);
-        }
-        else
-        {
-            bleedIcon.SetActive(false);
-            photonView.RPC("RPC_BladeNormal", RpcTarget.All);
         }
 
         bleedStackText.text = bleedStacks.ToString();
     }
 
-    [PunRPC]
-    void RPC_BladeBleeding()
+    private void UpdateBleedStatus()
     {
-        Blade.GetComponent<Renderer>().material = bleed;
+        if (bleedStacks > 3)
+        {
+            bleedIcon.SetActive(true);
+            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, bleed);
+        }
+        else
+        {
+            bleedIcon.SetActive(false);
+            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, normal);
+        }
     }
 
     [PunRPC]
-    void RPC_BladeNormal()
+    void RPC_BladeMaterial(Material material)
     {
-        Blade.GetComponent<Renderer>().material = normal;
+        if (!photonView.IsMine)
+            return;
+        Blade.GetComponent<Renderer>().material = material;
+    }
+
+    public void rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }
-

@@ -34,7 +34,7 @@ namespace BNG {
 
         void Start() {
             if(PhysicsCheckType == RemoteGrabType.Trigger && GetComponent<Collider>() == null) {
-                Debug.LogWarning("Remote Grabber set to 'Trigger', but no Trigger Collider was found. You may need to add a collider, or switch to a different physics check type.");
+                //Debug.LogWarning("Remote Grabber set to 'Trigger', but no Trigger Collider was found. You may need to add a collider, or switch to a different physics check type.");
             }
 
             // Add a raycast check if we're using a trigger type. Trigger types don't check collision.
@@ -78,7 +78,7 @@ namespace BNG {
 
             _lastColliderHit = colliderHit;
 
-            if (_lastColliderHit.gameObject.TryGetComponent(out Grabbable grabObject)) {
+            if (_lastColliderHit.gameObject.TryGetComponent(out NetworkedGrabbable grabObject)) {
                 ParentGrabber.AddValidRemoteGrabbable(_lastColliderHit, grabObject);
                 return;
             }
@@ -93,7 +93,7 @@ namespace BNG {
         public void RemovePreviousHitObject() {
             if (_lastColliderHit == null) return;
 
-            if (_lastColliderHit.TryGetComponent(out Grabbable grabObject)) {
+            if (_lastColliderHit.TryGetComponent(out NetworkedGrabbable grabObject)) {
                 ParentGrabber.RemoveValidRemoteGrabbable(_lastColliderHit, grabObject);
                 return;
             }
@@ -120,7 +120,7 @@ namespace BNG {
             }
 
             //  We will let this grabber know we have remote objects available           
-            Grabbable grabObject = other.GetComponent<Grabbable>();
+            NetworkedGrabbable grabObject = other.GetComponent<NetworkedGrabbable>();
             if(grabObject != null && ParentGrabber != null) {
                 ParentGrabber.AddValidRemoteGrabbable(other, grabObject);
                 return;
@@ -141,7 +141,7 @@ namespace BNG {
                 return;
             }
 
-            Grabbable grabObject = other.GetComponent<Grabbable>();
+            NetworkedGrabbable grabObject = other.GetComponent<NetworkedGrabbable>();
             if (grabObject != null && ParentGrabber != null) {
                 ParentGrabber.RemoveValidRemoteGrabbable(other, grabObject);
                 return;

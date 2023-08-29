@@ -129,8 +129,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             if (!alive) return;
             // calculates the distance from NPC to player
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
-            // Debug.Log(distanceToPlayer);
-            // match the animator Aggro with the NPC aggro
             animator.SetBool("Agro", Agro);
 
             if (currentState == States.Shocked)
@@ -142,6 +140,15 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             if (distanceToPlayer <= DetectRange && CheckForPlayer())
             {
                 Agro = true;
+            }
+
+            // If the enemy has detected the player but doesn't have a clear line of sight
+            if (Agro && !IsLineOfSightClear(targetTransform))
+            {
+                SwitchStates(States.Follow);
+                agent.isStopped = false;
+                agent.destination = targetTransform.position; // Move towards the player
+                return; // Don't proceed to other behaviors until we have a clear line of sight
             }
             // if it is not agro, then patrol like normal
             // else then see if the player is in the valid agro range (bigger than detect range) then give chase
@@ -282,7 +289,24 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Attack()
     {
         transform.LookAt(targetTransform);
-        attackWeapon.fireWeaponBool = true;
+        if (IsLineOfSightClear(targetTransform))
+            attackWeapon.fireWeaponBool = true;
+    }
+
+    private bool IsLineOfSightClear(Transform target)
+    {
+        Vector3 directionToTarget = target.position - transform.position;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
+        {
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void EMPShock()
@@ -327,16 +351,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         shock();
     }
 
-    private void LookAtTarget()
-    {
-        Vector3 lookDirection = directionToTarget;
-        lookDirection.y = 0f;
-
-        Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
-
-        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * agent.angularSpeed);
-    }
-
     public void TakeDamage(int damage)
     {
         if (!alive)
@@ -361,8 +375,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         // Raise Event Here
         hitEffect.SetActive(false);
         firstHit = false;
-
-
     }
 
     public void EMPShock(GameObject Effect)

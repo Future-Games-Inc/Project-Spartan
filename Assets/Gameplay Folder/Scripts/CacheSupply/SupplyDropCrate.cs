@@ -30,7 +30,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         activationSlider.gameObject.SetActive(true);
-        StartCoroutine(NoContact());
+        //StartCoroutine(NoContact());
     }
     IEnumerator PlayAudioLoop()
     {
@@ -84,30 +84,32 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         }
     }
 
-    IEnumerator Destroy()
-    {
-        yield return new WaitForSeconds(.75f);
-        matchProps.lastSpawnTime = Time.time;
-        matchProps.spawned = false;
-        PhotonNetwork.Destroy(gameObject);
-    }
+    //IEnumerator Destroy()
+    //{
+    //    yield return new WaitForSeconds(.75f);
+    //    matchProps.lastSpawnTime = Time.time;
+    //    matchProps.spawned = false;
+    //    PhotonNetwork.Destroy(gameObject);
+    //}
 
-    IEnumerator NoContact()
-    {
-        yield return new WaitForSeconds(30);
-        if (contact == false)
-        {
-            matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
-            matchProps.lastSpawnTime = Time.time;
-            matchProps.spawned = false;
-            yield return new WaitForSeconds(2);
-            PhotonNetwork.Destroy(gameObject);
-        }
-    }
+    //IEnumerator NoContact()
+    //{
+    //    yield return new WaitForSeconds(30);
+    //    if (contact == false)
+    //    {
+    //        matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
+    //        matchProps.lastSpawnTime = Time.time;
+    //        matchProps.spawned = false;
+    //        yield return new WaitForSeconds(2);
+    //        PhotonNetwork.Destroy(gameObject);
+    //    }
+    //}
 
     [PunRPC]
     void RPC_InstantiateWeapons()
     {
+        if (!photonView.IsMine)
+            return;
         int count = Random.Range(1, weaponPrefabs.Length + 1);
         for (int i = 0; i < count; i++)
         {
@@ -123,14 +125,18 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Trigger()
     {
+        if (!photonView.IsMine)
+            return;
         InstantiateWeapons();
-        StartCoroutine(Destroy());
+        //StartCoroutine(Destroy());
         contact = true;
     }
 
     [PunRPC]
     void RPC_Update()
     {
+        if (!photonView.IsMine)
+            return;
         if (!isActive)
         {
             elapsedTime += Time.deltaTime;
@@ -153,6 +159,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Update2()
     {
+        if (!photonView.IsMine)
+            return;
         foreach (GameObject vfx in effects)
         {
             vfx.SetActive(true);
@@ -162,6 +170,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Color()
     {
+        if (!photonView.IsMine)
+            return;
         if (activationSlider.value <= (activationTime * 0.75) && activationSlider.value > (activationTime * 0.25))
             sliderImage.color = Color.yellow;
         if (activationSlider.value <= (activationTime * 0.25))

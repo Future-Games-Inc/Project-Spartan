@@ -333,7 +333,7 @@ namespace Invector.vCharacterController
             }
             catch (UnityException e)
             {
-                Debug.LogWarning(e.Message, gameObject);
+                //Debug.LogWarning(e.Message, gameObject);
             }
         }
 

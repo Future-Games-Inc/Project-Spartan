@@ -29,19 +29,6 @@ public class SaveData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(PlayerLevelRoutine());
-
-        object savedCints;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out savedCints))
-        {
-            SkillPoints = (int)savedCints;
-        }
-        else
-            SkillPoints = ES3.Load<int>("SkillPoints", 50);
-
-        ExitGames.Client.Photon.Hashtable cints = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, SkillPoints } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(cints);
-
         object savedBosses;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossKilled, out savedBosses))
         {
@@ -234,9 +221,23 @@ public class SaveData : MonoBehaviour
         ES3.Save("PlayerPrestige", playerPrestigeCurrent);
     }
 
-    IEnumerator PlayerLevelRoutine()
+    public IEnumerator PlayerLevelRoutine()
     {
-        yield return new WaitForSeconds(2.75f);
+        yield return new WaitForSeconds(.75f);
+        object savedCints;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out savedCints))
+        {
+            SkillPoints = (int)savedCints;
+            if (SkillPoints != leaderboard.Score)
+                SkillPoints = leaderboard.Score;
+        }
+        else
+            SkillPoints = ES3.Load<int>("SkillPoints", 50);
+
+        ExitGames.Client.Photon.Hashtable cints = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, SkillPoints } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(cints);
+
+        yield return new WaitForSeconds(.75f);
         LootLockerSDKManager.GetPlayerInfo((response) =>
         {
             currentLevelInt = (int)response.level;
@@ -265,17 +266,33 @@ public class SaveData : MonoBehaviour
             playerPrestigeCurrent = (int)playerPrestige;
             if (playerPrestigeCurrent != currentPrestigeLevel)
             {
-                playerPrestigeCurrent = currentPrestigeLevel;
                 awarded = true;
             }
         }
         else
+        {
             playerPrestigeCurrent = ES3.Load<int>("PlayerPrestige", 0);
+
+            ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
+            PlayerPrestigeSave();
+        }
+
+        PlayerLevelSave();
+    }
+
+    public void PlayerPrestige()
+    {
+        object playerPrestige;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerPrestige, out playerPrestige))
+        {
+            playerPrestigeCurrent = (int)playerPrestige;
+            playerPrestigeCurrent = currentPrestigeLevel;
+        }
 
         ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
 
-        PlayerLevelSave();
         PlayerPrestigeSave();
     }
 }

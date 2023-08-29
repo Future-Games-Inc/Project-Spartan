@@ -9,7 +9,6 @@ public class ProgressionBadges : MonoBehaviour
     public int levelIncrement = 10;
     public GameObject[] badges;
     public SaveData saveData;
-    public TopReactsLeaderboard topReactLeaderboard;
 
     public GameObject awardButton;
 
@@ -17,7 +16,6 @@ public class ProgressionBadges : MonoBehaviour
     void Start()
     {
         saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();
-        StartCoroutine(UpdateBadges());
     }
 
     // Update is called once per frame
@@ -26,9 +24,9 @@ public class ProgressionBadges : MonoBehaviour
         awardButton.SetActive(saveData.awarded);
     }
 
-    IEnumerator UpdateBadges()
+    public IEnumerator UpdateBadges()
     {
-        yield return new WaitForSeconds(2.75f);
+        yield return new WaitForSeconds(.25f);
         int playerLevel;
 
         if (int.TryParse(levelText.text, out playerLevel))

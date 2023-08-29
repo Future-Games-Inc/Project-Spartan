@@ -48,7 +48,6 @@ public class BlackMarketManager : MonoBehaviour
         blackMarketUI.SetActive(true);
 
         // Display available contracts in the UI
-        StartCoroutine(DisplayAvailableContracts());
     }
 
     // Called when the player accepts a contract
@@ -195,7 +194,7 @@ public class BlackMarketManager : MonoBehaviour
     // Display available contracts in the UI for the player to accept
     public IEnumerator DisplayAvailableContracts()
     {
-        yield return new WaitForSeconds(2.75f);
+        yield return new WaitForSeconds(.75f);
         active = true;
         if (CheckForPlayerWithinRadius())
             // Clear existing contract buttons

@@ -97,7 +97,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
             return;
         }
 
-        else if (other.CompareTag("Player") && other != bulletOwner)
+        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
         {
             //critical hit here
             PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();

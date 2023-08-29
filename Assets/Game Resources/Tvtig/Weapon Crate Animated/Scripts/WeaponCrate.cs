@@ -40,7 +40,7 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     private void Awake()
     {
         _collider = GetComponent<BoxCollider>();
-        photonView.RPC("RPC_CacheStart", RpcTarget.All);
+        cacheActive = true;
     }
     void Start()
     {
@@ -87,14 +87,10 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_CacheStart()
-    {
-        cacheActive = true;
-    }
-
-    [PunRPC]
     void RPC_CacheOpened()
     {
+        if (!photonView.IsMine)
+            return;
         _collider.enabled = false;
         _animator.SetBool("Open", true);
         _visualEffect.SendEvent("OnPlay");
@@ -108,6 +104,8 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_CacheClosed()
     {
+        if (!photonView.IsMine)
+            return;
         _animator.SetBool("Open", false);
         cacheActive = true;
         foreach (GameObject cache in cacheBase)
@@ -118,13 +116,8 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_CacheExit()
     {
+        if (!photonView.IsMine)
+            return;
         _animator.SetBool("Open", false);
-    }
-
-    [PunRPC]
-    public void RPC_Obstacle(bool obstacle)
-    {
-        GetComponent<NavMeshObstacle>().enabled = obstacle;
-        GetComponent<Rigidbody>().useGravity = obstacle;
     }
 }

@@ -17,10 +17,10 @@ namespace Autohand.Demo {
         }
 
         void StartTouch(Hand hand) {
-            Debug.Log("Start Touch: " + hand.name);
+            //Debug.Log("Start Touch: " + hand.name);
         }
         void StopTouch(Hand hand) {
-            Debug.Log("Stop Touch: " + hand.name);
+            //Debug.Log("Stop Touch: " + hand.name);
         }
     }
 

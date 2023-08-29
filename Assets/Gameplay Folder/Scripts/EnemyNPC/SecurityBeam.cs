@@ -47,7 +47,20 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
             if (lost == false)
             {
                 NavMeshAgent droneAgent = securityDrone.GetComponent<NavMeshAgent>();
-                droneAgent.SetDestination(detectedPlayer.transform.position);
+                if (droneAgent.isOnNavMesh)
+                {
+                    droneAgent.SetDestination(detectedPlayer.transform.position);
+                }
+                else if (!droneAgent.isOnNavMesh)
+                {
+                    // If droneAgent is not on NavMesh, find the nearest point and warp there
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(droneAgent.transform.position, out hit, 10.0f, NavMesh.AllAreas))
+                    {
+                        droneAgent.Warp(hit.position);
+                        droneAgent.SetDestination(detectedPlayer.transform.position);
+                    }
+                }
             }
             lostTimer += Time.deltaTime;
             if (lostTimer >= 10 && neverFound == false)
@@ -65,6 +78,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_TriggerEnter()
     {
+        if (!photonView.IsMine) return;
         lostTimer = 0;
         lost = false;
         neverFound = false;
@@ -81,7 +95,6 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
             {
                 followAi.AgroRange = 500;
                 followAi.agent.speed = 3;
-                followAi.inSight = true;
             }
         }
     }
@@ -89,6 +102,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_LostPlayer()
     {
+        if (!photonView.IsMine) return;
         lost = true;
         neverFound = true;
 
@@ -103,8 +117,7 @@ public class SecurityBeam : MonoBehaviourPunCallbacks
             if (enemy.TryGetComponent(out FollowAI followAi))
             {
                 followAi.AgroRange = 25f;
-                followAi.agent.speed = 1.5f;
-                followAi.inSight = false;
+                followAi.agent.speed = 1.5f;;
             }
         }
     }

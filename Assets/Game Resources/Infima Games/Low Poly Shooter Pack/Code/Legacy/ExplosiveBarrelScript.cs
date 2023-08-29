@@ -135,6 +135,8 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
         [PunRPC]
         void RPC_TakeDamage()
         {
+            if (!photonView.IsMine)
+                return;
             Health -= 25;
 
             if (Health <= 0)

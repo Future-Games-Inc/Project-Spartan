@@ -24,7 +24,7 @@ public class ScoreboardItem : MonoBehaviourPunCallbacks
 
     void UpdateStats()
     {
-        Debug.Log("Updating Stats");
+        //Debug.Log("Updating Stats");
         if (player.CustomProperties.TryGetValue("playerKills", out object playersKilled))
         {
             killstext.text = "Players Killed: " + playersKilled.ToString();
@@ -43,7 +43,7 @@ public class ScoreboardItem : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        Debug.Log("Changing Stats");
+        //Debug.Log("Changing Stats");
         if (targetPlayer == player)
         {
             if (changedProps.ContainsKey("playerKills") || changedProps.ContainsKey("enemyKills") || changedProps.ContainsKey("reactorExtraction"))

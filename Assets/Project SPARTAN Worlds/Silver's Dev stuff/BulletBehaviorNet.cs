@@ -38,7 +38,6 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
         // audioSource.PlayOneShot(clip);
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (playerBullet == true)
@@ -81,7 +80,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             }
         }
 
-        if (other.CompareTag("Player") && other != bulletOwner)
+        if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
         {
             // select custom functions for damage
             switch (Type)

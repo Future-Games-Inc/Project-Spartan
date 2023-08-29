@@ -23,7 +23,7 @@ public class DecoyPlayer : MonoBehaviourPunCallbacks
     IEnumerator DestroyDecoy()
     {
         yield return new WaitForSeconds(15);
-        PhotonNetwork.Instantiate(decoyDeath.name, transform.position, Quaternion.identity, 0);
+        PhotonNetwork.InstantiateRoomObject(decoyDeath.name, transform.position, Quaternion.identity, 0, null);
         photonView.RPC("RPC_DecoyDestroyed", RpcTarget.All);
         yield return new WaitForSeconds(3f);
         PhotonNetwork.Destroy(gameObject);
@@ -31,7 +31,7 @@ public class DecoyPlayer : MonoBehaviourPunCallbacks
 
     IEnumerator DecoyKilled()
     {
-        PhotonNetwork.Instantiate(decoyDeath.name, transform.position, Quaternion.identity, 0);
+        PhotonNetwork.InstantiateRoomObject(decoyDeath.name, transform.position, Quaternion.identity, 0, null);
         photonView.RPC("RPC_DecoyKilled", RpcTarget.All);
         yield return new WaitForSeconds(3f);
         PhotonNetwork.Destroy(gameObject);
@@ -40,6 +40,8 @@ public class DecoyPlayer : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_DecoyDestroyed()
     {
+        if (!photonView.IsMine)
+            return;
         active = false;
         animator.SetTrigger("Death");
     }
@@ -47,6 +49,8 @@ public class DecoyPlayer : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_DecoyKilled()
     {
+        if (!photonView.IsMine)
+            return;
         active = false;
         animator.SetTrigger("Death");
     }

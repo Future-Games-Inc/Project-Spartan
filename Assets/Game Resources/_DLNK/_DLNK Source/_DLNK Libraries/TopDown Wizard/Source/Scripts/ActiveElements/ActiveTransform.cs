@@ -124,7 +124,7 @@ public class ActiveTransform : MonoBehaviour
                 _timer = 0f;
                 done = true;
                 _waitforit = true;
-                Debug.Log("Door Opened");
+                //Debug.Log("Door Opened");
             }
             else
                 if (_percentage < 0f)
@@ -134,7 +134,7 @@ public class ActiveTransform : MonoBehaviour
                 _timer = 0f;
                 done = false;
                 _waitforit = true;
-                Debug.Log("Door Closed");
+                //Debug.Log("Door Closed");
             }
             foreach (Target tar in Targets)
             {

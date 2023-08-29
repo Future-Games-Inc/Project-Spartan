@@ -163,7 +163,7 @@ namespace Photon.Voice.Unity.Demos.DemoVoiceUI
         {
             if (this.micOptions == null)
             {
-                Debug.LogWarning("micOptions list is null");
+                //Debug.LogWarning("micOptions list is null");
                 return;
             }
             #if PHOTON_MICROPHONE_ENUMERATOR

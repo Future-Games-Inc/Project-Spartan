@@ -123,7 +123,7 @@ public class GrabHandPose : MonoBehaviour
     [MenuItem("Tools/Mirror Selected Right Grab Pose")]
     public static void MirrorRightPose()
     {
-        Debug.Log("MIRROR RIGHT POSE");
+        //Debug.Log("MIRROR RIGHT POSE");
         GrabHandPose handPose = Selection.activeGameObject.GetComponent<GrabHandPose>();
         handPose.MirrorPose(handPose.leftHandPose, handPose.rightHandPose);
     }

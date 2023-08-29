@@ -46,7 +46,7 @@ namespace BNG {
         }
 
         public virtual void OnControllerFound() {
-            // Debug.Log("Controller found : " + thisControllerModel);
+            // //Debug.Log("Controller found : " + thisControllerModel);
 
             DefineControllerOffsets();
 

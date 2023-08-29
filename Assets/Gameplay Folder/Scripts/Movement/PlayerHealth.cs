@@ -80,7 +80,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject deathToken;
     public GameObject bombDeath;
     public GameObject model;
-    public GameObject energyBlade;
     public Transform meleeAttach;
 
     public Transform bombDropLocation;
@@ -163,6 +162,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Leaderboard Data ------------------------------------")]
     public string leaderboardID = "react_leaderboard";
+    public string progressionKey = "cent_prog";
 
     [Header("Contract Tracking ------------------------------------")]
     public int bossesKilled;
@@ -191,7 +191,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public bool stealth;
     public bool berserker;
     public bool berserkerActivated = false;
-    public bool spawnedBlade;
     public float stealthDuration = 30;
     public float aiCompanionDuration = 30;
     public float decoyDeployDuration = 30;
@@ -268,18 +267,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         CheckHealthStatus();
         CheckArmorStatus();
-
-        if (!spawnedBlade && photonView.IsMine)
-        {
-            spawnedBlade = true;
-            GameObject blade = PhotonNetwork.Instantiate(energyBlade.name, meleeAttach.position, transform.rotation, 0, null);
-            PhotonView bladePhotonView = blade.GetComponent<PhotonView>();
-            bladePhotonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            blade.GetComponent<EnergyBladeNet>().playerHealth = gameObject.GetComponent<PlayerHealth>();
-            PlayerHealth localPlayerHealth = gameObject.GetComponent<PlayerHealth>();
-            meleeAttach.gameObject.SetActive(true);
-            meleeAttach.GetComponent<SocketedObjectController>().targetSocketedObject = blade;
-        }
 
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment) && (int)assignment >= 1)
             hasButtonAssignment = true;
@@ -1149,7 +1136,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         reactorTimer = 0;
     }
 
-    [System.Obsolete]
     public void EnemyKilled(string type)
     {
         if (type == "Normal")
@@ -1203,7 +1189,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    [System.Obsolete]
     public void PlayersKilled()
     {
         playersKilled++;
@@ -1572,7 +1557,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public IEnumerator GetXP(int XP)
     {
         yield return new WaitForSeconds(0);
-        LootLockerSDKManager.SubmitXp((XP), (response) =>
+        LootLockerSDKManager.AddPointsToPlayerProgression(progressionKey, (ulong)XP, response =>
         {
         });
     }
@@ -1603,7 +1588,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_TakeDamage(int damage)
+    void RPC_TakeDamage(int damage) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1638,7 +1623,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_GainHealth(int health)
+    void RPC_GainHealth(int health) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1648,7 +1633,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
     [PunRPC]
-    void RPC_GainArmor(int armor)
+    void RPC_GainArmor(int armor) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1663,7 +1648,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         { return; }
 
         model.SetActive(false);
-        player.transform.position = spawnManager.spawnPosition.position;
+        player.transform.position = spawnManager.respawnPosition;
         playerLives -= 1;
         Armor = 125;
         Health = 125;
@@ -1674,7 +1659,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_SetMaxHealth(int Health)
+    void RPC_SetMaxHealth(int Health) // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1751,7 +1736,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_HealthRegen()
+    void RPC_HealthRegen() // PROBABLY DOESN'T NEED TO BE AN RPC
     {
         if (!photonView.IsMine)
         { return; }
@@ -1848,7 +1833,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             berserkerActivated = true;
             Armor = maxArmor;
             Health = maxHealth;
-            movement.currentSpeed = movement.maxSpeed;
+            movement.currentSpeed += 4;
             bulletModifier = startingBulletModifier * 2;
         }
     }

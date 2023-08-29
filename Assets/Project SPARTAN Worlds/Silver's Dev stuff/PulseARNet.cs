@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.InputSystem;
 using Photon.Pun;
 using TMPro;
+using BNG;
 
 public class PulseARNet : MonoBehaviourPunCallbacks
 {
@@ -39,19 +38,19 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     public bool reloadingWeapon = false;
 
     [Header("Keybinds ------------------------------------")]
-    public InputActionProperty triggerL;
-    public InputActionProperty triggerR;
     [HideInInspector]
     public bool isDual = false;
     [HideInInspector]
     public bool isTriggerSingle = false;
+
+    public NetworkedGrabbable grabbable;
+    public GrabbableUnityEvents grabbableEvents;
 
     // Start is called before the first frame update
     void OnEnable()
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
         photonView.RPC("RPC_PulseStart", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -67,57 +66,30 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        checkForInputs();
-        // check for durablity
-        if (durability <= 0)
-            StartCoroutine(DestroyWeapon());
+        if (ammoLeft <= 0)
+            ammoLeft = 0;
     }
 
-    private void checkForInputs()
+    public void StartFireBullet()
     {
-        // ignore if the gun is not being held
-        if (!isTriggerSingle) return;
-
-        // hold down trigger R for fire (works on left hand as well)
-        if ((triggerR.action.ReadValue<float>() > 0.8f || triggerL.action.ReadValue<float>() > 0.8f))
+        if (grabbable.BeingHeldWithTwoHands)
         {
-            // if both trigger held down then do pulse fire
-            if (triggerL.action.ReadValue<float>() > 0.8f && isDual)
-            {
-                // pulse fire
-                if (!isFiring)
-                {
-                    isFiring = true;
-                    StartCoroutine(FireBullet(true));
-                }
-            }
-            else
-            {
-                // normal fire
-                if (!isFiring)
-                {
-                    isFiring = true;
-                    StartCoroutine(FireBullet());
-                }
-            }
+            isFiring = true;
+            StartCoroutine(FireBullet(true));
         }
-
-        if (triggerL.action.ReadValue<float>() < 0.8f && isDual)
+        else
         {
-            if (isFiring)
-                isFiring = false;
-        }
-        else if (triggerL.action.ReadValue<float>() < 0.8f && !isDual || triggerR.action.ReadValue<float>() < 0.8f && !isDual)
-        {
-            if (isFiring)
-                isFiring = false;
+            isFiring = true;
+            StartCoroutine(FireBullet());
         }
     }
 
-    public void setDual(bool state)
+    public void StopFireBullet()
     {
-        isDual = state;
+        isFiring = false;
+        StopCoroutine(FireBullet());
     }
+
 
     public void setHeld(bool state)
     {
@@ -143,8 +115,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseDualFire", RpcTarget.All);
-                    yield return new WaitForSeconds(PulseBullet.GetComponent<BulletBehavior>().RateOfFire);
                 }
+                yield return new WaitForSeconds(0.5f);
 
             }
 
@@ -163,8 +135,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
                     photonView.RPC("RPC_PulseSingleFire", RpcTarget.All);
-                    yield return new WaitForSeconds(playerBullet.GetComponent<BulletBehaviorNet>().RateOfFire);
                 }
+                yield return new WaitForSeconds(0.2f);
             }
         }
     }
@@ -196,6 +168,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseStart()
     {
+        if (!photonView.IsMine)
+            return;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -209,8 +183,10 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_RPC_PulseDualFire()
+    void RPC_PulseDualFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft -= 3;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -221,8 +197,10 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_RPC_PulseSingleFire()
+    void RPC_PulseSingleFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft--;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -235,6 +213,9 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseReload()
     {
+        if (!photonView.IsMine)
+            return;
+        StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
         durability--;
@@ -242,7 +223,6 @@ public class PulseARNet : MonoBehaviourPunCallbacks
         if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
-            GetComponent<XRGrabNetworkInteractable>().enabled = false;
             StartCoroutine(DestroyWeapon());
         }
     }
@@ -250,6 +230,8 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseReload2()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
@@ -258,15 +240,23 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PulseTrigger()
     {
+        if (!photonView.IsMine)
+            return;
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
-        GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
     }
 
     [PunRPC]
     void RPC_PulseDestroy()
     {
+        if (!photonView.IsMine)
+            return;
         explosionObject.SetActive(true);
+    }
+
+    public void Rescale()
+    {
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }

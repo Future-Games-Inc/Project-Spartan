@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.InputSystem;
 using Photon.Pun;
 using TMPro;
 
@@ -38,9 +36,6 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        XRGrabNetworkInteractable grabbable = GetComponent<XRGrabNetworkInteractable>();
-        grabbable.activated.AddListener(StartFireBullet);
-        grabbable.deactivated.AddListener(StopFireBullet);
         photonView.RPC("RPC_EMPStart", RpcTarget.All);
         StartCoroutine(TextUpdate());
     }
@@ -57,16 +52,17 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        if (ammoLeft <= 0)
+            ammoLeft = 0;
     }
 
-    public void StartFireBullet(ActivateEventArgs arg)
+    public void StartFireBullet()
     {
         isFiring = true;
         StartCoroutine(FireBullet());
     }
 
-    public void StopFireBullet(DeactivateEventArgs arg)
+    public void StopFireBullet()
     {
         isFiring = false;
         StopCoroutine(FireBullet());
@@ -119,6 +115,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPStart()
     {
+        if (!photonView.IsMine)
+            return;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
@@ -127,6 +125,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPText()
     {
+        if (!photonView.IsMine)
+            return;
         ammoText.text = ammoLeft.ToString();
         durabilityText.text = durability.ToString();
     }
@@ -134,6 +134,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPFire()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft--;
 
         if (ammoLeft <= 0 && reloadingWeapon == false)
@@ -146,6 +148,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPReload()
     {
+        if (!photonView.IsMine)
+            return;
         StopCoroutine(FireBullet());
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
@@ -154,7 +158,6 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
         if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
-            GetComponent<XRGrabNetworkInteractable>().enabled = false;
             StartCoroutine(DestroyWeapon());
         }
     }
@@ -162,6 +165,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPReload2()
     {
+        if (!photonView.IsMine)
+            return;
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
@@ -170,15 +175,25 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_EMPTrigger()
     {
+        if (!photonView.IsMine)
+            return;
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
-        GetComponent<Rigidbody>().isKinematic = false;
         rotatorScript.enabled = false;
     }
 
     [PunRPC]
     void RPC_EMPDestroy()
     {
+        if (!photonView.IsMine)
+            return;
         explosionObject.SetActive(true);
+    }
+
+    public void Rescale()
+    {
+        if (!photonView.IsMine)
+            return;
+        this.gameObject.transform.localScale = Vector3.one;
     }
 }

@@ -56,7 +56,7 @@ public class SetMaterialGO : MonoBehaviour
         // set the door out of reach
         _iscolliding = false;
         //debug
-        Debug.Log(trig.name + "has exit the activator trigger");
+        //Debug.Log(trig.name + "has exit the activator trigger");
     }
 
     // Update is called once per frame

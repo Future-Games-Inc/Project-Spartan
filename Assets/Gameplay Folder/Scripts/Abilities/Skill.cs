@@ -29,7 +29,7 @@ public class Skill : MonoBehaviour
 
     void Update()
     {
-        BodyText.text = $"Cost: {skillTree.saveData.SkillPoints}/{cost} Cs";
+        BodyText.text = $"{cost} Cs";
         image.color = skillTree.saveData.SkillPoints >= cost ? Color.white : Color.grey;
     }
     public void UpdateUI()

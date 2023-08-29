@@ -55,6 +55,8 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     public float ammoLeft;
     public float maxAmmo = 10f;
 
+    public LayerMask obstacleMask;
+
     public enum States
     {
         Patrol,
@@ -192,6 +194,22 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             TakeDamage(300);
         }
     }
+    private bool IsLineOfSightClear(Transform target)
+    {
+        Vector3 directionToTarget = target.position - transform.position;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
+        {
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {
         TurnSpeed = RotationSpeed;
@@ -222,7 +240,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         while (true)
         {
-            if (isFiring && ammoLeft > 0)
+            if (isFiring && ammoLeft > 0 && IsLineOfSightClear(targetTransform))
             {
                 await Task.Delay(250);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
@@ -263,6 +281,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
 
             explosionEffect.SetActive(true);
+            explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
 
             agent.enabled = false;
             GetComponent<Rigidbody>().isKinematic = false;
@@ -310,6 +329,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_OnEnable()
     {
+        if (!photonView.IsMine) return;
         explosionEffect.SetActive(false);
         //healthBar.SetMaxHealth(Health);
         alive = true;
@@ -318,6 +338,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_PlayAudio()
     {
+        if (!photonView.IsMine) return;
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }

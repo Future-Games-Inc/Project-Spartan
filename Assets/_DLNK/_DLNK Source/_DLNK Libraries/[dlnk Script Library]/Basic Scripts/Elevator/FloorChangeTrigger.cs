@@ -26,7 +26,7 @@ public class FloorChangeTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
-            Debug.Log("Press '" + floorChangeKey.ToString() + "' to change floor.");
+            //Debug.Log("Press '" + floorChangeKey.ToString() + "' to change floor.");
         }
     }
 
@@ -35,7 +35,7 @@ public class FloorChangeTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-            Debug.Log("Player left the trigger.");
+            //Debug.Log("Player left the trigger.");
         }
     }
 
@@ -55,7 +55,7 @@ public class FloorChangeTrigger : MonoBehaviour
                 elevator.ChangeTargetFloor(currentTargetFloor);
             }
 
-            Debug.Log("Floor changed to " + currentTargetFloor.ToString());
+            //Debug.Log("Floor changed to " + currentTargetFloor.ToString());
         }
     }
 }

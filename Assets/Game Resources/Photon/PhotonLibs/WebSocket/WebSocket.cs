@@ -208,7 +208,7 @@ namespace ExitGames.Client.Photon
 
         private void SocketOnClose(object sender, CloseEventArgs e)
         {
-            //UnityEngine.Debug.Log(e.Code.ToString());
+            //UnityEngine.//Debug.Log(e.Code.ToString());
 
             // this code is used for cases when the socket failed to get created (specifically used to detect "blocked by Windows firewall")
             // for some reason this situation is not calling OnError

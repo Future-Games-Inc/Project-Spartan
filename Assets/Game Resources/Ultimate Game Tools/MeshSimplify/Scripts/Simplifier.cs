@@ -1170,7 +1170,7 @@ namespace UltimateGameTools
             }
           }
 
-          UnityEngine.Debug.LogError("TexAt(): Vertex not found");
+          UnityEngine.//Debug.LogError("TexAt(): Vertex not found");
           return 0;
         }
 
@@ -1190,7 +1190,7 @@ namespace UltimateGameTools
             }
           }
 
-          UnityEngine.Debug.LogError("SetTexAt(): Vertex not found");
+          UnityEngine.//Debug.LogError("SetTexAt(): Vertex not found");
         }
 
         public void SetTexAt(int i, int uv)

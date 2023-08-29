@@ -21,10 +21,24 @@ public class LoginManager5 : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
-    [System.Obsolete]
     public void EnterRoom1()
     {
-        roomManager.OnEnterButtonClicked_Multiplayer6();
+        roomManager.OnEnterButtonClicked_Playground();
+    }
+
+    public void EnterRoom2()
+    {
+        roomManager.OnEnterButtonClicked_DropZone1();
+    }
+
+    public void EnterRoom3()
+    {
+        roomManager.OnEnterButtonClicked_DropZone2();
+    }
+
+    public void EnterRoom4()
+    {
+        roomManager.OnEnterButtonClicked_DropZone3();
     }
 }
 
