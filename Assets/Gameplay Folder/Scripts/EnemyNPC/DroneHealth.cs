@@ -29,7 +29,9 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
-        photonView.RPC("RPC_OnEnable", RpcTarget.All);
+        explosionEffect.SetActive(false);
+        //healthBar.SetMaxHealth(Health);
+        alive = true;
     }
 
     // Update is called once per frame
@@ -51,7 +53,8 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (Health <= 0 && alive == true)
         {
             alive = false;
-            enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
+            if (!audioSource.isPlaying)
+                audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
 
             explosionEffect.SetActive(true);
             explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
@@ -97,23 +100,6 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             int damage = (int)data[0];
             TakeDamage(damage);
         }
-    }
-
-    [PunRPC]
-    void RPC_OnEnable()
-    {
-        if (!photonView.IsMine) return;
-        explosionEffect.SetActive(false);
-        //healthBar.SetMaxHealth(Health);
-        alive = true;
-    }
-
-    [PunRPC]
-    void RPC_PlayAudio()
-    {
-        if (!photonView.IsMine) return; 
-        if (!audioSource.isPlaying)
-            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
     

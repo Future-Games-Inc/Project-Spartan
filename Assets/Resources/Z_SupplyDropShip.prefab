@@ -59,13 +59,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540293457683071426}
   serializedVersion: 2
-  m_Mass: 50
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 122
   m_CollisionDetection: 2
 --- !u!135 &4399356359249965959
 SphereCollider:
@@ -265,6 +265,8 @@ MonoBehaviour:
   - {fileID: 7103567131878025263, guid: 5dd6baadebc872b40946e13691a2da00, type: 3}
   - {fileID: 72694092025295610, guid: 95e386f4184173041b73570a0534d298, type: 3}
   - {fileID: 1622295053002393203, guid: 990dd834577fff44cbcd04eb1a12f09a, type: 3}
+  - {fileID: 5366973608428439056, guid: 2e7f66d37f94dd241acc31fc815a636c, type: 3}
+  - {fileID: 7247037325887940937, guid: 1e4ffee8cbb8bf140b567bcfae35615e, type: 3}
   activationSlider: {fileID: 4399356360164687134}
   effects:
   - {fileID: 4399356359751639218}
@@ -283,6 +285,7 @@ MonoBehaviour:
   activationTime: 10
   radius: 2
   playAudio: 1
+  forceMagnitude: 80
 --- !u!95 &540293457683071429
 Animator:
   serializedVersion: 5

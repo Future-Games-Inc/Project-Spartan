@@ -32,6 +32,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     private bool contact = false;
     public bool playAudio = true;
 
+    public float forceMagnitude;
+
     public static readonly byte SupplyShipArrive = 30;
     public static readonly byte SupplyShipDestroy = 31;
 
@@ -120,6 +122,9 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
 
     void InstantiateWeapons()
     {
+        Rigidbody rb = this.GetComponent<Rigidbody>();
+        rb.AddForce(Vector3.up * forceMagnitude);
+        Debug.Log("Force Added " + forceMagnitude);
         // Shuffle the weaponPrefabs array
         GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
 

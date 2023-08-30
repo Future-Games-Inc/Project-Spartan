@@ -12226,8 +12226,8 @@ MonoBehaviour:
   - Z_Card_Shield
   - Z_Card_Toxicity
   ExcludeTransformNames: []
-  SoundOnSnap: {fileID: 0}
-  SoundOnUnsnap: {fileID: 0}
+  SoundOnSnap: {fileID: 8300000, guid: fffd065b51473d349b5e0240ddff6e6e, type: 3}
+  SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
   OnSnapEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -12881,7 +12881,7 @@ MonoBehaviour:
   OnlyAllowNames:
   - Z_Energy Blade
   ExcludeTransformNames: []
-  SoundOnSnap: {fileID: 0}
+  SoundOnSnap: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
   SoundOnUnsnap: {fileID: 0}
   OnSnapEvent:
     m_PersistentCalls:
@@ -19901,6 +19901,8 @@ GameObject:
   - component: {fileID: 2614677425909999729}
   - component: {fileID: 8416428736088088097}
   - component: {fileID: 1032804305675168016}
+  - component: {fileID: 4979991002843447868}
+  - component: {fileID: 5294467528782880930}
   m_Layer: 8
   m_Name: PickupDrop
   m_TagString: PickupSlot
@@ -19986,6 +19988,116 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.43963477, y: 0.54452693, z: 0.51566374}
   m_Center: {x: -0.003312108, y: 0.021301595, z: 0.09632328}
+--- !u!82 &4979991002843447868
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478405504969178706}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 12
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 10
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5294467528782880930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478405504969178706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d42d7ffd6361e34c93e86905f88a140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 4979991002843447868}
+  clip: {fileID: 8300000, guid: 7ddc41f9ed50caa45bcf710ce6325ae3, type: 3}
 --- !u!1 &7537622712827892262
 GameObject:
   m_ObjectHideFlags: 0
@@ -24464,8 +24576,8 @@ MonoBehaviour:
   - Z_Card_Shield
   - Z_Card_Toxicity
   ExcludeTransformNames: []
-  SoundOnSnap: {fileID: 0}
-  SoundOnUnsnap: {fileID: 0}
+  SoundOnSnap: {fileID: 8300000, guid: fffd065b51473d349b5e0240ddff6e6e, type: 3}
+  SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
   OnSnapEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -25265,8 +25377,8 @@ MonoBehaviour:
   - Z_Card_Shield
   - Z_Card_Toxicity
   ExcludeTransformNames: []
-  SoundOnSnap: {fileID: 0}
-  SoundOnUnsnap: {fileID: 0}
+  SoundOnSnap: {fileID: 8300000, guid: fffd065b51473d349b5e0240ddff6e6e, type: 3}
+  SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
   OnSnapEvent:
     m_PersistentCalls:
       m_Calls: []
