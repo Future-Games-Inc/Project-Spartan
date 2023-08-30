@@ -594,7 +594,7 @@ namespace BNG {
                     }
 
                     // Debug - draw all contact points and normals
-                    //Debug.DrawRay(contact.point, contact.normal * 10, Color.white);
+                    Debug.DrawRay(contact.point, contact.normal * 10, Color.white);
 
                     Debug.DrawLine(contact.point, transform.position);
                 }
