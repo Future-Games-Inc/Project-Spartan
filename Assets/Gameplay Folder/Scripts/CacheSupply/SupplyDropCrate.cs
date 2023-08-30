@@ -16,6 +16,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     public Image sliderImage;
     public AudioSource audioSource;
     public AudioClip audioClip;
+    public AudioClip spawnClip;
 
     public Animator animator;
     public string animationName;
@@ -127,6 +128,8 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         Debug.Log("Force Added " + forceMagnitude);
         // Shuffle the weaponPrefabs array
         GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
+
+        audioSource.PlayOneShot(spawnClip);
 
         // Instantiate a weapon for each spawn point
         PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0].name, spawn1.position, spawn1.rotation, 0, null);

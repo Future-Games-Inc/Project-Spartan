@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.01797059, g: 0.027027763, b: 0.037471794, a: 1}
+  m_IndirectSpecularColor: {r: 0.01759421, g: 0.027209625, b: 0.037273314, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -32843,9 +32843,9 @@ MonoBehaviour:
   matchBegan: {fileID: 8300000, guid: 035f3e011ef2b5a40be97ea5633810e9, type: 3}
   supplyShip1: {fileID: 8300000, guid: 80e2da84e7836a54b90ce5c6c375c477, type: 3}
   supplyShip2: {fileID: 8300000, guid: 73008e4528100214bafca919ce17e0a2, type: 3}
-  supplyDropShipPrefab: {fileID: 5013620648127742661, guid: ee849b97449b0ae4092b531ba0f0529b,
+  supplyDropShipPrefab: {fileID: 540293457683071426, guid: 9d9db7f20016c754f802ac4d26d501e6,
     type: 3}
-  spawnInterval: 20
+  spawnInterval: 60
   lastSpawnTime: 0
   startMatchBool: 0
   spawnReactor: 0
@@ -52252,13 +52252,14 @@ MonoBehaviour:
   - {fileID: 6034457858837941721, guid: 1d7ce555d167a874e9887fa3002fd726, type: 3}
   - {fileID: 6603845394697585824, guid: b638833feb869684896e1a5065a38f55, type: 3}
   matchProps: {fileID: 602118813}
-  enemyCountMax: 5
+  enemyCountMax: 10
   securityCountMax: 8
   reactorCountMax: 1
   healthCountMax: 6
   enemiesKilledForBossSpawn: 5
   bombsCountMax: 10
   artifactCountMax: 10
+  enemiesKilled: 0
   spawnRadius: 100
   navMeshSurface: {fileID: 952625869}
   spawnPositions: []
