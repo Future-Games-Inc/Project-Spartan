@@ -122,9 +122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2e6cfd61171a5469e9f7b211f651d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 50
-  AttackRange: 20
-  AgroRange: 30
+  DetectRange: 30
+  AttackRange: 15
+  AgroRange: 25
   currentState: 0
   patrolling: 0
   wanderRadius: 300
@@ -156,16 +156,17 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bab26a43daff5f94a83a5519d9ea4cca, type: 3}
   - {fileID: 8300000, guid: 8d4851574d898e3489aeed0ae257a80f, type: 3}
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
+  reloadClip: {fileID: 8300000, guid: a61ed39a82ea73e4386638b2d21b35b4, type: 3}
   agent: {fileID: 1371365325884012709}
   targetTransform: {fileID: 0}
   bullet: {fileID: 5451881146956983319, guid: 3958478d9877b9e4bb6a751f1a15f51d, type: 3}
   bulletTransform: {fileID: 2295490710770790003}
   shootForce: 0
-  ammoLeft: 0
+  ammoLeft: 10
   maxAmmo: 10
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 521
+    m_Bits: 4096
 --- !u!195 &1371365325884012709
 NavMeshAgent:
   m_ObjectHideFlags: 0

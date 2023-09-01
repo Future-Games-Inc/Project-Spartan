@@ -55,11 +55,10 @@ public class AIWeapon : MonoBehaviourPunCallbacks
             if (ammoLeft <= 0)
             {
                 canShoot = false;
-                ReloadWeapon();
-                continue;
+                StartCoroutine(ReloadWeapon());
             }
 
-            if (fireWeaponBool)
+            if (fireWeaponBool & canShoot)
             {
                 yield return new WaitForSeconds(0.25f);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
@@ -80,6 +79,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 ammoLeft--;
                 yield return new WaitForSeconds(0.25f);
             }
+            yield return new WaitForSeconds(0.25f);
         }
     }
 
@@ -122,10 +122,10 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     //    }
     //}
 
-    async void ReloadWeapon()
+    IEnumerator ReloadWeapon()
     {
-        await Task.Delay(2000);
         audioSource2.PlayOneShot(weaponReload);
+        yield return new WaitForSeconds(2);
         ammoLeft = maxAmmo;
         canShoot = true;
     }

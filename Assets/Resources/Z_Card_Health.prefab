@@ -495,8 +495,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   grabbable: {fileID: -1221131992008183228}
-  audioSource: {fileID: 3953280749660119568}
-  clip: {fileID: 8300000, guid: 7ddc41f9ed50caa45bcf710ce6325ae3, type: 3}
 --- !u!114 &1700992167922287633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,7 +603,19 @@ MonoBehaviour:
       m_Calls: []
   onSnapZoneExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6333603242807089148}
+        m_TargetAssemblyTypeName: EnemyXPDrop, Assembly-CSharp
+        m_MethodName: rescale
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &7913292333629792916
 BoxCollider:
   m_ObjectHideFlags: 0

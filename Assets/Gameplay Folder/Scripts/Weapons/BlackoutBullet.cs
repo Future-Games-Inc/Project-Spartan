@@ -18,7 +18,9 @@ public class BlackoutBullet : MonoBehaviourPunCallbacks
     public float maxBlindDuration = 6.0f;
     public float minBlindDuration = 2.0f;
 
-    [System.Obsolete]
+    public AudioSource audioSource;
+    public AudioClip clip;
+
     private void OnTriggerEnter(Collider other)
     {
         if (!hasHit)
@@ -69,7 +71,7 @@ public class BlackoutBullet : MonoBehaviourPunCallbacks
                 enemyDamageCrit.TakeDamage(15);
             }
 
-            else if (other.CompareTag("Player"))
+            else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
             {
                 //critical hit here
                 PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();

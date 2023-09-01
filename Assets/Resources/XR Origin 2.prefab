@@ -4253,7 +4253,6 @@ MonoBehaviour:
   - {fileID: 8442321561479727818}
   playerInformation:
   - {fileID: 5613086387514531284}
-  - {fileID: 0}
 --- !u!114 &7353679456415546202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5880,7 +5879,7 @@ MonoBehaviour:
   CanDropItem: 1
   CanSwapItem: 1
   CanRemoveItem: 1
-  ScaleItem: 1
+  ScaleItem: 5
   DisableColliders: 1
   DuplicateItemOnGrab: 0
   MaxDropTime: 0.1
@@ -5897,10 +5896,34 @@ MonoBehaviour:
   SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
   OnSnapEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6261003334231023070}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDetachEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6261003334231023070}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   ClosestGrabbable: {fileID: 0}
 --- !u!114 &6245448969045293440
 MonoBehaviour:
@@ -7317,7 +7340,7 @@ MonoBehaviour:
   CanDropItem: 1
   CanSwapItem: 1
   CanRemoveItem: 1
-  ScaleItem: 1
+  ScaleItem: 5
   DisableColliders: 1
   DuplicateItemOnGrab: 0
   MaxDropTime: 0.1
@@ -7334,10 +7357,34 @@ MonoBehaviour:
   SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
   OnSnapEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3292977351770983579}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDetachEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3292977351770983579}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   ClosestGrabbable: {fileID: 0}
 --- !u!114 &2890059627544623953
 MonoBehaviour:
@@ -18934,7 +18981,7 @@ MonoBehaviour:
   CanDropItem: 1
   CanSwapItem: 1
   CanRemoveItem: 1
-  ScaleItem: 1
+  ScaleItem: 5
   DisableColliders: 1
   DuplicateItemOnGrab: 0
   MaxDropTime: 0.1
@@ -18951,10 +18998,34 @@ MonoBehaviour:
   SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
   OnSnapEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7799806271123800345}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDetachEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7799806271123800345}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   ClosestGrabbable: {fileID: 0}
 --- !u!114 &4636886783143543649
 MonoBehaviour:

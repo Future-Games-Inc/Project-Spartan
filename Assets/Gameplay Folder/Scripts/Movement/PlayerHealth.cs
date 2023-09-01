@@ -471,7 +471,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_REGEN, out object storedHealthRegen) && (int)storedHealthRegen >= 1)
         {
-            photonView.RPC("RPC_HealthRegen", RpcTarget.All);
+            InvokeRepeating("HealthRegen", 0f, 3f);
         }
     }
 
@@ -553,7 +553,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     // Update is called once per frame
-    [System.Obsolete]
     void Update()
     {
         if (!photonView.IsMine)
@@ -993,7 +992,33 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             damageTaken = (damage - ((int)storedDamageTaken / 4));
         else
             damageTaken = damage;
-        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damageTaken);
+        if (Armor >= damage)
+        {
+            Armor -= damage;
+            StartCoroutine(ShieldBuffNormal());
+        }
+        else if (Armor < damage && Armor > 0)
+        {
+            Health -= (damage - Armor);
+            Armor = 0;
+            StartCoroutine(ShieldBuffCritical());
+        }
+        else if (Armor <= 0)
+        {
+            Health -= damage;
+        }
+
+        if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
+        {
+            alive = false;
+            StartCoroutine(PlayerRespawn());
+        }
+
+        else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
+        {
+            alive = false;
+            StartCoroutine(PlayerDeath());
+        }
         CheckArmorStatus();
         CheckHealthStatus();
     }
@@ -1007,7 +1032,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             healthAdded = (health + (int)storedHealthPowerup);
         else
             healthAdded = health;
-        photonView.RPC("RPC_GainHealth", RpcTarget.All, healthAdded);
+        Health += health;
         CheckHealthStatus();
     }
 
@@ -1021,7 +1046,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(bulletHit);
 
         armorAdded = armor;
-        photonView.RPC("RPC_GainArmor", RpcTarget.All, armorAdded);
+        Armor += armor;
         CheckArmorStatus();
     }
 
@@ -1032,7 +1057,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator Cracked()
     {
-        yield return new WaitForSeconds(0);
         crackedScreen.SetActive(true);
         yield return new WaitForSeconds(.5f);
         crackedScreen.SetActive(false);
@@ -1588,60 +1612,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void RPC_TakeDamage(int damage) // PROBABLY DOESN'T NEED TO BE AN RPC
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        if (Armor >= damage)
-        {
-            Armor -= damage;
-            StartCoroutine(ShieldBuffNormal());
-        }
-        else if (Armor < damage && Armor > 0)
-        {
-            Health -= (damage - Armor);
-            Armor = 0;
-            StartCoroutine(ShieldBuffCritical());
-        }
-        else if (Armor <= 0)
-        {
-            Health -= damage;
-        }
-
-        if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
-        {
-            alive = false;
-            StartCoroutine(PlayerRespawn());
-        }
-
-        else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
-        {
-            alive = false;
-            StartCoroutine(PlayerDeath());
-        }
-    }
-
-    [PunRPC]
-    void RPC_GainHealth(int health) // PROBABLY DOESN'T NEED TO BE AN RPC
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        Health += health;
-    }
-
-
-    [PunRPC]
-    void RPC_GainArmor(int armor) // PROBABLY DOESN'T NEED TO BE AN RPC
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        Armor += armor;
-    }
-
-    [PunRPC]
     void RPC_Respawn()
     {
         if (!photonView.IsMine)
@@ -1656,16 +1626,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         CheckHealthStatus();
         alive = true;
         model.SetActive(true);
-    }
-
-    [PunRPC]
-    void RPC_SetMaxHealth(int Health) // PROBABLY DOESN'T NEED TO BE AN RPC
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        maxHealth = Health;
-        multiplayerHealth.SetMaxHealth(maxHealth);
     }
 
     [PunRPC]
@@ -1735,14 +1695,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         leechEffect = false;
     }
 
-    [PunRPC]
-    void RPC_HealthRegen() // PROBABLY DOESN'T NEED TO BE AN RPC
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        InvokeRepeating("HealthRegen", 0f, 3f);
-    }
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         // Check if this is the object's current owner and if the new master client exists

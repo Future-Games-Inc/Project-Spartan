@@ -87,6 +87,13 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void RPC_Obstacle(bool state)
+    {
+        GetComponent<NavMeshObstacle>().enabled = state;
+        GetComponent<Rigidbody>().isKinematic = !state;
+    }
+
+    [PunRPC]
     void RPC_CacheOpened()
     {
         if (!photonView.IsMine)

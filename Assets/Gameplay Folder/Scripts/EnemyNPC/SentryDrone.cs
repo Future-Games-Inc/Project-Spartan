@@ -39,6 +39,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject explosionEffect;
     //public EnemyHealthBar healthBar;
     public AudioClip[] audioClip;
+    public AudioClip reloadClip;
     public NavMeshAgent agent;
 
     private GameObject[] players;
@@ -73,7 +74,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         //healthBar.SetMaxHealth(Health);
         alive = true;
         timer = wanderTimer;
-        Fire();
+        StartCoroutine(Fire());
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.AddCallbackTarget(this);
@@ -238,35 +239,37 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         isFiring = true;
     }
 
-    private async void Fire()
+    IEnumerator Fire()
     {
         while (true)
         {
             if (isFiring && ammoLeft > 0 && IsLineOfSightClear(targetTransform))
             {
-                await Task.Delay(250);
+                yield return new WaitForSeconds(0.25f);
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
+                spawnedBullet.GetComponent<Bullet>().bulletModifier = 4;
                 shootForce = (int)Random.Range(40, 75);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
                 ammoLeft--;
-                await Task.Delay(250);
+                yield return new WaitForSeconds(0.25f);
             }
 
             else if (isFiring && ammoLeft <= 0)
             {
                 isFiring = false;
-                ReloadWeapon();
+                StartCoroutine(ReloadWeapon());
             }
 
-            await Task.Yield();
+            yield return new WaitForSeconds(0.25f);
         }
     }
 
-    private async void ReloadWeapon()
+    IEnumerator ReloadWeapon()
     {
-        await Task.Delay(2000);
+        audioSource.PlayOneShot(reloadClip);
+        yield return new WaitForSeconds(2f);
         ammoLeft = maxAmmo;
         isFiring = true;
     }
@@ -316,7 +319,6 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void RandomSFX()
     {
-        if (!photonView.IsMine) return;
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }

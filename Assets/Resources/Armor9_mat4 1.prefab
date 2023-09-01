@@ -3145,14 +3145,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 50
-  AttackRange: 20
-  AgroRange: 30
+  DetectRange: 30
+  AttackRange: 15
+  AgroRange: 25
   wanderRadius: 500
   Health: 200
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 521
+    m_Bits: 4096
   agent: {fileID: 1799011468459518908}
   targetTransform: {fileID: 0}
   enemyHealth: {fileID: 26474372960577008}
@@ -3320,11 +3320,10 @@ MonoBehaviour:
   bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
   bulletTransform: {fileID: 421824761609566074}
   shootForce: 100
-  ammoLeft: 0
+  ammoLeft: 15
   maxAmmo: 0
   audioSource: {fileID: 3239117333501985060}
   audioSource2: {fileID: 2642686913866406122}
-  weaponFire: {fileID: 8300000, guid: 2a60d8d2e4715ab44af8212f1a286db0, type: 3}
   weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
   fireWeaponBool: 0
   canShoot: 1

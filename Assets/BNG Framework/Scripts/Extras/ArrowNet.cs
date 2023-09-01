@@ -85,6 +85,7 @@ namespace BNG
 
             if (Flying)
             {
+                gameObject.GetComponent<TrailRenderer>().enabled = true;
                 flightTime += Time.fixedDeltaTime;
             }
 
@@ -422,7 +423,7 @@ namespace BNG
             {
                 case "Enemy":
                     // Handle enemy damage
-                    FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("Normal");
@@ -435,7 +436,7 @@ namespace BNG
                     break;
                 case "BossEnemy":
                     // Handle boss enemy damage
-                    FollowAI BossenemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("BossEnemy");
@@ -448,18 +449,18 @@ namespace BNG
                     break;
                 case "Security":
                     // Handle security damage
-                    DroneHealth DroneenemyDamageCrit = collider.GetComponent<DroneHealth>();
+                    DroneHealth DroneenemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                     if (DroneenemyDamageCrit != null)
                         DroneenemyDamageCrit.TakeDamage(damage);
                     else
                     {
-                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponent<SentryDrone>();
+                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
                         SentryenemyDamageCrit2.TakeDamage(damage);
                     }
                     break;
                 case "Player":
                     // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponent<PlayerHealth>();
+                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
                     if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
                     {
                         playerHealth.PlayersKilled();
@@ -484,7 +485,7 @@ namespace BNG
             {
                 case "Enemy":
                     // Handle enemy damage
-                    FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("Normal");
@@ -498,7 +499,7 @@ namespace BNG
                     break;
                 case "BossEnemy":
                     // Handle boss enemy damage
-                    FollowAI BossenemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("BossEnemy");
@@ -512,18 +513,18 @@ namespace BNG
                     break;
                 case "Security":
                     // Handle security damage
-                    DroneHealth DroneenemyDamageCrit = collider.GetComponent<DroneHealth>();
+                    DroneHealth DroneenemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                     if (DroneenemyDamageCrit != null)
                         DroneenemyDamageCrit.TakeDamage(damage * 2);
                     else
                     {
-                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponent<SentryDrone>();
+                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
                         SentryenemyDamageCrit2.TakeDamage(damage * 2);
                     }
                     break;
                 case "Player":
                     // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponent<PlayerHealth>();
+                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
                     if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
                     {
                         playerHealth.PlayersKilled();

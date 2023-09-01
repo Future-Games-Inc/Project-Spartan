@@ -89,7 +89,8 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void RandomSFX()
     {
-        photonView.RPC("RPC_PlayAudio", RpcTarget.All);
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
     public void OnEvent(EventData photonEvent)

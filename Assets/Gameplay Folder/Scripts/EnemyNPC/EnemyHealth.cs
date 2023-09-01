@@ -49,7 +49,10 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void KillEnemy()
     {
-        photonView.RPC("RPC_KillEnemy", RpcTarget.All);
+        alive = false;
+        aiScript.attackWeapon.fireWeaponBool = false;
+        aiScript.alive = false;
+        DestroyEnemy();
     }
 
     public void DestroyEnemy()
@@ -82,12 +85,12 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
-        Destroy();
+        StartCoroutine(Destroy());
     }
 
-    private async void Destroy()
+    IEnumerator Destroy()
     {
-        await Task.Delay(5000);
+        yield return new WaitForSeconds(2);
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -102,23 +105,6 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             EnemyHealthEnable();
         }
-    }
-
-
-    [PunRPC]
-    void RPC_KillEnemy()
-    {
-        if (!photonView.IsMine)
-            return;
-
-        alive = false;
-        aiScript.attackWeapon.fireWeaponBool = false;
-        aiScript.alive = false;
-
-        //enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
-        //enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
-
-        DestroyEnemy();
     }
 
 

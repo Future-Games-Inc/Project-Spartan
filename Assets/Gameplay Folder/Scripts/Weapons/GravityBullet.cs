@@ -15,12 +15,14 @@ public class GravityBullet : MonoBehaviourPunCallbacks
     public float gravityWellRadius = 10.0f;
     public float gravityWellForce = 100.0f;
 
+    public AudioSource audioSource;
+    public AudioClip clip;
+
     private void Update()
     {
 
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (!hasHit)
@@ -41,7 +43,7 @@ public class GravityBullet : MonoBehaviourPunCallbacks
                     }
                 }
 
-                if (other.CompareTag("Player"))
+                if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
                 {
                     //critical hit here
                     PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
