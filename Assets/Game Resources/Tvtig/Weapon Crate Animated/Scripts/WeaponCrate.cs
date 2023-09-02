@@ -4,6 +4,7 @@ using UnityEngine.VFX;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.AI;
+using System;
 
 public class WeaponCrate : MonoBehaviourPunCallbacks
 {
@@ -52,6 +53,36 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     }
 
+    String[] ShuffleArray(String[] array)
+    {
+        String[] shuffledArray = (String[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            String temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
+        }
+
+        return shuffledArray;
+    }
+
+    String[] ShufflePowerups(String[] array)
+    {
+        String[] shuffledArray = (String[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            String temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
+        }
+
+        return shuffledArray;
+    }
+
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         // Check if this is the object's current owner and if the new master client exists
@@ -66,53 +97,32 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            photonView.RPC("RPC_CacheOpened", RpcTarget.All);
+            _collider.enabled = false;
+            _animator.SetBool("Open", true);
+            _visualEffect.SendEvent("OnPlay");
+            cacheAudio.PlayOneShot(cacheClip);
+            cacheActive = false;
+            foreach (GameObject cache in cacheBase)
+                cache.GetComponent<Renderer>().material = deactiveMaterial;
+            StartCoroutine(WeaponCache());
         }
     }
 
     IEnumerator WeaponCache()
     {
+        String[] shuffledWeapons = ShuffleArray(weapons);
+        String[] shuffledPowerups = ShufflePowerups(powerups);
         yield return new WaitForSeconds(1);
-        PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(weapons[0], spawn1.position, spawn1.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(weapons[2], spawn3.position, spawn3.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(powerups[0], spawn2.position, spawn2.rotation, 0, null);
         StartCoroutine(CacheRespawn());
-        photonView.RPC("RPC_CacheExit", RpcTarget.All);
+        _animator.SetBool("Open", false);
     }
 
     IEnumerator CacheRespawn()
     {
         yield return new WaitForSeconds(30);
-        photonView.RPC("RPC_CacheClosed", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void RPC_Obstacle(bool state)
-    {
-        GetComponent<NavMeshObstacle>().enabled = state;
-        GetComponent<Rigidbody>().isKinematic = !state;
-    }
-
-    [PunRPC]
-    void RPC_CacheOpened()
-    {
-        if (!photonView.IsMine)
-            return;
-        _collider.enabled = false;
-        _animator.SetBool("Open", true);
-        _visualEffect.SendEvent("OnPlay");
-        cacheAudio.PlayOneShot(cacheClip);
-        cacheActive = false;
-        foreach(GameObject cache in cacheBase)
-            cache.GetComponent<Renderer>().material = deactiveMaterial;
-        StartCoroutine(WeaponCache());
-    }
-
-    [PunRPC]
-    void RPC_CacheClosed()
-    {
-        if (!photonView.IsMine)
-            return;
         _animator.SetBool("Open", false);
         cacheActive = true;
         foreach (GameObject cache in cacheBase)
@@ -121,10 +131,9 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_CacheExit()
+    void RPC_Obstacle(bool state)
     {
-        if (!photonView.IsMine)
-            return;
-        _animator.SetBool("Open", false);
+        GetComponent<NavMeshObstacle>().enabled = state;
+        GetComponent<Rigidbody>().isKinematic = !state;
     }
 }

@@ -65,7 +65,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
 
         // Create an array to store the valid positions
-        spawnPositions = new Vector3[5];
+        spawnPositions = new Vector3[10];
         validPositionsCount = 0;
 
 
@@ -86,6 +86,36 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         }
     }
 
+    GameObject[] ShuffleArray(GameObject[] array)
+    {
+        GameObject[] shuffledArray = (GameObject[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            GameObject temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
+        }
+
+        return shuffledArray;
+    }
+
+    Vector3[] ShuffleSpawns(Vector3[] array)
+    {
+        Vector3[] shuffledArray = (Vector3[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            Vector3 temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
+        }
+
+        return shuffledArray;
+    }
+
     public override void OnDisable()
     {
         StopAllCoroutines();
@@ -103,11 +133,14 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             while (!matchProps.startMatchBool)
                 yield return null;
 
+            ShuffleArray(enemyAI);
+            ShuffleSpawns(spawnPositions);
+
             spawnEnemy = false;
 
-            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+            Vector3 spawnPosition = spawnPositions[0];
 
-            GameObject enemyCharacter = enemyAI[Random.Range(0, enemyAI.Length)];
+            GameObject enemyCharacter = enemyAI[0];
             PhotonNetwork.InstantiateRoomObject(enemyCharacter.name, spawnPosition, Quaternion.identity, 0, null);
 
             enemyCount++;
@@ -127,11 +160,16 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             while (!matchProps.startMatchBool)
                 yield return null;
 
+            yield return new WaitForSeconds(1);
+
+            ShuffleArray(securityAI);
+            ShuffleSpawns(spawnPositions);
+
             spawnSecurity = false;
 
-            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+            Vector3 spawnPosition = spawnPositions[0];
 
-            GameObject securityDrone = securityAI[Random.Range(0, securityAI.Length)];
+            GameObject securityDrone = securityAI[0];
             PhotonNetwork.InstantiateRoomObject(securityDrone.name, spawnPosition, Quaternion.identity, 0, null);
 
             securityCount++;
@@ -152,7 +190,8 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             if (matchProps.spawnReactor && reactorCount < reactorCountMax)
             {
-                Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+                ShuffleSpawns(spawnPositions);
+                Vector3 spawnPosition = spawnPositions[0];
 
                 PhotonNetwork.InstantiateRoomObject(reactor.name, spawnPosition, Quaternion.identity, 0, null);
 
@@ -268,9 +307,11 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             while (!matchProps.startMatchBool)
                 yield return null;
 
+            ShuffleSpawns(spawnPositions);
+
             spawnHealth = false;
 
-            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+            Vector3 spawnPosition = spawnPositions[0];
 
             GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, spawnPosition, Quaternion.identity, 0, null);
 
@@ -292,9 +333,12 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             if (enemiesKilled >= enemiesKilledForBossSpawn)
             {
-                Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+                ShuffleArray(enemyBoss);
+                ShuffleSpawns(spawnPositions);
 
-                GameObject enemyCharacterBoss = enemyBoss[Random.Range(0, enemyBoss.Length)];
+                Vector3 spawnPosition = spawnPositions[0];
+
+                GameObject enemyCharacterBoss = enemyBoss[0];
                 PhotonNetwork.InstantiateRoomObject(enemyCharacterBoss.name, spawnPosition, Quaternion.identity, 0, null);
 
                 enemiesKilled = 0;

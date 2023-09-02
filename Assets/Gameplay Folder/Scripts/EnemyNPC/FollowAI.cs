@@ -272,24 +272,23 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             PatrolPauseDone = false;
             agent.isStopped = false;
-            PatrolDelay();
+            StartCoroutine(PatrolDelay());
         }
     }
 
-    private async void PatrolDelay()
+    IEnumerator PatrolDelay()
     {
         attackWeapon.fireWeaponBool = false;
-        await Task.Delay(3000);
+        yield return new WaitForSeconds(3);
         PatrolPauseDone = true;
         Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
         agent.SetDestination(newPos);
-        // agent.speed = PatrolPoints.WalkingSpeed;
+        //agent.speed = PatrolPoints.WalkingSpeed;
     }
 
     private void Follow()
     {
         attackWeapon.fireWeaponBool = false;
-        PatrolDelay();
         agent.destination = targetTransform.position;
         agent.speed = 2.5f;
     }
@@ -385,42 +384,42 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         firstHit = false;
     }
 
-    public void EMPShock(GameObject Effect)
-    {
-        async void Shock()
-        {
-            attackWeapon.fireWeaponBool = false;
-            //States preState = currentState;
-            SwitchStates(States.Shocked);
-            agent.isStopped = true;
-            animator.SetTrigger("Shock");
-            animator.SetBool("ShockDone", false);
-            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
-            // apply damage
-            await Task.Delay(1000);
-            TakeDamage(5);
-            // play shock effect
-            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
-            agent.isStopped = true;
-            await Task.Delay(1000);
-            TakeDamage(5);
-            // play shock effect
-            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
-            agent.isStopped = true;
-            await Task.Delay(1000);
-            TakeDamage(5);
-            // play shock effect
-            Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
-            // enable movement
-            animator.ResetTrigger("shock");
-            animator.SetBool("ShockDone", true);
-            currentState = previousState;
-            agent.isStopped = false;
-        }
-        // if already shocked, ignore effects
-        if (currentState == States.Shocked) return;
-        Shock();
-    }
+    //public void EMPShock(GameObject Effect)
+    //{
+    //    async void Shock()
+    //    {
+    //        attackWeapon.fireWeaponBool = false;
+    //        //States preState = currentState;
+    //        SwitchStates(States.Shocked);
+    //        agent.isStopped = true;
+    //        animator.SetTrigger("Shock");
+    //        animator.SetBool("ShockDone", false);
+    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+    //        // apply damage
+    //        await Task.Delay(1000);
+    //        TakeDamage(5);
+    //        // play shock effect
+    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+    //        agent.isStopped = true;
+    //        await Task.Delay(1000);
+    //        TakeDamage(5);
+    //        // play shock effect
+    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
+    //        agent.isStopped = true;
+    //        await Task.Delay(1000);
+    //        TakeDamage(5);
+    //        // play shock effect
+    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
+    //        // enable movement
+    //        animator.ResetTrigger("shock");
+    //        animator.SetBool("ShockDone", true);
+    //        currentState = previousState;
+    //        agent.isStopped = false;
+    //    }
+    //    // if already shocked, ignore effects
+    //    if (currentState == States.Shocked) return;
+    //    Shock();
+    //}
 
     //[PunRPC]
     //void RPC_EnemyHealthMax()

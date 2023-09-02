@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,13 +37,16 @@ namespace BNG
         Coroutine queueDestroy;
 
         public Projectile ProjectileObject;
+        public GameObject bubble;
 
         public GameObject arrowOwner;
+        public GameObject surgeBubble;
 
         // Get this value from the ProjectileObject
         float arrowDamage;
 
         public PlayerHealth playerHealth;
+        public bool activated = false;
 
         public string Type = "Default";
 
@@ -388,7 +392,7 @@ namespace BNG
                 }
             }
 
-            float delay = .25f;
+            float delay = 2f;
             StartCoroutine(Destroy(delay));
         }
 
@@ -396,6 +400,8 @@ namespace BNG
         {
             yield return new WaitForSeconds(EMPDelay);
             explosionEffect.SetActive(true);
+            StartCoroutine(GrowBubbleCoroutine());
+            StartCoroutine(DestroyBubbleCoroutine());
 
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
             foreach (var target in Targets)
@@ -409,8 +415,27 @@ namespace BNG
                 }
             }
 
-            float delay = .25f;
+            float delay = 2f;
             StartCoroutine(Destroy(delay));
+        }
+
+        IEnumerator GrowBubbleCoroutine()
+        {
+            surgeBubble = PhotonNetwork.InstantiateRoomObject(bubble.name, transform.position, Quaternion.identity, 0, null);
+            while (true)
+            {
+                float scaleIncrease = 8f * Time.deltaTime;
+                surgeBubble.transform.localScale += new Vector3(scaleIncrease, scaleIncrease, scaleIncrease);
+
+                yield return null;
+            }
+        }
+
+        IEnumerator DestroyBubbleCoroutine()
+        {
+            yield return new WaitForSeconds(1.25f);
+            StopCoroutine(GrowBubbleCoroutine());
+            PhotonNetwork.Destroy(surgeBubble);
         }
 
         void HandleDamage(Collider collider, TargetInfo target)

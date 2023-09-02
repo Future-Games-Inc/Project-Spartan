@@ -25759,6 +25759,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464554655}
   m_CullTransparentMesh: 1
+--- !u!1 &465671148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 465671150}
+  - component: {fileID: 465671149}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &465671149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465671148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9dedcc8f10e69f42b95cac01a80a834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxPlayersPerRoom: 0
+  JoinRoomOnStart: 1
+  dontDestroyOnLoad: 1
+  JoinRoomName: RandomRoom
+  GameVersion: 1
+  RemotePlayerObjectName: XR Origin 2
+  DebugText: {fileID: 0}
+--- !u!4 &465671150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465671148}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.28466, y: 13.5, z: 2.368637}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 33
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &468344344
 GameObject:
   m_ObjectHideFlags: 0
@@ -32828,7 +32879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783053d50686a314ab8b9f4d6a023074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchCountdown: 10
+  matchCountdown: 15
   currentMatchTime: 0
   spawnManager: {fileID: 972798658}
   uiCanvas: {fileID: 523125582}
@@ -71917,7 +71968,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1327619677}
-  - component: {fileID: 1327619678}
   m_Layer: 0
   m_Name: Environment
   m_TagString: Untagged
@@ -71944,25 +71994,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1327619678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1327619676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9dedcc8f10e69f42b95cac01a80a834, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersPerRoom: 0
-  JoinRoomOnStart: 1
-  dontDestroyOnLoad: 1
-  JoinRoomName: RandomRoom
-  GameVersion: 1
-  RemotePlayerObjectName: RemotePlayer
-  DebugText: {fileID: 0}
 --- !u!1 &1336661333 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3779658382935846958, guid: 6d348c9374362fa4e8a79cbb3f4eab5b,
@@ -73825,7 +73856,7 @@ PrefabInstance:
     - target: {fileID: 439788778926290553, guid: 8bbc800b4080a844eb5d4fa2d3bb9748,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 439788778926290556, guid: 8bbc800b4080a844eb5d4fa2d3bb9748,
         type: 3}

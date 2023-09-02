@@ -46,6 +46,9 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
     public GameObject stickyBullet;
     public GameObject gravityBullet;
     public GameObject blackoutBullet;
+    public GameObject stickyBulletIcon;
+    public GameObject gravityBulletIcon;
+    public GameObject blackoutBulletIcon;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -94,16 +97,25 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
     public void StickyActive()
     {
         activeLauncher = Launcher.Sticky;
+        stickyBulletIcon.SetActive(true);
+        gravityBulletIcon.SetActive(false);
+        blackoutBulletIcon.SetActive(false);
     }
 
     public void GravityActive()
     {
         activeLauncher = Launcher.Gravity;
+        gravityBulletIcon.SetActive(true);
+        stickyBulletIcon.SetActive(false);
+        blackoutBulletIcon.SetActive(false);
     }
 
     public void BlackOutActive()
     {
         activeLauncher = Launcher.Blackout;
+        blackoutBulletIcon.SetActive(true);
+        gravityBulletIcon.SetActive(false);
+        stickyBulletIcon.SetActive(false);
     }
 
     private void CheckForLauncher()

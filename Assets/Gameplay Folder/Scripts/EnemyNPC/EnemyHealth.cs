@@ -34,6 +34,7 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         base.OnEnable();
         if (PhotonNetwork.IsMasterClient)
         {
+            alive = true;
             enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
             RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
             PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
