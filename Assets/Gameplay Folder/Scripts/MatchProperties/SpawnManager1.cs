@@ -133,14 +133,14 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             while (!matchProps.startMatchBool)
                 yield return null;
 
-            ShuffleArray(enemyAI);
-            ShuffleSpawns(spawnPositions);
+            GameObject[] enemies = ShuffleArray(enemyAI);
+            Vector3[] spawns = ShuffleSpawns(spawnPositions);
 
             spawnEnemy = false;
 
-            Vector3 spawnPosition = spawnPositions[0];
+            Vector3 spawnPosition = spawns[0];
 
-            GameObject enemyCharacter = enemyAI[0];
+            GameObject enemyCharacter = enemies[0];
             PhotonNetwork.InstantiateRoomObject(enemyCharacter.name, spawnPosition, Quaternion.identity, 0, null);
 
             enemyCount++;
@@ -162,14 +162,14 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             yield return new WaitForSeconds(1);
 
-            ShuffleArray(securityAI);
-            ShuffleSpawns(spawnPositions);
+            GameObject[] enemies = ShuffleArray(securityAI);
+            Vector3[] spawns = ShuffleSpawns(spawnPositions);
 
             spawnSecurity = false;
 
-            Vector3 spawnPosition = spawnPositions[0];
+            Vector3 spawnPosition = spawns[0];
 
-            GameObject securityDrone = securityAI[0];
+            GameObject securityDrone = enemies[0];
             PhotonNetwork.InstantiateRoomObject(securityDrone.name, spawnPosition, Quaternion.identity, 0, null);
 
             securityCount++;
@@ -190,8 +190,8 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             if (matchProps.spawnReactor && reactorCount < reactorCountMax)
             {
-                ShuffleSpawns(spawnPositions);
-                Vector3 spawnPosition = spawnPositions[0];
+                Vector3[] spawns = ShuffleSpawns(spawnPositions);
+                Vector3 spawnPosition = spawns[0];
 
                 PhotonNetwork.InstantiateRoomObject(reactor.name, spawnPosition, Quaternion.identity, 0, null);
 
@@ -307,11 +307,11 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             while (!matchProps.startMatchBool)
                 yield return null;
 
-            ShuffleSpawns(spawnPositions);
+            Vector3[] spawns = ShuffleSpawns(spawnPositions);
 
             spawnHealth = false;
 
-            Vector3 spawnPosition = spawnPositions[0];
+            Vector3 spawnPosition = spawns[0];
 
             GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, spawnPosition, Quaternion.identity, 0, null);
 
@@ -333,12 +333,12 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             if (enemiesKilled >= enemiesKilledForBossSpawn)
             {
-                ShuffleArray(enemyBoss);
-                ShuffleSpawns(spawnPositions);
+                GameObject[] bosses = ShuffleArray(enemyBoss);
+                Vector3[] spawns = ShuffleSpawns(spawnPositions);
 
-                Vector3 spawnPosition = spawnPositions[0];
+                Vector3 spawnPosition = spawns[0];
 
-                GameObject enemyCharacterBoss = enemyBoss[0];
+                GameObject enemyCharacterBoss = bosses[0];
                 PhotonNetwork.InstantiateRoomObject(enemyCharacterBoss.name, spawnPosition, Quaternion.identity, 0, null);
 
                 enemiesKilled = 0;
@@ -351,20 +351,22 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
     private void NetworkingClient_EventReceived(ExitGames.Client.Photon.EventData obj)
     {
-        if (obj.Code == (byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount)
-        {
-            UpdateEnemy();
-            UpdateEnemyCount();
-            return;
-        }
+        //if (obj.Code == (byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount)
+        //{
+        //    UpdateEnemy();
+        //    UpdateEnemyCount();
+        //    return;
+        //}
     }
 
-    public void UpdateEnemy()
+    [PunRPC]
+    public void RPC_UpdateEnemy()
     {
         enemyCount--;
     }
 
-    public void UpdateEnemyCount()
+    [PunRPC]
+    public void RPC_UpdateEnemyCount()
     {
         enemiesKilled++;
     }

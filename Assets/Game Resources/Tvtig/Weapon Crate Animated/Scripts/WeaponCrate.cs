@@ -113,9 +113,9 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
         String[] shuffledWeapons = ShuffleArray(weapons);
         String[] shuffledPowerups = ShufflePowerups(powerups);
         yield return new WaitForSeconds(1);
-        PhotonNetwork.InstantiateRoomObject(weapons[0], spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(weapons[2], spawn3.position, spawn3.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(powerups[0], spawn2.position, spawn2.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0], spawn1.position, spawn1.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2], spawn3.position, spawn3.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledPowerups[0], spawn2.position, spawn2.rotation, 0, null);
         StartCoroutine(CacheRespawn());
         _animator.SetBool("Open", false);
     }

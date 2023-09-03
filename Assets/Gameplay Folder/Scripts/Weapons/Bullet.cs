@@ -133,14 +133,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                 else
                 {
                     SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
-                    if (enemyDamageCrit2.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                    if (enemyDamageCrit2.Health <= (30 * bulletModifier) && enemyDamageCrit2.alive == true && playerHealth != null)
                     {
                         playerHealth.GuardianKilled();
-                        enemyDamageCrit.TakeDamage(30 * bulletModifier);
+                        enemyDamageCrit2.TakeDamage(30 * bulletModifier);
                     }
 
-                    else if (enemyDamageCrit.Health > (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
-                        enemyDamageCrit.TakeDamage(30 * bulletModifier);
+                    else if (enemyDamageCrit2.Health > (30 * bulletModifier) && enemyDamageCrit2.alive == true && playerHealth != null)
+                        enemyDamageCrit2.TakeDamage(30 * bulletModifier);
                 }
             }
 
@@ -161,7 +161,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 else
                 {
                     SentryDrone enemyDamage2 = other.GetComponentInParent<SentryDrone>();
-                    if (enemyDamage.Health <= (30 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+                    if (enemyDamage2.Health <= (30 * bulletModifier) && enemyDamage2.alive == true && playerHealth != null)
                     {
                         playerHealth.GuardianKilled();
                         enemyDamage2.TakeDamage(30 * bulletModifier);

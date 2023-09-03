@@ -67,6 +67,8 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public HitBox hitbox;
     public Ragdoll ragdoll;
+    public bool stuck = false;
+    public float stickySpeed = 0f;
 
     // Start is called before the first frame update
     public override void OnEnable()
@@ -204,12 +206,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             // set the speed for the agent for the blend tree
             animator.SetFloat("Speed", agent.velocity.magnitude);
         }
-
-        if (agent != null && !agent.isOnNavMesh)
-        {
-            TakeDamage(300);
-            enemyCounter.enemiesKilled--;
-        }
     }
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
@@ -265,7 +261,10 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Patrol()
     {
         attackWeapon.fireWeaponBool = false;
-        agent.speed = 1.5f;
+        if (!stuck)
+            agent.speed = 1.5f;
+        else if (stuck)
+            agent.speed = stickySpeed;
         Agro = false;
         // patrols from one place to the next
         if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
@@ -290,7 +289,10 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         attackWeapon.fireWeaponBool = false;
         agent.destination = targetTransform.position;
-        agent.speed = 2.5f;
+        if (!stuck)
+            agent.speed = 2.5f;
+        else if (stuck)
+            agent.speed = stickySpeed;
     }
 
     private void Attack()
@@ -362,12 +364,12 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (!alive)
             return;
-        //photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
+        photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
 
         // Raise take damage event
-        object[] data = new object[] { damage };
-        RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_TakeDamage, data, options, SendOptions.SendUnreliable);
+        //object[] data = new object[] { damage };
+        //RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+        //PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_TakeDamage, data, options, SendOptions.SendUnreliable);
     }
 
     public void RandomSFX()
@@ -376,12 +378,13 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
-    void StopHit()
+    IEnumerator StopHit()
     {
-        // photonView.RPC("RPC_StopHit", RpcTarget.All);
+        yield return new WaitForSeconds(1f);
+        photonView.RPC("RPC_StopHit", RpcTarget.All);
         // Raise Event Here
-        hitEffect.SetActive(false);
-        firstHit = false;
+        //hitEffect.SetActive(false);
+        //firstHit = false;
     }
 
     //public void EMPShock(GameObject Effect)
@@ -430,22 +433,68 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     // Unwrap damage event and call local Take Damage method
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_TakeDamage)
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            int damage = (int)data[0];
-            TakeDamageEnemy(damage);
-        }
-        if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_StopHit)
-        {
-            // Call StopHit after 3 seconds
-            Invoke("StopHit", 3f);
-        }
+        //if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_TakeDamage)
+        //{
+        //    object[] data = (object[])photonEvent.CustomData;
+        //    int damage = (int)data[0];
+        //    TakeDamageEnemy(damage);
+        //}
+        //if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_StopHit)
+        //{
+        //    Call StopHit after 3 seconds
+        //    Invoke("StopHit", 3f);
+        //}
     }
 
     // Damages the enemy and kills it if health <= 0
-    void TakeDamageEnemy(int damage)
+    //void TakeDamageEnemy(int damage)
+    //{
+    //    audioSource.PlayOneShot(bulletHit);
+    //    Health -= damage;
+    //    healthBar.SetCurrentHealth(Health);
+
+    //    if (Health <= 0 && alive == true)
+    //    {
+    //        alive = false;
+    //        enemyHealth.KillEnemy();
+
+    //        Updates Enemy counts
+    //       RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+    //        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount, null, options, SendOptions.SendUnreliable);
+    //    }
+
+    //    if (!firstHit)
+    //    {
+    //        hitEffect.SetActive(true);
+    //        firstHit = true;
+    //        Invoke StopHit after 3 seconds so no need for Coroutine
+
+    //       Invoke("StopHit", 3f);
+    //       RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+    //        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_StopHit, null, options, SendOptions.SendUnreliable);
+    //    }
+    //}
+
+    // --------- OLD RPC FOR StopHit ---------------
+
+    [PunRPC]
+    void RPC_StopHit()
     {
+        if (!photonView.IsMine)
+            return;
+        hitEffect.SetActive(false);
+        firstHit = false;
+    }
+
+
+
+    // --------- OLD RPC FOR ENEMY TAKING DAMAGE ---------------
+
+    [PunRPC]
+    void RPC_TakeDamageEnemy(int damage)
+    {
+        if (!photonView.IsMine)
+            return;
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
         //healthBar.SetCurrentHealth(Health);
@@ -454,56 +503,15 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             alive = false;
             enemyHealth.KillEnemy();
-
-            // Updates Enemy counts
-            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount, null, options, SendOptions.SendUnreliable);
         }
 
         if (!firstHit)
         {
             hitEffect.SetActive(true);
             firstHit = true;
-            // Invoke StopHit after 3 seconds so no need for Coroutine
-            //Invoke("StopHit", 3f);
-            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_StopHit, null, options, SendOptions.SendUnreliable);
+            StartCoroutine(StopHit());
         }
     }
-
-    // --------- OLD RPC FOR StopHit ---------------
-
-    //[PunRPC]
-    //void RPC_StopHit()
-    //{
-    //    hitEffect.SetActive(false);
-    //    firstHit = false;
-    //}
-
-
-
-    // --------- OLD RPC FOR ENEMY TAKING DAMAGE ---------------
-
-    //[PunRPC]
-    //void RPC_TakeDamageEnemy(int damage)
-    //{
-    //    audioSource.PlayOneShot(bulletHit);
-    //    Health -= damage;
-    //    //healthBar.SetCurrentHealth(Health);
-
-    //    if (Health <= 0 && alive == true)
-    //    {
-    //        alive = false;
-    //        enemyHealth.KillEnemy();
-    //    }
-
-    //    if (!firstHit)
-    //    {
-    //        hitEffect.SetActive(true);
-    //        firstHit = true;
-    //        StartCoroutine(StopHit());
-    //    }
-    //}
 
 
 }

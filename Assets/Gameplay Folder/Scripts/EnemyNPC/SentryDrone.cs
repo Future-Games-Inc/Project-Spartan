@@ -191,11 +191,6 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
                 transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
             }
         }
-
-        if (agent != null && !agent.isOnNavMesh)
-        {
-            TakeDamage(300);
-        }
     }
     private bool IsLineOfSightClear(Transform target)
     {

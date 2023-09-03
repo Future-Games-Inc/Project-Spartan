@@ -76,7 +76,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         InitializeTimer();
-        photonView.RPC("AudioEnter", RpcTarget.All);
 
         // Generate a random 4-digit sequence
         photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);
@@ -162,8 +161,7 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         if (currentMatchTime <= 0)
         {
             photonView.RPC("AudioStart", RpcTarget.All);
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
+            StartCoroutine(RoomClosed());
             StartCoroutine(SpawnCheckCoroutine());
             //StartCoroutine(Artifacts());
             timerCoroutine = null; // Stop the coroutine
@@ -173,6 +171,13 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             RefreshTimer_S();
             timerCoroutine = StartCoroutine(TimerEvent());
         }
+    }
+
+    IEnumerator RoomClosed()
+    {
+        yield return new WaitForSeconds(30);
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
     }
 
     //IEnumerator Artifacts()
@@ -241,12 +246,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(matchBegan);
         uiCanvas.SetActive(false);
         startMatchBool = true;
-    }
-
-    [PunRPC]
-    void AudioEnter()
-    {
-        startMatchBool = false;
     }
 
     [PunRPC]

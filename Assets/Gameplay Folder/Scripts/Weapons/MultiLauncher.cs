@@ -50,6 +50,16 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
     public GameObject gravityBulletIcon;
     public GameObject blackoutBulletIcon;
 
+    public GameObject stickyBulletSmoke;
+    public GameObject gravityBulletSmoke;
+    public GameObject blackoutBulletSmoke;
+
+    public GameObject reactors;
+
+    public Material stickyMaterial;
+    public Material gravityMaterial;
+    public Material blackoutMaterial;
+
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -57,17 +67,14 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
-        StartCoroutine(TextUpdate());
+        CheckForLauncher();
+        UpdateText();
     }
 
-    IEnumerator TextUpdate()
+    void UpdateText()
     {
-        while (true)
-        {
-            ammoText.text = ammoLeft.ToString();
-            durabilityText.text = durability.ToString();
-            yield return new WaitForSeconds(.15f);
-        }
+        ammoText.text = ammoLeft.ToString();
+        durabilityText.text = durability.ToString();
     }
 
     // Update is called once per frame
@@ -79,7 +86,7 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         if (durability <= 0)
         {
             audioSource.PlayOneShot(weaponBreak);
-            DestroyWeapon();
+            StartCoroutine(DestroyWeapon());
         }
     }
 
@@ -97,25 +104,37 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
     public void StickyActive()
     {
         activeLauncher = Launcher.Sticky;
+        reactors.GetComponent<MeshRenderer>().material = stickyMaterial;
         stickyBulletIcon.SetActive(true);
         gravityBulletIcon.SetActive(false);
         blackoutBulletIcon.SetActive(false);
+        stickyBulletSmoke.SetActive(true);
+        gravityBulletSmoke.SetActive(false);
+        blackoutBulletSmoke.SetActive(false);
     }
 
     public void GravityActive()
     {
         activeLauncher = Launcher.Gravity;
+        reactors.GetComponent<MeshRenderer>().material = gravityMaterial;
         gravityBulletIcon.SetActive(true);
         stickyBulletIcon.SetActive(false);
         blackoutBulletIcon.SetActive(false);
+        stickyBulletSmoke.SetActive(false);
+        gravityBulletSmoke.SetActive(true);
+        blackoutBulletSmoke.SetActive(false);
     }
 
     public void BlackOutActive()
     {
         activeLauncher = Launcher.Blackout;
+        reactors.GetComponent<MeshRenderer>().material = blackoutMaterial;
         blackoutBulletIcon.SetActive(true);
         gravityBulletIcon.SetActive(false);
         stickyBulletIcon.SetActive(false);
+        stickyBulletSmoke.SetActive(false);
+        gravityBulletSmoke.SetActive(false);
+        blackoutBulletSmoke.SetActive(true);
     }
 
     private void CheckForLauncher()
@@ -170,10 +189,9 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
                     spawnedBullet.GetComponent<StickyBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StickyBullet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                 }
-
-                photonView.RPC("RPC_MultiLauncherFire", RpcTarget.All);
-                yield return new WaitForSeconds(0.2f);
+                Fire();
             }
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -191,10 +209,9 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
                     spawnedBullet.gameObject.GetComponent<GravityBullet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<GravityBullet>().playerBullet = true;
                 }
-
-                photonView.RPC("RPC_MultiLauncherFire", RpcTarget.All);
-                yield return new WaitForSeconds(0.2f);
+                Fire();
             }
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -212,15 +229,13 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
                     spawnedBullet.gameObject.GetComponent<BlackoutBullet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<BlackoutBullet>().playerBullet = true;
                 }
-
-                photonView.RPC("RPC_MultiLauncherFire", RpcTarget.All);
-                yield return new WaitForSeconds(0.2f);
+                Fire();
             }
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
-    [PunRPC]
-    void RPC_MultiLauncherFire()
+    void Fire()
     {
         ammoLeft--;
 
@@ -229,6 +244,8 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
             reloadingWeapon = true;
             StartCoroutine(Reload());
         }
+
+        UpdateText();
     }
 
     [PunRPC]
@@ -245,6 +262,7 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         ammoLeft = maxAmmo;
         reloadingScreen.SetActive(false);
         reloadingWeapon = false;
+        UpdateText();
     }
 
     [PunRPC]

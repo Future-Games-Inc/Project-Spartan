@@ -45,25 +45,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void TakeDamage(int damage)
     {
-        //photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
-        audioSource.PlayOneShot(bulletHit);
-        Health -= damage;
-        //healthBar.SetCurrentHealth(Health);
-
-        if (Health <= 0 && alive == true)
-        {
-            alive = false;
-            if (!audioSource.isPlaying)
-                audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
-
-            explosionEffect.SetActive(true);
-            explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
-
-            agent.enabled = false;
-            GetComponent<Rigidbody>().isKinematic = false;
-
-            DestroyEnemy();
-        }
+        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
     private void DestroyEnemy()
@@ -82,7 +64,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
-
+        enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
         //yield return new WaitForSeconds(.75f);
         PhotonNetwork.Destroy(gameObject);
     }
@@ -95,35 +77,36 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == (byte)PUNEventDatabase.DroneHealth_TakeDamage)
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            int damage = (int)data[0];
-            TakeDamage(damage);
-        }
+        //if (photonEvent.Code == (byte)PUNEventDatabase.DroneHealth_TakeDamage)
+        //{
+        //    object[] data = (object[])photonEvent.CustomData;
+        //    int damage = (int)data[0];
+        //    TakeDamage(damage);
+        //}
     }
 
-    
 
-    //[PunRPC]
-    //void RPC_TakeDamage(int damage)
-    //{
-    //    audioSource.PlayOneShot(bulletHit);
-    //    Health -= damage;
-    //    //healthBar.SetCurrentHealth(Health);
 
-    //    if (Health <= 0 && alive == true)
-    //    {
-    //        alive = false;
-    //        enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
+    [PunRPC]
+    void RPC_TakeDamage(int damage)
+    {
+        if (!photonView.IsMine)
+            return;
+        audioSource.PlayOneShot(bulletHit);
+        Health -= damage;
+        //healthBar.SetCurrentHealth(Health);
 
-    //        explosionEffect.SetActive(true);
+        if (Health <= 0 && alive == true)
+        {
+            alive = false;
 
-    //        agent.enabled = false;
-    //        GetComponent<Rigidbody>().isKinematic = false;
+            explosionEffect.SetActive(true);
 
-    //        DestroyEnemy();
-    //    }
-    //}
+            agent.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = false;
+
+            DestroyEnemy();
+        }
+    }
 }
 
