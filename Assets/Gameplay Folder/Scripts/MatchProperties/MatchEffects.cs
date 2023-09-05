@@ -46,16 +46,6 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         RefreshTimer
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        // Check if this is the object's current owner and if the new master client exists
-        if (photonView.IsMine && newMasterClient != null)
-        {
-            // Transfer ownership of the object to the new master client
-            photonView.TransferOwnership(newMasterClient.ActorNumber);
-        }
-    }
-
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code >= 200)
@@ -75,14 +65,17 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
-        InitializeTimer();
-
-        // Generate a random 4-digit sequence
-        photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // Only the Master Client will initialize the sequence
+            photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);
+        }
     }
 
     IEnumerator SpawnCheckCoroutine()
     {
+        if (!PhotonNetwork.IsMasterClient) yield break; // Exit if not Master Client
+
         while (true)
         {
             yield return new WaitForSeconds(spawnInterval);
@@ -149,9 +142,12 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator TimerEvent()
     {
+        if (!PhotonNetwork.IsMasterClient) yield break; // Exit if not Master Client
+
         yield return new WaitForSeconds(1f);
 
         currentMatchTime -= 1;
+        RefreshTimer_S();
 
         if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
         {
@@ -194,13 +190,12 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void RefreshTimer_S()
     {
-        object[] package = new object[] { currentMatchTime };
+        if (!PhotonNetwork.IsMasterClient) return; // Exit if not Master Client
 
-        PhotonNetwork.RaiseEvent(
-            (byte)EventCodes.RefreshTimer, package,
-            new RaiseEventOptions { Receivers = ReceiverGroup.All },
-            new SendOptions { Reliability = true }
-            );
+        object[] package = new object[] { currentMatchTime };
+        PhotonNetwork.RaiseEvent((byte)EventCodes.RefreshTimer, package,
+                                  new RaiseEventOptions { Receivers = ReceiverGroup.All },
+                                  new SendOptions { Reliability = true });
     }
 
     public void RefreshTimer_R(object[] data)
@@ -213,6 +208,11 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         base.OnEnable();
         PhotonNetwork.AddCallbackTarget(this);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InitializeTimer(); // Only the Master Client will initialize the timer
+            StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
+        }
     }
 
     public override void OnDisable()
@@ -251,11 +251,10 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_GenerateSequence()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            numSequence = GenerateRandomSequence(4);
-            photonView.RPC("RPC_ReceiveSequence", RpcTarget.All, numSequence);
-        }
+        if (!PhotonNetwork.IsMasterClient) return; // Exit if not Master Client
+
+        numSequence = GenerateRandomSequence(4);
+        photonView.RPC("RPC_ReceiveSequence", RpcTarget.All, numSequence);
     }
 
     [PunRPC]
