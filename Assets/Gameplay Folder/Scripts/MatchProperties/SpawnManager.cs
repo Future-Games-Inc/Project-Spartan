@@ -3,19 +3,18 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.AI;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : MonoBehaviourPunCallbacks
 {
     public GameObject[] playerPrefab;
     public bool gameOver;
     public GameObject winnerPlayer;
 
-    public float spawnRadius = 300.0f;   // Maximum spawn radius
+    public float spawnRadius = 300.0f;
 
     public NavMeshSurface navMeshSurface;
     Vector3 spawnPosition;
     public Vector3 respawnPosition;
 
-    // Start is called before the first frame update
     void OnEnable()
     {
         if (PhotonNetwork.IsConnectedAndReady)
@@ -26,39 +25,14 @@ public class SpawnManager : MonoBehaviour
         winnerPlayer = null;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-
-    }
-
     IEnumerator SpawnPlayer()
     {
         yield return new WaitForSeconds(.5f);
-        // Create an array to store the valid positions
-        Vector3[] spawnPositions = new Vector3[10];
-        int validPositionsCount = 0;
+        Vector3 randomPosition = GenerateRandomPosition();
 
-        // Generate multiple random positions within the spawn radius
-        for (int i = 0; i < spawnPositions.Length; i++)
+        if (randomPosition != Vector3.zero)
         {
-            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-            randomPosition += transform.position;
-
-            // Find the nearest point on the NavMesh to the random position
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-            {
-                // Add the valid position to the array
-                spawnPositions[validPositionsCount] = hit.position;
-                validPositionsCount++;
-            }
-        }
-
-        // If there are valid positions, choose one randomly for spawning the enemy
-        if (validPositionsCount > 0)
-        {
-            spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+            spawnPosition = randomPosition;
             respawnPosition = spawnPosition;
 
             object avatarSelectionNumber;
@@ -68,5 +42,18 @@ public class SpawnManager : MonoBehaviour
                 PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition, Quaternion.identity);
             }
         }
+    }
+
+    Vector3 GenerateRandomPosition()
+    {
+        Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+        randomPosition += transform.position;
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+        return Vector3.zero;
     }
 }

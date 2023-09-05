@@ -34,6 +34,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
 
     public GameObject attachedCache;
     public Transform attachTransform;
+    public float nextUpdateTime;
 
     public enum States
     {
@@ -162,7 +163,11 @@ public class LootDrone : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            FindClosestEnemy();
+            if (Time.time >= nextUpdateTime)
+            {
+                nextUpdateTime = Time.time + 1f; // Update every 1 second
+                FindClosestEnemy();
+            }
 
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
 

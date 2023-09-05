@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine.AI;
 using System;
 
@@ -10,12 +9,12 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 {
     [Header("Cache Effects ------------------------------------------------------")]
     [SerializeField]
-    private VisualEffect _visualEffect;    
-    
+    private VisualEffect _visualEffect;
+
     public Transform spawn1;
     public Transform spawn2;
-    public Transform spawn3;    
-    
+    public Transform spawn3;
+
     public AudioSource cacheAudio;
     public AudioClip cacheClip;
 
@@ -50,6 +49,17 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (!cacheActive)
+        {
+            foreach (GameObject cache in cacheBase)
+                cache.GetComponent<Renderer>().material = deactiveMaterial;
+        }
+        else
+        {
+            foreach (GameObject cache in cacheBase)
+                cache.GetComponent<Renderer>().material = activeMaterial;
+        }
+        _collider.enabled = cacheActive;
 
     }
 
@@ -83,57 +93,56 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
         return shuffledArray;
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        // Check if this is the object's current owner and if the new master client exists
-        if (photonView.IsMine && newMasterClient != null)
-        {
-            // Transfer ownership of the object to the new master client
-            photonView.TransferOwnership(newMasterClient.ActorNumber);
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            _collider.enabled = false;
             _animator.SetBool("Open", true);
             _visualEffect.SendEvent("OnPlay");
             cacheAudio.PlayOneShot(cacheClip);
-            cacheActive = false;
-            foreach (GameObject cache in cacheBase)
-                cache.GetComponent<Renderer>().material = deactiveMaterial;
+            photonView.RPC("RPC_CacheState", RpcTarget.All, false);
             StartCoroutine(WeaponCache());
         }
     }
 
     IEnumerator WeaponCache()
     {
-        String[] shuffledWeapons = ShuffleArray(weapons);
-        String[] shuffledPowerups = ShufflePowerups(powerups);
+        photonView.RPC("RPC_WeaponSpawn", RpcTarget.MasterClient);
         yield return new WaitForSeconds(1);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0], spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2], spawn3.position, spawn3.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledPowerups[0], spawn2.position, spawn2.rotation, 0, null);
-        StartCoroutine(CacheRespawn());
         _animator.SetBool("Open", false);
+        StartCoroutine(CacheRespawn());
     }
 
     IEnumerator CacheRespawn()
     {
         yield return new WaitForSeconds(30);
         _animator.SetBool("Open", false);
-        cacheActive = true;
-        foreach (GameObject cache in cacheBase)
-            cache.GetComponent<Renderer>().material = activeMaterial;
-        _collider.enabled = true;
+        photonView.RPC("RPC_CacheState", RpcTarget.All, true);
     }
 
     [PunRPC]
     void RPC_Obstacle(bool state)
     {
+        if (!photonView.IsMine)
+            return;
+
         GetComponent<NavMeshObstacle>().enabled = state;
         GetComponent<Rigidbody>().isKinematic = !state;
+    }
+
+    [PunRPC]
+    void RPC_WeaponSpawn()
+    {
+        String[] shuffledWeapons = ShuffleArray(weapons);
+        String[] shuffledPowerups = ShufflePowerups(powerups);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0], spawn1.position, spawn1.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2], spawn3.position, spawn3.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledPowerups[0], spawn2.position, spawn2.rotation, 0, null);
+    }
+
+    [PunRPC]
+    void RPC_CacheState(bool state)
+    {
+        cacheActive = state;
     }
 }

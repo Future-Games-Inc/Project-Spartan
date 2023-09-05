@@ -2508,6 +2508,8 @@ MonoBehaviour:
   enemyCounter: {fileID: 0}
   hitbox: {fileID: 371741241528066123}
   ragdoll: {fileID: 5309151438218465623}
+  stuck: 0
+  stickySpeed: 0
 --- !u!114 &1132709372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2687,7 +2689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 5451881146956983319, guid: d8e64eb845a36b54bbf116c26a10e549, type: 3}
   bulletTransform: {fileID: 8579373721277181630}
-  shootForce: 100
+  shootForce: 65
   ammoLeft: 10
   maxAmmo: 0
   audioSource: {fileID: 868550654554536011}

@@ -280,7 +280,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_DROPZONE3)
             roomOptions.MaxPlayers = 5;
         else if ((string)mapType == MultiplayerVRConstants.MAP_TYPE_VALUE_WeaponTest)
-            roomOptions.MaxPlayers = 1;
+            roomOptions.MaxPlayers = 5;
 
         string[] roomPropsInLobby = { MultiplayerVRConstants.MAP_TYPE_KEY, "PlayerLevelForRoom" };
 

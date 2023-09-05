@@ -152,8 +152,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public XRNode left_HandButtonSource;
     [SerializeField] private bool primaryButtonPressed;
     [SerializeField] private bool secondaryButtonPressed;
-    InputDevice primaryImplant;
-    InputDevice secondaryImplant;
 
     [Header("Player Static Byte Data ------------------------------------")]
     public static readonly byte ExtractionGameMode = 1;
@@ -272,9 +270,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             hasButtonAssignment = true;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment2) && (int)assignment2 >= 2)
             hasButtonAssignment2 = true;
-
-        InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
-        InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
 
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestTarget, out object storedBossesTarget))
             bossesRequired = (int)storedBossesTarget;
@@ -737,12 +732,20 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void GetPrimaryButtonState()
     {
+        InputDevice primaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         primaryImplant.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
+
+        if (primaryButtonPressed && primaryPowerupTimer)
+            PrimaryImplantActivation();
     }
 
     void GetSecondaryButtonState()
     {
+        InputDevice secondaryImplant = InputDevices.GetDeviceAtXRNode(left_HandButtonSource);
         secondaryImplant.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
+
+        if (secondaryButtonPressed && secondaryPowerupTimer)
+            SecondaryImplantActivation();
     }
 
     void UpdateReactor()
@@ -1360,9 +1363,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator PrimaryTimer(float time)
     {
-        yield return new WaitForSeconds(time);
-        primaryPowerupTimer = true;
-
+        yield return new WaitForSeconds(time/2);
         object primaryImplant;
         object primaryNode;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
@@ -1376,13 +1377,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             decoyDeploy = false;
         }
+
+        yield return new WaitForSeconds(time / 2);
+        primaryPowerupTimer = true;
     }
 
     IEnumerator SecondaryTimer(float time)
     {
-        yield return new WaitForSeconds(time);
-        secondaryPowerupTimer = true;
-
+        yield return new WaitForSeconds(time / 2);
         object secondaryImplant;
         object secondaryNode;
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
@@ -1396,6 +1398,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             decoyDeploy = false;
         }
+
+        yield return new WaitForSeconds(time / 2);
+        secondaryPowerupTimer = true;
     }
 
     void PrimaryImplantActivation()
@@ -1403,137 +1408,137 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         object primaryImplant;
         object primaryNode;
 
-        if (primaryButtonPressed && primaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant! >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode != 1 || primaryButtonPressed && primaryPowerupTimer == true &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant! >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode != 1)
+        //if (primaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant! >= 1 &&
+        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode != 1 || primaryPowerupTimer == true &&
+        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant! >= 1 &&
+        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode != 1)
+        //{
+        primaryPowerupTimer = false;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
         {
-            primaryPowerupTimer = false;
-
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                AddHealth(25);
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                leechEffect = true;
-                leechEffectTimer = 0;
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                activeCamo = true;
-                activeCamoTimer = 0;
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                stealth = true;
-                stealthTimer = 0;
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                aiCompanion = true;
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                decoyDeploy = true;
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out primaryNode) && (int)primaryNode == 1)
-            {
-                berserker = true;
-                berserkerEffectTimer = 0;
-                StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
-            }
+            AddHealth(25);
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
-        else
-            return;
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            leechEffect = true;
+            leechEffectTimer = 0;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            activeCamo = true;
+            activeCamoTimer = 0;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            stealth = true;
+            stealthTimer = 0;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            aiCompanion = true;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            decoyDeploy = true;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out primaryImplant) && (int)primaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out primaryNode) && (int)primaryNode == 1)
+        {
+            berserker = true;
+            berserkerEffectTimer = 0;
+            StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
+        }
+        //}
+        //else
+        //    return;
     }
 
-    void SecondayImplantActivation()
+    void SecondaryImplantActivation()
     {
         object secondaryImplant;
         object secondaryNode;
 
-        if (secondaryButtonPressed && secondaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out secondaryImplant) && (int)secondaryImplant! >= 2 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out secondaryNode) && (int)secondaryNode != 2 || primaryButtonPressed && primaryPowerupTimer == true &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out secondaryImplant) && (int)secondaryImplant! >= 2 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out secondaryNode) && (int)secondaryNode != 2)
+        //if (secondaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out secondaryImplant) && (int)secondaryImplant! >= 2 &&
+        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out secondaryNode) && (int)secondaryNode != 2 || secondaryPowerupTimer == true &&
+        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out secondaryImplant) && (int)secondaryImplant! >= 2 &&
+        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out secondaryNode) && (int)secondaryNode != 2)
+        //{
+        secondaryPowerupTimer = false;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
         {
-            secondaryPowerupTimer = false;
-
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                AddHealth(25);
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                leechEffect = true;
-                leechEffectTimer = 0;
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                activeCamo = true;
-                activeCamoTimer = 0;
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                stealth = true;
-                stealthTimer = 0;
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                aiCompanion = true;
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                decoyDeploy = true;
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
-
-            else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out secondaryNode) && (int)secondaryNode == 2)
-            {
-                berserker = true;
-                berserkerEffectTimer = 0;
-                StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
-            }
+            AddHealth(25);
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
-        else
-            return;
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            leechEffect = true;
+            leechEffectTimer = 0;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            activeCamo = true;
+            activeCamoTimer = 0;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            stealth = true;
+            stealthTimer = 0;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            aiCompanion = true;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            decoyDeploy = true;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        }
+
+        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out secondaryImplant) && (int)secondaryImplant >= 1 &&
+                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        {
+            berserker = true;
+            berserkerEffectTimer = 0;
+            StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
+        }
+        //}
+        //else
+        //    return;
     }
 
     public void EMPShock()

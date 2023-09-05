@@ -12,12 +12,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     public GameObject Blade;
     public PlayerHealth playerHealth;
 
-    private Transform bladeTransform;
-
-    private Vector3 previousPosition;
-
-    private float bladeVelocity;
-
     public Material normal;
     public Material bleed;
 
@@ -50,16 +44,11 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     void OnEnable()
     {
-        bladeTransform = transform;
-        previousPosition = bladeTransform.localPosition;
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (bladeVelocity < 0.2f)
-        {
-            return;  // Check if blade is not moving fast enough
-        }
         int Damage = baseDamage + bleedStacks * bleedDamage;
 
         if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
@@ -142,11 +131,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        // Calculate blade velocity
-        Vector3 displacement = bladeTransform.localPosition - previousPosition;
-        bladeVelocity = displacement.magnitude / Time.deltaTime;
-        previousPosition = bladeTransform.localPosition;
-
         if (bleedStacks > 3)
             isBleeding = true;
 

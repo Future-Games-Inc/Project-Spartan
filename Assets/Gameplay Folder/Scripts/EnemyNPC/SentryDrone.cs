@@ -2,10 +2,8 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Rendering;
 
 public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -56,6 +54,8 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     public float ammoLeft;
     public float maxAmmo = 10f;
 
+    public float nextUpdateTime;
+
     public LayerMask obstacleMask;
 
     public enum States
@@ -75,20 +75,13 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         alive = true;
         timer = wanderTimer;
         StartCoroutine(Fire());
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.AddCallbackTarget(this);
-        }
-
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.RemoveCallbackTarget(this);
-        }
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void FindClosestEnemy()
@@ -116,7 +109,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         previousState = currentState;
 
-        currentState = input;
+        photonView.RPC("RPC_SyncCurrentState", RpcTarget.All, input);
     }
 
     public void Patrol()
@@ -150,7 +143,11 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            FindClosestEnemy();
+            if (Time.time >= nextUpdateTime)
+            {
+                nextUpdateTime = Time.time + 1f; // Update every 1 second
+                FindClosestEnemy();
+            }
 
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
 
@@ -173,7 +170,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else
             {
-                if(previousState != States.Patrol)
+                if (previousState != States.Patrol)
                 {
                     Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
                     agent.SetDestination(newPos);
@@ -244,7 +241,6 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
                 GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = 4;
-                shootForce = (int)Random.Range(40, 75);
                 spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
 
                 ammoLeft--;
@@ -271,24 +267,24 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void TakeDamage(int damage)
     {
-        //photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
-        audioSource.PlayOneShot(bulletHit);
-        Health -= damage;
+        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        //audioSource.PlayOneShot(bulletHit);
+        //Health -= damage;
         //healthBar.SetCurrentHealth(Health);
 
-        if (Health <= 0 && alive == true)
-        {
-            alive = false;
-            enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
+        //if (Health <= 0 && alive == true)
+        //{
+        //    alive = false;
+        //    enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
 
-            explosionEffect.SetActive(true);
-            explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
+        //    explosionEffect.SetActive(true);
+        //    explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
 
-            agent.enabled = false;
-            GetComponent<Rigidbody>().isKinematic = false;
+        //    agent.enabled = false;
+        //    GetComponent<Rigidbody>().isKinematic = false;
 
-            DestroyEnemy();
-        }
+        //    DestroyEnemy();
+        //}
     }
 
     private void DestroyEnemy()
@@ -308,7 +304,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
 
-       //yield return new WaitForSeconds(.75f);
+        //yield return new WaitForSeconds(.75f);
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -328,25 +324,31 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    //[PunRPC]
-    //void RPC_TakeDamage(int damage)
-    //{
-    //    audioSource.PlayOneShot(bulletHit);
-    //    Health -= damage;
-    //    //healthBar.SetCurrentHealth(Health);
+    [PunRPC]
+    void RPC_SyncCurrentState(States state)
+    {
+        currentState = state;
+    }
 
-    //    if (Health <= 0 && alive == true)
-    //    {
-    //        alive = false;
-    //        enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
+    [PunRPC]
+    void RPC_TakeDamage(int damage)
+    {
+        audioSource.PlayOneShot(bulletHit);
+        Health -= damage;
+        //healthBar.SetCurrentHealth(Health);
 
-    //        explosionEffect.SetActive(true);
+        if (Health <= 0 && alive == true)
+        {
+            alive = false;
+            enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
 
-    //        agent.enabled = false;
-    //        GetComponent<Rigidbody>().isKinematic = false;
+            explosionEffect.SetActive(true);
 
-    //        DestroyEnemy();
-    //    }
-    //}
+            agent.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = false;
+
+            DestroyEnemy();
+        }
+    }
 }
 

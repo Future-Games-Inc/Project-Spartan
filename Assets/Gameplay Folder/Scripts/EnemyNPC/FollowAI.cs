@@ -5,6 +5,7 @@ using System.Collections;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using System.Threading.Tasks;
+using System;
 
 public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -69,27 +70,27 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     public Ragdoll ragdoll;
     public bool stuck = false;
     public float stickySpeed = 0f;
+    float nextUpdateTime;
 
     // Start is called before the first frame update
     public override void OnEnable()
     {
         base.OnEnable();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            InvokeRepeating("RandomSFX", 15, 20);
-            animator = GetComponent<Animator>();
-            hitbox.ApplyTagRecursively(gameObject.transform);
-            ragdoll.SetUp();
 
-            enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-            agent.SetDestination(newPos);
+        InvokeRepeating("RandomSFX", 15, 20);
+        animator = GetComponent<Animator>();
+        hitbox.ApplyTagRecursively(gameObject.transform);
+        ragdoll.SetUp();
 
-            Patrol();
+        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+        agent.SetDestination(newPos);
 
-            //photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
-            //Listen to PhotonEvents
-        }
+        Patrol();
+
+        //photonView.RPC("RPC_EnemyHealthMax", RpcTarget.All);
+        //Listen to PhotonEvents
+
         PhotonNetwork.AddCallbackTarget(this);
     }
 
@@ -121,24 +122,21 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         targetTransform = closest.transform;
     }
 
-    public void SwitchStates(States input)
-    {
-        previousState = currentState;
-
-        currentState = input;
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            FindClosestEnemy();
+            if (Time.time >= nextUpdateTime)
+            {
+                nextUpdateTime = Time.time + 1f; // Update every 1 second
+                FindClosestEnemy();
+            }
 
             if (!alive) return;
             // calculates the distance from NPC to player
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
-            animator.SetBool("Agro", Agro);
+            photonView.RPC("RPC_SyncAnimator", RpcTarget.All, "Agro", Agro);
 
             if (currentState == States.Shocked)
             {
@@ -148,13 +146,15 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             // If the player are seen by the NPC or if the distance is close enough
             if (distanceToPlayer <= DetectRange && CheckForPlayer())
             {
-                Agro = true;
+                // When Agro changes
+                photonView.RPC("RPC_SetAgro", RpcTarget.All, true);
             }
 
             // If the enemy has detected the player but doesn't have a clear line of sight
             if (Agro && !IsLineOfSightClear(targetTransform))
             {
-                SwitchStates(States.Follow);
+                photonView.RPC("RPC_SwitchState", RpcTarget.All, States.Follow.ToString());
+
                 agent.isStopped = false;
                 agent.destination = targetTransform.position; // Move towards the player
                 return; // Don't proceed to other behaviors until we have a clear line of sight
@@ -164,7 +164,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             //          if the player is outside of agro range, drop agro.
             if (!Agro)
             {
-                SwitchStates(States.Patrol);
+                photonView.RPC("RPC_SwitchState", RpcTarget.All, States.Patrol.ToString());
                 agent.isStopped = false;
                 Patrol();
             }
@@ -173,7 +173,8 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
                 // if the NPC is BEYOND the range that it could agro, drop the agro.
                 if (distanceToPlayer > AgroRange)
                 {
-                    Agro = false;
+                    // When Agro changes
+                    photonView.RPC("RPC_SetAgro", RpcTarget.All, false);
                     // stop where it is
                     agent.SetDestination(gameObject.transform.position);
                     return;
@@ -181,7 +182,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
                 // if in range of attacks
                 if (distanceToPlayer <= AttackRange)
                 {
-                    SwitchStates(States.Attack);
+                    photonView.RPC("RPC_SwitchState", RpcTarget.All, States.Attack.ToString());
                     LookatTarget(1, 3f);
                     agent.isStopped = true;
                     Attack();
@@ -189,7 +190,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
                 // give chase if not in range
                 else
                 {
-                    SwitchStates(States.Follow);
+                    photonView.RPC("RPC_SwitchState", RpcTarget.All, States.Follow.ToString());
                     agent.isStopped = false;
                     Follow();
                 }
@@ -247,7 +248,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
-        Vector3 randDirection = Random.insideUnitSphere * dist;
+        Vector3 randDirection = UnityEngine.Random.insideUnitSphere * dist;
 
         randDirection += origin;
 
@@ -265,7 +266,7 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             agent.speed = 1.5f;
         else if (stuck)
             agent.speed = stickySpeed;
-        Agro = false;
+        photonView.RPC("RPC_SetAgro", RpcTarget.All, false);
         // patrols from one place to the next
         if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
         {
@@ -320,44 +321,45 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void EMPShock()
     {
-        async void shock()
+        if (!PhotonNetwork.IsMasterClient) return;
+        IEnumerator shock()
         {
             attackWeapon.fireWeaponBool = false;
             //States preState = currentState;
             currentState = States.Shocked;
             agent.isStopped = true;
             animator.SetTrigger("Shock");
-            animator.SetBool("ShockDone", false);
+            photonView.RPC("RPC_SyncAnimator", RpcTarget.All, "ShockDone", false);
 
             // apply damage
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
             GameObject effect = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1);
             PhotonNetwork.Destroy(effect);
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
             GameObject effect2 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1);
             PhotonNetwork.Destroy(effect2);
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
             GameObject effect3 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1);
             PhotonNetwork.Destroy(effect3);
             // enable movement
 
             animator.ResetTrigger("shock");
-            animator.SetBool("ShockDone", true);
+            photonView.RPC("RPC_SyncAnimator", RpcTarget.All, "ShockDone", true);
             currentState = previousState;
             agent.isStopped = false;
         }
         // if already shocked, ignore effects
         if (currentState == States.Shocked) return;
-        shock();
+        StartCoroutine(shock());
     }
 
     public void TakeDamage(int damage)
@@ -365,123 +367,28 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!alive)
             return;
         photonView.RPC("RPC_TakeDamageEnemy", RpcTarget.All, damage);
-
-        // Raise take damage event
-        //object[] data = new object[] { damage };
-        //RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-        //PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_TakeDamage, data, options, SendOptions.SendUnreliable);
     }
 
     public void RandomSFX()
     {
         if (!audioSource.isPlaying)
-            audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
+            audioSource.PlayOneShot(audioClip[UnityEngine.Random.Range(0, audioClip.Length)]);
     }
 
     IEnumerator StopHit()
     {
         yield return new WaitForSeconds(1f);
         photonView.RPC("RPC_StopHit", RpcTarget.All);
-        // Raise Event Here
-        //hitEffect.SetActive(false);
-        //firstHit = false;
     }
-
-    //public void EMPShock(GameObject Effect)
-    //{
-    //    async void Shock()
-    //    {
-    //        attackWeapon.fireWeaponBool = false;
-    //        //States preState = currentState;
-    //        SwitchStates(States.Shocked);
-    //        agent.isStopped = true;
-    //        animator.SetTrigger("Shock");
-    //        animator.SetBool("ShockDone", false);
-    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
-    //        // apply damage
-    //        await Task.Delay(1000);
-    //        TakeDamage(5);
-    //        // play shock effect
-    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
-    //        agent.isStopped = true;
-    //        await Task.Delay(1000);
-    //        TakeDamage(5);
-    //        // play shock effect
-    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 1f);
-    //        agent.isStopped = true;
-    //        await Task.Delay(1000);
-    //        TakeDamage(5);
-    //        // play shock effect
-    //        Destroy(Instantiate(Effect, gameObject.transform.position + new Vector3(0, 1, 0), Quaternion.identity), 0.5f);
-    //        // enable movement
-    //        animator.ResetTrigger("shock");
-    //        animator.SetBool("ShockDone", true);
-    //        currentState = previousState;
-    //        agent.isStopped = false;
-    //    }
-    //    // if already shocked, ignore effects
-    //    if (currentState == States.Shocked) return;
-    //    Shock();
-    //}
-
-    //[PunRPC]
-    //void RPC_EnemyHealthMax()
-    //{
-    //    healthBar.SetMaxHealth(Health);
-    //}
 
     // Unwrap damage event and call local Take Damage method
     public void OnEvent(EventData photonEvent)
     {
-        //if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_TakeDamage)
-        //{
-        //    object[] data = (object[])photonEvent.CustomData;
-        //    int damage = (int)data[0];
-        //    TakeDamageEnemy(damage);
-        //}
-        //if (photonEvent.Code == (byte)PUNEventDatabase.FollowAI_StopHit)
-        //{
-        //    Call StopHit after 3 seconds
-        //    Invoke("StopHit", 3f);
-        //}
     }
-
-    // Damages the enemy and kills it if health <= 0
-    //void TakeDamageEnemy(int damage)
-    //{
-    //    audioSource.PlayOneShot(bulletHit);
-    //    Health -= damage;
-    //    healthBar.SetCurrentHealth(Health);
-
-    //    if (Health <= 0 && alive == true)
-    //    {
-    //        alive = false;
-    //        enemyHealth.KillEnemy();
-
-    //        Updates Enemy counts
-    //       RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-    //        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount, null, options, SendOptions.SendUnreliable);
-    //    }
-
-    //    if (!firstHit)
-    //    {
-    //        hitEffect.SetActive(true);
-    //        firstHit = true;
-    //        Invoke StopHit after 3 seconds so no need for Coroutine
-
-    //       Invoke("StopHit", 3f);
-    //       RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-    //        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.FollowAI_StopHit, null, options, SendOptions.SendUnreliable);
-    //    }
-    //}
-
-    // --------- OLD RPC FOR StopHit ---------------
 
     [PunRPC]
     void RPC_StopHit()
     {
-        if (!photonView.IsMine)
-            return;
         hitEffect.SetActive(false);
         firstHit = false;
     }
@@ -493,8 +400,6 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     void RPC_TakeDamageEnemy(int damage)
     {
-        if (!photonView.IsMine)
-            return;
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
         //healthBar.SetCurrentHealth(Health);
@@ -511,6 +416,37 @@ public class FollowAI : MonoBehaviourPunCallbacks, IOnEventCallback
             firstHit = true;
             StartCoroutine(StopHit());
         }
+    }
+
+    [PunRPC]
+    void RPC_SwitchState(string newState)
+    {
+        currentState = (States)Enum.Parse(typeof(States), newState);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // Send local health to other clients
+            stream.SendNext(Health);
+        }
+        else
+        {
+            // Receive health updates from other clients
+            Health = (int)stream.ReceiveNext();
+        }
+    }
+    [PunRPC]
+    void RPC_SetAgro(bool agro)
+    {
+        Agro = agro;
+    }
+
+    [PunRPC]
+    void RPC_SyncAnimator(string paramName, bool state)
+    {
+        animator.SetBool(paramName, state);
     }
 
 

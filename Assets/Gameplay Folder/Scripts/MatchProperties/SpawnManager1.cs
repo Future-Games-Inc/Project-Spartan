@@ -51,13 +51,16 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     {
         if (!coroutinesStarted)
         {
-            StartCoroutine(SpawnEnemies());
-            StartCoroutine(SpawnSecurity());
-            StartCoroutine(SpawnReactor());
-            StartCoroutine(SpawnHealth());
-            StartCoroutine(SpawnBoss());
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartCoroutine(SpawnEnemies());
+                StartCoroutine(SpawnSecurity());
+                StartCoroutine(SpawnReactor());
+                StartCoroutine(SpawnHealth());
+                StartCoroutine(SpawnBoss());
 
-            coroutinesStarted = true;
+                coroutinesStarted = true;
+            }
         }
         base.OnEnable();
         // Listen to Photon Events
@@ -393,15 +396,5 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     public void RPC_UpdateHealthCount()
     {
         healthCount--;
-    }
-
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        // Check if this is the object's current owner and if the new master client exists
-        if (photonView.IsMine && newMasterClient != null)
-        {
-            // Transfer ownership of the object to the new master client
-            photonView.TransferOwnership(newMasterClient.ActorNumber);
-        }
     }
 }

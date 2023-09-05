@@ -83,10 +83,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
 
                 if (elapsedTime >= activationTime)
                 {
-                    isActive = true;
-                    activationSlider.gameObject.SetActive(false);
-                    InstantiateWeapons();
-                    contact = true;
+                    photonView.RPC("RPC_WeaponSpawn", RpcTarget.All);
                 }
 
                 foreach (GameObject vfx in effects)
@@ -125,16 +122,11 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     {
         Rigidbody rb = this.GetComponent<Rigidbody>();
         rb.AddForce(Vector3.up * forceMagnitude);
-        Debug.Log("Force Added " + forceMagnitude);
         // Shuffle the weaponPrefabs array
-        GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
 
         audioSource.PlayOneShot(spawnClip);
 
-        // Instantiate a weapon for each spawn point
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0].name, spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[1].name, spawn2.position, spawn2.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2].name, spawn3.position, spawn3.rotation, 0, null);
+        photonView.RPC("RPC_WeaponSpawn", RpcTarget.All);
 
         StartCoroutine(Destroy());
     }
@@ -158,7 +150,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
     IEnumerator Destroy()
     {
         photonView.RPC("RaiseEvent2", RpcTarget.All, SupplyDropShip.SupplyShipDestroy, null);
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(1.5f);
         matchProps.lastSpawnTime = Time.time;
         matchProps.spawned = false;
         PhotonNetwork.Destroy(gameObject);
@@ -176,6 +168,27 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(.75f);
             PhotonNetwork.Destroy(gameObject);
         }
+    }
+
+    [PunRPC]
+    void RPC_WeaponSpawn()
+    {
+        isActive = true;
+        activationSlider.gameObject.SetActive(false);
+        contact = true;
+
+        Rigidbody rb = this.GetComponent<Rigidbody>();
+        rb.AddForce(Vector3.up * forceMagnitude);
+
+        // Shuffle the weaponPrefabs array
+        audioSource.PlayOneShot(spawnClip);
+        GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
+        // Instantiate a weapon for each spawn point
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0].name, spawn1.position, spawn1.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[1].name, spawn2.position, spawn2.rotation, 0, null);
+        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2].name, spawn3.position, spawn3.rotation, 0, null);
+
+        StartCoroutine(Destroy());
     }
 
     [PunRPC]

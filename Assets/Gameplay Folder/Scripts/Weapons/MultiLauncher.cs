@@ -183,13 +183,16 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                foreach (Transform t in spawnPoint)
+                if (photonView.IsMine) // Only allow the local client to instantiate the bullet
                 {
-                    GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(stickyBullet.name, t.position, Quaternion.identity, 0, null);
-                    spawnedBullet.GetComponent<StickyBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StickyBullet>().clip);
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+                    foreach (Transform t in spawnPoint)
+                    {
+                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(stickyBullet.name, t.position, Quaternion.identity, 0, null);
+                        spawnedBullet.GetComponent<StickyBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StickyBullet>().clip);
+                        spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+                    }
+                    Fire();
                 }
-                Fire();
             }
             yield return new WaitForSeconds(0.2f);
         }
@@ -201,15 +204,18 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                foreach (Transform t in spawnPoint)
+                if (photonView.IsMine) // Only allow the local client to instantiate the bullet
                 {
-                    GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(gravityBullet.name, t.position, Quaternion.identity, 0, null);
-                    spawnedBullet.GetComponent<GravityBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<GravityBullet>().clip);
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
-                    spawnedBullet.gameObject.GetComponent<GravityBullet>().bulletOwner = player.gameObject;
-                    spawnedBullet.gameObject.GetComponent<GravityBullet>().playerBullet = true;
+                    foreach (Transform t in spawnPoint)
+                    {
+                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(gravityBullet.name, t.position, Quaternion.identity, 0, null);
+                        spawnedBullet.GetComponent<GravityBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<GravityBullet>().clip);
+                        spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+                        spawnedBullet.gameObject.GetComponent<GravityBullet>().bulletOwner = player.gameObject;
+                        spawnedBullet.gameObject.GetComponent<GravityBullet>().playerBullet = true;
+                    }
+                    Fire();
                 }
-                Fire();
             }
             yield return new WaitForSeconds(0.2f);
         }
@@ -221,15 +227,18 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                foreach (Transform t in spawnPoint)
+                if (photonView.IsMine) // Only allow the local client to instantiate the bullet
                 {
-                    GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(blackoutBullet.name, t.position, Quaternion.identity, 0, null);
-                    spawnedBullet.GetComponent<BlackoutBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BlackoutBullet>().clip);
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
-                    spawnedBullet.gameObject.GetComponent<BlackoutBullet>().bulletOwner = player.gameObject;
-                    spawnedBullet.gameObject.GetComponent<BlackoutBullet>().playerBullet = true;
+                    foreach (Transform t in spawnPoint)
+                    {
+                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(blackoutBullet.name, t.position, Quaternion.identity, 0, null);
+                        spawnedBullet.GetComponent<BlackoutBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BlackoutBullet>().clip);
+                        spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
+                        spawnedBullet.gameObject.GetComponent<BlackoutBullet>().bulletOwner = player.gameObject;
+                        spawnedBullet.gameObject.GetComponent<BlackoutBullet>().playerBullet = true;
+                    }
+                    Fire();
                 }
-                Fire();
             }
             yield return new WaitForSeconds(0.2f);
         }
