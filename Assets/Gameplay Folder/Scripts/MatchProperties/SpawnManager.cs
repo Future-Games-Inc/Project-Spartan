@@ -15,32 +15,25 @@ public class SpawnManager : MonoBehaviourPunCallbacks
     Vector3 spawnPosition;
     public Vector3 respawnPosition;
 
-    void OnEnable()
+    void Start()
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            StartCoroutine(SpawnPlayer());
+            Vector3 randomPosition = GenerateRandomPosition();
+
+            if (randomPosition != Vector3.zero)
+            {
+                spawnPosition = randomPosition;
+                respawnPosition = spawnPosition;
+
+                // We then invoke an RPC function to instantiate the player across all clients
+                InstantiatePlayer(spawnPosition);
+            }
         }
         gameOver = false;
         winnerPlayer = null;
     }
-
-    IEnumerator SpawnPlayer()
-    {
-        yield return new WaitForSeconds(.5f);
-        Vector3 randomPosition = GenerateRandomPosition();
-
-        if (randomPosition != Vector3.zero)
-        {
-            spawnPosition = randomPosition;
-            respawnPosition = spawnPosition;
-
-            // We then invoke an RPC function to instantiate the player across all clients
-            photonView.RPC("InstantiatePlayer", RpcTarget.AllBuffered, spawnPosition);
-        }
-    }
-
-    [PunRPC]
+    
     void InstantiatePlayer(Vector3 spawnPosition)
     {
         object avatarSelectionNumber;

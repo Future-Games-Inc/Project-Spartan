@@ -51,16 +51,13 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     {
         if (!coroutinesStarted)
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                StartCoroutine(SpawnEnemies());
-                StartCoroutine(SpawnSecurity());
-                StartCoroutine(SpawnReactor());
-                StartCoroutine(SpawnHealth());
-                StartCoroutine(SpawnBoss());
+            StartCoroutine(SpawnEnemies());
+            StartCoroutine(SpawnSecurity());
+            StartCoroutine(SpawnReactor());
+            StartCoroutine(SpawnHealth());
+            StartCoroutine(SpawnBoss());
 
-                coroutinesStarted = true;
-            }
+            coroutinesStarted = true;
         }
         base.OnEnable();
         // Listen to Photon Events
