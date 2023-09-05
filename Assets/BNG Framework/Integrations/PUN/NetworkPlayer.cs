@@ -114,8 +114,15 @@ MonoBehaviourPunCallbacks, IPunObservable, IPunOwnershipCallbacks
             // Remote Player
             if (!photonView.IsMine) 
             {
+                PlayerHeadTransform.gameObject.SetActive(false);
+                PlayerLeftHandTransform.gameObject.SetActive(false);
+                PlayerRightHandTransform.gameObject.SetActive(false);
+                LeftHandController.enabled = false;
+                RightHandController.enabled = false;
+                RightGrabber.enabled = false;
+                LeftGrabber.enabled = false;
 
-                if(disabledObjects) {
+                if (disabledObjects) {
                     toggleObjects(true);
                 }
 

@@ -36,9 +36,9 @@ public class AIWeapon : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void FireBullet(Vector3 position, Vector4 rotation)
+    void FireBullet(Vector3 position, Vector3 rotationEuler)
     {
-        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w), 0, null);
+        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, Quaternion.Euler(rotationEuler), 0, null);
         spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
     }
 
@@ -56,8 +56,7 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 else if (canShoot)
                 {
                     yield return new WaitForSeconds(0.25f);
-                    Quaternion rot = Quaternion.identity;
-                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, new Vector4(rot.x, rot.y, rot.z, rot.w));
+                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, Quaternion.identity.eulerAngles);
                     ammoLeft--;
                 }
             }

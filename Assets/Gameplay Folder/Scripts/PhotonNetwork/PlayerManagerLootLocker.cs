@@ -51,5 +51,6 @@ public class PlayerManagerLootLocker : MonoBehaviour
                 }
             });
         }
+        StartCoroutine(leaderboard.FetchTopHighScores());
     }
 }
