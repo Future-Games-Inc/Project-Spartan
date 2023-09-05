@@ -4,6 +4,7 @@ using Photon.Realtime;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -245,8 +246,8 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
                 else if (IsLineOfSightClear(targetTransform))
                 {
                     yield return new WaitForSeconds(0.25f);
-                    yield return new WaitForSeconds(0.25f);
-                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, Quaternion.identity);
+                    Quaternion rot = Quaternion.identity;
+                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, new Vector4(rot.x, rot.y, rot.z, rot.w));
                     ammoLeft--;
                 }
             }
@@ -255,9 +256,9 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     [PunRPC]
-    void FireBullet(Vector3 position, Quaternion rotation)
+    void FireBullet(Vector3 position, Vector4 rotation)
     {
-        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, rotation, 0, null);
+        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w), 0, null);
         spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
     }
 
