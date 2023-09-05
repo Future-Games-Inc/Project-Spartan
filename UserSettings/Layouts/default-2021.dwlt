@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2560
     height: 1349.3334
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Console
   m_RootView: {fileID: 10}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 272
+  controlID: 55
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 16
+  controlID: 75
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 253
+  controlID: 74
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProjectBrowser
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -225,14 +225,14 @@ MonoBehaviour:
     y: 894.6667
     width: 1706
     height: 404.6667
-  m_MinSize: {x: 231, y: 271}
-  m_MaxSize: {x: 10001, y: 10021}
-  m_ActualView: {fileID: 17}
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 22}
   m_Panes:
   - {fileID: 17}
   - {fileID: 22}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 254
+  controlID: 34
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -489,22 +489,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Game Resources/JMO Assets/Cartoon FX/Scripts
+    - Assets/Gameplay Folder/Scripts/Weapons
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 87
   m_LastFolders:
-  - Assets/Game Resources/JMO Assets/Cartoon FX/Scripts
+  - Assets/Gameplay Folder/Scripts/Weapons
   m_LastFoldersGridSize: 87
-  m_LastProjectPath: C:\Users\monda\Project-Spartan
+  m_LastProjectPath: E:\Project-Spartan
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 1167}
-    m_SelectedIDs: c6ec0600
-    m_LastClickedID: 453830
-    m_ExpandedIDs: 00000000f4e10000f6e10000f8e10000fae10000fce10000fee1000000e2000002e2000004e2000006e2000008e200000ae200000ce200000ee2000010e2000012e2000014e2000016e2000018e200001ae200001ce200001ee2000020e2000022e2000024e2000026e20000c8e30000d2e30000d4e300007e190100c8ec0600caec060000ca9a3b
+    scrollPos: {x: 0, y: 536.3333}
+    m_SelectedIDs: 0a101000
+    m_LastClickedID: 1052682
+    m_ExpandedIDs: 00000000200b1000380b1000440b1000540b10000c10100000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -532,7 +532,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f4e10000f6e10000f8e10000fae10000fce10000fee1000000e2000002e2000004e2000006e2000008e200000ae200000ce200000ee2000010e2000012e2000014e2000016e2000018e200001ae200001ce200001ee2000020e2000022e2000024e2000026e20000
+    m_ExpandedIDs: 
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -557,8 +557,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 30bbf8ff
+    m_LastClickedInstanceID: -476368
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -664,23 +664,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: d0e10600
-      m_LastClickedID: 451024
-      m_ExpandedIDs: 98ffeeff0c4ef0ff02e6f0ff7874f4ff86a1fdff52fffdfffe6ffeff5ee2ffffb0e2ffff64e3ffffa0e3ffffbce3ffffcafaffff78b50000825e05003e650500f2650500fc650500686d05003c6e05001270050004ac050022ca050026ca050028ca05002aca0500b6160600fe2a0600aa2b060064320600d04906002c540600c6bc0600d4bf0600b6da060088de0600f4e2060054ea060068ea06006eea0600
+      m_SelectedIDs: 30bbf8ff
+      m_LastClickedID: -476368
+      m_ExpandedIDs: 2ee5f8fff2e8f8ff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: Canvas
-        m_OriginalName: Canvas
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 447452
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 3}
       m_SearchString: 
@@ -974,7 +974,7 @@ MonoBehaviour:
       layout: 4
     m_OverlaysVisible: 1
   m_WindowGUID: cc27987af1a868c49b0894db9c0f5429
-  m_Gizmos: 1
+  m_Gizmos: 0
   m_OverrideSceneCullingMask: 6917529027641081856
   m_SceneIsLit: 1
   m_SceneLighting: 1
@@ -983,9 +983,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -44.26398, y: 33.50215, z: -4.871507}
+    m_Target: {x: -26.990234, y: 3.6930084, z: -44.374702}
     speed: 2
-    m_Value: {x: -44.26398, y: 33.50215, z: -4.871507}
+    m_Value: {x: -26.990234, y: 3.6930084, z: -44.374702}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1032,20 +1032,20 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.27687588, y: -0.110387646, z: 0.039088864, w: -0.9549037}
+    m_Target: {x: 0.01242869, y: -0.97941905, z: 0.026035897, w: 0.20523812}
     speed: 2
-    m_Value: {x: -0.27800018, y: -0.110206656, z: 0.039211728, w: -0.9534322}
+    m_Value: {x: 0.012492903, y: -0.9777159, z: 0.025969727, w: 0.2079451}
   m_Size:
     m_Target: 0.5584598
     speed: 2
-    m_Value: 10
+    m_Value: 0.5584598
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 0.73967
-    m_SpeedNormalized: 0.36951974
+    m_Speed: 0.97954994
+    m_SpeedNormalized: 0.48951975
     m_SpeedMin: 0.001
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -1099,7 +1099,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 1279.5, y: 546.0001}
+  m_TargetSize: {x: 853, y: 364.00006}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -1114,10 +1114,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -426.5
-    m_HBaseRangeMax: 426.5
-    m_VBaseRangeMin: -182.00005
-    m_VBaseRangeMax: 182.00005
+    m_HBaseRangeMin: -284.33334
+    m_HBaseRangeMax: 284.33334
+    m_VBaseRangeMin: -121.33336
+    m_VBaseRangeMax: 121.33336
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -1137,7 +1137,7 @@ MonoBehaviour:
       y: 21
       width: 853
       height: 364.00006
-    m_Scale: {x: 0.99999994, y: 0.99999994}
+    m_Scale: {x: 1, y: 1}
     m_Translation: {x: 426.5, y: 182.00003}
     m_MarginLeft: 0
     m_MarginRight: 0
@@ -1145,12 +1145,12 @@ MonoBehaviour:
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -426.50003
-      y: -182.00005
-      width: 853.00006
-      height: 364.0001
+      x: -426.5
+      y: -182.00003
+      width: 853
+      height: 364.00006
     m_MinimalGUI: 1
-  m_defaultScale: 0.99999994
+  m_defaultScale: 1
   m_LastWindowPixelSize: {x: 1279.5, y: 577.5001}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1

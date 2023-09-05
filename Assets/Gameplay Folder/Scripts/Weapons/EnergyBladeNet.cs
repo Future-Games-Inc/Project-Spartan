@@ -165,8 +165,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_BladeMaterial(Material material)
     {
-        if (!photonView.IsMine)
-            return;
         Blade.GetComponent<Renderer>().material = material;
     }
 

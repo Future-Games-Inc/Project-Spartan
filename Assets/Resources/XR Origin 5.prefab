@@ -8119,7 +8119,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.16
+  near clip plane: 0.235
   far clip plane: 150
   field of view: 60.000004
   orthographic: 0
@@ -9092,8 +9092,8 @@ MonoBehaviour:
     pelvisTargetRight: {x: 0, y: 0, z: 0}
     pelvisPositionWeight: 0
     pelvisRotationWeight: 0
-  proxyInterpolationSpeed: 20
-  proxyMaxErrorSqrMag: 4
+  proxyInterpolationSpeed: 25
+  proxyMaxErrorSqrMag: 1
   remoteMaterialOverride: {fileID: 0}
 --- !u!114 &1650279767881213376
 MonoBehaviour:
@@ -23961,11 +23961,23 @@ MonoBehaviour:
   OnlyAllowNames:
   - Z_Energy Blade
   ExcludeTransformNames: []
-  SoundOnSnap: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
+  SoundOnSnap: {fileID: 0}
   SoundOnUnsnap: {fileID: 0}
   OnSnapEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7900451365555598134}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDetachEvent:
     m_PersistentCalls:
       m_Calls:
@@ -23980,6 +23992,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7900451365555598134}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   ClosestGrabbable: {fileID: 0}
 --- !u!114 &8194763687639466123
@@ -26356,8 +26380,8 @@ MonoBehaviour:
       maxVelocity: 1
       velocityFactor: 0.4
       maxLegStretch: 1
-      rootSpeed: 20
-      stepSpeed: 10
+      rootSpeed: 100
+      stepSpeed: 3
       stepHeight:
         serializedVersion: 2
         m_Curve:

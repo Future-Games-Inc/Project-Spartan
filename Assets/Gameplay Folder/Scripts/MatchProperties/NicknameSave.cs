@@ -3,6 +3,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(InputField))]
 public class NicknameSave : MonoBehaviour
@@ -27,7 +28,7 @@ public class NicknameSave : MonoBehaviour
     /// </summary>
     void OnEnable()
     {
-
+        _inputField.text = PlayerPrefs.GetString(playerNamePrefKey);
     }
 
 

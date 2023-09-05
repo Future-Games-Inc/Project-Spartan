@@ -13,11 +13,6 @@ public class PlayerManagerLootLocker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    public void LoginPlayer()
-    {
         StartCoroutine(LoginRoutine());
     }
 
@@ -56,6 +51,5 @@ public class PlayerManagerLootLocker : MonoBehaviour
                 }
             });
         }
-        yield return leaderboard.FetchTopHighScores();
     }
 }
