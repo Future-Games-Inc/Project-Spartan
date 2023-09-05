@@ -35,12 +35,19 @@ public class SpawnManager : MonoBehaviourPunCallbacks
             spawnPosition = randomPosition;
             respawnPosition = spawnPosition;
 
-            object avatarSelectionNumber;
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
-            {
-                int selectionValue = (int)avatarSelectionNumber;
-                PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition, Quaternion.identity);
-            }
+            // We then invoke an RPC function to instantiate the player across all clients
+            photonView.RPC("InstantiatePlayer", RpcTarget.AllBuffered, spawnPosition);
+        }
+    }
+
+    [PunRPC]
+    void InstantiatePlayer(Vector3 spawnPosition)
+    {
+        object avatarSelectionNumber;
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
+        {
+            int selectionValue = (int)avatarSelectionNumber;
+            PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition, Quaternion.identity);
         }
     }
 

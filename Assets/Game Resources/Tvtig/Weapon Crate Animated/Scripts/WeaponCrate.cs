@@ -107,7 +107,7 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     IEnumerator WeaponCache()
     {
-        photonView.RPC("RPC_WeaponSpawn", RpcTarget.MasterClient);
+        photonView.RPC("RPC_WeaponSpawn", RpcTarget.All);
         yield return new WaitForSeconds(1);
         _animator.SetBool("Open", false);
         StartCoroutine(CacheRespawn());
@@ -123,9 +123,6 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_Obstacle(bool state)
     {
-        if (!photonView.IsMine)
-            return;
-
         GetComponent<NavMeshObstacle>().enabled = state;
         GetComponent<Rigidbody>().isKinematic = !state;
     }
