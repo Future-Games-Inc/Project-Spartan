@@ -37,14 +37,10 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
 
 
-    private void Awake()
+    private void Start()
     {
         _collider = GetComponent<BoxCollider>();
         cacheActive = true;
-    }
-    void Start()
-    {
-
     }
 
     private void Update()

@@ -233,29 +233,34 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator Fire()
     {
-        while (true)
+        while (gameObject.activeSelf)
         {
-            if (isFiring && ammoLeft > 0 && IsLineOfSightClear(targetTransform))
+            if (isFiring)
             {
-                yield return new WaitForSeconds(0.25f);
-                GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
-                spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
-                spawnedBullet.GetComponent<Bullet>().bulletModifier = 4;
-                spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
-
-                ammoLeft--;
-                yield return new WaitForSeconds(0.25f);
+                if (isFiring && ammoLeft <= 0)
+                {
+                    isFiring = false;
+                    StartCoroutine(ReloadWeapon());
+                }
+                else if (IsLineOfSightClear(targetTransform))
+                {
+                    yield return new WaitForSeconds(0.25f);
+                    yield return new WaitForSeconds(0.25f);
+                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, Quaternion.identity);
+                    ammoLeft--;
+                }
             }
-
-            else if (isFiring && ammoLeft <= 0)
-            {
-                isFiring = false;
-                StartCoroutine(ReloadWeapon());
-            }
-
             yield return new WaitForSeconds(0.25f);
         }
     }
+
+    [PunRPC]
+    void FireBullet(Vector3 position, Quaternion rotation)
+    {
+        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, rotation, 0, null);
+        spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
+    }
+
 
     IEnumerator ReloadWeapon()
     {
