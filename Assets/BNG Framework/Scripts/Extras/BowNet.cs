@@ -462,6 +462,11 @@ namespace BNG {
                 return;
             rotator.enabled = false;
         }
+
+        public void Rescale()
+        {
+            this.gameObject.transform.localScale = Vector3.one;
+        }
     }
 
     /// <summary>

@@ -40,5 +40,10 @@ public class LoginManager5 : MonoBehaviourPunCallbacks
     {
         roomManager.OnEnterButtonClicked_DropZone3();
     }
+
+    public void EnterRoom5()
+    {
+        roomManager.OnEnterButtonClicked_WeaponTest();
+    }
 }
 

@@ -4,7 +4,6 @@ using Photon.Pun;
 using UnityEngine.AI;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
-using System.Threading.Tasks;
 
 public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -26,32 +25,34 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
-        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-        PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
+
     }
 
     public override void OnEnable()
     {
         base.OnEnable();
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.AddCallbackTarget(this);
+            alive = true;
+            enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
+            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
         }
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.RemoveCallbackTarget(this);
-        }
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void KillEnemy()
     {
-        photonView.RPC("RPC_KillEnemy", RpcTarget.All);
+        alive = false;
+        aiScript.attackWeapon.fireWeaponBool = false;
+        aiScript.alive = false;
+        DestroyEnemy();
     }
 
     public void DestroyEnemy()
@@ -84,12 +85,14 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
-        Destroy();
+        StartCoroutine(Destroy());
     }
 
-    private async void Destroy()
+    IEnumerator Destroy()
     {
-        await Task.Delay(5000);
+        enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
+        enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
+        yield return new WaitForSeconds(2);
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -104,23 +107,6 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             EnemyHealthEnable();
         }
-    }
-
-
-    [PunRPC]
-    void RPC_KillEnemy()
-    {
-        if (!photonView.IsMine)
-            return;
-
-        alive = false;
-        aiScript.attackWeapon.fireWeaponBool = false;
-        aiScript.alive = false;
-
-        //enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
-        //enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
-
-        DestroyEnemy();
     }
 
 

@@ -263,7 +263,7 @@ namespace Photon.Voice.Unity.Demos.DemoVoiceUI
         public void RefreshMicrophones()
         {
             #if PHOTON_MICROPHONE_ENUMERATOR
-            //Debug.Log("Refresh Mics");
+            ////Debug.Log("Refresh Mics");
             this.recorder.MicrophonesEnumerator.Refresh();
             #endif
             this.SetupMicDropdown();

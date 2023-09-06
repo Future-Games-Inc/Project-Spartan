@@ -102,6 +102,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                         else
                             fsmBehaviour.aiController.MoveTo(fsmBehaviour.aiController.targetWaypoint.position, patrolSpeed);
                         if (debugMode) //Debug.Log("Go to new Waypoint");
+                            ;
                     }
                 }
             }

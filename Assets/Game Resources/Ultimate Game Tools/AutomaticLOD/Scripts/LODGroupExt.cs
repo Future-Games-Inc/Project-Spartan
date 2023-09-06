@@ -97,11 +97,11 @@ public static class LODGroupExt
     /// </summary>
     /// <param name="lodGroup"></param>
     /// <returns></returns>
-    public static int GetVisibleLODSceneView(LODGroup lodGroup)
-    {
-        Camera camera = SceneView.lastActiveSceneView.camera;
-        return GetVisibleLOD(lodGroup, camera);
-    }
+    //public static int GetVisibleLODSceneView(LODGroup lodGroup)
+    //{
+    //    Camera camera = SceneView.lastActiveSceneView.camera;
+    //    return GetVisibleLOD(lodGroup, camera);
+    //}
 
     /// <summary>
     ///     Gets the maximum LOD level

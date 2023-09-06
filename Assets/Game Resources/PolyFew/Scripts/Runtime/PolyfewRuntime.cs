@@ -627,7 +627,7 @@ namespace BrainFailProductions.PolyFewRuntime
                                 /*
                                 meshAssignments.Add(() =>
                                 {
-                                    //Debug.Log("reduced for  " + gameObject.name);
+                                    ////Debug.Log("reduced for  " + gameObject.name);
 
                                     var reducedMesh = meshSimplifier.ToMesh();
 
@@ -718,8 +718,8 @@ namespace BrainFailProductions.PolyFewRuntime
                 }
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
-                //Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
+                ////Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
+                ////Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
 
             }
 
@@ -1124,8 +1124,8 @@ namespace BrainFailProductions.PolyFewRuntime
                 }
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
-                //Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
+                ////Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
+                ////Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
 
             }
 
@@ -1564,7 +1564,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds);
+                ////Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds);
 
                 if (!isError)
                 {
@@ -1580,8 +1580,8 @@ namespace BrainFailProductions.PolyFewRuntime
                 }
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds );
-                //Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
+                ////Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds );
+                ////Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
 
             }
 
@@ -1935,7 +1935,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds);
+                ////Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds);
 
                 if (!isError)
                 {
@@ -1951,8 +1951,8 @@ namespace BrainFailProductions.PolyFewRuntime
                 }
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds );
-                //Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
+                ////Debug.Log("Elapsed Time   " + watch.ElapsedMilliseconds );
+                ////Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
 
             }
 
@@ -2033,7 +2033,7 @@ namespace BrainFailProductions.PolyFewRuntime
                 {
                     if (filter.sharedMesh)
                     {
-                        //Debug.Log("Adding From Mesh Filter   "+ filter.sharedMesh.name + "  for gameobject  "+ filter.gameObject.name);
+                        ////Debug.Log("Adding From Mesh Filter   "+ filter.sharedMesh.name + "  for gameobject  "+ filter.gameObject.name);
                         MeshRendererPair meshRendererPair = new MeshRendererPair(true, filter.sharedMesh);
                         objectMeshPairs.Add(filter.gameObject, meshRendererPair);
                     }

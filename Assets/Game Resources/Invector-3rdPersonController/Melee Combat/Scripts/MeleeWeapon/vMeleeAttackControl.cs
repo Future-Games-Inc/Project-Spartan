@@ -39,6 +39,7 @@ namespace Invector.vMelee
                 mFighter.OnEnableAttack();
 
             if (debug)
+                ;
                 //Debug.Log("Enter " + damageType);
         }
 
@@ -77,11 +78,11 @@ namespace Invector.vMelee
             if (debug)
                 //Debug.Log("Exit " + damageType);
 
-            if (isActive)
-            {
-                isActive = false;
-                ActiveDamage(animator, false);
-            }
+                if (isActive)
+                {
+                    isActive = false;
+                    ActiveDamage(animator, false);
+                }
 
             if (isAttacking)
             {
@@ -93,6 +94,7 @@ namespace Invector.vMelee
                 mFighter.ResetAttackTriggers();
 
             if (debug) //Debug.Log(animator.name + " attack " + damageType + " stateExit");
+                ; 
         }
 
         void ActiveDamage(Animator animator, bool value)

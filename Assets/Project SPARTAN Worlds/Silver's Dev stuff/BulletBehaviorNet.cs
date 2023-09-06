@@ -22,12 +22,11 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
 
     [Header("Audio Properties  -------------")]
     public AudioClip clip;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
     private void OnEnable()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
         StartCoroutine(Destroy(Duration));
     }
     IEnumerator Destroy(float duration)

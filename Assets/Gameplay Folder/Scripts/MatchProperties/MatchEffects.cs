@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using TMPro;
+using UnityEngine.AI;
 
 public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -22,20 +23,21 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     public AudioSource audioSource;
     public AudioClip[] countdownClips;
     public AudioClip matchBegan;
-    //public AudioClip supplyShip1;
-    //public AudioClip supplyShip2;
+    public AudioClip supplyShip1;
+    public AudioClip supplyShip2;
 
-    //public GameObject supplyDropShipPrefab;
-    //public float spawnInterval; // 5 minutes in seconds
-    //public float lastSpawnTime;
-    //public Transform spawnLocation;
+    public GameObject supplyDropShipPrefab;
+    public float spawnInterval; // 5 minutes in seconds
+    public float lastSpawnTime;
 
     public bool startMatchBool = false;
     public bool spawnReactor = false;
-    //public bool spawned = false;
-    //public bool DE_supplyDrop;
+    public bool spawned = false;
+    public bool DE_supplyDrop;
 
     public string numSequence;
+
+    public float spawnRadius = 300.0f;
 
     public TextMeshProUGUI nexusCodePanel;
 
@@ -74,21 +76,55 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         InitializeTimer();
-        photonView.RPC("AudioEnter", RpcTarget.All);
 
         // Generate a random 4-digit sequence
         photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);
     }
 
-    private void Update()
+    IEnumerator SpawnCheckCoroutine()
     {
-        //if (Time.time > lastSpawnTime + spawnInterval && spawned == false && DE_supplyDrop == true)
-        //{
-        //    lastSpawnTime = Time.time;
-        //    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnLocation.position, Quaternion.Euler(0, 90, 90), 0, null);
-        //    StartCoroutine(SupplyShipAudio());
-        //    spawned = true;
-        //}
+        while (true)
+        {
+            yield return new WaitForSeconds(spawnInterval);
+
+            if (spawned == false && DE_supplyDrop == true)
+            {
+                lastSpawnTime = Time.time;
+                // Create an array to store the valid positions
+                Vector3[] spawnPositions = new Vector3[10];
+                int validPositionsCount = 0;
+
+
+                // Generate multiple random positions within the spawn radius
+                for (int i = 0; i < spawnPositions.Length; i++)
+                {
+                    Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+                    randomPosition += transform.position;
+
+                    // Find the nearest point on the NavMesh to the random position
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+                    {
+                        // Add the valid position to the array
+                        spawnPositions[validPositionsCount] = hit.position;
+                        validPositionsCount++;
+                    }
+                }
+
+                // If there are valid positions, choose one randomly for spawning the enemy
+                if (validPositionsCount > 0)
+                {
+                    Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+
+                    // Adjust the y value to be 100 units above the original spawn position
+                    spawnPosition.y += 100;
+
+                    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnPosition, Quaternion.identity, 0, null);
+                    StartCoroutine(SupplyShipAudio());
+                    spawned = true;
+                }
+            }
+        }
     }
 
     IEnumerator SupplyShipAudio()
@@ -125,8 +161,8 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         if (currentMatchTime <= 0)
         {
             photonView.RPC("AudioStart", RpcTarget.All);
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
+            StartCoroutine(RoomClosed());
+            StartCoroutine(SpawnCheckCoroutine());
             //StartCoroutine(Artifacts());
             timerCoroutine = null; // Stop the coroutine
         }
@@ -135,6 +171,13 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
             RefreshTimer_S();
             timerCoroutine = StartCoroutine(TimerEvent());
         }
+    }
+
+    IEnumerator RoomClosed()
+    {
+        yield return new WaitForSeconds(30);
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
     }
 
     //IEnumerator Artifacts()
@@ -166,13 +209,15 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         RefreshTimerUI();
     }
 
-    private void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         PhotonNetwork.AddCallbackTarget(this);
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
+        base.OnDisable();
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
@@ -182,33 +227,25 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(countdownClips[clipIndex]);
     }
 
-    //[PunRPC]
-    //void PlaySupplyDropAudio()
-    //{
-    //    audioSource.PlayOneShot(supplyShip1);
-    //    StartCoroutine(PlaySupplyDropAudioDelayed());
-    //}
+    [PunRPC]
+    void PlaySupplyDropAudio()
+    {
+        audioSource.PlayOneShot(supplyShip1);
+        StartCoroutine(PlaySupplyDropAudioDelayed());
+    }
 
-    //IEnumerator PlaySupplyDropAudioDelayed()
-    //{
-    //    yield return new WaitForSeconds(supplyShip1.length);
-    //    audioSource.PlayOneShot(supplyShip2);
-    //}
+    IEnumerator PlaySupplyDropAudioDelayed()
+    {
+        yield return new WaitForSeconds(supplyShip1.length);
+        audioSource.PlayOneShot(supplyShip2);
+    }
 
     [PunRPC]
     void AudioStart()
     {
         audioSource.PlayOneShot(matchBegan);
         uiCanvas.SetActive(false);
-        spawnManager.SetActive(true);
         startMatchBool = true;
-    }
-
-    [PunRPC]
-    void AudioEnter()
-    {
-        spawnManager.SetActive(false);
-        startMatchBool = false;
     }
 
     [PunRPC]

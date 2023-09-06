@@ -15,7 +15,10 @@ namespace Michsky.UI.Shift
         void Start()
         {
             try { sliderObject = gameObject.GetComponent<Slider>(); }
-            catch { //Debug.LogWarning("Slider is missing. Sliding via gamepad won't work."); }
+            catch
+            { //Debug.LogWarning("Slider is missing. Sliding via gamepad won't work."); }
+                ;
+            }
         }
 
         void Update()

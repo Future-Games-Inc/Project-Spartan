@@ -51,7 +51,7 @@ public class BuildingControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         // View actual floor in console
-        //Debug.Log(ActualFloor + " " + PreviousTest);
+        ////Debug.Log(ActualFloor + " " + PreviousTest);
         // Check if the floor has changed from the previous update
         if (TownManagerScript.PlayerLocation == BuildingName)
         {

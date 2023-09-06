@@ -1289,7 +1289,6 @@ MonoBehaviour:
   spawnPoint:
   - {fileID: 824610677915689482}
   audioSource: {fileID: 1622295053002393211}
-  weaponFire: {fileID: 8300000, guid: ab1fb9eb4849c7b4c82aedda61b0a588, type: 3}
   weaponReload: {fileID: 8300000, guid: 1ce147489df85984a999249d72d9cbca, type: 3}
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   player: {fileID: 0}
@@ -1430,7 +1429,19 @@ MonoBehaviour:
       m_Calls: []
   onSnapZoneExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1622295053002393200}
+        m_TargetAssemblyTypeName: StingerShotgun, Assembly-CSharp
+        m_MethodName: Rescale
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6983726093403791887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1466,7 +1477,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 5
+  RemoteGrabDistance: 2
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
@@ -30817,8 +30828,8 @@ MonoBehaviour:
   ThrowForceMultiplierAngular: 1.125
   BreakDistance: 0.5
   HideHandGraphics: 0
-  ParentToHands: 1
-  ParentHandModel: 0
+  ParentToHands: 0
+  ParentHandModel: 1
   SnapHandModel: 1
   CanBeDropped: 1
   CanBeSnappedToSnapZone: 0
@@ -35961,14 +35972,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4638596789584545631}
-  m_LocalRotation: {x: 0.60965425, y: -0.69820267, z: 0.18153399, w: -0.3284512}
-  m_LocalPosition: {x: 0.0002, y: -0.0259, z: 0.0354}
+  m_LocalRotation: {x: 0.6834408, y: -0.6865651, z: 0.19412234, w: -0.15444638}
+  m_LocalPosition: {x: -0.0126, y: -0.013, z: -0.0444}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3582348316296022475}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -8.452, y: 136.57, z: 281.11798}
+  m_LocalEulerAnglesHint: {x: 3.178, y: 151.435, z: 269.452}
 --- !u!114 &1903797900571071671
 MonoBehaviour:
   m_ObjectHideFlags: 0

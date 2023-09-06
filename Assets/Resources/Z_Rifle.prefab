@@ -24,14 +24,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 110687257888557912}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.0464, y: -0.035600662, z: 0.0005912781}
+  m_LocalRotation: {x: -0, y: 0.7244088, z: -0, w: 0.6893707}
+  m_LocalPosition: {x: -0.04405594, y: -0.027500033, z: 0.007659912}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 674361954080940946}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 92.839, z: 0}
 --- !u!114 &1164027203667520260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,14 +182,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 687351774466097146}
-  m_LocalRotation: {x: -0, y: 0.8229576, z: -0, w: 0.56810284}
-  m_LocalPosition: {x: -0.0436, y: -0.0362, z: 0.0112}
+  m_LocalRotation: {x: -0.022325257, y: 0.7021928, z: -0.039988805, w: 0.7105124}
+  m_LocalPosition: {x: -0.0481, y: -0.0274, z: -0.0106}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 674361954080940946}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 110.764, z: 0}
+  m_LocalEulerAnglesHint: {x: 1.4, y: 89.263, z: -5.06}
 --- !u!114 &1278061869840686429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,7 +550,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -29.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5114278104935791814}
   m_Father: {fileID: 5354387927311843914}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -860,8 +861,8 @@ MonoBehaviour:
   ThrowForceMultiplierAngular: 1.125
   BreakDistance: 0.5
   HideHandGraphics: 0
-  ParentToHands: 1
-  ParentHandModel: 0
+  ParentToHands: 0
+  ParentHandModel: 1
   SnapHandModel: 1
   CanBeDropped: 1
   CanBeSnappedToSnapZone: 0
@@ -25124,6 +25125,82 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!1 &5974171526731395947
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5114278104935791814}
+  - component: {fileID: 7608246882189234888}
+  - component: {fileID: 2497694825361078250}
+  m_Layer: 22
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5114278104935791814
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974171526731395947}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.00009346008}
+  m_LocalScale: {x: 0.3620081, y: 0.362008, z: 0.36200798}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1336068513995487688}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -166.8, y: -0.000076293945}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7608246882189234888
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974171526731395947}
+  m_CullTransparentMesh: 1
+--- !u!114 &2497694825361078250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974171526731395947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9529412, g: 1, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 3fdab05161357824cad3549a848e986d, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &7024774115121521094
 GameObject:
   m_ObjectHideFlags: 0
@@ -30080,7 +30157,6 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 2217963444104038592}
   - {fileID: 4382648151897021629}
-  - {fileID: 1008985783864362606}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -30244,7 +30320,19 @@ MonoBehaviour:
       m_Calls: []
   onSnapZoneExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6233824270997354970}
+        m_TargetAssemblyTypeName: PlayerWeapon, Assembly-CSharp
+        m_MethodName: Rescale
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5802512255592175878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30299,7 +30387,6 @@ MonoBehaviour:
   ammoText: {fileID: 8191313413314344176}
   durabilityText: {fileID: 950073796046744212}
   audioSource: {fileID: 2806393697717137235}
-  weaponFire: {fileID: 8300000, guid: ab1fb9eb4849c7b4c82aedda61b0a588, type: 3}
   weaponReload: {fileID: 8300000, guid: 1ce147489df85984a999249d72d9cbca, type: 3}
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
@@ -30324,7 +30411,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 5
+  RemoteGrabDistance: 2
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
@@ -30340,7 +30427,7 @@ MonoBehaviour:
   handPoseType: 1
   SelectedHandPose: {fileID: 0}
   CustomHandPose: 0
-  SecondaryGrabBehavior: 2
+  SecondaryGrabBehavior: 0
   TwoHandedPosition: 0
   TwoHandedPostionLerpAmount: 0.5
   TwoHandedRotation: 1

@@ -177,21 +177,18 @@ namespace Autohand{
         public void EditorSavePoseRight() {
             if (editorHand != null)
                 EditorSaveGrabPose(editorHand, false);
-            else {
+            else
                 //Debug.Log("Editor Hand must be assigned");
-
-            }
+                ;
         }
 
         [ContextMenu("SAVE LEFT")]
         public void EditorSavePoseLeft() {
             if (editorHand != null)
                 EditorSaveGrabPose(editorHand, true);
-            else 
-            {
+            else
                 //Debug.Log("Editor Hand must be assigned");
-
-            }
+                ;
         }
 
         [ContextMenu("OVERWRITE SCRIPTABLE")]

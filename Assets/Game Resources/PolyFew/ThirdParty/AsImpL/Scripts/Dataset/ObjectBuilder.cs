@@ -327,7 +327,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 buildStatus.subObjParent = buildStatus.currObjGameObject;
 
                 //if (od.Name != "default") go.name = od.Name;
-                //Debug.Log("Object: " + objData.name);
+                ////Debug.Log("Object: " + objData.name);
                 buildStatus.newObject = false;
                 buildStatus.subObjCount = 0;
                 buildStatus.idxCount = 0;
@@ -460,12 +460,12 @@ namespace BrainFailProductions.PolyFew.AsImpL
             {
                 throw new InvalidOperationException("Failed to parse vertex and uv data. It might be that the file is corrupt or is not a valid wavefront OBJ file.");
 
-                //Debug.LogWarning("Sub object: " + objData.name + " has no face defined. Creating empty game object.");
+                ////Debug.LogWarning("Sub object: " + objData.name + " has no face defined. Creating empty game object.");
 
                 //return go;
             }
 
-            //Debug.Log( "Importing sub object:" + objData.Name );
+            ////Debug.Log( "Importing sub object:" + objData.Name );
 
             // count vertices needed for all the faces and map face indices to new vertices
             Dictionary<string, int> vIdxCount = new Dictionary<string, int>();
@@ -726,7 +726,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                     }
                     newMaterial.SetTexture("_MainTex", md.diffuseTex);
                 }
-                //Debug.LogFormat("Diffuse set for {0}",m.name);
+                ////Debug.LogFormat("Diffuse set for {0}",m.name);
             }
             else if (md.opacityTex != null)
             {

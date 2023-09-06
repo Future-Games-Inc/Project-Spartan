@@ -49,7 +49,7 @@ public class ActivateGO : MonoBehaviour
         GOnTrigger.SetActive(true);
         // get player collider
         _activator = ManagerScript.PlayerCollider;
-        //Debug.Log(trig.name + "has entered the activator trigger");
+        ////Debug.Log(trig.name + "has entered the activator trigger");
         // check if Key pressed and collider hit was from correct target
         if (trig.GetComponent<Collider>() == _activator)
         {

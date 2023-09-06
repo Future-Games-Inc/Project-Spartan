@@ -382,9 +382,9 @@ namespace BrainFailProductions.PolyFew
 			}
 			else
 			{
-				//Debug.LogException(
-					new Exception("<" + coroutine.MethodName + "> yielded an unknown or unsupported type! (" + current.GetType() + ")"),
-					null);
+				////Debug.LogException(
+				//	new Exception("<" + coroutine.MethodName + "> yielded an unknown or unsupported type! (" + current.GetType() + ")"),
+				//	null);
 				coroutine.currentYield = new YieldDefault();
 			}
 			return true;

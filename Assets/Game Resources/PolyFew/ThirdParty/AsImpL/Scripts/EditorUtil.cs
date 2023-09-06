@@ -35,7 +35,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 #else
             Application.CaptureScreenshot(fileName);
 #endif
-            Debug.Log("Screenshot saved to " + Application.dataPath + "/" + fileName);
+            //Debug.Log("Screenshot saved to " + Application.dataPath + "/" + fileName);
             EditorUtility.RevealInFinder(Application.dataPath);
         }
 
@@ -49,14 +49,14 @@ namespace BrainFailProductions.PolyFew.AsImpL
             TextureImporter textureImporter = AssetImporter.GetAtPath(texAssetPath) as TextureImporter;
             if (textureImporter)
             {
-                Debug.LogFormat("Changing import settings for texture {0}...", texAssetPath);
+                //Debug.LogFormat("Changing import settings for texture {0}...", texAssetPath);
                 textureImporter.isReadable = true;
                 textureImporter.alphaIsTransparency = true;
                 textureImporter.SaveAndReimport();
             }
             else
             {
-                Debug.LogError("Texture importer for not found for " + texAssetPath);
+                //Debug.LogError("Texture importer for not found for " + texAssetPath);
             }
         }
 
@@ -73,7 +73,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             string newTexAssetPath = Path.GetDirectoryName(texAssetPath) + "/" + Path.GetFileNameWithoutExtension(texAssetPath) + postFix + ".png";
             if (newTexAssetPath != texAssetPath)
             {
-                Debug.LogFormat("Storing texture {0}...", newTexAssetPath);
+                //Debug.LogFormat("Storing texture {0}...", newTexAssetPath);
                 // Encode texture into PNG
                 byte[] bytes = texture.EncodeToPNG();
                 File.WriteAllBytes(Application.dataPath + "/../" + newTexAssetPath, bytes);

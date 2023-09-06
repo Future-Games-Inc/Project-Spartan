@@ -1,6 +1,6 @@
+using System.Collections;
 using UnityEngine;
 using Photon.Pun;
-using System.Collections;
 
 public class NetworkGrenade : MonoBehaviourPunCallbacks
 {
@@ -11,29 +11,24 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     }
 
     public GrenadeType Type;
+    public float explosionRadius = 5f;
+    public int maxDamage = 80;
+    public float explosionDelay = 5f;
+    public float throwForce;
+    public float throwUpwardForce;
 
     [System.Serializable]
     public struct TargetInfo
     {
         public string Tag;
     }
-
     public TargetInfo[] Targets;
-
-    public float explosionRadius = 5f;
-    public int maxDamage = 80;
-    public float explosionDelay = 5f;
 
     public GameObject player;
     public PlayerHealth playerHealth;
     public GameObject explosionEffect;
     public Rigidbody rb;
-
-    public float throwForce;
-    public float throwUpwardForce;
-
     public AudioSource audioSource;
-
     public GameObject objectRenderer;
 
     private void OnTriggerEnter(Collider other)
@@ -46,33 +41,23 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
 
     public void Throw()
     {
-        if (!photonView.IsMine) return; // Ensure only the owner can throw
+        if (!photonView.IsMine) return;
 
-        Camera cam = player.GetComponentInChildren<Camera>();
-        Vector3 forceToAdd = cam.transform.forward * throwForce * throwUpwardForce;
-        rb.AddForce(forceToAdd);
-        photonView.RPC("GrenadeSound", RpcTarget.All);
+        ApplyThrowForce();
+        audioSource.Play();
         StartCoroutine(ExplodeDelayed());
+    }
+
+    private void ApplyThrowForce()
+    {
+        Vector3 forceDirection = transform.forward;
+        Vector3 forceToAdd = forceDirection * throwForce * throwUpwardForce;
+        rb.AddForce(forceToAdd);
     }
 
     public IEnumerator ExplodeDelayed()
     {
         yield return new WaitForSeconds(explosionDelay);
-        photonView.RPC("Explode", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void GrenadeSound()
-    {
-        if (!photonView.IsMine) return;
-        audioSource.Play();
-    }
-
-    [PunRPC]
-    void Explode()
-    {
-        if (!photonView.IsMine) return; // Ensure only the owner can explode
-
         explosionEffect.SetActive(true);
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
@@ -96,60 +81,61 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
         float distance = Vector3.Distance(transform.position, collider.transform.position);
         int damage = CalculateDamage(distance);
 
-        // Based on the tag, handle damage appropriately. This is a simplified version, extend as needed.
+        // Handle damage based on the target's tag
         switch (target.Tag)
         {
             case "Enemy":
-                // Handle enemy damage
-                FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-                if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
-                {
-                    playerHealth.EnemyKilled("Normal");
-                    enemyDamageCrit.TakeDamage(damage);
-                }
-                else if (enemyDamageCrit.Health > damage && enemyDamageCrit.alive == true && playerHealth != null)
-                {
-                    enemyDamageCrit.TakeDamage(damage);
-                }
-                break;
             case "BossEnemy":
-                // Handle boss enemy damage
-                FollowAI BossenemyDamageCrit = collider.GetComponent<FollowAI>();
-                if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
-                {
-                    playerHealth.EnemyKilled("BossEnemy");
-                    BossenemyDamageCrit.TakeDamage(damage);
-                }
-                else if (BossenemyDamageCrit.Health > damage && BossenemyDamageCrit.alive == true && playerHealth != null)
-                {
-                    BossenemyDamageCrit.TakeDamage(damage);
-                }
+                HandleEnemyDamage(collider, damage, target.Tag);
                 break;
             case "Security":
-                // Handle security damage
-                DroneHealth DroneenemyDamageCrit = collider.GetComponent<DroneHealth>();
-                if (DroneenemyDamageCrit != null)
-                    DroneenemyDamageCrit.TakeDamage(damage);
-                else
-                {
-                    SentryDrone SentryenemyDamageCrit2 = collider.GetComponent<SentryDrone>();
-                    SentryenemyDamageCrit2.TakeDamage(damage);
-                }
+                HandleSecurityDamage(collider, damage);
                 break;
             case "Player":
-                // Handle player damage
-                PlayerHealth PlayerenemyDamageCrit = collider.GetComponent<PlayerHealth>();
-                if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
-                {
-                    playerHealth.PlayersKilled();
-                    PlayerenemyDamageCrit.TakeDamage(damage);
-                }
-                else if (PlayerenemyDamageCrit.Health > damage && PlayerenemyDamageCrit.alive == true && playerHealth != null)
-                {
-                    PlayerenemyDamageCrit.TakeDamage(damage);
-                }
+                HandlePlayerDamage(collider, damage);
                 break;
                 // Add more cases as needed
+        }
+    }
+
+    void HandleEnemyDamage(Collider collider, int damage, string enemyType)
+    {
+        // Simplified enemy damage handling logic here
+        FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+        if (enemyDamageCrit.alive)
+        {
+            enemyDamageCrit.TakeDamage(damage);
+            if (enemyDamageCrit.Health <= damage && playerHealth != null)
+            {
+                playerHealth.EnemyKilled(enemyType);
+            }
+        }
+    }
+
+    void HandleSecurityDamage(Collider collider, int damage)
+    {
+        // Simplified security damage handling logic here
+        DroneHealth droneHealth = collider.GetComponent<DroneHealth>();
+        if (droneHealth != null)
+            droneHealth.TakeDamage(damage);
+        else
+        {
+            SentryDrone sentry = collider.GetComponent<SentryDrone>();
+            sentry.TakeDamage(damage);
+        }
+    }
+
+    void HandlePlayerDamage(Collider collider, int damage)
+    {
+        // Simplified player damage handling logic here
+        PlayerHealth playerHealthCrit = collider.GetComponent<PlayerHealth>();
+        if (playerHealthCrit.alive && collider.transform.root.gameObject != player)
+        {
+            playerHealthCrit.TakeDamage(damage);
+            if (playerHealthCrit.Health <= damage && playerHealth != null)
+            {
+                playerHealth.PlayersKilled();
+            }
         }
     }
 

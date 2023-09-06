@@ -32,6 +32,7 @@ public class WhiteLabelManager : MonoBehaviour
     public TMP_InputField _inputField;
 
     public GameObject returning;
+    public GameObject loggingInScreen;
     public GameObject inputFieldText;
     public GameObject[] keyboards;
 
@@ -46,8 +47,8 @@ public class WhiteLabelManager : MonoBehaviour
 
     private void OnEnable()
     {
-        existingUserEmailInputField.enabled = true;
-        existingUserPasswordInputField.enabled = true;
+        existingUserEmailInputField.gameObject.SetActive(true);
+        existingUserPasswordInputField.gameObject.SetActive(true);
         loggingIn.SetActive(false);
         loggedOut.SetActive(false);
         invalidAccount.SetActive(false);
@@ -65,46 +66,54 @@ public class WhiteLabelManager : MonoBehaviour
             if (!response.success)
             {
                 // Error
-                return;
+                invalidLogin.SetActive(true);
+                loggingIn.SetActive(false);
+                Clear();
             }
 
-            loggingIn.SetActive(true);
-            existingUserEmailInputField.enabled = false;
-            existingUserPasswordInputField.enabled = false;
-            LootLockerSDKManager.StartWhiteLabelSession((response) =>
+            else
             {
-                if (!response.success)
+                loggingIn.SetActive(true);
+                existingUserEmailInputField.gameObject.SetActive(false);
+                existingUserPasswordInputField.gameObject.SetActive(false);
+                LootLockerSDKManager.StartWhiteLabelSession((response) =>
                 {
-                    // Error
-                    invalidLogin.SetActive(true);
-                    loggingIn.SetActive(false);
-                }
-                else
-                {
-                    invalidLogin.SetActive(false);
-                    // Session was succesfully started;
-                    string defaultName = string.Empty;
-                    if (_inputField != null)
+                    if (!response.success)
                     {
-                        LootLockerSDKManager.GetPlayerName((response) =>
-                        {
-                            if (response.success)
-                            {
-                                defaultName = response.name.ToString();
-                                _inputField.text = defaultName.ToString();
-                            }
-                        });
+                        // Error
+                        invalidLogin.SetActive(true);
+                        loggingIn.SetActive(false);
+                        existingUserEmailInputField.gameObject.SetActive(true);
+                        existingUserPasswordInputField.gameObject.SetActive(true);
+                        Clear();
                     }
                     else
                     {
-                        defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
+                        invalidLogin.SetActive(false);
+                        // Session was succesfully started;
+                        string defaultName = string.Empty;
+                        if (_inputField != null)
+                        {
+                            LootLockerSDKManager.GetPlayerName((response) =>
+                            {
+                                if (response.success)
+                                {
+                                    defaultName = response.name.ToString();
+                                    _inputField.text = defaultName.ToString();
+                                }
+                            });
+                        }
+                        else
+                        {
+                            defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
+                        }
+                        PhotonNetwork.NickName = defaultName;
+                        PlayerPrefs.SetString(playerNamePrefKey, defaultName);
+                        playerID = response.player_id.ToString();
+                        StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
                     }
-                    PhotonNetwork.NickName = defaultName;
-                    PlayerPrefs.SetString(playerNamePrefKey, defaultName);
-                    playerID = response.player_id.ToString();
-                    StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
-                }
-            });
+                });
+            }
         });
     }
 
@@ -144,6 +153,8 @@ public class WhiteLabelManager : MonoBehaviour
         else
         {
             rememberMeToggle.isOn = true;
+            loggingInScreen.SetActive(false);
+            AutoLogin();
         }
     }
 
@@ -178,8 +189,8 @@ public class WhiteLabelManager : MonoBehaviour
                 else
                 {
                     loggingIn.SetActive(true);
-                    existingUserEmailInputField.enabled = false;
-                    existingUserPasswordInputField.enabled = false;
+                    existingUserEmailInputField.gameObject.SetActive(false);
+                    existingUserPasswordInputField.gameObject.SetActive(false);
                     // Session is valid, start game session
                     LootLockerSDKManager.StartWhiteLabelSession((response) =>
                                     {
@@ -220,6 +231,9 @@ public class WhiteLabelManager : MonoBehaviour
                                             rememberMeToggle.isOn = false;
                                             invalidLogin.SetActive(true);
                                             loggingIn.SetActive(false);
+                                            existingUserEmailInputField.gameObject.SetActive(true);
+                                            existingUserPasswordInputField.gameObject.SetActive(true);
+                                            Clear();
 
                                             return;
                                         }

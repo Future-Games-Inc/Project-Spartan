@@ -10,7 +10,6 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
 
     [Header("Audio ------------------------------------------")]
     public AudioSource audioSource;
-    public AudioClip weaponFire;
     public AudioClip weaponReload;
     public AudioClip weaponBreak;
 
@@ -38,7 +37,9 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     void OnEnable()
     {
         durability = 5;
-        photonView.RPC("RPC_StingerStart", RpcTarget.All);
+        reloadingScreen.SetActive(false);
+        ammoLeft = maxAmmo;
+        ammoText.text = ammoLeft.ToString();
         StartCoroutine(TextUpdate());
     }
 
@@ -46,7 +47,8 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     {
         while (true)
         {
-            photonView.RPC("RPC_StingerTextUpdate", RpcTarget.All);
+            ammoText.text = ammoLeft.ToString();
+            durabilityText.text = durability.ToString();
             yield return new WaitForSeconds(.15f);
         }
     }
@@ -56,6 +58,12 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     {
         if (ammoLeft <= 0)
             ammoLeft = 0;
+
+        if (durability <= 0)
+        {
+            audioSource.PlayOneShot(weaponBreak);
+            StartCoroutine(DestroyWeapon());
+        }
     }
 
     public void StartFireBullet()
@@ -76,11 +84,10 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                if (!audioSource.isPlaying)
-                    audioSource.PlayOneShot(weaponFire);
                 foreach (Transform t in spawnPoint)
                 {
                     GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0, null);
+                    spawnedBullet.GetComponent<StingerBulletNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StingerBulletNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<StingerBulletNet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<StingerBulletNet>().bulletOwner = player.gameObject;
@@ -112,28 +119,9 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     IEnumerator DestroyWeapon()
     {
         yield return new WaitForSeconds(0.5f);
-        photonView.RPC("RPC_StingerDestroy", RpcTarget.All);
+        explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_StingerStart()
-    {
-        if (!photonView.IsMine)
-            return;
-        reloadingScreen.SetActive(false);
-        ammoLeft = maxAmmo;
-        ammoText.text = ammoLeft.ToString();
-    }
-
-    [PunRPC]
-    void RPC_StingerTextUpdate()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoText.text = ammoLeft.ToString();
-        durabilityText.text = durability.ToString();
     }
 
     [PunRPC]
@@ -159,12 +147,6 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
         durability--;
-
-        if (durability <= 0)
-        {
-            audioSource.PlayOneShot(weaponBreak);
-            StartCoroutine(DestroyWeapon());
-        }
     }
 
     [PunRPC]
@@ -185,14 +167,6 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
-    }
-
-    [PunRPC]
-    void RPC_StingerDestroy()
-    {
-        if (!photonView.IsMine)
-            return;
-        explosionObject.SetActive(true);
     }
 
     public void Rescale()

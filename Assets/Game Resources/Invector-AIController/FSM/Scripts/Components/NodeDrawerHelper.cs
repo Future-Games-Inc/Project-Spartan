@@ -56,6 +56,7 @@ namespace Invector.vCharacterController.AI.FSMBehaviour
                         }
                     }
                     if (!contains)
+                        ;
                         //Debug.Log("REQUIRED TYPE OF CONTROLLER IS " + state.requiredType.Name);
                 }
             }

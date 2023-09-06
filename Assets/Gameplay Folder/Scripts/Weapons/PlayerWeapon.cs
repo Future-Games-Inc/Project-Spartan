@@ -23,7 +23,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
     public TextMeshProUGUI durabilityText;
 
     public AudioSource audioSource;
-    public AudioClip weaponFire;
     public AudioClip weaponReload;
     public AudioClip weaponBreak;
 
@@ -36,12 +35,14 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         base.OnEnable();
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        TextUpdate();
+        reloadingScreen.SetActive(false);
+        ammoLeft = maxAmmo;
+        ammoText.text = ammoLeft.ToString();
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("RPC_Start", RpcTarget.All);
             PhotonNetwork.AddCallbackTarget(this);
         }
+        UpdateText();
     }
 
     public override void OnDisable()
@@ -50,27 +51,23 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    async void TextUpdate()
-    {
-        while (true)
-        {
-            UpdateText();
-            //photonView.RPC("RPC_Update", RpcTarget.All);
-            await Task.Delay(150);
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (ammoLeft <= 0) // Maybe change this in the future
             ammoLeft = 0;
+
+        if (durability <= 0)
+        {
+            audioSource.PlayOneShot(weaponBreak);
+            StartCoroutine(DestroyWeapon());
+        }
     }
 
     public void StartFireBullet()
     {
         isFiring = true;
-        FireBullet();
+        StartCoroutine(FireBullet());
     }
 
     public void StopFireBullet()
@@ -80,37 +77,36 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
 
     }
 
-    async void FireBullet()
+   IEnumerator FireBullet()
     {
         while (isFiring)
         {
             if (ammoLeft >= 1 && !reloadingWeapon)
             {
-                if (!audioSource.isPlaying)
-                    audioSource.PlayOneShot(weaponFire);
                 foreach (Transform t in spawnPoint)
                 {
                     GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0, null);
+                    spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                 }
-            }
 
-            Fire();
-            await Task.Delay(200);
+                Fire();
+            }
+            yield return new WaitForSeconds(.2f);
         }
     }
 
-    async void ReloadWeapon()
+    IEnumerator ReloadWeapon()
     {
         StopFireBullet();
         ammoText.gameObject.SetActive(false);
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
 
-        await Task.Delay(2000);
+        yield return new WaitForSeconds(2f);
 
         photonView.RPC("RPC_Reload", RpcTarget.All, photonView.ViewID);
 
@@ -128,11 +124,11 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         }
     }
 
-    async void DestroyWeapon()
+    IEnumerator DestroyWeapon()
     {
-        await Task.Delay(500);
-        photonView.RPC("RPC_Destroy", RpcTarget.All);
-        await Task.Delay(500);
+        yield return new WaitForSeconds(.5f);
+        explosionObject.SetActive(true);
+        yield return new WaitForSeconds(.5f);
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -150,8 +146,9 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         if (ammoLeft <= 0 && !reloadingWeapon)
         {
             reloadingWeapon = true;
-            ReloadWeapon();
+            StartCoroutine(ReloadWeapon());
         }
+        UpdateText();
     }
 
     [PunRPC]
@@ -176,23 +173,8 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         }
         durability--;
 
-        if (durability <= 0)
-        {
-            audioSource.PlayOneShot(weaponBreak);
-            DestroyWeapon();
-        }
-
         ammoLeft = maxAmmo;
-    }
-
-    [PunRPC]
-    void RPC_Start()
-    {
-        if (!photonView.IsMine)
-            return;
-        reloadingScreen.SetActive(false);
-        ammoLeft = maxAmmo;
-        ammoText.text = ammoLeft.ToString();
+        UpdateText();
     }
 
     [PunRPC]
@@ -203,14 +185,6 @@ public class PlayerWeapon : MonoBehaviourPunCallbacks
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
-    }
-
-    [PunRPC]
-    void RPC_Destroy()
-    {
-        if (!photonView.IsMine)
-            return;
-        explosionObject.SetActive(true);
     }
 
     public void Rescale()

@@ -128,10 +128,11 @@ namespace Autohand {
 
 
             if(body == null){
-                if(GetComponent<Rigidbody>())
+                if (GetComponent<Rigidbody>())
                     body = GetComponent<Rigidbody>();
                 else
                     //Debug.LogError("RIGIDBODY MISSING FROM GRABBABLE: " + transform.name + " \nPlease add/attach a rigidbody", this);
+                    ;
             }
 
 

@@ -108,7 +108,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 // remove this progress to let complete the total loading process
                 //return;
             }
-            //Debug.LogFormat("Parsing geometry data in {0}...", www.url);
+            ////Debug.LogFormat("Parsing geometry data in {0}...", www.url);
             ParseGeometryData(loadedText);
         }
 
@@ -149,7 +149,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             while (isWorking)
             {
-                //Debug.Log("Stuck in ISWORKING WHILE LOOP");
+                ////Debug.Log("Stuck in ISWORKING WHILE LOOP");
                 ObjectImporter.downloadProgress.Value = (individualProgress.Value / ObjectImporter.activeDownloads) * 100f;
                 await Task.Delay(1);
             }
@@ -176,7 +176,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 // remove this progress to let complete the total loading process
                 //return;
             }
-            //Debug.LogFormat("Parsing geometry data in {0}...", www.url);
+            ////Debug.LogFormat("Parsing geometry data in {0}...", www.url);
 
             try
             {
@@ -253,7 +253,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 totalProgress.singleProgress.Remove(objLoadingProgress);
                 throw new InvalidOperationException("Failed to load data from the downloaded obj file. The file might be empty or non readable.");
             }
-            //Debug.LogFormat("Parsing geometry data in {0}...", www.url);
+            ////Debug.LogFormat("Parsing geometry data in {0}...", www.url);
 
             try
             {
@@ -332,7 +332,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (!string.IsNullOrWhiteSpace(loadedText))
             {
-                //Debug.LogFormat("Parsing material libray {0}...", loader.url);
+                ////Debug.LogFormat("Parsing material libray {0}...", loader.url);
                 objLoadingProgress.message = "Parsing material library...";
                 ParseMaterialData(loadedText);
             }
@@ -393,7 +393,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (!string.IsNullOrWhiteSpace(loadedText))
             {
-                //Debug.LogFormat("Parsing material libray {0}...", loader.url);
+                ////Debug.LogFormat("Parsing material libray {0}...", loader.url);
                 objLoadingProgress.message = "Parsing material library...";
                 ParseMaterialData(loadedText);
             }
@@ -438,7 +438,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
             if (!string.IsNullOrWhiteSpace(loadedText))
             {
-                //Debug.LogFormat("Parsing material libray {0}...", loader.url);
+                ////Debug.LogFormat("Parsing material libray {0}...", loader.url);
                 objLoadingProgress.message = "Parsing material library...";
                 ParseMaterialData(loadedText);
             }
@@ -812,7 +812,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                             }
                             break;
                         default:
-                            //Debug.Log("this line was not processed :" + line);
+                            ////Debug.Log("this line was not processed :" + line);
                             break;
                     }
                 }

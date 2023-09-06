@@ -846,7 +846,7 @@ namespace Autohand {
 #endif
                         fingers[i].CopyPose(copyFromHand.fingers[i]);
                     }
-                    ///Debug.Log("Auto Hand: Copied Hand Pose!");
+                    //Debug.Log("Auto Hand: Copied Hand Pose!");
                 }
 
             }

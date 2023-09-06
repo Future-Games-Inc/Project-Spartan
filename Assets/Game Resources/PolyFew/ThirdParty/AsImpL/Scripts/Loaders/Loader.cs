@@ -164,7 +164,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             objLoadingProgress.fileName = fileName;
             objLoadingProgress.error = false;
             objLoadingProgress.message = "Loading " + fileName + "...";
-            //Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
+            ////Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
 
             await Task.Yield();
             //yield return null;
@@ -262,7 +262,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             objLoadingProgress.fileName = fileName;
             objLoadingProgress.error = false;
             objLoadingProgress.message = "Loading " + fileName + "...";
-            //Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
+            ////Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
 
             await Task.Yield();
 
@@ -363,7 +363,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             objLoadingProgress.fileName = fileName;
             objLoadingProgress.error = false;
             objLoadingProgress.message = "Loading " + fileName + "...";
-            //Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
+            ////Debug.LogFormat("Loading {0}\n  from: {1}...", objName, absolutePath);
 
 
             loadedModels[objURL] = null; // define a key for the dictionary
@@ -1386,7 +1386,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
 
         public IEnumerator DownloadFile(string url, ReferencedNumeric<float> downloadProgress, Action<byte[]> DownloadComplete, Action<string> OnError)
         {
-            //Debug.Log("Into the DownloadFile Coroutine");
+            ////Debug.Log("Into the DownloadFile Coroutine");
             UnityWebRequest webrequest = null;
             float oldProgress = downloadProgress.Value;
 
@@ -1434,7 +1434,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 {
                     if (string.IsNullOrWhiteSpace(webrequest.error))
                     {
-                        //Debug.Log("Calling Download Complete");
+                        ////Debug.Log("Calling Download Complete");
 
                         downloadProgress.Value = oldProgress + 1;
                         DownloadComplete(webrequest.downloadHandler.data);
@@ -1452,7 +1452,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
             StopCoroutine(progress);
 
             webrequest.Dispose();
-            //Debug.Log("End of File Download Coroutine.");
+            ////Debug.Log("End of File Download Coroutine.");
 
         }
 

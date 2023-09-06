@@ -47,7 +47,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
                 string filePath = modelsInfo[i].path;
                 if (string.IsNullOrEmpty(filePath))
                 {
-                    Debug.LogErrorFormat("File path missing for the model at position {0} in the list.", i);
+                    //Debug.LogErrorFormat("File path missing for the model at position {0} in the list.", i);
                     continue;
                 }
 

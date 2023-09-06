@@ -337,7 +337,7 @@ namespace BrainFailProductions.PolyFewRuntime
                 //init stuff
                 Dictionary<string, bool> materialCache = new Dictionary<string, bool>();
 
-                //Debug.Log("Exporting OBJ. Please wait.. Starting to export.");
+                ////Debug.Log("Exporting OBJ. Please wait.. Starting to export.");
 
 
                 InitializeExporter(toExport, exportPath, exportOptions);
@@ -583,7 +583,7 @@ namespace BrainFailProductions.PolyFewRuntime
 
             string ExportTexture(Texture2D t, string exportPath)
             {
-                //Debug.Log($"Exporting texture:  {t.name} to path: {exportPath}");
+                ////Debug.Log($"Exporting texture:  {t.name} to path: {exportPath}");
 
                 string textureName = t.name;
 

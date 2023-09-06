@@ -28,7 +28,7 @@ public class ActiveAnim : MonoBehaviour
             {
                 if (activeParent.AutoOnExit)
                     {
-                    //Debug.Log("Activando animacion");
+                    ////Debug.Log("Activando animacion");
                     animator.SetBool("Opened", false);
                     animator.SetTrigger("Actived");
                     }
@@ -38,13 +38,13 @@ public class ActiveAnim : MonoBehaviour
                     {
                         if (animator.GetBool("Opened"))
                         {
-                            //Debug.Log("Activando animacion");
+                            ////Debug.Log("Activando animacion");
                             animator.SetBool("Opened", false);
                             animator.SetTrigger("Actived");
                         }
                         else
                         {
-                            //Debug.Log("Activando animacion de salida");
+                            ////Debug.Log("Activando animacion de salida");
                             animator.SetTrigger("Actived");
                             animator.SetBool("Opened", true);
                         }
@@ -56,13 +56,13 @@ public class ActiveAnim : MonoBehaviour
             {
                 if (animator.GetBool("Opened"))
                 {
-                    //Debug.Log("Activando animacion");
+                    ////Debug.Log("Activando animacion");
                     animator.SetBool("Opened", false);
                     animator.SetTrigger("Actived");
                 }
                 else
                 {
-                    //Debug.Log("Activando animacion de salida");
+                    ////Debug.Log("Activando animacion de salida");
                     animator.SetTrigger("Actived");
                     animator.SetBool("Opened", true);
                 }
@@ -75,7 +75,7 @@ public class ActiveAnim : MonoBehaviour
 
             if(_localAuto && activeParent.AutoOnExit)
             {
-                //Debug.Log("Activando animacion de salida");
+                ////Debug.Log("Activando animacion de salida");
                 animator.SetTrigger("Actived");
                 animator.SetBool("Opened", true);
             }

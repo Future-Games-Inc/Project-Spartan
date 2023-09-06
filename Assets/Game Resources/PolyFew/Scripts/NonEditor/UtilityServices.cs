@@ -103,7 +103,7 @@ namespace BrainFailProductions.PolyFew
             object threadLock2 = new object();
 
             //if(applyForReduceDeep)
-            //Debug.Log("reduce deep was checked so executing like slider changed val");
+            ////Debug.Log("reduce deep was checked so executing like slider changed val");
 
             if (runOnThreads)
             {
@@ -243,7 +243,7 @@ namespace BrainFailProductions.PolyFew
                                 /*
                                 meshAssignments.Add(() =>
                                 {
-                                    //Debug.Log("reduced for  " + gameObject.name);
+                                    ////Debug.Log("reduced for  " + gameObject.name);
 
                                     var reducedMesh = meshSimplifier.ToMesh();
 
@@ -298,8 +298,8 @@ namespace BrainFailProductions.PolyFew
                 }
 
                 //watch.Stop();
-                //Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
-                //Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
+                ////Debug.Log("Elapsed Time   " + watch.Elapsed.TotalSeconds + "  isPreservationActive?  " +isPreservationActive + "  reductionStrength   " + reductionStrength);
+                ////Debug.Log("MESHESHANDLED  " + meshesHandled + "  Threads Allowed?  " + maxConcurrentThreads + "   Elapsed Time   "  +watch.Elapsed.TotalSeconds);
 
             }
 
@@ -562,7 +562,7 @@ namespace BrainFailProductions.PolyFew
             object threadLock2 = new object();
 
             //if(applyForReduceDeep)
-            //Debug.Log("reduce deep was checked so executing like slider changed val");
+            ////Debug.Log("reduce deep was checked so executing like slider changed val");
 
 
             Tuple<Mesh[], Mesh[], MeshFilter[], SkinnedMeshRenderer[]>[] allLevelsReducedMeshes;
@@ -2940,7 +2940,7 @@ namespace BrainFailProductions.PolyFew
                 var meshRenderer = renderer as MeshRenderer;
                 var skinnedMeshRenderer = renderer as SkinnedMeshRenderer;
 
-                //Debug.Log($"Deleting LOD Asset {a + 1}/{renderers.Length}   Progress   " + (float)a / renderers.Length);
+                ////Debug.Log($"Deleting LOD Asset {a + 1}/{renderers.Length}   Progress   " + (float)a / renderers.Length);
                 EditorUtility.DisplayProgressBar("Destroying LODS", $"Deleting LOD Asset {a + 1}/{renderers.Length}", (float)a / renderers.Length);
                 a++;
 
@@ -3702,7 +3702,7 @@ namespace BrainFailProductions.PolyFew
             {
                 foreach (var mesh in staticMeshes)
                 {
-                    //Debug.Log("Static Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
+                    ////Debug.Log("Static Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
 
                     if (!IsMeshSavedAsAsset(mesh)) { return false; }
                 }
@@ -3712,7 +3712,7 @@ namespace BrainFailProductions.PolyFew
             {
                 foreach (var mesh in skinnedMeshes)
                 {
-                    //Debug.Log("Skinned Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
+                    ////Debug.Log("Skinned Mesh Path  " + AssetDatabase.GetAssetPath(mesh));
 
                     if (!IsMeshSavedAsAsset(mesh)) { return false; }
                 }
@@ -4095,7 +4095,7 @@ namespace BrainFailProductions.PolyFew
                     {
                         if (includeInbuilt)
                         {
-                            //Debug.Log("Adding From Mesh Filter   "+ filter.sharedMesh.name + "  for gameobject  "+ filter.gameObject.name);
+                            ////Debug.Log("Adding From Mesh Filter   "+ filter.sharedMesh.name + "  for gameobject  "+ filter.gameObject.name);
                             DataContainer.MeshRendererPair meshRendererPair = new DataContainer.MeshRendererPair(true, filter.sharedMesh);
                             objectMeshPairs.Add(filter.gameObject, meshRendererPair);
                         }
@@ -4282,7 +4282,8 @@ namespace BrainFailProductions.PolyFew
 
                             if (filter == null) { continue; }
 
-                            //Debug.Log("Is attached to meshfilter  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + filter.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ////Debug.Log("Is attached to meshfilter  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + filter.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ;
 
                             filter.sharedMesh = meshRendererPair.mesh;
                         }
@@ -4293,7 +4294,9 @@ namespace BrainFailProductions.PolyFew
 
                             if (sRenderer == null) { continue; }
 
-                            //Debug.Log("Is attached to SkinnedMeshRendere  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + sRenderer.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ////Debug.Log("Is attached to SkinnedMeshRendere  GAMOBJECT:   " + gameObject.name + "  CurrentMesh name:  " + sRenderer.sharedMesh.name + "  set sharedMesh to  " + meshRendererPair.mesh.name);
+                            ///
+                            ;
 
                             sRenderer.sharedMesh = meshRendererPair.mesh;
                         }
@@ -4301,12 +4304,16 @@ namespace BrainFailProductions.PolyFew
                     else
                     {
                         //Debug.Log("Invalid reference to gameobnejct");
+                        ;
                     }
 
                 }
             }
 
-            else { //Debug.LogError("Object mesh pairs is null"); }
+            else
+            { //Debug.LogError("Object mesh pairs is null"); }
+                ;
+            }
 
         }
 
@@ -5121,7 +5128,7 @@ namespace BrainFailProductions.PolyFew
             {
                 if (Mathf.Approximately((Mathf.Sin(angle1) * Mathf.Deg2Rad), (Mathf.Sin(angle2) * Mathf.Deg2Rad)))
                 {
-                    //Debug.Log("equal");
+                    ////Debug.Log("equal");
                     return true;
                 }
             }
@@ -5720,7 +5727,7 @@ namespace BrainFailProductions.PolyFew
                 //init stuff
                 Dictionary<string, bool> materialCache = new Dictionary<string, bool>();
 
-                //Debug.Log("Exporting OBJ. Please wait.. Starting to export.");
+                ////Debug.Log("Exporting OBJ. Please wait.. Starting to export.");
 
 
                 InitializeExporter(toExport, exportPath, exportOptions);
@@ -5955,7 +5962,7 @@ namespace BrainFailProductions.PolyFew
 
             string ExportTexture(Texture2D t, string exportPath)
             {
-                //Debug.Log($"Exporting texture:  {t.name} to path: {exportPath}");
+                ////Debug.Log($"Exporting texture:  {t.name} to path: {exportPath}");
 
                 string textureName = t.name;
 

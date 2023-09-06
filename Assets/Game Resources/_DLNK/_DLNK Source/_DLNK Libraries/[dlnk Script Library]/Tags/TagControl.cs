@@ -119,17 +119,17 @@ public class TagControl : MonoBehaviour {
 		// Keep time tracking DEBUG
 			if (CheckOnUpdate)
 			{
-				if (timer < TimeDelay)
-					//Debug.Log("["+ (TimeDelay - timer) + "] Seconds Delay Left");
-				else
+				if (timer < TimeDelay) ;
+				//Debug.Log("["+ (TimeDelay - timer) + "] Seconds Delay Left");
+				else;
 					//Debug.Log("["+ (TimeDelay + EndAnim.length - timer) + "] ExitAnim Left");
 			}
 		// Start End Animation
 			if (timer > TimeDelay)
 			{
 				TargetAnimation.Play(EndAnim.name);
-		// Warn animation start DEBUG
-				if (CheckOnUpdate)
+				// Warn animation start DEBUG
+				if (CheckOnUpdate) ;
 					//Debug.Log(gameObject.name + "is playing "+ EndAnim.name + " animation clip");
 			}
 		// FADE OUT GLOW
@@ -137,8 +137,8 @@ public class TagControl : MonoBehaviour {
 			{
 				glowint = ((TimeDelay-timer)/TimeDelay);
 				MaterialGlow2.SetColor("_EmissionColor", (GlowColor*(SelectIntensity*glowint)));
-		// Check GlowInt DEBUG
-				if (CheckOnUpdate)
+				// Check GlowInt DEBUG
+				if (CheckOnUpdate) ;
 					//Debug.Log( MaterialGlow2.name + " HDR:[" + (SelectIntensity*glowint) + "], glowint value:[" + glowint + "], time:[" + (timer) + "]");
 			}
 
@@ -154,8 +154,8 @@ public class TagControl : MonoBehaviour {
 				waiting = false;
 				ready = false;
 				timer = 0f;
-				// Check player is out DEBUG
-				if (CheckOnUpdate)
+			// Check player is out DEBUG
+			if (CheckOnUpdate) ;
 				//Debug.Log(PlayerCollider.gameObject.name + " has left the " + TargetCollider.GetComponent<Collider>().name + " area.");
 				// Disable Parts
 				EnabledParts.gameObject.SetActive(false);
@@ -182,7 +182,7 @@ public class TagControl : MonoBehaviour {
 					MaterialGlow2.SetColor("_EmissionColor", (GlowColor*(SelectIntensity*glowint)));
 				}
 				// Keep time tracking DEBUG
-				if (CheckOnUpdate)
+				if (CheckOnUpdate) ;
 				//Debug.Log ((StartAnim.length - timerstart) + " seconds to go");
 			}
 			// Enable Parts

@@ -49,7 +49,7 @@ public class PushTrigger : MonoBehaviour {
     {
         // get player collider
         _activator = ManagerScript.PlayerCollider;
-        //Debug.Log(trig.name + "has entered the door trigger");
+        ////Debug.Log(trig.name + "has entered the door trigger");
         // check if Key pressed and collider hit was from correct target
         if (trig.GetComponent<Collider>() == _activator)
         {

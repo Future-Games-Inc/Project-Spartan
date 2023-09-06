@@ -265,7 +265,7 @@ namespace UltimateGameTools
           }
         }
 
-        //Debug.Log("In: " + av3Vertices.Length + " vertices. Out: " + m_listVertices.Count + " vertices.");
+        ////Debug.Log("In: " + av3Vertices.Length + " vertices. Out: " + m_listVertices.Count + " vertices.");
       }
 
       #endregion // Public methods

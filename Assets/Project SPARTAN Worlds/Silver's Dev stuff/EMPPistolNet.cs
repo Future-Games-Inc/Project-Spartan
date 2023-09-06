@@ -36,7 +36,9 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     {
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
-        photonView.RPC("RPC_EMPStart", RpcTarget.All);
+        reloadingScreen.SetActive(false);
+        ammoLeft = maxAmmo;
+        ammoText.text = ammoLeft.ToString();
         StartCoroutine(TextUpdate());
     }
 
@@ -44,7 +46,8 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     {
         while (true)
         {
-            photonView.RPC("RPC_EMPText", RpcTarget.All);
+            ammoText.text = ammoLeft.ToString();
+            durabilityText.text = durability.ToString();
             yield return new WaitForSeconds(.15f);
         }
     }
@@ -54,6 +57,12 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     {
         if (ammoLeft <= 0)
             ammoLeft = 0;
+
+        if (durability <= 0)
+        {
+            audioSource.PlayOneShot(weaponBreak);
+            StartCoroutine(DestroyWeapon());
+        }
     }
 
     public void StartFireBullet()
@@ -77,7 +86,7 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
                 foreach (Transform t in spawnPoint)
                 {
                     GameObject spawnedBullet = PhotonNetwork.Instantiate(Bullet.name, t.position, Quaternion.identity, 0, null);
-                    audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
+                    spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                     spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().playerBullet = true;
@@ -107,28 +116,9 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     IEnumerator DestroyWeapon()
     {
         yield return new WaitForSeconds(0.5f);
-        photonView.RPC("RPC_EMPDestroy", RpcTarget.All);
+        explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_EMPStart()
-    {
-        if (!photonView.IsMine)
-            return;
-        reloadingScreen.SetActive(false);
-        ammoLeft = maxAmmo;
-        ammoText.text = ammoLeft.ToString();
-    }
-
-    [PunRPC]
-    void RPC_EMPText()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoText.text = ammoLeft.ToString();
-        durabilityText.text = durability.ToString();
     }
 
     [PunRPC]
@@ -154,12 +144,6 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
         durability--;
-
-        if (durability <= 0)
-        {
-            audioSource.PlayOneShot(weaponBreak);
-            StartCoroutine(DestroyWeapon());
-        }
     }
 
     [PunRPC]
@@ -180,14 +164,6 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
         var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
         maxAmmo = newMaxAmmo;
         rotatorScript.enabled = false;
-    }
-
-    [PunRPC]
-    void RPC_EMPDestroy()
-    {
-        if (!photonView.IsMine)
-            return;
-        explosionObject.SetActive(true);
     }
 
     public void Rescale()

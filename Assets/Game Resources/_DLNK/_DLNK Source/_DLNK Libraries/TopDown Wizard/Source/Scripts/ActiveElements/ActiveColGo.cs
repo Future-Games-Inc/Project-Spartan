@@ -17,7 +17,7 @@ public class ActiveColGo : MonoBehaviour
     }
     void OnTriggerEnter(Collider trig)
     {
-        //Debug.Log("hey! im working! cuz" + trig + "has entered and my player is: " + tdscene.PlayerChar.gameObject.GetComponent<Collider>());
+        ////Debug.Log("hey! im working! cuz" + trig + "has entered and my player is: " + tdscene.PlayerChar.gameObject.GetComponent<Collider>());
         //Check character in range and keycode pressed or automatic to start action
         if (trig.GetComponent<Collider>() == tdscene.PlayerChar)
         {

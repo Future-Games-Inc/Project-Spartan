@@ -491,7 +491,7 @@ namespace Invector.vCharacterController
         IEnumerator ResetPlayer(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            //Debug.Log("Ragdoll OFF");        
+            ////Debug.Log("Ragdoll OFF");        
             if (iChar != null)
             {
                 iChar.ResetRagdoll();

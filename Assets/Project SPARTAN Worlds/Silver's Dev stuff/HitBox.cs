@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class HitBox : MonoBehaviour
 {
-    void Start()
-    {
-        ApplyTagRecursively(gameObject.transform);
-    }
-    void ApplyTagRecursively(Transform parent)
+    //void Start()
+    //{
+    //    ApplyTagRecursively(gameObject.transform);
+    //}
+    public void ApplyTagRecursively(Transform parent)
     {
         foreach (Transform child in parent)
         {

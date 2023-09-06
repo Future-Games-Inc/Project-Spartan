@@ -21,6 +21,8 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
     public int numSmallBullets = 5;
     public float smallBulletTargetRadius = 10.0f;
     public float smallBulletLifetime = 5.0f;
+    public AudioSource audioSource;
+    public AudioClip clip;
 
     private void OnEnable()
     {
@@ -185,6 +187,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         for (int i = 0; i < numSmallBullets; i++)
         {
             GameObject smallBullet = PhotonNetwork.Instantiate(smallBulletPrefab.name, transform.position, Quaternion.identity, 0, null);
+            smallBullet.GetComponent<StingerBulletMiniNet>().audioSource.PlayOneShot(smallBullet.GetComponent<StingerBulletMiniNet>().clip);
             smallBullet.transform.forward = Random.insideUnitSphere;
             smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
             smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().playerBullet = true;

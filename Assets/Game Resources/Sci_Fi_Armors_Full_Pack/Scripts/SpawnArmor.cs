@@ -19,7 +19,7 @@ public class SpawnArmor : MonoBehaviour
     {
         if (name == GameManager.GetCurrent())
         {
-            //Debug.Log("Return reached");
+            ////Debug.Log("Return reached");
             if (GameObject.Find("Canvas").GetComponentsInChildren<Toggle>()[1].isOn == true)
             {
                 OrbitCamera2.SetNewResetCamPos(true);
@@ -30,7 +30,7 @@ public class SpawnArmor : MonoBehaviour
         {
             Destroy(GameObject.Find(GameManager.GetCurrent() + "(Clone)"));
 			current = Instantiate(Resources.Load(name)) as GameObject;
-            //Debug.Log("Current model is " + name);
+            ////Debug.Log("Current model is " + name);
             GameManager.SetCurrent(name);
   //          OnTogglePushed(state);
 
@@ -48,7 +48,7 @@ public class SpawnArmor : MonoBehaviour
 
         if (WireOn)
         {
-            //Debug.Log("pressed");
+            ////Debug.Log("pressed");
             Material newMat = Resources.Load("Materials/Wireframe", typeof(Material)) as Material;
 
             GameObject.Find(GameManager.GetCurrent() + "(Clone)").GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;

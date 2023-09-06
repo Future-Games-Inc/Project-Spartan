@@ -38,7 +38,7 @@ namespace InfimaGames.LowPolyShooterPack
             Internal_Log(message, LogType.Error);
         }
 
-        public static void oopsie(Exception oopsie, UnityEngine.Object context = default(UnityEngine.Object)) { //Debug.LogException(oopsie, context); }
+        public static void oopsie(Exception oopsie, UnityEngine.Object context = default(UnityEngine.Object)) { /*Debug.LogException(oopsie, context);*/ }
 
         /// <summary>
         /// Throws a reference error. We have this as a specific function so we don't have to repeat it

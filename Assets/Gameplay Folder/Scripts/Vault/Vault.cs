@@ -48,7 +48,6 @@ public class Vault : MonoBehaviourPunCallbacks
         if (activated && hasBeenActivated) // Only move if the vault has been activated before
         {
 
-            photonView.RPC("RPC_VaultMaterial", RpcTarget.All, activatedMaterial);
             if (isMovingUp && isHolding)
             {
                 radius = 10f;
@@ -77,7 +76,6 @@ public class Vault : MonoBehaviourPunCallbacks
             else
             {
                 radius = 4f;
-                photonView.RPC("RPC_VaultMaterial", RpcTarget.All, deactivatedMaterial);
                 // Move the object down
                 transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
 
@@ -116,14 +114,6 @@ public class Vault : MonoBehaviourPunCallbacks
             isHolding = false;
             isMovingUp = false;
         }
-    }
-
-    [PunRPC]
-    void RPC_VaultMaterial(Material material)
-    {
-        if (!photonView.IsMine)
-            return;
-        keycardObject.GetComponent<MeshRenderer>().material = material;
     }
 
     public bool CheckForPlayerWithinRadius()

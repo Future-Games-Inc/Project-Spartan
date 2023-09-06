@@ -1443,7 +1443,7 @@ namespace BrainFailProductions.PolyFew
                             {
                                 MaterialProperties props = combMat.materialProperties;
                                 props.BurnAttrToImg(ref attrImg, props.matIndex, props.texArrIndex);
-                                //Debug.Log($"GameObject {gameObject.name}  is linked to Material: {combMat.material.name}");
+                                ////Debug.Log($"GameObject {gameObject.name}  is linked to Material: {combMat.material.name}");
                             }
                         }
 

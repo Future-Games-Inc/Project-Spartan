@@ -14,6 +14,10 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
     public GameObject rifleUpgrader;
     public GameObject pulseUpgrader;
     public GameObject pulseAR;
+    public GameObject ZBowNormal;
+    public GameObject ZBowBomb;
+    public GameObject ZBowEMP;
+    public GameObject bowUpgrade;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +36,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             stingerUpgrader.SetActive(false);
             rifleUpgrader.SetActive(false);
             pulseUpgrader.SetActive(false);
+            bowUpgrade.SetActive(false);
         }
     }
 
@@ -102,6 +107,11 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             //    pulseAR.ammoText.enabled = false;
             //}
         }
+
+        else if (snapZone.HeldItem.gameObject.name == "Z_BowNormal" || snapZone.HeldItem.gameObject.name == "Z_BowBomb" || snapZone.HeldItem.gameObject.name == "Z_BowEMP")
+        {
+            bowUpgrade.SetActive(true);
+        }
         snapZone.lastHeldItem = snapZone.HeldItem;
     }
 
@@ -151,7 +161,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
         if (snapZone.HeldItem.gameObject.name == "Z_Pistol")
         {
             PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newEmpPistol = PhotonNetwork.Instantiate(empPistol.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
+            GameObject newEmpPistol = PhotonNetwork.InstantiateRoomObject(empPistol.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
             newEmpPistol.gameObject.name = "Z_EMPPistol";
             EMPPistolNet pistol = newEmpPistol.GetComponent<EMPPistolNet>();
             pistol.reloadingScreen.SetActive(false);
@@ -163,7 +173,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
         else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
         {
             PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newStingerShotgun = PhotonNetwork.Instantiate(stingerShotgun.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
+            GameObject newStingerShotgun = PhotonNetwork.InstantiateRoomObject(stingerShotgun.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
             newStingerShotgun.gameObject.name = "Z_Stinger Shotgun";
             StingerShotgun stinger = newStingerShotgun.GetComponent<StingerShotgun>();
             stinger.reloadingScreen.SetActive(false);
@@ -175,7 +185,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
         else if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
         {
             PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newPulseAR = PhotonNetwork.Instantiate(pulseAR.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
+            GameObject newPulseAR = PhotonNetwork.InstantiateRoomObject(pulseAR.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
             newPulseAR.gameObject.name = "Z_PulseAR";
             PulseARNet AR = newPulseAR.GetComponent<PulseARNet>();
             AR.reloadingScreen.SetActive(false);
@@ -184,6 +194,36 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             NetworkedGrabbable newGrabbable = newPulseAR.GetComponent<NetworkedGrabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
+    }
+
+    public void UpgradeBowNormal()
+    {
+
+        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowNormal.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        newBow.gameObject.name = "Z_BowNormal";
+        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        snapZone.GrabGrabbable(newGrabbable);
+    }
+
+    public void UpgradeBowBomb()
+    {
+
+        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowBomb.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        newBow.gameObject.name = "Z_BowBomb";
+        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        snapZone.GrabGrabbable(newGrabbable);
+    }
+
+    public void UpgradeBowEMP()
+    {
+
+        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowEMP.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        newBow.gameObject.name = "Z_BowEMP";
+        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        snapZone.GrabGrabbable(newGrabbable);
     }
 
     public void Rescale()
@@ -203,6 +243,10 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
         else if (snapZone.lastHeldItem.gameObject.name == "Z_PulseAR")
         {
             snapZone.lastHeldItem.gameObject.GetComponent<PulseARNet>().Rescale();
+        }
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_BowNormal" || snapZone.lastHeldItem.gameObject.name == "Z_BowBomb" || snapZone.lastHeldItem.gameObject.name == "Z_BowEMP")
+        {
+            snapZone.lastHeldItem.gameObject.GetComponent<BowNet>().Rescale();
         }
     }
 }

@@ -84,7 +84,7 @@ public class RuntimeMeshSimplifier : MonoBehaviour
       m_strLastMessage = strMessage;
       m_nLastProgress  = nPercent;
 
-      //Debug.Log(strTitle + " " + strMessage + " " + nPercent);
+      ////Debug.Log(strTitle + " " + strMessage + " " + nPercent);
     }
   }
 

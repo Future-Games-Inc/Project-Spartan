@@ -120,7 +120,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
         /// <param name="objectName">name of the new object</param>
         public void AddObject(string objectName)
         {
-            //Debug.Log("Adding new object " + name + ". Current is empty: " + isEmpty);
+            ////Debug.Log("Adding new object " + name + ". Current is empty: " + isEmpty);
             string currentMaterial = currObjData.faceGroups[currObjData.faceGroups.Count - 1].materialName;
 
             if (noFaceDefined) objectList.Remove(currObjData);

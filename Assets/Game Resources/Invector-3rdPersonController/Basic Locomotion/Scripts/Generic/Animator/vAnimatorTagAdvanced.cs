@@ -42,6 +42,7 @@ namespace Invector.vEventSystems
                 {
                     RemoveTag(stateInfos, layer);
                     if (debug) //Debug.Log("REMOVE TAG " + tagName + " in  " + normalizedTime);
+                        ;
                 }
               
                 if (looping && normalizedTime > loopCount + 1)

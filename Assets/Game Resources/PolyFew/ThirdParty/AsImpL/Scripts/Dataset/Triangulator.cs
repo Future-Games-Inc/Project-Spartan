@@ -18,7 +18,7 @@ namespace BrainFailProductions.PolyFew.AsImpL
         public static void Triangulate(DataSet dataSet, DataSet.FaceIndices[] face)
         {
             int numVerts = face.Length;
-            //Debug.LogFormat("Triangulating a face with {0} vertices of {1}...", numVerts, dataSet.CurrGroupName);
+            ////Debug.LogFormat("Triangulating a face with {0} vertices of {1}...", numVerts, dataSet.CurrGroupName);
             Vector3 planeNormal = FindPlaneNormal(dataSet, face);
 
             // setup the data structure used for triangluation

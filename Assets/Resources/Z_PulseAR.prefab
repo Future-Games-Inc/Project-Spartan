@@ -24235,8 +24235,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.1, z: 0.1}
-  m_Center: {x: 0.07, y: -0.08, z: 0}
+  m_Size: {x: 0.25, y: 0.0633471, z: 0.041723132}
+  m_Center: {x: 0.06999999, y: -0.0827719, z: -0.002016604}
 --- !u!114 &987370482741504961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29434,7 +29434,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6169673624175221685}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.0025, y: -0.1061, z: 0.0161}
+  m_LocalPosition: {x: 0.0422, y: -0.0505, z: 0.0008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34465,6 +34465,7 @@ MonoBehaviour:
   isTriggerSingle: 0
   grabbable: {fileID: -6713328730111113911}
   grabbableEvents: {fileID: 5074445494317248635}
+  SecondaryTrigger: 0
 --- !u!54 &2511659228002151072
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -34628,8 +34629,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.1, z: 0.1}
-  m_Center: {x: -0.25, y: -0.08, z: 0}
+  m_Size: {x: 0.25, y: 0.083115906, z: 0.051908135}
+  m_Center: {x: -0.25, y: -0.071557954, z: 0.00013500452}
 --- !u!114 &5074445494317248635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34755,7 +34756,19 @@ MonoBehaviour:
       m_Calls: []
   onSnapZoneExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2430747419902260605}
+        m_TargetAssemblyTypeName: PulseARNet, Assembly-CSharp
+        m_MethodName: Rescale
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2263381541762075036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34810,7 +34823,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 5
+  RemoteGrabDistance: 2
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0

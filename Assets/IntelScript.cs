@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class IntelScript : MonoBehaviourPunCallbacks
 {
-    public AudioSource audioSource;
     public AudioClip pickupClip;
     public LayerMask groundLayer;
     private Rigidbody rb;
