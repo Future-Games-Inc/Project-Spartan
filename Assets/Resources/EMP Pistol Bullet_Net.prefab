@@ -112,7 +112,6 @@ GameObject:
   - component: {fileID: 790354606006371444}
   - component: {fileID: 2160279510426487234}
   - component: {fileID: -1350901098225621217}
-  - component: {fileID: 734994651339915880}
   - component: {fileID: 8004411208675292311}
   m_Layer: 20
   m_Name: EMP Pistol Bullet_Net
@@ -120,7 +119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7844051141168327265
 Transform:
   m_ObjectHideFlags: 0
@@ -351,28 +350,6 @@ MonoBehaviour:
   AutoTracking: 0
   clip: {fileID: 8300000, guid: 660337883d4d3bf4ab3fde6c83b7e3c6, type: 3}
   audioSource: {fileID: 8004411208675292311}
---- !u!114 &734994651339915880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2228136128379212152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!82 &8004411208675292311
 AudioSource:
   m_ObjectHideFlags: 0

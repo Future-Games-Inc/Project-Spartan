@@ -1,5 +1,4 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AvatarSelectionManager : MonoBehaviour
 {
@@ -35,11 +34,10 @@ public class AvatarSelectionManager : MonoBehaviour
     {
         ////Initially, de-activating the Avatar Selection Platform.
         //AvatarSelectionPlatformGameobject.SetActive(false);
-
-        object storedAvatarSelectionNumber;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out storedAvatarSelectionNumber))
+        // To Retrieve
+        if (PlayerPrefs.HasKey("AvatarSelectionNumber"))
         {
-            avatarSelectionNumber = (int)storedAvatarSelectionNumber;
+            avatarSelectionNumber = PlayerPrefs.GetInt("AvatarSelectionNumber");
             ActivateAvatarModelAt(avatarSelectionNumber);
             LoadAvatarModelAt(avatarSelectionNumber);
         }
@@ -115,7 +113,6 @@ public class AvatarSelectionManager : MonoBehaviour
         loadableAvatarModels[avatarIndex].SetActive(true);
         loadableAvatarModels[avatarIndex].GetComponent<Animator>().enabled = true;
 
-        ExitGames.Client.Photon.Hashtable playerSelectionProp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, avatarSelectionNumber } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(playerSelectionProp);
+        PlayerPrefs.SetInt("AvatarSelectionNumber", avatarSelectionNumber);
     }
 }

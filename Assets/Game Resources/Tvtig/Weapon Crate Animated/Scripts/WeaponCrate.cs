@@ -1,11 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
-using Photon.Pun;
 using UnityEngine.AI;
-using System;
+using Umbrace.Unity.PurePool;
 
-public class WeaponCrate : MonoBehaviourPunCallbacks
+public class WeaponCrate : MonoBehaviour
 {
     [Header("Cache Effects ------------------------------------------------------")]
     [SerializeField]
@@ -21,8 +20,8 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     public bool cacheActive;
 
     [Header("Cache Properties ------------------------------------------------------")]
-    public string[] powerups;
-    public string[] weapons;
+    public GameObject[] powerups;
+    public GameObject[] weapons;
 
     public Animator _animator;
 
@@ -35,10 +34,12 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     public MatchEffects matchProps;
 
+    public GameObjectPoolManager PoolManager;
 
 
     private void Start()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
         _collider = GetComponent<BoxCollider>();
         cacheActive = true;
     }
@@ -59,29 +60,14 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     }
 
-    String[] ShuffleArray(String[] array)
+    GameObject[] ShuffleArray(GameObject[] array)
     {
-        String[] shuffledArray = (String[])array.Clone();
+        GameObject[] shuffledArray = (GameObject[])array.Clone();
 
         for (int i = shuffledArray.Length - 1; i > 0; i--)
         {
             int randomIndex = UnityEngine.Random.Range(0, i + 1);
-            String temp = shuffledArray[i];
-            shuffledArray[i] = shuffledArray[randomIndex];
-            shuffledArray[randomIndex] = temp;
-        }
-
-        return shuffledArray;
-    }
-
-    String[] ShufflePowerups(String[] array)
-    {
-        String[] shuffledArray = (String[])array.Clone();
-
-        for (int i = shuffledArray.Length - 1; i > 0; i--)
-        {
-            int randomIndex = UnityEngine.Random.Range(0, i + 1);
-            String temp = shuffledArray[i];
+            GameObject temp = shuffledArray[i];
             shuffledArray[i] = shuffledArray[randomIndex];
             shuffledArray[randomIndex] = temp;
         }
@@ -96,14 +82,18 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
             _animator.SetBool("Open", true);
             _visualEffect.SendEvent("OnPlay");
             cacheAudio.PlayOneShot(cacheClip);
-            photonView.RPC("RPC_CacheState", RpcTarget.All, false);
+            cacheActive = false;
             StartCoroutine(WeaponCache());
         }
     }
 
     IEnumerator WeaponCache()
     {
-        photonView.RPC("RPC_WeaponSpawn", RpcTarget.All);
+        GameObject[] shuffledWeapons = ShuffleArray(weapons);
+        GameObject[] shuffledPowerups = ShuffleArray(powerups);
+        this.PoolManager.Acquire(shuffledWeapons[0], spawn1.position, spawn1.rotation);
+        this.PoolManager.Acquire(shuffledWeapons[2], spawn3.position, spawn3.rotation);
+        this.PoolManager.Acquire(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);
         _animator.SetBool("Open", false);
         StartCoroutine(CacheRespawn());
@@ -113,29 +103,12 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(30);
         _animator.SetBool("Open", false);
-        photonView.RPC("RPC_CacheState", RpcTarget.All, true);
+        cacheActive = true;
     }
 
-    [PunRPC]
-    void RPC_Obstacle(bool state)
+    public void Obstacle(bool state)
     {
         GetComponent<NavMeshObstacle>().enabled = state;
         GetComponent<Rigidbody>().isKinematic = !state;
-    }
-
-    [PunRPC]
-    void RPC_WeaponSpawn()
-    {
-        String[] shuffledWeapons = ShuffleArray(weapons);
-        String[] shuffledPowerups = ShufflePowerups(powerups);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0], spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2], spawn3.position, spawn3.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledPowerups[0], spawn2.position, spawn2.rotation, 0, null);
-    }
-
-    [PunRPC]
-    void RPC_CacheState(bool state)
-    {
-        cacheActive = state;
     }
 }

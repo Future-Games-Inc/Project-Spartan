@@ -1,4 +1,3 @@
-using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -19,7 +18,7 @@ public class decoySpawner : MonoBehaviour
         yield return new WaitForSeconds(0);
         foreach (Transform spawnPoint in spawnLocations)
         {
-            PhotonNetwork.InstantiateRoomObject(decoyModel.name, spawnPoint.position, Quaternion.identity, 0, null);
+            Instantiate(decoyModel, spawnPoint.position, Quaternion.identity);
         }
         player.decoyDeploy = false;
         this.gameObject.SetActive(false);

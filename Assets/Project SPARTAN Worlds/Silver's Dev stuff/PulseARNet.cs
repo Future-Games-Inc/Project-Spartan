@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
 using BNG;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 
-public class PulseARNet : MonoBehaviourPunCallbacks
+public class PulseARNet : MonoBehaviour
 {
     [Header("Spawning ---------------------------------------")]
     public Transform[] spawnPoint;
@@ -43,14 +44,16 @@ public class PulseARNet : MonoBehaviourPunCallbacks
     [HideInInspector]
     public bool isTriggerSingle = false;
 
-    public NetworkedGrabbable grabbable;
-    public GrabbableUnityEvents grabbableEvents;
-
     public bool SecondaryTrigger = false;
+
+    public GameObjectPoolManager PoolManager;
+
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
         reloadingScreen.SetActive(false);
@@ -119,14 +122,20 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                 {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(PulseBullet.name, t.position, Quaternion.identity, 0, null);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(PulseBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
-                        spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
+                        spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
                         spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
-                    photonView.RPC("RPC_PulseDualFire", RpcTarget.All);
+                    ammoLeft -= 3;
+
+                    if (ammoLeft <= 0 && reloadingWeapon == false)
+                    {
+                        reloadingWeapon = true;
+                        StartCoroutine(Reload());
+                    }
                 }
                 yield return new WaitForSeconds(0.5f);
 
@@ -139,14 +148,20 @@ public class PulseARNet : MonoBehaviourPunCallbacks
                 {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(playerBullet.name, spawnPoint[0].position, Quaternion.identity, 0, null);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(playerBullet, spawnPoint[0].position, Quaternion.identity);
                         spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
-                        spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
+                        spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
                         spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                         spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                     }
-                    photonView.RPC("RPC_PulseSingleFire", RpcTarget.All);
+                    ammoLeft--;
+
+                    if (ammoLeft <= 0 && reloadingWeapon == false)
+                    {
+                        reloadingWeapon = true;
+                        StartCoroutine(Reload());
+                    }
                 }
                 yield return new WaitForSeconds(0.2f);
             }
@@ -155,9 +170,14 @@ public class PulseARNet : MonoBehaviourPunCallbacks
 
     IEnumerator Reload()
     {
-        photonView.RPC("RPC_PulseReload", RpcTarget.All);
+        StopCoroutine(FireBullet());
+        reloadingScreen.SetActive(true);
+        audioSource.PlayOneShot(reloadSFX);
+        durability--;
         yield return new WaitForSeconds(ReloadDuration);
-        photonView.RPC("RPC_PulseReload2", RpcTarget.All);
+        ammoLeft = maxAmmo;
+        reloadingScreen.SetActive(false);
+        reloadingWeapon = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -165,7 +185,9 @@ public class PulseARNet : MonoBehaviourPunCallbacks
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.parent.gameObject;
-            photonView.RPC("RPC_PulseTrigger", RpcTarget.All);
+            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            maxAmmo = newMaxAmmo;
+            rotatorScript.enabled = false;
         }
     }
 
@@ -174,66 +196,7 @@ public class PulseARNet : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        PhotonNetwork.Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_PulseDualFire()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft -= 3;
-
-        if (ammoLeft <= 0 && reloadingWeapon == false)
-        {
-            reloadingWeapon = true;
-            StartCoroutine(Reload());
-        }
-    }
-
-    [PunRPC]
-    void RPC_PulseSingleFire()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft--;
-
-        if (ammoLeft <= 0 && reloadingWeapon == false)
-        {
-            reloadingWeapon = true;
-            StartCoroutine(Reload());
-        }
-    }
-
-    [PunRPC]
-    void RPC_PulseReload()
-    {
-        if (!photonView.IsMine)
-            return;
-        StopCoroutine(FireBullet());
-        reloadingScreen.SetActive(true);
-        audioSource.PlayOneShot(reloadSFX);
-        durability--;
-    }
-
-    [PunRPC]
-    void RPC_PulseReload2()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft = maxAmmo;
-        reloadingScreen.SetActive(false);
-        reloadingWeapon = false;
-    }
-
-    [PunRPC]
-    void RPC_PulseTrigger()
-    {
-        if (!photonView.IsMine)
-            return;
-        var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
-        maxAmmo = newMaxAmmo;
-        rotatorScript.enabled = false;
+        this.PoolManager.Release(gameObject);
     }
 
     public void Rescale()

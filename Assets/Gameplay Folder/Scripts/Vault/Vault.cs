@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
-public class Vault : MonoBehaviourPunCallbacks
+public class Vault : MonoBehaviour
 {
     public float startY;
     public float endY;

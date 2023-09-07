@@ -1,8 +1,9 @@
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
 
-public class Bullet : MonoBehaviourPunCallbacks
+public class Bullet : MonoBehaviour
 {
     public GameObject bulletOwner;
     public PlayerHealth playerHealth;
@@ -11,9 +12,14 @@ public class Bullet : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public AudioClip clip;
 
+    public GameObjectPoolManager PoolManager;
+
+
     // Start is called before the first frame update
     void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         StartCoroutine(DestroyBullet());
     }
 
@@ -210,28 +216,28 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     //critical hit here
                     PlayerHealth playerDamageCrit = other.GetComponentInParent<PlayerHealth>();
-                    playerDamageCrit.TakeDamage(10 * bulletModifier);
+                    playerDamageCrit.TakeDamage(3 * bulletModifier);
                 }
 
                 else
                 {
                     PlayerHealth playerDamage = other.GetComponentInParent<PlayerHealth>();
-                    playerDamage.TakeDamage(5 * bulletModifier);
+                    playerDamage.TakeDamage(bulletModifier);
                 }
             }
         }
 
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     IEnumerator DestroyBullet()
     {
         yield return new WaitForSeconds(5);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
     IEnumerator DestroyBulletCollision()
     {
         yield return new WaitForSeconds(0.15f);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

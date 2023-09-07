@@ -1,17 +1,21 @@
 using BNG;
-using Photon.Pun;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class IntelScript : MonoBehaviourPunCallbacks
+public class IntelScript : MonoBehaviour
 {
     public AudioClip pickupClip;
     public LayerMask groundLayer;
     private Rigidbody rb;
     public Grabbable grabbable;
 
+    public GameObjectPoolManager PoolManager;
+
+
     // Start is called before the first frame update
     void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
         rb = GetComponent<Rigidbody>();
         // Freeze X and Z initially
         rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
@@ -28,7 +32,7 @@ public class IntelScript : MonoBehaviourPunCallbacks
         if (other.CompareTag("PickupSlot"))
         {
             other.GetComponentInParent<PlayerHealth>().IntelFound();
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 

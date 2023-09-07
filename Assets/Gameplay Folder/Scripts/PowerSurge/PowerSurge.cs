@@ -1,11 +1,9 @@
-using ExitGames.Client.Photon;
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerSurge : MonoBehaviourPunCallbacks
+public class PowerSurge : MonoBehaviour
 {
     [Header("Power Surge Effect -------------------------------------------------------")]
     public float radius = 2f;
@@ -29,11 +27,6 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     private Coroutine bubbleScaleCoroutine;
     public MatchEffects matchProps;
 
-    void Enable()
-    {
-        PhotonPeer.RegisterType(typeof(Light), (byte)'L', Serialize, DeserializeLight);
-    }
-
     public static readonly byte[] memLight = new byte[4] { 0, 0, 0, 0 };
 
     public static object DeserializeLight(byte[] bytes)
@@ -52,7 +45,6 @@ public class PowerSurge : MonoBehaviourPunCallbacks
 
     void OnEnable()
     {
-        Enable();
         canBeActivated = true;
         StartCoroutine(Flicker());
 
@@ -104,7 +96,7 @@ public class PowerSurge : MonoBehaviourPunCallbacks
     {
         if (!activated && canBeActivated && matchProps.startMatchBool)
         {
-            photonView.RPC("SetActivated", RpcTarget.All, true);
+            activated = true;
             bubbleScaleCoroutine = StartCoroutine(GrowBubbleCoroutine());
         }
     }
@@ -125,7 +117,6 @@ public class PowerSurge : MonoBehaviourPunCallbacks
         foreach (Light light in lightToFlicker)
         {
             light.intensity = 0;
-            photonView.RPC("SetLightIntensity", RpcTarget.All, light, light.intensity);
         }
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, lightRadius);
@@ -160,7 +151,6 @@ public class PowerSurge : MonoBehaviourPunCallbacks
         foreach (Light light in lightToFlicker)
         {
             light.intensity = maxIntensity;
-            photonView.RPC("SetLightIntensity", RpcTarget.All, light, light.intensity);
         }
 
         surgeBubble.transform.localScale = initialScale;
@@ -177,7 +167,7 @@ public class PowerSurge : MonoBehaviourPunCallbacks
                 yield return null;
             }
 
-            photonView.RPC("ActivateBubble", RpcTarget.All, true);
+            surgeBubble.SetActive(true);
 
             // Calculate a random target intensity for each light
             foreach (Light light in lightToFlicker)
@@ -185,19 +175,12 @@ public class PowerSurge : MonoBehaviourPunCallbacks
                 float randomIntensity = UnityEngine.Random.Range(0.0f, 1.0f);
                 float targetIntensity = Mathf.Lerp(minIntensity, maxIntensity, randomIntensity);
                 int lightIndex = lightIndexDict[light];
-                photonView.RPC("SetLightIntensity", RpcTarget.All, light, targetIntensity);
                 light.intensity = targetIntensity;
             }
 
             // Wait for a short time before flickering again
             yield return new WaitForSeconds(flickerSpeed);
         }
-    }
-
-    [PunRPC]
-    void ActivateBubble(bool active)
-    {
-        surgeBubble.SetActive(active);
     }
 
     IEnumerator GrowBubbleCoroutine()
@@ -207,27 +190,7 @@ public class PowerSurge : MonoBehaviourPunCallbacks
             float scaleIncrease = 8f * Time.deltaTime;
             surgeBubble.transform.localScale += new Vector3(scaleIncrease, scaleIncrease, scaleIncrease);
 
-            photonView.RPC("SyncBubbleScale", RpcTarget.Others, surgeBubble.transform.localScale);
-
             yield return null;
         }
-    }
-
-    [PunRPC]
-    private void SetActivated(bool newActivated)
-    {
-        activated = newActivated;
-    }
-
-    [PunRPC]
-    private void SetLightIntensity(Light light, float intensity)
-    {
-        light.intensity = intensity;
-    }
-
-    [PunRPC]
-    void SyncBubbleScale(Vector3 scale)
-    {
-        surgeBubble.transform.localScale = scale;
     }
 }

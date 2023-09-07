@@ -1,9 +1,7 @@
-using Photon.Pun;
-using Photon.Realtime;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class VirtualWorldManager : MonoBehaviourPunCallbacks
+public class VirtualWorldManager : MonoBehaviour
 {
     public static VirtualWorldManager Instance;
 
@@ -20,15 +18,7 @@ public class VirtualWorldManager : MonoBehaviourPunCallbacks
     public void LeaveRoomAndLoadHomeScene()
     {
         // Leave the room and load the new scene
-        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("TD Main Menu");
     }
 
-    #region Photon Callback Methods 
-
-    public override void OnLeftRoom()
-    {
-        PhotonNetwork.LoadLevel("TD Main Menu");
-    }
-
-    #endregion
 }

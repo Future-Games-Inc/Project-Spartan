@@ -1,7 +1,6 @@
-using Photon.Pun;
 using UnityEngine;
 
-public class StickyBullet : MonoBehaviourPunCallbacks
+public class StickyBullet : MonoBehaviour
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     public GameObject stickySurfacePrefab;
@@ -24,11 +23,11 @@ public class StickyBullet : MonoBehaviourPunCallbacks
             // Create sticky surface on wall
             if (!other.CompareTag("Enemy") || !other.CompareTag("Security") || !other.CompareTag("Player") || !other.CompareTag("BossEnemy"))
             {
-                GameObject stickySurface = PhotonNetwork.InstantiateRoomObject(stickySurfacePrefab.name, other.ClosestPoint(transform.position), Quaternion.identity, 0, null);
+                GameObject stickySurface = Instantiate(stickySurfacePrefab, other.ClosestPoint(transform.position), Quaternion.identity);
             }
 
             // Destroy bullet
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

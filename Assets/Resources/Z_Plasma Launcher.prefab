@@ -14857,8 +14857,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4187053195458554051}
   - component: {fileID: 4187053195458554048}
-  - component: {fileID: 2586530939557878040}
-  - component: {fileID: 2457580635620487239}
+  - component: {fileID: 3822245775537943650}
   m_Layer: 22
   m_Name: Secondary Grabbale
   m_TagString: Untagged
@@ -14896,7 +14895,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.09956932, y: 0.17722309, z: 0.0447464}
   m_Center: {x: -0.00012302399, y: 0.011372626, z: 0.002281189}
---- !u!114 &2586530939557878040
+--- !u!114 &3822245775537943650
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14905,7 +14904,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4187053195458554050}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -14919,7 +14918,7 @@ MonoBehaviour:
   RemoteGrabDistance: 0.1
   ThrowForceMultiplier: 1.25
   ThrowForceMultiplierAngular: 1.125
-  BreakDistance: 0.5
+  BreakDistance: 0
   HideHandGraphics: 0
   ParentToHands: 0
   ParentHandModel: 1
@@ -14941,7 +14940,7 @@ MonoBehaviour:
   TwoHandedLookVector: 0
   SecondHandLookSpeed: 40
   SecondaryGrabbable: {fileID: 0}
-  OtherGrabbableMustBeGrabbed: {fileID: -369780027826340980}
+  OtherGrabbableMustBeGrabbed: {fileID: -2258252832276975593}
   CollisionSpring: 3000
   CollisionSlerp: 500
   CollisionLinearMotionX: 2
@@ -14967,29 +14966,6 @@ MonoBehaviour:
   UseCustomInspector: 1
   lastFlickTime: 0
   FlickForce: 1
---- !u!114 &2457580635620487239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4187053195458554050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 2586530939557878040}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &4187053195732787467
 GameObject:
   m_ObjectHideFlags: 0
@@ -15090,22 +15066,20 @@ GameObject:
   - component: {fileID: 4187053195921423625}
   - component: {fileID: 4187053195921423631}
   - component: {fileID: 4187053195921423628}
-  - component: {fileID: 6884942599621234848}
-  - component: {fileID: 2728400412304460578}
   - component: {fileID: 1876646196661262836}
   - component: {fileID: 3299428337317119191}
   - component: {fileID: 3788504621408853310}
   - component: {fileID: 2292309521094399951}
   - component: {fileID: 8063971507820094066}
-  - component: {fileID: -369780027826340980}
   - component: {fileID: -2498765482890082319}
+  - component: {fileID: -2258252832276975593}
   m_Layer: 22
   m_Name: Z_Plasma Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4187053195921423625
 Transform:
   m_ObjectHideFlags: 0
@@ -15153,46 +15127,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.13880324, y: 0.13533437, z: 0.02877289}
   m_Center: {x: -0.11386001, y: -0.11773163, z: 0.0016847551}
---- !u!114 &6884942599621234848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4187053195921423624}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 2728400412304460578}
-  - {fileID: -369780027826340980}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &2728400412304460578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4187053195921423624}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!114 &1876646196661262836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15479,7 +15413,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-369780027826340980
+--- !u!114 &-2498765482890082319
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15488,7 +15422,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 4187053195921423624}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HapticsOnValidPickup: 1
+  HapticsOnValidRemotePickup: 0
+  HapticsOnCollision: 0
+  HapticsOnGrab: 1
+  VibrateFrequency: 0.3
+  VibrateAmplitude: 0.1
+  VibrateDuration: 0.1
+--- !u!114 &-2258252832276975593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4187053195921423624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -15523,7 +15476,7 @@ MonoBehaviour:
   TwoHandedDropBehavior: 0
   TwoHandedLookVector: 0
   SecondHandLookSpeed: 40
-  SecondaryGrabbable: {fileID: 2586530939557878040}
+  SecondaryGrabbable: {fileID: 3822245775537943650}
   OtherGrabbableMustBeGrabbed: {fileID: 0}
   CollisionSpring: 3000
   CollisionSlerp: 500
@@ -15550,25 +15503,6 @@ MonoBehaviour:
   UseCustomInspector: 1
   lastFlickTime: 0
   FlickForce: 1
---- !u!114 &-2498765482890082319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4187053195921423624}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HapticsOnValidPickup: 1
-  HapticsOnValidRemotePickup: 0
-  HapticsOnCollision: 0
-  HapticsOnGrab: 1
-  VibrateFrequency: 0.3
-  VibrateAmplitude: 0.1
-  VibrateDuration: 0.1
 --- !u!1 &4187053196667198379
 GameObject:
   m_ObjectHideFlags: 0

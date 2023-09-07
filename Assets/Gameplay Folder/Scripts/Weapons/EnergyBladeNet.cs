@@ -1,8 +1,9 @@
-using Photon.Pun;
+using PathologicalGames;
 using TMPro;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class EnergyBladeNet : MonoBehaviourPunCallbacks
+public class EnergyBladeNet : MonoBehaviour
 {
     [Header("Blade Characteristics ---------------------------------------------------------------")]
     public TextMeshProUGUI bleedStackText;
@@ -26,6 +27,8 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     public float bleedDuration = 5.0f;
 
     private int _bleedStacks = 0;
+
+    public GameObjectPoolManager PoolManager;
     public int bleedStacks
     {
         get
@@ -44,7 +47,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     void OnEnable()
     {
-
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -112,7 +115,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     private void ApplyEffects(int Damage, Vector3 position)
     {
         // Apply hit effect
-        PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, position, Quaternion.identity, 0, null);
+        GameObject hit = this.PoolManager.Acquire(hitEffectPrefab, position, Quaternion.identity);
 
         // Apply bleed effect
         if (!isBleeding)
@@ -153,16 +156,15 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
         if (bleedStacks > 3)
         {
             bleedIcon.SetActive(true);
-            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, bleed);
+            RPC_BladeMaterial(bleed);
         }
         else
         {
             bleedIcon.SetActive(false);
-            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, normal);
+            RPC_BladeMaterial(normal);
         }
     }
 
-    [PunRPC]
     void RPC_BladeMaterial(Material material)
     {
         Blade.GetComponent<Renderer>().material = material;
@@ -170,6 +172,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     public void rescale()
     {
-        this.gameObject.transform.localScale = Vector3.one;
+        this.transform.localScale = Vector3.one;
     }
 }

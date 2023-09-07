@@ -1,9 +1,9 @@
-using System.Collections;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
 using UnityEngine.AI;
 
-public class SpawnManager : MonoBehaviourPunCallbacks
+public class SpawnManager : MonoBehaviour
 {
     public GameObject[] playerPrefab;
     public bool gameOver;
@@ -14,33 +14,33 @@ public class SpawnManager : MonoBehaviourPunCallbacks
     public NavMeshSurface navMeshSurface;
     Vector3 spawnPosition;
     public Vector3 respawnPosition;
+    public GameObjectPoolManager PoolManager;
 
     void Start()
     {
-        if (PhotonNetwork.IsConnectedAndReady)
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        Vector3 randomPosition = GenerateRandomPosition();
+
+        if (randomPosition != Vector3.zero)
         {
-            Vector3 randomPosition = GenerateRandomPosition();
+            spawnPosition = randomPosition;
+            respawnPosition = spawnPosition;
 
-            if (randomPosition != Vector3.zero)
-            {
-                spawnPosition = randomPosition;
-                respawnPosition = spawnPosition;
-
-                // We then invoke an RPC function to instantiate the player across all clients
-                InstantiatePlayer(spawnPosition);
-            }
+            // We then invoke an RPC function to instantiate the player across all clients
+            InstantiatePlayer(spawnPosition);
         }
         gameOver = false;
         winnerPlayer = null;
     }
-    
+
     void InstantiatePlayer(Vector3 spawnPosition)
     {
         object avatarSelectionNumber;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
+        if (PlayerPrefs.HasKey("AvatarSelectionNumber"))
         {
+            avatarSelectionNumber = PlayerPrefs.GetInt("AvatarSelectionNumber");
             int selectionValue = (int)avatarSelectionNumber;
-            PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition, Quaternion.identity);
+            GameObject playter = this.PoolManager.Acquire(playerPrefab[selectionValue], spawnPosition, Quaternion.identity);
         }
     }
 

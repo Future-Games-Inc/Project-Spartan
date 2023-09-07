@@ -1,16 +1,14 @@
-using ExitGames.Client.Photon;
-using ExitGames.Client.Photon.StructWrapping;
 using LootLocker.Requests;
-using Photon.Pun;
-using Photon.Realtime;
+using PathologicalGames;
 using System.Collections;
 using TMPro;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
+public class PlayerHealth : MonoBehaviour
 {
     public enum States
     {
@@ -27,7 +25,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public SceneFader sceneFader;
 
     public XRDirectInteractor[] directInteractors;
-    public XRRayInteractor[] rayInteractors;
 
     public bool male;
     public bool alive;
@@ -65,7 +62,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject shockEffect;
 
     [Header("Player UI ------------------------------------")]
-    public GameObject winCanvas;
     public GameObject reactorIcon;
     public GameObject shipIcon;
     public GameObject[] playerObjects;
@@ -84,9 +80,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public Transform bombDropLocation;
     public Transform tokenDropLocation;
-
-    public TextMeshProUGUI messageText;
-    public TextMeshProUGUI reactorText;
 
     public ActivateWristUI activateWristUI;
 
@@ -153,11 +146,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] private bool primaryButtonPressed;
     [SerializeField] private bool secondaryButtonPressed;
 
-    [Header("Player Static Byte Data ------------------------------------")]
-    public static readonly byte ExtractionGameMode = 1;
-    public static readonly byte PlayerGameMode = 2;
-    public static readonly byte EnemyGameMode = 3;
-
     [Header("Player Leaderboard Data ------------------------------------")]
     public string leaderboardID = "react_leaderboard";
     public string progressionKey = "cent_prog";
@@ -198,10 +186,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject decoySpawner;
     private object retrurn;
 
+    public GameObjectPoolManager PoolManager;
+
+
     // Start is called before the first frame update
     void OnEnable()
     {
-        PhotonNetwork.AddCallbackTarget(this);
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         criticalHealth.SetActive(false);
 
         InitHealth();
@@ -230,7 +222,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         leechEffect = false;
         activeCamo = false;
         stealth = false;
-        winCanvas.SetActive(false);
         shipIcon.SetActive(false);
 
         InitBulletModifier();
@@ -257,47 +248,44 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         startingBulletModifier = bulletModifier;
 
-        if (photonView.IsMine)
-        {
-            healthBarObject.SetActive(true);
-            armorBarObject.SetActive(true);
-        }
+        healthBarObject.SetActive(true);
+        armorBarObject.SetActive(true);
 
         CheckHealthStatus();
         CheckArmorStatus();
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment) && (int)assignment >= 1)
+        if (PlayerPrefs.HasKey("BUTTON_ASSIGN") && PlayerPrefs.GetInt("BUTTON_ASSIGN") >= 1)
             hasButtonAssignment = true;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BUTTON_ASSIGN, out object assignment2) && (int)assignment2 >= 2)
+        if (PlayerPrefs.HasKey("BUTTON_ASSIGN") && PlayerPrefs.GetInt("BUTTON_ASSIGN") >= 2)
             hasButtonAssignment2 = true;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestTarget, out object storedBossesTarget))
-            bossesRequired = (int)storedBossesTarget;
+        if (PlayerPrefs.HasKey("BossQuestTarget"))
+            bossesRequired = PlayerPrefs.GetInt("BossQuestTarget");
         else
             bossesRequired = 0;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestTarget, out object storedGuardianTarget))
-            guardianRequired = (int)storedGuardianTarget;
+        if (PlayerPrefs.HasKey("GuardianQuestTarget"))
+            guardianRequired = PlayerPrefs.GetInt("GuardianQuestTarget");
         else
             guardianRequired = 0;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestTarget, out object storedCollectorsTarget))
-            collectorsRequired = (int)storedCollectorsTarget;
+        if (PlayerPrefs.HasKey("CollectorQuestTarget"))
+            collectorsRequired = PlayerPrefs.GetInt("CollectorQuestTarget");
         else
             collectorsRequired = 0;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestTarget, out object storedIntelTarget))
-            intelRequired = (int)storedIntelTarget;
+        if (PlayerPrefs.HasKey("IntelQuestTarget"))
+            intelRequired = PlayerPrefs.GetInt("IntelQuestTarget");
         else
             intelRequired = 0;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestTarget, out object storedArtifactTarget))
-            artifactsRequired = (int)storedArtifactTarget;
+        if (PlayerPrefs.HasKey("ArtifactQuestTarget"))
+            artifactsRequired = PlayerPrefs.GetInt("ArtifactQuestTarget");
         else
             artifactsRequired = 0;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestTarget, out object storedBombTarget))
-            bombsRequired = (int)storedBombTarget;
+        if (PlayerPrefs.HasKey("BombQuestTarget"))
+            bombsRequired = PlayerPrefs.GetInt("BombQuestTarget");
         else
             bombsRequired = 0;
 
@@ -307,59 +295,56 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void UpdateSecondaryText()
     {
-        object secondaryImplant;
-        object secondaryNode;
-
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("HEALTH_STIM") && PlayerPrefs.GetInt("HEALTH_STIM") >= 1 &&
+                PlayerPrefs.HasKey("HEALTH_STIM_SLOT") && PlayerPrefs.GetInt("HEALTH_STIM_SLOT") == 2)
         {
             secondaryPowerupText.text = "HEALTH STIM";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("LEECH") && PlayerPrefs.GetInt("LEECH") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "LEECH";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "ACTIVE CAMO";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "STEALTH";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "AI COMPANION";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "DECOY DEPLOYMENT";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") >= 2)
         {
             secondaryPowerupText.text = "BERSERKER FURY";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "SAVING GRACE APPLIED";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        else if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             secondaryPowerupText.text = "EXPLOSIVE DEATH APPLIED";
         }
@@ -367,59 +352,56 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void UpdatePrimaryText()
     {
-        object primaryImplant;
-        object primaryNode;
-
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("HEALTH_STIM") && PlayerPrefs.GetInt("HEALTH_STIM") >= 1 &&
+                PlayerPrefs.HasKey("HEALTH_STIM_SLOT") && PlayerPrefs.GetInt("HEALTH_STIM_SLOT") == 1)
         {
             primaryPowerupText.text = "HEALTH STIM";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("LEECH") && PlayerPrefs.GetInt("LEECH") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "LEECH";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "ACTIVE CAMO";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "STEALTH";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "AI COMPANION";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "DECOY DEPLOYMENT";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "BERSERKER FURY";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant >= 1 &&
-        PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "SAVING GRACE APPLIED";
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        else if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
+                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             primaryPowerupText.text = "EXPLOSIVE DEATH APPLIED";
         }
@@ -427,44 +409,45 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void InitHealth()
     {
-        Health = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_HEALTH, out object storedPlayerHealth) && (int)storedPlayerHealth >= 1
-            ? 100 + ((int)storedPlayerHealth * 10) : 100;
+        Health = PlayerPrefs.HasKey("PLAYER_HEALTH") && PlayerPrefs.GetInt("PLAYER_HEALTH") >= 1
+            ? 100 + (PlayerPrefs.GetInt("PLAYER_HEALTH") * 10) : 100;
 
         multiplayerHealth.SetMaxHealth(Health);
     }
 
     private void InitArmor()
     {
-        Armor = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_ARMOR, out object storedPlayerArmor) && (int)storedPlayerArmor >= 1
-            ? 100 + ((int)storedPlayerArmor * 10) : 100;
+        Armor = PlayerPrefs.HasKey("PLAYER_ARMOR") && PlayerPrefs.GetInt("PLAYER_HEALTH") >= 1
+            ? 100 + (PlayerPrefs.GetInt("PLAYER_ARMOR") * 10) : 100;
 
         multiplayerHealth.SetMaxArmor(Armor);
     }
 
     private void InitAvatarSelection()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out object avatarSelectionNumber))
+        // To Retrieve
+        if (PlayerPrefs.HasKey("AvatarSelectionNumber"))
         {
-            characterInt = (int)avatarSelectionNumber;
+            characterInt = PlayerPrefs.GetInt("AvatarSelectionNumber");
             male = characterInt <= 4 ? true : false;
         }
     }
 
     private void InitBulletModifier()
     {
-        bulletModifier = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BULLET_MODIFIER, out object storedBulletModifier) && (int)storedBulletModifier >= 1
-            ? 1 + (int)storedBulletModifier : 1;
+        bulletModifier = PlayerPrefs.HasKey("BULLET_MODIFIER") && PlayerPrefs.GetInt("BULLET_MODIFIER") >= 1
+            ? 1 + PlayerPrefs.GetInt("BULLET_MODIFIER") : 1;
     }
 
     private void InitMaxAmmo()
     {
-        maxAmmo = PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AMMO_OVERLOAD, out object storedAmmoOverload) && (int)storedAmmoOverload >= 1
+        maxAmmo = PlayerPrefs.HasKey("AMMO_OVERLOAD") && PlayerPrefs.GetInt("AMMO_OVERLOAD") >= 1
             ? bulletModifier * 5 : 0;
     }
 
     private void InitHealthRegen()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_REGEN, out object storedHealthRegen) && (int)storedHealthRegen >= 1)
+        if (PlayerPrefs.HasKey("HEALTH_REGEN") && PlayerPrefs.GetInt("HEALTH_REGEN") >= 1)
         {
             InvokeRepeating("HealthRegen", 0f, 3f);
         }
@@ -472,63 +455,63 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void InitPlayerCints()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out object storedPlayerCints) && (int)storedPlayerCints >= 1)
+        if (PlayerPrefs.HasKey("CINTS") && PlayerPrefs.GetInt("CINTS") >= 1)
         {
-            playerCints = (int)storedPlayerCints;
+            playerCints = PlayerPrefs.GetInt("CINTS");
         }
     }
 
     private void InitBossesKilled()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossKilled, out object storedBossesKilled) && (int)storedBossesKilled >= 1)
+        if (PlayerPrefs.HasKey("BossKilled") && PlayerPrefs.GetInt("BossKilled") >= 1)
         {
-            bossesKilled = (int)storedBossesKilled;
+            bossesKilled = PlayerPrefs.GetInt("BossKilled");
         }
     }
 
     private void InitIntelGathered()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelFound, out object storedIntelFound) && (int)storedIntelFound >= 1)
+        if (PlayerPrefs.HasKey("IntelFound") && PlayerPrefs.GetInt("IntelFound") >= 1)
         {
-            intelCollected = (int)storedIntelFound;
+            intelCollected = PlayerPrefs.GetInt("IntelFound");
         }
     }
 
     private void InitArtifactsFound()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactFound, out object storedArtifactsFound) && (int)storedArtifactsFound >= 1)
+        if (PlayerPrefs.HasKey("ArtifactFound") && PlayerPrefs.GetInt("ArtifactFound") >= 1)
         {
-            artifactsRecovered = (int)storedArtifactsFound;
+            artifactsRecovered = PlayerPrefs.GetInt("ArtifactFound");
         }
     }
 
     private void InitBombsDestroyed()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombDestroyed, out object storedBombsDestroyed) && (int)storedBombsDestroyed >= 1)
+        if (PlayerPrefs.HasKey("BombDestroyed") && PlayerPrefs.GetInt("BombDestroyed") >= 1)
         {
-            bombsDestroyed = (int)storedBombsDestroyed;
+            bombsDestroyed = PlayerPrefs.GetInt("BombDestroyed");
         }
     }
 
     private void InitCollectorsKilled()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorDestroyed, out object storedCollectorsKilled) && (int)storedCollectorsKilled >= 1)
+        if (PlayerPrefs.HasKey("CollectorsDestroyed") && PlayerPrefs.GetInt("CollectorsDestroyed") >= 1)
         {
-            collectorsDestroyed = (int)storedCollectorsKilled;
+            collectorsDestroyed = PlayerPrefs.GetInt("CollectorsDestroyed");
         }
     }
 
     private void InitGuardiansKilled()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianDestroyed, out object storedGuardiansKilled) && (int)storedGuardiansKilled >= 1)
+        if (PlayerPrefs.HasKey("GuardianDestroyed") && PlayerPrefs.GetInt("GuardianDestroyed") >= 1)
         {
-            guardiansDestroyed = (int)storedGuardiansKilled;
+            guardiansDestroyed = PlayerPrefs.GetInt("GuardianDestroyed");
         }
     }
 
     private void InitSavingGrace()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out object storedSavingGrace) && (int)storedSavingGrace >= 1)
+        if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1)
         {
             playerLives += 1;
         }
@@ -550,27 +533,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine)
-        {
-            foreach (GameObject obj in playerObjects)
-            {
-                obj.SetActive(false);
-            }
-        }
         // Perform time-based actions
         if (reactorHeld)
             UpdateReactor();
-        else if (!reactorHeld)
-            reactorText.enabled = false;
         UpdatePowerups();
 
         // Check win conditions
         if (reactorExtraction >= 100 && !spawnManager.gameOver)
             CheckExtractionWinCondition();
-        if (playersKilled >= 15 && !spawnManager.gameOver)
-            CheckPlayerWinCondition();
-        if (enemiesKilled >= 25 && !spawnManager.gameOver)
-            CheckEnemyWinCondition();
 
         // Call abilities
         if (toxicEffectActive)
@@ -599,133 +569,79 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (bossesKilled >= bossesRequired)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestCompleted, out object contractState) && (bool)contractState == true)
+            if (PlayerPrefs.HasKey("BossQuestCompleted") && PlayerPrefs.GetInt("BossQuestCompleted") == 1)
             {
-                contractState = false;
+                PlayerPrefs.SetInt("BossQuestCompleted", 0);
 
-                ExitGames.Client.Photon.Hashtable bossContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuest, contractState } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContract);
-
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestExpTarget, out object storedBossesTargetEXP))
-                {
-                    expReward = (int)storedBossesTargetEXP;
-                    GetXP(expReward);
-                }
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestCintTarget, out object storedBossesTargetCint))
-                {
-                    cintReward = (int)storedBossesTargetCint;
-                    UpdateSkills(cintReward);
-                }
+                expReward = PlayerPrefs.GetInt("BossQuestExpTarget");
+                GetXP(expReward);
+                cintReward = PlayerPrefs.GetInt("BossQuestCintTarget");
+                UpdateSkills(cintReward);
             }
         }
 
         if (collectorsDestroyed >= collectorsRequired)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuest, out object contractState) && (bool)contractState == true)
+            if (PlayerPrefs.HasKey("CollectorQuestCompleted") && PlayerPrefs.GetInt("CollectorQuestCompleted") == 1)
             {
-                contractState = false;
+                PlayerPrefs.SetInt("CollectorQuestCompleted", 0);
 
-                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuest, contractState } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
-
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestExpTarget, out object storedTargetEXP))
-                {
-                    expReward = (int)storedTargetEXP;
-                    GetXP(expReward);
-                }
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestCintTarget, out object storedTargetCint))
-                {
-                    cintReward = (int)storedTargetCint;
-                    UpdateSkills(cintReward);
-                }
+                expReward = PlayerPrefs.GetInt("CollectorQuestExpTarget");
+                GetXP(expReward);
+                cintReward = PlayerPrefs.GetInt("CollectorQuestCintTarget");
+                UpdateSkills(cintReward);
             }
         }
 
         if (guardiansDestroyed >= guardianRequired)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuest, out object contractState) && (bool)contractState == true)
+            if (PlayerPrefs.HasKey("GuardianQuestCompleted") && PlayerPrefs.GetInt("GuardianQuestCompleted") == 1)
             {
-                contractState = false;
+                PlayerPrefs.SetInt("GuardianQuestCompleted", 0);
 
-                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuest, contractState } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
-
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestExpTarget, out object storedTargetEXP))
-                {
-                    expReward = (int)storedTargetEXP;
-                    GetXP(expReward);
-                }
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestCintTarget, out object storedTargetCint))
-                {
-                    cintReward = (int)storedTargetCint;
-                    UpdateSkills(cintReward);
-                }
+                expReward = PlayerPrefs.GetInt("GuardianQuestExpTarget");
+                GetXP(expReward);
+                cintReward = PlayerPrefs.GetInt("GuardianQuestCintTarget");
+                UpdateSkills(cintReward);
             }
         }
 
         if (intelCollected >= intelRequired)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuest, out object contractState) && (bool)contractState == true)
+            if (PlayerPrefs.HasKey("IntelQuestCompleted") && PlayerPrefs.GetInt("IntelQuestCompleted") == 1)
             {
-                contractState = false;
+                PlayerPrefs.SetInt("IntelQuestCompleted", 0);
 
-                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuest, contractState } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
-
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestExpTarget, out object storedTargetEXP))
-                {
-                    expReward = (int)storedTargetEXP;
-                    GetXP(expReward);
-                }
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestCintTarget, out object storedTargetCint))
-                {
-                    cintReward = (int)storedTargetCint;
-                    UpdateSkills(cintReward);
-                }
+                expReward = PlayerPrefs.GetInt("IntelQuestExpTarget");
+                GetXP(expReward);
+                cintReward = PlayerPrefs.GetInt("IntelQuestCintTarget");
+                UpdateSkills(cintReward);
             }
         }
 
         if (bombsDestroyed >= bombsRequired)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuest, out object contractState) && (bool)contractState == true)
+            if (PlayerPrefs.HasKey("BombQuestCompleted") && PlayerPrefs.GetInt("BombQuestCompleted") == 1)
             {
-                contractState = false;
+                PlayerPrefs.SetInt("BombQuestCompleted", 0);
 
-                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuest, contractState } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
-
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestExpTarget, out object storedTargetEXP))
-                {
-                    expReward = (int)storedTargetEXP;
-                    GetXP(expReward);
-                }
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestCintTarget, out object storedTargetCint))
-                {
-                    cintReward = (int)storedTargetCint;
-                    UpdateSkills(cintReward);
-                }
+                expReward = PlayerPrefs.GetInt("BombQuestExpTarget");
+                GetXP(expReward);
+                cintReward = PlayerPrefs.GetInt("BombQuestCintTarget");
+                UpdateSkills(cintReward);
             }
         }
 
         if (artifactsRecovered >= artifactsRequired)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuest, out object contractState) && (bool)contractState == true)
+            if (PlayerPrefs.HasKey("ArtifactQuestCompleted") && PlayerPrefs.GetInt("ArtifactQuestCompleted") == 1)
             {
-                contractState = false;
+                PlayerPrefs.SetInt("ArtifactQuestCompleted", 0);
 
-                ExitGames.Client.Photon.Hashtable Contract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuest, contractState } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(Contract);
-
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestExpTarget, out object storedTargetEXP))
-                {
-                    expReward = (int)storedTargetEXP;
-                    GetXP(expReward);
-                }
-                if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestCintTarget, out object storedTargetCint))
-                {
-                    cintReward = (int)storedTargetCint;
-                    UpdateSkills(cintReward);
-                }
+                expReward = PlayerPrefs.GetInt("ArtifactQuestExpTarget");
+                GetXP(expReward);
+                cintReward = PlayerPrefs.GetInt("CArtifactQuestCintTarget");
+                UpdateSkills(cintReward);
             }
         }
     }
@@ -750,7 +666,6 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void UpdateReactor()
     {
-        reactorText.enabled = true;
         reactorTimer += Time.deltaTime;
         if (reactorTimer > 5f)
         {
@@ -767,8 +682,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     void CheckExtractionWinCondition()
     {
         extractionWinner = true;
-        photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
-        StartCoroutine(WinMessage("200 skill points awarded for winning the round"));
+        spawnManager.gameOver = true;
+        spawnManager.winnerPlayer = this.gameObject;
         UpdateSkills(200);
         ExtractionGame();
     }
@@ -777,38 +692,32 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (type == "Collector" && drone.GetComponent<LootDrone>().attachedCache != null)
         {
-            object questActive;
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuest, out questActive) && (bool)questActive == true)
+            if (PlayerPrefs.HasKey("CollectorQuest") && PlayerPrefs.GetInt("CollectorQuest") == 1)
             {
                 collectorsDestroyed++;
 
-                ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuest, collectorsDestroyed } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+                PlayerPrefs.SetInt("CollectorQuestTarget", collectorsDestroyed);
             }
         }
     }
 
     public void GuardianKilled()
     {
-        object questActive;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuest, out questActive) && (bool)questActive == true)
+        if (PlayerPrefs.HasKey("GuardianQuest") && PlayerPrefs.GetInt("GuardianQuest") == 1)
         {
             guardiansDestroyed++;
 
-            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuest, guardiansDestroyed } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+            PlayerPrefs.SetInt("GuardianQuestTarget", guardiansDestroyed);
         }
     }
 
     public void ArtifactFound()
     {
-        object questActive;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuest, out questActive) && (bool)questActive == true)
+        if (PlayerPrefs.HasKey("ArtifactQuest") && PlayerPrefs.GetInt("ArtifactQuest") == 1)
         {
             artifactsRecovered++;
 
-            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuest, artifactsRecovered } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+            PlayerPrefs.SetInt("ArtifactQuestTarget", artifactsRecovered);
         }
         else
             GetXP(100);
@@ -816,13 +725,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void IntelFound()
     {
-        object questActive;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuest, out questActive) && (bool)questActive == true)
+        if (PlayerPrefs.HasKey("IntelQuest") && PlayerPrefs.GetInt("IntelQuest") == 1)
         {
             intelCollected++;
 
-            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuest, intelCollected } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+            PlayerPrefs.SetInt("IntelQuestTarget", intelCollected);
         }
         else
             GetXP(100);
@@ -830,34 +737,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void BombNeutralized()
     {
-        object questActive;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuest, out questActive) && (bool)questActive == true)
+        if (PlayerPrefs.HasKey("BombQuest") && PlayerPrefs.GetInt("BombQuest") == 1)
         {
             bombsDestroyed++;
 
-            ExitGames.Client.Photon.Hashtable questUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuest, bombsDestroyed } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(questUpdate);
+            PlayerPrefs.SetInt("BombQuestTarget", bombsDestroyed);
         }
         else
             GetXP(100);
-    }
-
-    void CheckPlayerWinCondition()
-    {
-        playerWinner = true;
-        photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
-        StartCoroutine(WinMessage("250 skill points awarded for winning the round"));
-        UpdateSkills(250);
-        PlayerGame();
-    }
-
-    void CheckEnemyWinCondition()
-    {
-        enemyWinner = true;
-        photonView.RPC("RPC_SpawnManagerTrue", RpcTarget.All);
-        StartCoroutine(WinMessage("150 skill points awarded for winning the round"));
-        UpdateSkills(150);
-        EnemyGame();
     }
 
     void CheckAbility1()
@@ -865,13 +752,15 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (toxicTimer <= toxicEffectTimer && toxicEffectActive == true && !shouldCallAbilities1True)
         {
             shouldCallAbilities1True = true;
-            photonView.RPC("RPC_Abilities1True", RpcTarget.All);
+            toxicEffect.SetActive(true);
+            toxicTimer += Time.deltaTime;
             shouldCallAbilities1True = false;
         }
         else if (toxicTimer > toxicEffectTimer && toxicEffectActive == true && !shouldCallAbilities1False)
         {
             shouldCallAbilities1False = true;
-            photonView.RPC("RPC_Abilities1False", RpcTarget.All);
+            toxicEffect.SetActive(false);
+            toxicEffectActive = false;
             shouldCallAbilities1False = false;
         }
     }
@@ -881,13 +770,15 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (bulletImproved == true && !shouldCallAbilities3True)
         {
             shouldCallAbilities3True = true;
-            photonView.RPC("RPC_Abilities3True", RpcTarget.All);
+            bulletModifier = startingBulletModifier + bulletXPModifier;
+            upgradeTimer += Time.deltaTime;
             shouldCallAbilities3True = false;
         }
         else if (upgradeTimer > bulletXPTimer && bulletImproved == true && !shouldCallAbilities3False)
         {
             shouldCallAbilities3False = true;
-            photonView.RPC("RPC_Abilities3False", RpcTarget.All);
+            bulletModifier = startingBulletModifier;
+            bulletImproved = false;
             shouldCallAbilities3False = false;
         }
     }
@@ -897,13 +788,15 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (leechEffect == true && leechEffectTimer <= leechEffectDuration && !shouldCallAbilities4True)
         {
             shouldCallAbilities4True = true;
-            photonView.RPC("RPC_Abilities4True", RpcTarget.All);
+            leechEffectTimer += Time.deltaTime;
+            leechBubble.SetActive(true);
             shouldCallAbilities4True = false;
         }
         else if (leechEffectTimer > leechEffectDuration && !shouldCallAbilities4False && leechEffect == false)
         {
             shouldCallAbilities4False = true;
-            photonView.RPC("RPC_Abilities4False", RpcTarget.All);
+            leechBubble.SetActive(false);
+            leechEffect = false;
             shouldCallAbilities4False = false;
         }
     }
@@ -913,13 +806,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (activeCamo == true && activeCamoTimer <= activeCamoDuration && !shouldCallAbilities5True)
         {
             shouldCallAbilities5True = true;
-            photonView.RPC("RPC_Abilities5True", RpcTarget.All);
+            activeCamoTimer += Time.deltaTime;
+            foreach (SkinnedMeshRenderer skin in characterSkins)
+            {
+                skin.enabled = false;
+            }
             shouldCallAbilities5True = false;
         }
         else if (activeCamoTimer > activeCamoDuration && !shouldCallAbilities5False || activeCamo == false && !shouldCallAbilities5False)
         {
             shouldCallAbilities5False = true;
-            photonView.RPC("RPC_Abilities5False", RpcTarget.All);
+            activeCamo = false;
+            foreach (SkinnedMeshRenderer skin in characterSkins)
+            {
+                skin.enabled = true;
+            }
             shouldCallAbilities5False = false;
         }
     }
@@ -929,13 +830,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (stealth == true && stealthTimer <= stealthDuration && !shouldCallAbilities6True)
         {
             shouldCallAbilities6True = true;
-            photonView.RPC("RPC_Abilities6True", RpcTarget.All);
+            stealthTimer += Time.deltaTime;
+            foreach (GameObject minimap in minimapSymbol)
+            {
+                minimap.SetActive(false);
+            }
             shouldCallAbilities6True = false;
         }
         else if (stealthTimer > stealthDuration && !shouldCallAbilities6False || stealth == false && !shouldCallAbilities6False)
         {
             shouldCallAbilities6False = true;
-            photonView.RPC("RPC_Abilities6False", RpcTarget.All);
+            stealth = false;
+            foreach (GameObject minimap in minimapSymbol)
+            {
+                minimap.SetActive(true);
+            }
             shouldCallAbilities6False = false;
         }
     }
@@ -945,7 +854,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!shouldCallAbilities8)
         {
             shouldCallAbilities8 = true;
-            photonView.RPC("RPC_Abilities8", RpcTarget.All);
+            aiCompanionDrone.SetActive(aiCompanion);
             shouldCallAbilities8 = false;
         }
     }
@@ -955,7 +864,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!shouldCallAbilities9)
         {
             shouldCallAbilities9 = true;
-            photonView.RPC("RPC_Abilities9", RpcTarget.All);
+            decoySpawner.SetActive(decoyDeploy);
             shouldCallAbilities9 = false;
         }
     }
@@ -965,13 +874,29 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         if (berserker == true && berserkerEffectTimer <= berserkerFuryDuration && !shouldCallAbilities10True)
         {
             shouldCallAbilities10True = true;
-            photonView.RPC("RPC_Abilities10True", RpcTarget.All);
+            berserkerEffectTimer += Time.deltaTime;
+            if (!berserkerActivated)
+            {
+                berserkerActivated = true;
+                Armor = maxArmor;
+                Health = maxHealth;
+                movement.currentSpeed += 4;
+                bulletModifier = startingBulletModifier * 2;
+            }
             shouldCallAbilities10True = false;
         }
         else if (berserkerEffectTimer > berserkerFuryDuration && !shouldCallAbilities10False || berserker == false && !shouldCallAbilities10False)
         {
             shouldCallAbilities10False = true;
-            photonView.RPC("RPC_Abilities10False", RpcTarget.All);
+            if (berserkerActivated)
+            {
+                berserker = false;
+                berserkerActivated = false;
+                Health = maxHealth;
+                CheckHealthStatus();
+                movement.currentSpeed = startingSpeed;
+                bulletModifier = startingBulletModifier;
+            }
             shouldCallAbilities10False = false;
         }
     }
@@ -990,9 +915,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         audioSource.PlayOneShot(bulletHit);
         StartCoroutine(Cracked());
 
-        object storedDamageTaken;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DAMAGAE_TAKEN, out storedDamageTaken) && (int)storedDamageTaken >= 1)
-            damageTaken = (damage - ((int)storedDamageTaken / 4));
+        if (PlayerPrefs.HasKey("DAMAGAE_TAKEN") && PlayerPrefs.GetInt("DAMAGAE_TAKEN") == 1)
+            damageTaken = (damage - (PlayerPrefs.GetInt("DAMAGAE_TAKEN") / 4));
         else
             damageTaken = damage;
         if (Armor >= damage)
@@ -1030,9 +954,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         audioSource.PlayOneShot(bulletHit);
 
-        object storedHealthPowerup;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_POWERUP, out storedHealthPowerup) && (int)storedHealthPowerup >= 1)
-            healthAdded = (health + (int)storedHealthPowerup);
+        if (PlayerPrefs.HasKey("HEALTH_POWERUP") && PlayerPrefs.GetInt("HEALTH_POWERUP") == 1)
+            healthAdded = (health + PlayerPrefs.GetInt("HEALTH_POWERUP"));
         else
             healthAdded = health;
         Health += health;
@@ -1071,52 +994,46 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         int cintUpdate = (playerCints / 10);
         StartCoroutine(sceneFader.ScreenFade());
         alive = false;
-        GameObject playerDeathTokenObject = PhotonNetwork.InstantiateRoomObject(deathToken.name, tokenDropLocation.position, Quaternion.identity, 0, null);
+        GameObject playerDeathTokenObject = this.PoolManager.Acquire(deathToken, tokenDropLocation.position, Quaternion.identity);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = cintUpdate;
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
         UpdateSkills(-cintUpdate);
 
-        object implant;
-        object node;
-
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out implant) && (int)implant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out node) && (int)node >= 1)
+        if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
+                PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") >= 1)
         {
-            GameObject bomb = PhotonNetwork.InstantiateRoomObject(bombDeath.name, tokenDropLocation.position, Quaternion.identity, 0, null);
+            GameObject bomb = this.PoolManager.Acquire(bombDeath, tokenDropLocation.position, Quaternion.identity);
             bomb.GetComponent<Rigidbody>().isKinematic = false;
             bomb.GetComponent<Rigidbody>().useGravity = true;
             NetworkGrenade grenade = bomb.GetComponent<NetworkGrenade>();
             grenade.StartCoroutine(grenade.ExplodeDelayed());
         }
         yield return new WaitForSeconds(.15f);
-        if (photonView.IsMine)
-        {
-            // Leave the room
-            VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
-        }
+        // Leave the room
+        VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 
     IEnumerator PlayerRespawn()
     {
         yield return new WaitForSeconds(0);
 
-        foreach (XRRayInteractor ray in rayInteractors)
-        {
-            ray.enabled = false;
-        }
         foreach (XRDirectInteractor direct in directInteractors)
         {
             direct.enabled = false;
         }
 
         StartCoroutine(sceneFader.Respawn());
-        photonView.RPC("RPC_Respawn", RpcTarget.All);
+        model.SetActive(false);
+        player.transform.position = spawnManager.respawnPosition;
+        playerLives -= 1;
+        Armor = 125;
+        Health = 125;
+        CheckArmorStatus();
+        CheckHealthStatus();
+        alive = true;
+        model.SetActive(true);
 
-        foreach (XRRayInteractor ray in rayInteractors)
-        {
-            ray.enabled = true;
-        }
         foreach (XRDirectInteractor direct in directInteractors)
         {
             direct.enabled = true;
@@ -1128,17 +1045,29 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator ShieldBuffNormal()
     {
         yield return new WaitForSeconds(0);
-        photonView.RPC("RPC_ShieldNomral", RpcTarget.All, true);
+        foreach (GameObject shield in shieldObjects)
+        {
+            shield.SetActive(true);
+        }
         yield return new WaitForSeconds(.75f);
-        photonView.RPC("RPC_ShieldNomral", RpcTarget.All, false);
+        foreach (GameObject shield in shieldObjects)
+        {
+            shield.SetActive(false);
+        }
     }
 
     IEnumerator ShieldBuffCritical()
     {
         yield return new WaitForSeconds(0);
-        photonView.RPC("RPC_ShieldCritical", RpcTarget.All, true);
+        foreach (GameObject shield in shieldObjects)
+        {
+            shield.SetActive(true);
+        }
         yield return new WaitForSeconds(.75f);
-        photonView.RPC("RPC_ShieldCritical", RpcTarget.All, false);
+        foreach (GameObject shield in shieldObjects)
+        {
+            shield.SetActive(false);
+        }
     }
 
     public void ApplyBlindEffect(float duration)
@@ -1150,15 +1079,12 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(0);
 
-        object storedReactorExtraction;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.REACTOR_EXTRACTION, out storedReactorExtraction) && (int)storedReactorExtraction >= 1)
-            reactorExtraction += (2 + (int)storedReactorExtraction);
+        if (PlayerPrefs.HasKey("REACTOR_EXTRACTION") && PlayerPrefs.GetInt("REACTOR_EXTRACTION") >= 1)
+            reactorExtraction += (2 + PlayerPrefs.GetInt("REACTOR_EXTRACTION"));
         else
             reactorExtraction += 2;
 
-        Hashtable hash = new Hashtable();
-        hash.Add("reactorExtraction", reactorExtraction);
-        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        PlayerPrefs.SetInt("ReactorExtraction", reactorExtraction);
 
         reactorTimer = 0;
     }
@@ -1169,9 +1095,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             enemiesKilled++;
 
-            Hashtable hash = new Hashtable();
-            hash.Add("enemyKills", enemiesKilled);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            PlayerPrefs.SetInt("EnemyKills", enemiesKilled);
 
             int playAudio = Random.Range(0, 100);
             if (!audioSource.isPlaying && playAudio <= 50)
@@ -1183,24 +1107,20 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 else
                     audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            StartCoroutine(GetXP(2));
+            StartCoroutine(GetXP(5));
         }
 
         else if (type == "Boss")
         {
-            object questActive;
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuest, out questActive) && (bool)questActive == true)
+            if (PlayerPrefs.HasKey("BossQuest") && PlayerPrefs.GetInt("BossQuest") == 1)
             {
                 bossesKilled++;
 
-                ExitGames.Client.Photon.Hashtable bossUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossKilled, bossesKilled } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossUpdate);
+                PlayerPrefs.SetInt("BossQuestTarget", bossesKilled);
             }
             enemiesKilled++;
 
-            Hashtable hash = new Hashtable();
-            hash.Add("enemyKills", enemiesKilled);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            PlayerPrefs.SetInt("EnemyKills", enemiesKilled);
 
             int playAudio = Random.Range(0, 100);
             if (!audioSource.isPlaying && playAudio <= 50)
@@ -1212,7 +1132,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
                 else
                     audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            StartCoroutine(GetXP(2));
+            StartCoroutine(GetXP(10));
         }
     }
 
@@ -1220,9 +1140,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         playersKilled++;
 
-        Hashtable hash = new Hashtable();
-        hash.Add("playerKills", playersKilled);
-        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        PlayerPrefs.SetInt("PlayersKilled", playersKilled);
 
         int playAudio = Random.Range(0, 100);
         if (!audioSource.isPlaying && playAudio <= 50)
@@ -1234,100 +1152,20 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             else
                 audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
         }
-        StartCoroutine(GetXP(5));
+        StartCoroutine(GetXP(15));
     }
 
     void ExtractionGame()
     {
-        StartCoroutine(GetXP(50));
+        StartCoroutine(GetXP(100));
 
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(ExtractionGameMode, null, raiseEventOptions, sendOptions);
+        StartCoroutine(DisplayMessage());
     }
 
-    void PlayerGame()
+    IEnumerator DisplayMessage()
     {
-        StartCoroutine(GetXP(30));
-
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(PlayerGameMode, null, raiseEventOptions, sendOptions);
-    }
-
-    void EnemyGame()
-    {
-        StartCoroutine(GetXP(10));
-
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        SendOptions sendOptions = new SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(EnemyGameMode, null, raiseEventOptions, sendOptions);
-    }
-
-    IEnumerator DisplayMessage(string message)
-    {
-        yield return new WaitForSeconds(3);
-        winCanvas.SetActive(true);
-        messageText.text = message;
-        yield return new WaitForSeconds(5);
-        messageText.text = "";
+        yield return new WaitForSeconds(8);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
-    }
-
-    IEnumerator WinMessage(string message)
-    {
-        yield return new WaitForSeconds(0);
-        audioSource.PlayOneShot(roundWonClip);
-        winCanvas.SetActive(true);
-        messageText.text = message;
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code == ExtractionGameMode)
-        {
-            string name = spawnManager.winnerPlayer.GetComponent<PhotonView>().Owner.NickName;
-            StartCoroutine(DisplayMessage($"{name} has extracted the reactor for their faction. Returning to Faction Base."));
-        }
-
-        if (photonEvent.Code == PlayerGameMode)
-        {
-            string name = spawnManager.winnerPlayer.GetComponent<PhotonView>().Owner.NickName;
-            StartCoroutine(DisplayMessage($"{name} has defeated {playersKilled} players and won the territory. Returning to Faction Base."));
-        }
-
-        if (photonEvent.Code == EnemyGameMode)
-        {
-            string name = spawnManager.winnerPlayer.GetComponent<PhotonView>().Owner.NickName;
-            StartCoroutine(DisplayMessage($"{name} has defeated {enemiesKilled} enemies and won the territory. Returning to Faction Base."));
-        }
-
-        if (photonEvent.Code == ReactorGrab.ReactorExtractionTrue)
-        {
-            reactorIcon.SetActive(true);
-            audioSource.PlayOneShot(reactorTaken);
-        }
-
-        if (photonEvent.Code == ReactorGrab.ReactorExtractionFalse)
-        {
-            reactorIcon.SetActive(false);
-
-        }
-
-        if (photonEvent.Code == SupplyDropShip.SupplyShipArrive)
-        {
-            shipIcon.SetActive(true);
-        }
-
-        if (photonEvent.Code == SupplyDropShip.SupplyShipDestroy)
-        {
-            shipIcon.SetActive(false);
-        }
-    }
-
-    private void OnDisable()
-    {
-        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void Toxicity(float toxicTime)
@@ -1357,23 +1195,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         playerCints += cintsEarned;
 
-        ExitGames.Client.Photon.Hashtable cintsUpdate = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, playerCints } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(cintsUpdate);
+        PlayerPrefs.SetInt("CINTS", playerCints);
+
     }
 
     IEnumerator PrimaryTimer(float time)
     {
-        yield return new WaitForSeconds(time/2);
-        object primaryImplant;
-        object primaryNode;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out primaryNode) && (int)primaryNode == 1)
+        yield return new WaitForSeconds(time / 2);
+        if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
+                    PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 1)
         {
             aiCompanion = false;
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
+                    PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 1)
         {
             decoyDeploy = false;
         }
@@ -1385,16 +1221,14 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
     IEnumerator SecondaryTimer(float time)
     {
         yield return new WaitForSeconds(time / 2);
-        object secondaryImplant;
-        object secondaryNode;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                    PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
+                    PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 2)
         {
             aiCompanion = false;
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
+                    PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 2)
         {
             decoyDeploy = false;
         }
@@ -1405,140 +1239,118 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     void PrimaryImplantActivation()
     {
-        object primaryImplant;
-        object primaryNode;
-
-        //if (primaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out primaryImplant) && (int)primaryImplant! >= 1 &&
-        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out primaryNode) && (int)primaryNode != 1 || primaryPowerupTimer == true &&
-        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out primaryImplant) && (int)primaryImplant! >= 1 &&
-        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out primaryNode) && (int)primaryNode != 1)
-        //{
         primaryPowerupTimer = false;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("HEALTH_STIM") && PlayerPrefs.GetInt("HEALTH_STIM") >= 1 &&
+                    PlayerPrefs.HasKey("HEALTH_STIM_SLOT") && PlayerPrefs.GetInt("HEALTH_STIM_SLOT") == 1)
         {
             AddHealth(25);
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("LEECH") && PlayerPrefs.GetInt("LEECH") >= 1 &&
+                    PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
             leechEffect = true;
             leechEffectTimer = 0;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
+                    PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 1)
         {
             activeCamo = true;
             activeCamoTimer = 0;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
+                    PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 1)
         {
             stealth = true;
             stealthTimer = 0;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
+                    PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 1)
         {
             aiCompanion = true;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
+                    PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 1)
         {
             decoyDeploy = true;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out primaryImplant) && (int)primaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out primaryNode) && (int)primaryNode == 1)
+        if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
+                    PlayerPrefs.HasKey("BERSERKER_FURY_SLOT") && PlayerPrefs.GetInt("BERSERKER_FURY_SLOT") == 1)
         {
             berserker = true;
             berserkerEffectTimer = 0;
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
-        //}
-        //else
-        //    return;
     }
 
     void SecondaryImplantActivation()
     {
-        object secondaryImplant;
-        object secondaryNode;
-
-        //if (secondaryPowerupTimer == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE, out secondaryImplant) && (int)secondaryImplant! >= 2 &&
-        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.SAVING_GRACE_SLOT, out secondaryNode) && (int)secondaryNode != 2 || secondaryPowerupTimer == true &&
-        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH, out secondaryImplant) && (int)secondaryImplant! >= 2 &&
-        //            PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.EXPLOSIVE_DEATH_SLOT, out secondaryNode) && (int)secondaryNode != 2)
-        //{
         secondaryPowerupTimer = false;
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.HEALTH_STIM_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("HEALTH_STIM") && PlayerPrefs.GetInt("HEALTH_STIM") >= 1 &&
+                    PlayerPrefs.HasKey("HEALTH_STIM_SLOT") && PlayerPrefs.GetInt("HEALTH_STIM_SLOT") == 2)
         {
             AddHealth(25);
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.LEECH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("LEECH") && PlayerPrefs.GetInt("LEECH") >= 1 &&
+                    PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
             leechEffect = true;
             leechEffectTimer = 0;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ACTIVE_CAMO_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
+                    PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 2)
         {
             activeCamo = true;
             activeCamoTimer = 0;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.STEALTH_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
+                    PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 2)
         {
             stealth = true;
             stealthTimer = 0;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AI_COMPANION_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
+                    PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 2)
         {
             aiCompanion = true;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DECOY_DEPLOYMENT_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
+                    PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 2)
         {
             decoyDeploy = true;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
-        else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY, out secondaryImplant) && (int)secondaryImplant >= 1 &&
-                PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BERSERKER_FURY_SLOT, out secondaryNode) && (int)secondaryNode == 2)
+        if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
+                    PlayerPrefs.HasKey("BERSERKER_FURY_SLOT") && PlayerPrefs.GetInt("BERSERKER_FURY_SLOT") == 2)
         {
             berserker = true;
             berserkerEffectTimer = 0;
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
-        //}
-        //else
-        //    return;
     }
 
     public void EMPShock()
@@ -1553,21 +1365,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
+            GameObject effect = this.PoolManager.Acquire(shockEffect, transform.position, Quaternion.identity);
             yield return new WaitForSeconds(1);
-            PhotonNetwork.Destroy(effect);
-            yield return new WaitForSeconds(1);
-            TakeDamage(5);
-            // play shock effect
-            GameObject effect2 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
-            yield return new WaitForSeconds(1);
-            PhotonNetwork.Destroy(effect2);
+            this.PoolManager.Release(effect);
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect3 = PhotonNetwork.InstantiateRoomObject(shockEffect.name, transform.position, Quaternion.identity, 0, null);
+            GameObject effect2 = this.PoolManager.Acquire(shockEffect, transform.position, Quaternion.identity);
             yield return new WaitForSeconds(1);
-            PhotonNetwork.Destroy(effect3);
+            this.PoolManager.Release(effect2);
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            GameObject effect3 = this.PoolManager.Acquire(shockEffect, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(1);
+            this.PoolManager.Release(effect3);
             // enable movement
 
             activeState = States.Normal;
@@ -1578,237 +1390,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         StartCoroutine(shock());
     }
 
-    public void FactionDataCard()
-    {
-        datacards++;
-    }
-
     public IEnumerator GetXP(int XP)
     {
         yield return new WaitForSeconds(0);
         LootLockerSDKManager.AddPointsToPlayerProgression(progressionKey, (ulong)XP, response =>
         {
         });
-    }
-
-    [PunRPC]
-    void RPC_ShieldNomral(bool state)
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        foreach (GameObject shield in shieldObjects)
-        {
-            shield.SetActive(state);
-        }
-    }
-
-
-    [PunRPC]
-    void RPC_ShieldCritical(bool state)
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        foreach (GameObject shield in shieldObjects)
-        {
-            shield.SetActive(state);
-        }
-    }
-
-    [PunRPC]
-    void RPC_Respawn()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        model.SetActive(false);
-        player.transform.position = spawnManager.respawnPosition;
-        playerLives -= 1;
-        Armor = 125;
-        Health = 125;
-        CheckArmorStatus();
-        CheckHealthStatus();
-        alive = true;
-        model.SetActive(true);
-    }
-
-    [PunRPC]
-    void RPC_SpawnManagerTrue()
-    {
-        spawnManager.gameOver = true;
-        spawnManager.winnerPlayer = this.gameObject;
-    }
-
-    [PunRPC]
-    void RPC_Abilities1True()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        toxicEffect.SetActive(true);
-        toxicTimer += Time.deltaTime;
-    }
-
-    [PunRPC]
-    void RPC_Abilities1False()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        toxicEffect.SetActive(false);
-        toxicEffectActive = false;
-    }
-
-    [PunRPC]
-    void RPC_Abilities3True()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        bulletModifier = startingBulletModifier + bulletXPModifier;
-        upgradeTimer += Time.deltaTime;
-    }
-
-    [PunRPC]
-    void RPC_Abilities3False()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        bulletModifier = startingBulletModifier;
-        bulletImproved = false;
-    }
-
-    [PunRPC]
-    void RPC_Abilities4True()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        leechEffectTimer += Time.deltaTime;
-        leechBubble.SetActive(true);
-    }
-
-    [PunRPC]
-    void RPC_Abilities4False()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        leechBubble.SetActive(false);
-        leechEffect = false;
-    }
-
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        // Check if this is the object's current owner and if the new master client exists
-        if (photonView.IsMine && newMasterClient != null)
-        {
-            // Transfer ownership of the object to the new master client
-            photonView.TransferOwnership(newMasterClient.ActorNumber);
-        }
-    }
-
-    [PunRPC]
-    void RPC_Abilities5True()
-    {
-        activeCamoTimer += Time.deltaTime;
-        if (!photonView.IsMine)
-        {
-            foreach (SkinnedMeshRenderer skin in characterSkins)
-            {
-                skin.enabled = false;
-            }
-        }
-    }
-
-    [PunRPC]
-    void RPC_Abilities5False()
-    {
-        activeCamo = false;
-        if (!photonView.IsMine || photonView.IsMine)
-        {
-            foreach (SkinnedMeshRenderer skin in characterSkins)
-            {
-                skin.enabled = true;
-            }
-        }
-    }
-
-    [PunRPC]
-    void RPC_Abilities6True()
-    {
-        stealthTimer += Time.deltaTime;
-        if (!photonView.IsMine)
-        {
-            foreach (GameObject minimap in minimapSymbol)
-            {
-                minimap.SetActive(false);
-            }
-        }
-    }
-
-    [PunRPC]
-    void RPC_Abilities6False()
-    {
-        stealth = false;
-        foreach (GameObject minimap in minimapSymbol)
-        {
-            minimap.SetActive(true);
-        }
-    }
-
-    [PunRPC]
-    void RPC_Abilities8()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        aiCompanionDrone.SetActive(aiCompanion);
-    }
-
-    [PunRPC]
-    void RPC_Abilities9()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        decoySpawner.SetActive(decoyDeploy);
-    }
-
-
-    [PunRPC]
-    void RPC_Abilities10True()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        berserkerEffectTimer += Time.deltaTime;
-        if (!berserkerActivated)
-        {
-            berserkerActivated = true;
-            Armor = maxArmor;
-            Health = maxHealth;
-            movement.currentSpeed += 4;
-            bulletModifier = startingBulletModifier * 2;
-        }
-    }
-
-    [PunRPC]
-    void RPC_Abilities10False()
-    {
-        if (!photonView.IsMine)
-        { return; }
-
-        if (berserkerActivated)
-        {
-            berserker = false;
-            berserkerActivated = false;
-            Health = maxHealth;
-            CheckHealthStatus();
-            movement.currentSpeed = startingSpeed;
-            bulletModifier = startingBulletModifier;
-        }
     }
 }

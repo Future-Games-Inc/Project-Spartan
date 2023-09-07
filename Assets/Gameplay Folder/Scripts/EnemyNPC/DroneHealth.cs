@@ -1,11 +1,7 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Photon.Pun;
-using Photon.Realtime;
-using ExitGames.Client.Photon;
 
-public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
+public class DroneHealth : MonoBehaviour
 {
     public int Health = 100;
     public GameObject xpDrop;
@@ -41,12 +37,6 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
-    }
-
-    [PunRPC]
-    void RPC_TakeDamage(int damage)
-    {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
 
@@ -63,8 +53,8 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = false;
         SpawnLoot();
-        enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
-        PhotonNetwork.Destroy(gameObject);
+        enemyCounter.UpdateSecurity();
+        Destroy(gameObject);
     }
 
     private void SpawnLoot()
@@ -72,7 +62,7 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         foreach (Transform t in lootSpawn)
         {
             GameObject drop = Random.Range(0, 100f) < xpDropRate ? xpDropExtra : xpDrop;
-            GameObject loot = PhotonNetwork.InstantiateRoomObject(drop.name, t.position, Quaternion.identity, 0);
+            GameObject loot = Instantiate(drop, t.position, Quaternion.identity);
             loot.GetComponent<Rigidbody>().isKinematic = false;
         }
     }
@@ -83,10 +73,5 @@ public class DroneHealth : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
         }
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        // Handle any photon events here if needed
     }
 }

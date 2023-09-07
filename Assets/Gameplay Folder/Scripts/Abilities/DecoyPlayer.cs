@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 using UnityEngine.AI;
 
-public class DecoyPlayer : MonoBehaviourPunCallbacks
+public class DecoyPlayer : MonoBehaviour
 {
     public GameObject decoyDeath;
     public Animator animator;
@@ -59,19 +58,11 @@ public class DecoyPlayer : MonoBehaviourPunCallbacks
 
     IEnumerator DecoyKilled()
     {
-        PhotonNetwork.InstantiateRoomObject(decoyDeath.name, transform.position, Quaternion.identity, 0, null);
-        photonView.RPC("RPC_DecoyKilled", RpcTarget.All);
-        yield return new WaitForSeconds(3f);
-        PhotonNetwork.Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_DecoyKilled()
-    {
-        if (!photonView.IsMine)
-            return;
+        Instantiate(decoyDeath, transform.position, Quaternion.identity);
         agent.isStopped = true;
         active = false;
         animator.SetTrigger("Death");
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
     }
 }

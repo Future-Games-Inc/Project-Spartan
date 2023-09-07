@@ -1,7 +1,6 @@
-using Photon.Pun;
 using UnityEngine;
 
-public class BlackoutBullet : MonoBehaviourPunCallbacks
+public class BlackoutBullet : MonoBehaviour
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     public GameObject hitEffectPrefab;
@@ -83,11 +82,11 @@ public class BlackoutBullet : MonoBehaviourPunCallbacks
             }
 
             // Apply hit effect
-            PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, transform.position, Quaternion.identity, 0, null);
-            PhotonNetwork.InstantiateRoomObject(smoke.name,transform.position, Quaternion.identity, 0, null);
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+            Instantiate(smoke,transform.position, Quaternion.identity);
 
             // Destroy bullet
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

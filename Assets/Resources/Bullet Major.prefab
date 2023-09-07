@@ -22,7 +22,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8276618496304622667
 Transform:
   m_ObjectHideFlags: 0
@@ -135,7 +135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e6da4d6b234a646ac02f9fd938398f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupData: {fileID: 0}
   spawnManager: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  grabbable: {fileID: 0}
 --- !u!65 &-5112801743314766650
 BoxCollider:
   m_ObjectHideFlags: 0

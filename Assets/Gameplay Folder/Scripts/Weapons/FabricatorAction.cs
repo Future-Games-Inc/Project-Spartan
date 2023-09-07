@@ -1,8 +1,7 @@
 using BNG;
-using Photon.Pun;
 using UnityEngine;
 
-public class FabricatorAction : MonoBehaviourPunCallbacks
+public class FabricatorAction : MonoBehaviour
 {
     public SnapZone snapZone;
     public GameObject pistolUpgrader;
@@ -160,38 +159,38 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
     {
         if (snapZone.HeldItem.gameObject.name == "Z_Pistol" || snapZone.HeldItem.gameObject.name == "Z_Pistol(Clone)")
         {
-            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newEmpPistol = PhotonNetwork.InstantiateRoomObject(empPistol.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+            Destroy(snapZone.HeldItem.gameObject);
+            GameObject newEmpPistol = Instantiate(empPistol, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newEmpPistol.gameObject.name = "Z_EMPPistol";
             EMPPistolNet pistol = newEmpPistol.GetComponent<EMPPistolNet>();
             pistol.reloadingScreen.SetActive(false);
             pistol.durabilityText.enabled = false;
             pistol.ammoText.enabled = false;
-            NetworkedGrabbable newGrabbable = empPistol.GetComponent<NetworkedGrabbable>();
+            Grabbable newGrabbable = empPistol.GetComponent<Grabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
         else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun" || snapZone.HeldItem.gameObject.name == "Z_Shotgun(Clone)")
         {
-            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newStingerShotgun = PhotonNetwork.InstantiateRoomObject(stingerShotgun.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+            Destroy(snapZone.HeldItem.gameObject);
+            GameObject newStingerShotgun = Instantiate(stingerShotgun, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newStingerShotgun.gameObject.name = "Z_Stinger Shotgun";
             StingerShotgun stinger = newStingerShotgun.GetComponent<StingerShotgun>();
             stinger.reloadingScreen.SetActive(false);
             stinger.durabilityText.enabled = false;
             stinger.ammoText.enabled = false;
-            NetworkedGrabbable newGrabbable = newStingerShotgun.GetComponent<NetworkedGrabbable>();
+            Grabbable newGrabbable = newStingerShotgun.GetComponent<Grabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
         else if (snapZone.HeldItem.gameObject.name == "Z_Rifle" || snapZone.HeldItem.gameObject.name == "Z_Rifle(Clone)")
         {
-            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newPulseAR = PhotonNetwork.InstantiateRoomObject(pulseAR.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+            Destroy(snapZone.HeldItem.gameObject);
+            GameObject newPulseAR = Instantiate(pulseAR, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newPulseAR.gameObject.name = "Z_PulseAR";
             PulseARNet AR = newPulseAR.GetComponent<PulseARNet>();
             AR.reloadingScreen.SetActive(false);
             AR.durabilityText.enabled = false;
             AR.ammoText.enabled = false;
-            NetworkedGrabbable newGrabbable = newPulseAR.GetComponent<NetworkedGrabbable>();
+            Grabbable newGrabbable = newPulseAR.GetComponent<Grabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
     }
@@ -199,30 +198,30 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
     public void UpgradeBowNormal()
     {
 
-        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowNormal.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = Instantiate(ZBowNormal, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
         newBow.gameObject.name = "Z_BowNormal";
-        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        Grabbable newGrabbable = newBow.GetComponent<Grabbable>();
         snapZone.GrabGrabbable(newGrabbable);
     }
 
     public void UpgradeBowBomb()
     {
 
-        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowBomb.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = Instantiate(ZBowBomb, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
         newBow.gameObject.name = "Z_BowBomb";
-        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        Grabbable newGrabbable = newBow.GetComponent<Grabbable>();
         snapZone.GrabGrabbable(newGrabbable);
     }
 
     public void UpgradeBowEMP()
     {
 
-        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowEMP.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = Instantiate(ZBowEMP, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
         newBow.gameObject.name = "Z_BowEMP";
-        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        Grabbable newGrabbable = newBow.GetComponent<Grabbable>();
         snapZone.GrabGrabbable(newGrabbable);
     }
 

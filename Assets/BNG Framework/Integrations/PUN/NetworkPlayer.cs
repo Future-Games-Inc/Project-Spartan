@@ -370,7 +370,7 @@ MonoBehaviourPunCallbacks, IPunObservable, IPunOwnershipCallbacks
 
             bool amOwner = targetView.AmOwner || (targetView.Owner == null && PhotonNetwork.IsMasterClient);
 
-            NetworkedGrabbable netGrabbable = targetView.gameObject.GetComponent<NetworkedGrabbable>();
+            Grabbable netGrabbable = targetView.gameObject.GetComponent<Grabbable>();
             if (netGrabbable != null) {
                 // Authorize transfer of ownership if we're not holding it
                 if (amOwner && !netGrabbable.BeingHeld) {

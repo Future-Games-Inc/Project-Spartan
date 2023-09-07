@@ -1,12 +1,11 @@
-using Photon.Pun;
-using Photon.Realtime;
-using System;
+using PathologicalGames;
 using System.Collections;
 using TMPro;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SupplyDropCrate : MonoBehaviourPunCallbacks
+public class SupplyDropCrate : MonoBehaviour
 {
     public GameObject[] weaponPrefabs;
     public Slider activationSlider;
@@ -35,12 +34,14 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
 
     public float forceMagnitude;
 
-    public static readonly byte SupplyShipArrive = 30;
-    public static readonly byte SupplyShipDestroy = 31;
+    public GameObjectPoolManager PoolManager;
+
 
     private void OnEnable()
     {
-        photonView.RPC("RaiseEvent1", RpcTarget.All, SupplyDropShip.SupplyShipArrive, null);
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
+        matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
         StartCoroutine(PlayAudioLoop());
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
@@ -83,7 +84,7 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
 
                 if (elapsedTime >= activationTime)
                 {
-                    photonView.RPC("RPC_WeaponSpawn", RpcTarget.All);
+                    tInstantiateWeapons();
                 }
 
                 foreach (GameObject vfx in effects)
@@ -118,15 +119,23 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         return false;
     }
 
-    void InstantiateWeapons()
+    void tInstantiateWeapons()
     {
+        isActive = true;
+        activationSlider.gameObject.SetActive(false);
+        contact = true;
+
         Rigidbody rb = this.GetComponent<Rigidbody>();
         rb.AddForce(Vector3.up * forceMagnitude);
         // Shuffle the weaponPrefabs array
 
         audioSource.PlayOneShot(spawnClip);
 
-        photonView.RPC("RPC_WeaponSpawn", RpcTarget.All);
+        GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
+        // this.PoolManager.Acquire a weapon for each spawn point
+        this.PoolManager.Acquire(shuffledWeapons[0], spawn1.position, spawn1.rotation);
+        this.PoolManager.Acquire(shuffledWeapons[1], spawn2.position, spawn2.rotation);
+        this.PoolManager.Acquire(shuffledWeapons[2], spawn3.position, spawn3.rotation);
 
         StartCoroutine(Destroy());
     }
@@ -149,11 +158,10 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
 
     IEnumerator Destroy()
     {
-        photonView.RPC("RaiseEvent2", RpcTarget.All, SupplyDropShip.SupplyShipDestroy, null);
         yield return new WaitForSeconds(1.5f);
         matchProps.lastSpawnTime = Time.time;
         matchProps.spawned = false;
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     IEnumerator NoContact()
@@ -161,49 +169,10 @@ public class SupplyDropCrate : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(30);
         if (contact == false)
         {
-            photonView.RPC("RaiseEvent2", RpcTarget.All, SupplyDropShip.SupplyShipDestroy, null);
-            matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
             matchProps.lastSpawnTime = Time.time;
             matchProps.spawned = false;
             yield return new WaitForSeconds(.75f);
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
-    }
-
-    [PunRPC]
-    void RPC_WeaponSpawn()
-    {
-        isActive = true;
-        activationSlider.gameObject.SetActive(false);
-        contact = true;
-
-        Rigidbody rb = this.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.up * forceMagnitude);
-
-        // Shuffle the weaponPrefabs array
-        audioSource.PlayOneShot(spawnClip);
-        GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
-        // Instantiate a weapon for each spawn point
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[0].name, spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[1].name, spawn2.position, spawn2.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(shuffledWeapons[2].name, spawn3.position, spawn3.rotation, 0, null);
-
-        StartCoroutine(Destroy());
-    }
-
-    [PunRPC]
-    void RaiseEvent1(byte eventCode, object content, PhotonMessageInfo info)
-    {
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
-    }
-
-    [PunRPC]
-    void RaiseEvent2(byte eventCode, object content, PhotonMessageInfo info)
-    {
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        ExitGames.Client.Photon.SendOptions sendOptions = new ExitGames.Client.Photon.SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, sendOptions);
     }
 }

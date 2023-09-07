@@ -1,9 +1,6 @@
-using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
-public class CuaTerminal : MonoBehaviourPunCallbacks
+public class CuaTerminal : MonoBehaviour
 {
     public GameObject logo;
     public GameObject button;
@@ -51,30 +48,29 @@ public class CuaTerminal : MonoBehaviourPunCallbacks
                 if (health != null)
                 {
                     playerHealth = health;
-                    if (!HasTerminalAccess(photonView.Owner))
+                    if (!HasTerminalAccess())
                     {
-                        SaveTerminalAccess(photonView.Owner, 75);
+                        SaveTerminalAccess(75);
                     }
                 }
             }
         }
     }
 
-    public bool HasTerminalAccess(Player player)
+    public bool HasTerminalAccess()
     {
         // Check if the player has accessed the terminal before
-        object terminalAccess;
-        if (player.CustomProperties.TryGetValue(terminalName, out terminalAccess))
+        if (PlayerPrefs.HasKey(terminalName))
         {
-            return (bool)terminalAccess;
+            return true;
         }
         return false;
     }
 
-    public void SaveTerminalAccess(Player player, int XP)
+    public void SaveTerminalAccess(int XP)
     {
         // Save terminal access in player's custom properties
-        player.SetCustomProperties(new Hashtable() { { terminalName, true } });
+        PlayerPrefs.SetInt(terminalName, 1);
         playerHealth.GetXP(XP);
     }
 }

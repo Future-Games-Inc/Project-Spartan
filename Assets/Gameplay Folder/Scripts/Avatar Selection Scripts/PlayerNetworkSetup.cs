@@ -1,10 +1,9 @@
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
+public class PlayerNetworkSetup : MonoBehaviour
 {
     public XROrigin localXRRigGameObject;
     public Camera myCamera;
@@ -25,93 +24,48 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
 
     void OnEnable()
     {
-        if (photonView != null)
+        foreach (TextMeshProUGUI playerText in playerNameText)
         {
-            if (!photonView.IsMine)
+            playerText.text = "Unknown React";
+        }
+        myCamera.enabled = true;
+        localXRRigGameObject.enabled = true;
+        playerMovement.enabled = true;
+        dash.enabled = true;
+        controllerSnapTurnProvider.enabled = true;
+        controllerContinuousTurnProvider.enabled = true;
+        earlyExtraction.enabled = true;
+        wristUI.enabled = true;
+
+        foreach (GameObject information in playerInformation)
+        {
+            information.SetActive(false);
+        }
+
+        foreach (ActionBasedController controllers in controller)
+        {
+            controllers.enabled = true;
+        }
+
+        foreach (HandPoseAnimator hands in handPoseAnimators)
+        {
+            hands.enabled = true;
+        }
+
+        if (PlayerPrefs.GetString(playerNamePrefKey) != null)
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                myCamera.enabled = false;
-                localXRRigGameObject.enabled = false;
-                playerMovement.enabled = false;
-                dash.enabled = false;
-                wristUI.enabled = false;
-                controllerSnapTurnProvider.enabled = false;
-                controllerContinuousTurnProvider.enabled = false;
-                earlyExtraction.enabled = false;
-
-                foreach (ActionBasedController controllers in controller)
-                {
-                    controllers.enabled = false;
-                }
-
-                foreach (HandPoseAnimator hands in handPoseAnimators)
-                {
-                    hands.enabled = false;
-                }
-
-                if (photonView.Owner.NickName != null)
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = photonView.Owner.NickName;
-                    }
-                }
-                else
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = "Unknown React";
-                    }
-                }
+                playerText.text = PlayerPrefs.GetString(playerNamePrefKey);
             }
 
-            else if (photonView.IsMine)
+        }
+        else if (PlayerPrefs.GetString(playerNamePrefKey) == null)
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                myCamera.enabled = true;
-                localXRRigGameObject.enabled = true;
-                playerMovement.enabled = true;
-                dash.enabled = true;
-                controllerSnapTurnProvider.enabled = true;
-                controllerContinuousTurnProvider.enabled = true;
-                earlyExtraction.enabled = true;
-                wristUI.enabled = true;
-
-                foreach (GameObject information in playerInformation)
-                {
-                    information.SetActive(false);
-                }
-
-                foreach (ActionBasedController controllers in controller)
-                {
-                    controllers.enabled = true;
-                }
-
-                foreach (HandPoseAnimator hands in handPoseAnimators)
-                {
-                    hands.enabled = true;
-                }
-
-                if (photonView.Owner.NickName != null)
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = photonView.Owner.NickName;
-                    }
-
-                }
-                else if (photonView.Owner.NickName == null)
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = "Unknown React";
-                    }
-                }
+                playerText.text = "Unknown React";
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

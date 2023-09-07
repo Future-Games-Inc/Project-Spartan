@@ -1,8 +1,8 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
 
-public class NetworkGrenade : MonoBehaviourPunCallbacks
+public class NetworkGrenade : MonoBehaviour
 {
     public enum GrenadeType
     {
@@ -31,6 +31,13 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public GameObject objectRenderer;
 
+    public GameObjectPoolManager PoolManager;
+
+
+    private void OnEnable()
+    {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
@@ -41,18 +48,8 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
 
     public void Throw()
     {
-        if (!photonView.IsMine) return;
-
-        ApplyThrowForce();
         audioSource.Play();
         StartCoroutine(ExplodeDelayed());
-    }
-
-    private void ApplyThrowForce()
-    {
-        Vector3 forceDirection = transform.forward;
-        Vector3 forceToAdd = forceDirection * throwForce * throwUpwardForce;
-        rb.AddForce(forceToAdd);
     }
 
     public IEnumerator ExplodeDelayed()
@@ -148,6 +145,6 @@ public class NetworkGrenade : MonoBehaviourPunCallbacks
     {
         objectRenderer.SetActive(false);
         yield return new WaitForSeconds(delay);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

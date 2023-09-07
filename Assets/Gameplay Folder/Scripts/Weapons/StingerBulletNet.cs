@@ -1,8 +1,9 @@
-using Photon.Pun;
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class StingerBulletNet : MonoBehaviourPunCallbacks
+public class StingerBulletNet : MonoBehaviour
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     public GameObject smallBulletPrefab;
@@ -24,9 +25,14 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public AudioClip clip;
 
+    public GameObjectPoolManager PoolManager;
+
+
     private void OnEnable()
     {
         StartCoroutine(ExplodeBullets());
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -186,7 +192,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         // Create smaller bullets and target nearby enemies
         for (int i = 0; i < numSmallBullets; i++)
         {
-            GameObject smallBullet = PhotonNetwork.Instantiate(smallBulletPrefab.name, transform.position, Quaternion.identity, 0, null);
+            GameObject smallBullet = this.PoolManager.Acquire(smallBulletPrefab, transform.position, Quaternion.identity);
             smallBullet.GetComponent<StingerBulletMiniNet>().audioSource.PlayOneShot(smallBullet.GetComponent<StingerBulletMiniNet>().clip);
             smallBullet.transform.forward = Random.insideUnitSphere;
             smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
@@ -200,7 +206,7 @@ public class StingerBulletNet : MonoBehaviourPunCallbacks
         }
 
         // Create explosion effect and destroy bullet
-        PhotonNetwork.InstantiateRoomObject(explosionPrefab.name, transform.position, Quaternion.identity, 0, null);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Acquire(explosionPrefab, transform.position, Quaternion.identity);
+        this.PoolManager.Release(gameObject);
     }
 }

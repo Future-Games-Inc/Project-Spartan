@@ -1,7 +1,8 @@
-using Photon.Pun;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
+public class StingerBulletMiniNet : MonoBehaviour
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     public GameObject explosionPrefab;
@@ -17,6 +18,13 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
     public AudioSource audioSource;
     public AudioClip clip;
 
+    public GameObjectPoolManager PoolManager;
+
+    private void OnEnable()
+    {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
+    }
     public void SetTarget(Transform target, float lifetime)
     {
         this.target = target;
@@ -121,7 +129,7 @@ public class StingerBulletMiniNet : MonoBehaviourPunCallbacks
 
     private void Explode()
     {
-        PhotonNetwork.InstantiateRoomObject(explosionPrefab.name, transform.position, Quaternion.identity, 0, null);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Acquire(explosionPrefab, transform.position, Quaternion.identity);
+        this.PoolManager.Release(gameObject);
     }
 }

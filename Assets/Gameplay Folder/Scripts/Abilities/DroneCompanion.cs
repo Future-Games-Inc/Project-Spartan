@@ -1,4 +1,3 @@
-using Photon.Pun;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -126,7 +125,7 @@ public class DroneCompanion : MonoBehaviour
         {
             while (!fireWeaponBool)
                 yield return null;
-            GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(droneBullet.name, droneBulletSpawn.position, Quaternion.identity, 0, null);
+            GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
             spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
             spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(1, 4);
             spawnedBullet.GetComponent<Bullet>().bulletOwner = player;

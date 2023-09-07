@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class ArtifactScript : MonoBehaviourPunCallbacks
+public class ArtifactScript : MonoBehaviour
 {
     public AudioSource audioSource;
     public AudioClip pickupClip;
@@ -34,7 +32,7 @@ public class ArtifactScript : MonoBehaviourPunCallbacks
     IEnumerator Destroy()
     {
         yield return new WaitForSeconds(.75f);
-        enemyCounter.photonView.RPC("RPC_UpdateArtifact", RpcTarget.AllBuffered);
-        PhotonNetwork.Destroy(gameObject);
+        //enemyCounter.photonView.RPC("RPC_UpdateArtifact", RpcTarget.AllBuffered);
+        Destroy(gameObject);
     }
 }

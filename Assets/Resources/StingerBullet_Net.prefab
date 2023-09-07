@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: -7646589030969162292}
   - component: {fileID: 2160279510426487234}
   - component: {fileID: 1238226808287737051}
-  - component: {fileID: 3883274836001431588}
   - component: {fileID: 3255237574253878179}
   m_Layer: 20
   m_Name: StingerBullet_Net
@@ -24,7 +23,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7844051141168327265
 Transform:
   m_ObjectHideFlags: 0
@@ -266,28 +265,6 @@ MonoBehaviour:
   smallBulletLifetime: 5
   audioSource: {fileID: 3255237574253878179}
   clip: {fileID: 8300000, guid: ab1fb9eb4849c7b4c82aedda61b0a588, type: 3}
---- !u!114 &3883274836001431588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2228136128379212152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!82 &3255237574253878179
 AudioSource:
   m_ObjectHideFlags: 0

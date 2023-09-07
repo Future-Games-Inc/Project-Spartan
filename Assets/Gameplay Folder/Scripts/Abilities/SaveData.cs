@@ -1,7 +1,7 @@
-using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using LootLocker.Requests;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class SaveData : MonoBehaviour
 {
@@ -29,71 +29,59 @@ public class SaveData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        object savedBosses;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossKilled, out savedBosses))
+        if (PlayerPrefs.HasKey("BossKilled"))
         {
-            bossesKilled = (int)savedBosses;
+            bossesKilled = PlayerPrefs.GetInt("BossKilled");
         }
         else
             bossesKilled = ES3.Load<int>("BossKilled", 0);
 
-        ExitGames.Client.Photon.Hashtable bosses = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossKilled, bossesKilled } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(bosses);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
 
-        object savedArtifacts;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactFound, out savedArtifacts))
+        if (PlayerPrefs.HasKey("ArtifactFound"))
         {
-            artifactsRecovered = (int)savedArtifacts;
+            artifactsRecovered = PlayerPrefs.GetInt("ArtifactFound");
         }
         else
             artifactsRecovered = ES3.Load<int>("ArtifactFound", 0);
 
-        ExitGames.Client.Photon.Hashtable artifacts = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactFound, artifactsRecovered } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(artifacts);
+        PlayerPrefs.SetInt("ArtifactFound", artifactsRecovered);
 
-        object savedBomb;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombDestroyed, out savedBomb))
+        if (PlayerPrefs.HasKey("BombDestroyed"))
         {
-            bombsDestroyed = (int)savedBomb;
+            bombsDestroyed = PlayerPrefs.GetInt("BombDestroyed");
         }
         else
             bombsDestroyed = ES3.Load<int>("BombDestroyed", 0);
 
-        ExitGames.Client.Photon.Hashtable bombs = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombDestroyed, bombsDestroyed } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(bombs);
+        PlayerPrefs.SetInt("BombDestroyed", bombsDestroyed);
 
-        object savedGuardian;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianDestroyed, out savedGuardian))
+        if (PlayerPrefs.HasKey("GuardianDestroyed"))
         {
-            guardiansDestroyed = (int)savedGuardian;
+            guardiansDestroyed = PlayerPrefs.GetInt("GuardianDestroyed");
         }
         else
             guardiansDestroyed = ES3.Load<int>("GuardianDestroyed", 0);
 
-        ExitGames.Client.Photon.Hashtable guardians = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianDestroyed, guardiansDestroyed } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(guardians);
+        PlayerPrefs.SetInt("GuardianDestroyed", guardiansDestroyed);
 
-        object savedIntel;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelFound, out savedIntel))
+        if (PlayerPrefs.HasKey("IntelFound"))
         {
-            intelSecured = (int)savedIntel;
+            intelSecured = PlayerPrefs.GetInt("IntelFound");
         }
         else
             intelSecured = ES3.Load<int>("IntelFound", 0);
 
-        ExitGames.Client.Photon.Hashtable intel = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelFound, intelSecured } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(intel);
+        PlayerPrefs.SetInt("IntelFound", intelSecured);
 
-        object savedCollectors;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorDestroyed, out savedCollectors))
+        if (PlayerPrefs.HasKey("CollectorDestroyed"))
         {
-            collectorsDestroyed = (int)savedCollectors;
+            collectorsDestroyed = PlayerPrefs.GetInt("CollectorDestroyed");
         }
         else
             collectorsDestroyed = ES3.Load<int>("CollectorDestroyed", 0);
 
-        ExitGames.Client.Photon.Hashtable collectors = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorDestroyed, collectorsDestroyed } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(collectors);
+        PlayerPrefs.SetInt("CollectorDestroyed", collectorsDestroyed);
 
         BossSave();
         ArtifactSave();
@@ -113,8 +101,7 @@ public class SaveData : MonoBehaviour
     public void UpdateSkills(int skills)
     {
         SkillPoints += skills;
-        ExitGames.Client.Photon.Hashtable cints = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, SkillPoints } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(cints);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         Save();
     }
 
@@ -122,16 +109,14 @@ public class SaveData : MonoBehaviour
     public void BossUpdateSkills(int skills)
     {
         bossesKilled += skills;
-        ExitGames.Client.Photon.Hashtable bosses = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossKilled, bossesKilled } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(bosses);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         BossSave();
     }
 
     public void ArtifactUpdateSkills(int skills)
     {
         artifactsRecovered += skills;
-        ExitGames.Client.Photon.Hashtable artifacts = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactFound, artifactsRecovered } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(artifacts);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         ArtifactSave();
     }
 
@@ -139,39 +124,35 @@ public class SaveData : MonoBehaviour
     public void BombUpdateSkills(int skills)
     {
         bombsDestroyed += skills;
-        ExitGames.Client.Photon.Hashtable bombs = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombDestroyed, bombsDestroyed } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(bombs);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         BombSave();
     }
 
     public void GuardianUpdateSkills(int skills)
     {
         guardiansDestroyed += skills;
-        ExitGames.Client.Photon.Hashtable guardians = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianDestroyed, guardiansDestroyed } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(guardians);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         GuardianSave();
     }
 
     public void IntelUpdateSkills(int skills)
     {
         intelSecured += skills;
-        ExitGames.Client.Photon.Hashtable intel = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelFound, intelSecured } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(intel);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         IntelSave();
     }
 
     public void CollectorUpdateSkills(int skills)
     {
         collectorsDestroyed += skills;
-        ExitGames.Client.Photon.Hashtable collector = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorDestroyed, collectorsDestroyed } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(collector);
+        PlayerPrefs.SetInt("BossKilled", bossesKilled);
         CollectorSave();
     }
 
     public void Save()
     {
         ES3.Save("SkillPoints", SkillPoints);
-        StartCoroutine(SubmitScore(SkillPoints));
+        StartCoroutine(leaderboard.SubmitScoreRoutine(SkillPoints));
     }
 
     public void BossSave()
@@ -204,12 +185,6 @@ public class SaveData : MonoBehaviour
         ES3.Save("collectorsDestroyed", collectorsDestroyed);
     }
 
-    IEnumerator SubmitScore(int score)
-    {
-        yield return new WaitForSeconds(0f);
-        StartCoroutine(leaderboard.SubmitScoreRoutine(score));
-    }
-
     public void PlayerLevelSave()
     {
         ES3.Save("PlayerLevel", playerLevelCurrent);
@@ -223,55 +198,41 @@ public class SaveData : MonoBehaviour
     public IEnumerator PlayerLevelRoutine()
     {
         yield return new WaitForSeconds(.75f);
-        object savedCints;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTS, out savedCints))
+        if (PlayerPrefs.HasKey("Cints"))
         {
-            SkillPoints = (int)savedCints;
+            SkillPoints = PlayerPrefs.GetInt("CINTS");
             if (SkillPoints != leaderboard.Score && SkillPoints < leaderboard.Score)
                 SkillPoints = leaderboard.Score;
         }
-        else
-            SkillPoints = leaderboard.Score;
+        SkillPoints = leaderboard.Score;
 
-        ExitGames.Client.Photon.Hashtable cints = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CINTS, SkillPoints } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(cints);
+        PlayerPrefs.SetInt("CINTS", SkillPoints);
 
         currentLevelInt = leaderboard.currentLevelInt;
 
         currentPrestigeLevel = (currentLevelInt / prestigeIncrement) + 1;
 
 
-        object playerLevel;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerLevel, out playerLevel))
+        if (PlayerPrefs.HasKey("PlayerLevel"))
         {
-            playerLevelCurrent = (int)playerLevel;
+            playerLevelCurrent = PlayerPrefs.GetInt("PlayerLevel");
             if (playerLevelCurrent != currentLevelInt && playerLevelCurrent < currentLevelInt)
                 playerLevelCurrent = currentLevelInt;
 
         }
-        else
-            playerLevelCurrent = leaderboard.currentLevelInt;  //Update leaderboard
+        playerLevelCurrent = leaderboard.currentLevelInt;
 
-        ExitGames.Client.Photon.Hashtable playerLevelSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerLevel, playerLevelCurrent } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(playerLevelSaved);
+        PlayerPrefs.SetInt("PlayerLevel", playerLevelCurrent);
 
-        object playerPrestige;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerPrestige, out playerPrestige))
+        if (PlayerPrefs.HasKey("PlayerPrestige"))
         {
-            playerPrestigeCurrent = (int)playerPrestige;
+            playerPrestigeCurrent = PlayerPrefs.GetInt("PlayerPrestige");
             if (playerPrestigeCurrent != currentPrestigeLevel && playerPrestigeCurrent < currentPrestigeLevel)
             {
                 awarded = true;
             }
         }
-        else
-        {
-            playerPrestigeCurrent = currentPrestigeLevel;
-
-            ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
-            PlayerPrestigeSave();
-        }
+        playerPrestigeCurrent = playerPrestigeCurrent / prestigeIncrement + 1;
 
         PlayerLevelSave();
         Save();
@@ -279,15 +240,13 @@ public class SaveData : MonoBehaviour
 
     public void PlayerPrestige()
     {
-        object playerPrestige;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PlayerPrestige, out playerPrestige))
+        if (PlayerPrefs.HasKey("PlayerPrestige"))
         {
-            playerPrestigeCurrent = (int)playerPrestige;
+            playerPrestigeCurrent = PlayerPrefs.GetInt("PlayerPrestige");
             playerPrestigeCurrent = currentPrestigeLevel;
         }
 
-        ExitGames.Client.Photon.Hashtable playerPrestigeSaved = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.PlayerPrestige, playerPrestigeCurrent } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(playerPrestigeSaved);
+        PlayerPrefs.SetInt("PlayerPrestige", playerPrestigeCurrent);
 
         PlayerPrestigeSave();
     }

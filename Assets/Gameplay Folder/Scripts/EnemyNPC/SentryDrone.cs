@@ -1,12 +1,10 @@
-using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.DebugUI.Table;
 
-public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
+public class SentryDrone : MonoBehaviour
 {
     public float DetectRange = 20;
     public float AttackRange = 15;
@@ -59,6 +57,11 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public LayerMask obstacleMask;
 
+    public int bulletModifier = 2;
+
+    public GameObjectPoolManager PoolManager;
+
+
     public enum States
     {
         Patrol,
@@ -69,6 +72,8 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
         explosionEffect.SetActive(false);
@@ -76,13 +81,6 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
         alive = true;
         timer = wanderTimer;
         StartCoroutine(Fire());
-        PhotonNetwork.AddCallbackTarget(this);
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
-        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void FindClosestEnemy()
@@ -110,7 +108,7 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         previousState = currentState;
 
-        photonView.RPC("RPC_SyncCurrentState", RpcTarget.All, input);
+       currentState = input;
     }
 
     public void Patrol()
@@ -142,52 +140,49 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (Time.time >= nextUpdateTime)
         {
-            if (Time.time >= nextUpdateTime)
-            {
-                nextUpdateTime = Time.time + 1f; // Update every 1 second
-                FindClosestEnemy();
-            }
+            nextUpdateTime = Time.time + 1f; // Update every 1 second
+            FindClosestEnemy();
+        }
 
-            float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
 
-            if (patrolling)
-                timer += Time.deltaTime;
+        if (patrolling)
+            timer += Time.deltaTime;
 
-            if (distanceToPlayer <= AttackRange)
+        if (distanceToPlayer <= AttackRange)
+        {
+            SwitchStates(States.Attack);
+            LookatTarget(1, 3f);
+            agent.isStopped = true;
+            Attack();
+        }
+        // give chase if not in range
+        else if (distanceToPlayer > AttackRange && distanceToPlayer < AgroRange)
+        {
+            SwitchStates(States.Follow);
+            agent.isStopped = false;
+            Follow();
+        }
+        else
+        {
+            if (previousState != States.Patrol)
             {
-                SwitchStates(States.Attack);
-                LookatTarget(1, 3f);
-                agent.isStopped = true;
-                Attack();
+                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                agent.SetDestination(newPos);
             }
-            // give chase if not in range
-            else if (distanceToPlayer > AttackRange && distanceToPlayer < AgroRange)
-            {
-                SwitchStates(States.Follow);
-                agent.isStopped = false;
-                Follow();
-            }
-            else
-            {
-                if (previousState != States.Patrol)
-                {
-                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-                    agent.SetDestination(newPos);
-                }
-                SwitchStates(States.Patrol);
-                agent.isStopped = false;
-                Patrol();
-            }
+            SwitchStates(States.Patrol);
+            agent.isStopped = false;
+            Patrol();
+        }
 
-            if (isLookingAtPlayer)
-            {
-                Vector3 direction = targetTransform.position - transform.position;
-                direction.y = 0;
-                Quaternion desiredRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
-            }
+        if (isLookingAtPlayer)
+        {
+            Vector3 direction = targetTransform.position - transform.position;
+            direction.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
         }
     }
     private bool IsLineOfSightClear(Transform target)
@@ -246,19 +241,14 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
                 else if (IsLineOfSightClear(targetTransform))
                 {
                     yield return new WaitForSeconds(0.25f);
-                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, Quaternion.identity.eulerAngles);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
                     ammoLeft--;
                 }
             }
             yield return new WaitForSeconds(0.25f);
         }
-    }
-
-    [PunRPC]
-    void FireBullet(Vector3 position, Vector3 rotationEuler)
-    {
-        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, Quaternion.Euler(rotationEuler), 0, null);
-        spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
     }
 
     IEnumerator ReloadWeapon()
@@ -271,24 +261,22 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
-        //audioSource.PlayOneShot(bulletHit);
-        //Health -= damage;
-        //healthBar.SetCurrentHealth(Health);
+        audioSource.PlayOneShot(bulletHit);
+        Health -= damage;
 
-        //if (Health <= 0 && alive == true)
-        //{
-        //    alive = false;
-        //    enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
+        if (Health <= 0 && alive == true)
+        {
+            alive = false;
+            enemyCounter.UpdateSecurity();
 
-        //    explosionEffect.SetActive(true);
-        //    explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
+            explosionEffect.SetActive(true);
+            explosionEffect.GetComponentInChildren<ParticleSystem>().Play();
 
-        //    agent.enabled = false;
-        //    GetComponent<Rigidbody>().isKinematic = false;
+            agent.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = false;
 
-        //    DestroyEnemy();
-        //}
+            DestroyEnemy();
+        }
     }
 
     private void DestroyEnemy()
@@ -298,61 +286,24 @@ public class SentryDrone : MonoBehaviourPunCallbacks, IOnEventCallback
             xpDropRate = 10f;
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                GameObject DropExtra = PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, t.position, Quaternion.identity, 0);
+                GameObject DropExtra = this.PoolManager.Acquire(xpDropExtra, t.position, Quaternion.identity);
                 DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
             {
-                GameObject DropNormal = PhotonNetwork.InstantiateRoomObject(xpDrop.name, t.position, Quaternion.identity, 0);
+                GameObject DropNormal = this.PoolManager.Acquire(xpDrop, t.position, Quaternion.identity);
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
 
         //yield return new WaitForSeconds(.75f);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     public void RandomSFX()
     {
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioClip[Random.Range(0, audioClip.Length)]);
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code == (byte)PUNEventDatabase.SentryDrone_TakeDamage)
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            int damage = (int)data[0];
-            TakeDamage(damage);
-        }
-    }
-
-    [PunRPC]
-    void RPC_SyncCurrentState(States state)
-    {
-        currentState = state;
-    }
-
-    [PunRPC]
-    void RPC_TakeDamage(int damage)
-    {
-        audioSource.PlayOneShot(bulletHit);
-        Health -= damage;
-        //healthBar.SetCurrentHealth(Health);
-
-        if (Health <= 0 && alive == true)
-        {
-            alive = false;
-            enemyCounter.photonView.RPC("RPC_UpdateSecurity", RpcTarget.All);
-
-            explosionEffect.SetActive(true);
-
-            agent.enabled = false;
-            GetComponent<Rigidbody>().isKinematic = false;
-
-            DestroyEnemy();
-        }
     }
 }
 

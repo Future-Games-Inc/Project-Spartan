@@ -1,17 +1,13 @@
-﻿using Photon.Pun;
-using Photon.Realtime;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using static NetworkGrenade;
 
 namespace BNG
 {
     /// <summary>
     /// A Grabbable object that can stick to objects and deal damage
     /// </summary>
-    public class ArrowNet : MonoBehaviourPunCallbacks
+    public class ArrowNet : MonoBehaviour
     {
         Rigidbody rb;
         Grabbable grab;
@@ -49,6 +45,8 @@ namespace BNG
         public bool activated = false;
 
         public string Type = "Default";
+        public GameObjectPoolManager PoolManager;
+
 
         public struct TargetInfo
         {
@@ -58,6 +56,7 @@ namespace BNG
         // Start is called before the first frame update
         void OnEnable()
         {
+            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
             rb = GetComponent<Rigidbody>();
             impactSound = GetComponent<AudioSource>();
             ShaftCollider = GetComponent<Collider>();
@@ -123,7 +122,7 @@ namespace BNG
 
             if (grab != null && !grab.BeingHeld && transform.parent == null)
             {
-                PhotonNetwork.Destroy(this.gameObject);
+                this.PoolManager.Release(this.gameObject);
             }
         }
 
@@ -173,7 +172,7 @@ namespace BNG
         IEnumerator Destroy(float duration)
         {
             yield return new WaitForSeconds(duration);
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
             // attach clip and play
             // audioSource.PlayOneShot(clip);
         }
@@ -322,7 +321,7 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamageBossEnemy(Collider target, float damage)
@@ -337,7 +336,7 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamagePlayer(Collider target, float damage)
@@ -348,7 +347,7 @@ namespace BNG
                     playerHealth.PlayersKilled();
                 }
                 enemyDamageReg.TakeDamage((int)arrowDamage);
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamageSecurity(Collider target, float damage)
@@ -361,7 +360,7 @@ namespace BNG
                     SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                     enemyDamageReg2.TakeDamage((int)arrowDamage);
                 }
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
         }
 
@@ -421,7 +420,7 @@ namespace BNG
 
         IEnumerator GrowBubbleCoroutine()
         {
-            surgeBubble = PhotonNetwork.InstantiateRoomObject(bubble.name, transform.position, Quaternion.identity, 0, null);
+            surgeBubble = this.PoolManager.Acquire(bubble, transform.position, Quaternion.identity);
             while (true)
             {
                 float scaleIncrease = 8f * Time.deltaTime;
@@ -435,7 +434,7 @@ namespace BNG
         {
             yield return new WaitForSeconds(1.25f);
             StopCoroutine(GrowBubbleCoroutine());
-            PhotonNetwork.Destroy(surgeBubble);
+            this.PoolManager.Release(surgeBubble);
         }
 
         void HandleDamage(Collider collider, TargetInfo target)

@@ -1,9 +1,10 @@
-using Photon.Pun;
+using PathologicalGames;
 using System.Collections;
 using TMPro;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class MultiLauncher : MonoBehaviourPunCallbacks
+public class MultiLauncher : MonoBehaviour
 {
     public enum Launcher
     {
@@ -60,9 +61,14 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
     public Material gravityMaterial;
     public Material blackoutMaterial;
 
+    public GameObjectPoolManager PoolManager;
+
     // Start is called before the first frame update
     void OnEnable()
     {
+
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         rotatorScript = GetComponent<Rotator>();
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
@@ -155,9 +161,14 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
 
     IEnumerator Reload()
     {
-        photonView.RPC("RPC_MultiReload", RpcTarget.All);
+        reloadingScreen.SetActive(true);
+        audioSource.PlayOneShot(reloadSFX);
+        durability--;
         yield return new WaitForSeconds(2);
-        photonView.RPC("RPC_MultiReload2", RpcTarget.All);
+        ammoLeft = maxAmmo;
+        reloadingScreen.SetActive(false);
+        reloadingWeapon = false;
+        UpdateText();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -165,7 +176,8 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            photonView.RPC("RPC_MultiTrigger", RpcTarget.All);
+            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            maxAmmo = newMaxAmmo;
         }
     }
 
@@ -174,7 +186,7 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     IEnumerator Sticky()
@@ -183,17 +195,14 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                if (photonView.IsMine) // Only allow the local client to instantiate the bullet
-                {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(stickyBullet.name, t.position, Quaternion.identity, 0, null);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(stickyBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<StickyBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StickyBullet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     }
                     Fire();
                 }
-            }
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -204,11 +213,9 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                if (photonView.IsMine) // Only allow the local client to instantiate the bullet
-                {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(gravityBullet.name, t.position, Quaternion.identity, 0, null);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(gravityBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<GravityBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<GravityBullet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                         spawnedBullet.gameObject.GetComponent<GravityBullet>().bulletOwner = player.gameObject;
@@ -216,7 +223,6 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
                     }
                     Fire();
                 }
-            }
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -227,11 +233,9 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         {
             if (ammoLeft >= 1 && reloadingWeapon == false)
             {
-                if (photonView.IsMine) // Only allow the local client to instantiate the bullet
-                {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(blackoutBullet.name, t.position, Quaternion.identity, 0, null);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(blackoutBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<BlackoutBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BlackoutBullet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                         spawnedBullet.gameObject.GetComponent<BlackoutBullet>().bulletOwner = player.gameObject;
@@ -239,7 +243,6 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
                     }
                     Fire();
                 }
-            }
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -255,29 +258,5 @@ public class MultiLauncher : MonoBehaviourPunCallbacks
         }
 
         UpdateText();
-    }
-
-    [PunRPC]
-    void RPC_MultiReload()
-    {
-        reloadingScreen.SetActive(true);
-        audioSource.PlayOneShot(reloadSFX);
-        durability--;
-    }
-
-    [PunRPC]
-    void RPC_MultiReload2()
-    {
-        ammoLeft = maxAmmo;
-        reloadingScreen.SetActive(false);
-        reloadingWeapon = false;
-        UpdateText();
-    }
-
-    [PunRPC]
-    void RPC_MultiTrigger()
-    {
-        var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
-        maxAmmo = newMaxAmmo;
     }
 }

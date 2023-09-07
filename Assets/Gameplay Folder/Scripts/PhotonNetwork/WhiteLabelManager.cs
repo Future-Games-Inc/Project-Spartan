@@ -3,7 +3,6 @@ using TMPro;
 using System;
 using UnityEngine.UI;
 using LootLocker.Requests;
-using Photon.Pun;
 
 public class WhiteLabelManager : MonoBehaviour
 {
@@ -107,7 +106,6 @@ public class WhiteLabelManager : MonoBehaviour
                         {
                             defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
                         }
-                        PhotonNetwork.NickName = defaultName;
                         PlayerPrefs.SetString(playerNamePrefKey, defaultName);
                         playerID = response.player_id.ToString();
                         StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
@@ -214,7 +212,6 @@ public class WhiteLabelManager : MonoBehaviour
                                             {
                                                 defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
                                             }
-                                            PhotonNetwork.NickName = defaultName;
                                             PlayerPrefs.SetString(playerNamePrefKey, defaultName);
                                             foreach (GameObject keys in keyboards)
                                                 keys.SetActive(false);

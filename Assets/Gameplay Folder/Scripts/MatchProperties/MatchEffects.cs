@@ -1,12 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
-using ExitGames.Client.Photon;
 using TMPro;
 using UnityEngine.AI;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 
-public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
+public class MatchEffects : MonoBehaviour
 {
 
     public int matchCountdown = 10;
@@ -41,41 +40,24 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public TextMeshProUGUI nexusCodePanel;
 
-    public enum EventCodes : byte
-    {
-        RefreshTimer
-    }
+    public GameObjectPoolManager PoolManager;
 
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code >= 200)
-            return;
-
-        EventCodes e = (EventCodes)photonEvent.Code;
-        object[] o = (object[])photonEvent.CustomData;
-
-        switch (e)
-        {
-            case EventCodes.RefreshTimer:
-                RefreshTimer_R(o);
-                break;
-        }
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // Only the Master Client will initialize the sequence
-            photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);
-        }
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
+        InitializeTimer(); // Only the Master Client will initialize the timer
+        StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
+
+        // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
+        numSequence = GenerateRandomSequence(4);
+        nexusCodePanel.text = numSequence.ToString();
     }
 
     IEnumerator SpawnCheckCoroutine()
     {
-        if (!PhotonNetwork.IsMasterClient) yield break; // Exit if not Master Client
-
         while (true)
         {
             yield return new WaitForSeconds(spawnInterval);
@@ -112,18 +94,23 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
                     // Adjust the y value to be 100 units above the original spawn position
                     spawnPosition.y += 100;
 
-                    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnPosition, Quaternion.identity, 0, null);
+                    this.PoolManager.Acquire(supplyDropShipPrefab, spawnPosition, Quaternion.identity);
                     StartCoroutine(SupplyShipAudio());
                     spawned = true;
                 }
             }
         }
     }
+    private void Update()
+    {
+        RefreshTimerUI();
+    }
 
     IEnumerator SupplyShipAudio()
     {
         yield return new WaitForSeconds(0);
-        photonView.RPC("PlaySupplyDropAudio", RpcTarget.All);
+        audioSource.PlayOneShot(supplyShip1);
+        StartCoroutine(PlaySupplyDropAudioDelayed());
     }
 
     private void RefreshTimerUI()
@@ -135,45 +122,35 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     private void InitializeTimer()
     {
         currentMatchTime = matchCountdown;
-        RefreshTimerUI();
 
         timerCoroutine = StartCoroutine(TimerEvent());
     }
 
     IEnumerator TimerEvent()
     {
-        if (!PhotonNetwork.IsMasterClient) yield break; // Exit if not Master Client
-
         yield return new WaitForSeconds(1f);
 
         currentMatchTime -= 1;
-        RefreshTimer_S();
 
         if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
         {
-            photonView.RPC("PlayCountdownAudio", RpcTarget.All, currentMatchTime - 1);
+            int clipIndex = currentMatchTime - 1;
+            audioSource.PlayOneShot(countdownClips[clipIndex]);
         }
 
         if (currentMatchTime <= 0)
         {
-            photonView.RPC("AudioStart", RpcTarget.All);
-            StartCoroutine(RoomClosed());
+            audioSource.PlayOneShot(matchBegan);
+            uiCanvas.SetActive(false);
+            startMatchBool = true;
             StartCoroutine(SpawnCheckCoroutine());
             //StartCoroutine(Artifacts());
             timerCoroutine = null; // Stop the coroutine
         }
         else
         {
-            RefreshTimer_S();
             timerCoroutine = StartCoroutine(TimerEvent());
         }
-    }
-
-    IEnumerator RoomClosed()
-    {
-        yield return new WaitForSeconds(30);
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
     }
 
     //IEnumerator Artifacts()
@@ -183,85 +160,15 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     //    {
     //        for (int i = 0; i < artifacts.Length; i++)
     //        {
-    //            PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
+    //            PhotonNetwork.this.PoolManager.Acquire(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
     //        }
     //    }
     //}
-
-    public void RefreshTimer_S()
-    {
-        if (!PhotonNetwork.IsMasterClient) return; // Exit if not Master Client
-
-        object[] package = new object[] { currentMatchTime };
-        PhotonNetwork.RaiseEvent((byte)EventCodes.RefreshTimer, package,
-                                  new RaiseEventOptions { Receivers = ReceiverGroup.All },
-                                  new SendOptions { Reliability = true });
-    }
-
-    public void RefreshTimer_R(object[] data)
-    {
-        currentMatchTime = (int)data[0];
-        RefreshTimerUI();
-    }
-
-    public override void OnEnable()
-    {
-        base.OnEnable();
-        PhotonNetwork.AddCallbackTarget(this);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            InitializeTimer(); // Only the Master Client will initialize the timer
-            StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
-        }
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
-        PhotonNetwork.RemoveCallbackTarget(this);
-    }
-
-    [PunRPC]
-    void PlayCountdownAudio(int clipIndex)
-    {
-        audioSource.PlayOneShot(countdownClips[clipIndex]);
-    }
-
-    [PunRPC]
-    void PlaySupplyDropAudio()
-    {
-        audioSource.PlayOneShot(supplyShip1);
-        StartCoroutine(PlaySupplyDropAudioDelayed());
-    }
 
     IEnumerator PlaySupplyDropAudioDelayed()
     {
         yield return new WaitForSeconds(supplyShip1.length);
         audioSource.PlayOneShot(supplyShip2);
-    }
-
-    [PunRPC]
-    void AudioStart()
-    {
-        audioSource.PlayOneShot(matchBegan);
-        uiCanvas.SetActive(false);
-        startMatchBool = true;
-    }
-
-    [PunRPC]
-    void RPC_GenerateSequence()
-    {
-        if (!PhotonNetwork.IsMasterClient) return; // Exit if not Master Client
-
-        numSequence = GenerateRandomSequence(4);
-        photonView.RPC("RPC_ReceiveSequence", RpcTarget.All, numSequence);
-    }
-
-    [PunRPC]
-    void RPC_ReceiveSequence(string sequence)
-    {
-        numSequence = sequence;
-        nexusCodePanel.text = numSequence.ToString();
     }
 
     private string GenerateRandomSequence(int length)

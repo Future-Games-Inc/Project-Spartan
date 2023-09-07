@@ -22,6 +22,7 @@ namespace BNG {
         protected Quaternion currentLocalRotation;
 
         protected virtual void Awake() {
+           
             initialLocalPosition = transform.localPosition;
             initialLocalRotation = transform.localRotation;
         }

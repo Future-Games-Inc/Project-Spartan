@@ -1,8 +1,9 @@
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
 
-public class AIWeapon : MonoBehaviourPunCallbacks
+public class AIWeapon : MonoBehaviour
 {
     public GameObject bullet;
     public Transform bulletTransform;
@@ -17,8 +18,11 @@ public class AIWeapon : MonoBehaviourPunCallbacks
 
     public bool fireWeaponBool = false;
     public bool canShoot = true;
+    public int bulletModifier;
 
     private EnemyType enemyType;
+    public GameObjectPoolManager PoolManager;
+
 
     public enum EnemyType
     {
@@ -26,20 +30,15 @@ public class AIWeapon : MonoBehaviourPunCallbacks
         BossEnemy
     }
 
-    public override void OnEnable()
+    void OnEnable()
     {
-        base.OnEnable();
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         enemyType = gameObject.CompareTag("Enemy") ? EnemyType.Enemy : EnemyType.BossEnemy;
         maxAmmo = (enemyType == EnemyType.Enemy) ? 10 : 15;
         ammoLeft = maxAmmo;
+        bulletModifier = gameObject.CompareTag("Enemy") ? 2 : 3;
         StartCoroutine(Fire());
-    }
-
-    [PunRPC]
-    void FireBullet(Vector3 position, Vector3 rotationEuler)
-    {
-        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, position, Quaternion.Euler(rotationEuler), 0, null);
-        spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
     }
 
     IEnumerator Fire()
@@ -56,7 +55,9 @@ public class AIWeapon : MonoBehaviourPunCallbacks
                 else if (canShoot)
                 {
                     yield return new WaitForSeconds(0.25f);
-                    photonView.RPC("FireBullet", RpcTarget.All, bulletTransform.position, Quaternion.identity.eulerAngles);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
                     ammoLeft--;
                 }
             }
@@ -64,16 +65,9 @@ public class AIWeapon : MonoBehaviourPunCallbacks
         }
     }
 
-
-    [PunRPC]
-    void ReloadSound()
-    {
-        audioSource2.PlayOneShot(weaponReload);
-    }
-
     IEnumerator ReloadWeapon()
     {
-        photonView.RPC("ReloadSound", RpcTarget.All);
+        audioSource2.PlayOneShot(weaponReload);
         yield return new WaitForSeconds(2);
         ammoLeft = maxAmmo;
         canShoot = true;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using Photon.Pun;
 using System.Collections;
 
 public class StickyTrigger : MonoBehaviour
@@ -43,6 +42,6 @@ public class StickyTrigger : MonoBehaviour
         {
             HandleCollider(collider, false); // Reset their speed as if they exited the trigger
         }
-        PhotonNetwork.Destroy(gameObject);
+        Destroy(gameObject);
     }
 }

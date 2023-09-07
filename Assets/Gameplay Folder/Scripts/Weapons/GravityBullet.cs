@@ -1,7 +1,6 @@
-using Photon.Pun;
 using UnityEngine;
 
-public class GravityBullet : MonoBehaviourPunCallbacks
+public class GravityBullet : MonoBehaviour
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     private bool hasHit = false;
@@ -60,10 +59,10 @@ public class GravityBullet : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, transform.position, Quaternion.identity, 0, null);
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
 
             // Destroy bullet
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -87,10 +86,10 @@ public class GravityBullet : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, transform.position, Quaternion.identity, 0, null);
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
 
             // Destroy bullet
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

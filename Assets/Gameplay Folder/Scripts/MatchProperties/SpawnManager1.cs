@@ -1,11 +1,10 @@
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
-using System.Threading.Tasks;
 using UnityEngine.AI;
 
-public class SpawnManager1 : MonoBehaviourPunCallbacks
+public class SpawnManager1 : MonoBehaviour
 {
     [SerializeField] private GameObject[] enemyAI;
     [SerializeField] private GameObject[] enemyBoss;
@@ -47,8 +46,13 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     public Vector3[] spawnPositions;
     public int validPositionsCount;
 
-    public override void OnEnable()
+    public GameObjectPoolManager PoolManager;
+
+
+    void Start()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         if (!coroutinesStarted)
         {
             StartCoroutine(SpawnEnemies());
@@ -59,10 +63,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
 
             coroutinesStarted = true;
         }
-        base.OnEnable();
-        // Listen to Photon Events
-        PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
-
 
         // Create an array to store the valid positions
         spawnPositions = new Vector3[10];
@@ -116,16 +116,6 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
         return shuffledArray;
     }
 
-    public override void OnDisable()
-    {
-        StopAllCoroutines();
-        coroutinesStarted = false;
-        base.OnDisable();
-        // Stop listening to Photon Events
-        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
-
-    }
-
     IEnumerator SpawnEnemies()
     {
         while (spawnEnemy && enemyCount < enemyCountMax)
@@ -141,14 +131,14 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             Vector3 spawnPosition = spawns[0];
 
             GameObject enemyCharacter = enemies[0];
-            PhotonNetwork.InstantiateRoomObject(enemyCharacter.name, spawnPosition, Quaternion.identity, 0, null);
+            this.PoolManager.Acquire(enemyCharacter, spawnPosition, Quaternion.identity);
 
             enemyCount++;
 
             yield return new WaitForSeconds(2); // Replaces await WaitSecondsConverter(10);
             spawnEnemy = true;
 
-            yield return new WaitForSeconds(1); // Replaces await WaitSecondsConverter(1);
+            yield return new WaitForSeconds(.25f); // Replaces await WaitSecondsConverter(1);
         }
     }
 
@@ -170,14 +160,14 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             Vector3 spawnPosition = spawns[0];
 
             GameObject securityDrone = enemies[0];
-            PhotonNetwork.InstantiateRoomObject(securityDrone.name, spawnPosition, Quaternion.identity, 0, null);
+            this.PoolManager.Acquire(securityDrone, spawnPosition, Quaternion.identity);
 
             securityCount++;
 
-            yield return new WaitForSeconds(4);
+            yield return new WaitForSeconds(3);
             spawnSecurity = true;
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(.25f);
         }
     }
 
@@ -193,13 +183,13 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
                 Vector3[] spawns = ShuffleSpawns(spawnPositions);
                 Vector3 spawnPosition = spawns[0];
 
-                PhotonNetwork.InstantiateRoomObject(reactor.name, spawnPosition, Quaternion.identity, 0, null);
+                this.PoolManager.Acquire(reactor, spawnPosition, Quaternion.identity);
 
                 reactorCount++;
 
                 yield return new WaitForSeconds(25);
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(.25f);
         }
     }
 
@@ -238,7 +228,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
 
     //            GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
-    //            PhotonNetwork.InstantiateRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
+    //            PhotonNetwork.this.PoolManager.AcquireRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
 
     //            bombsCount++;
 
@@ -287,7 +277,7 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
     //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
 
     //            GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
-    //            PhotonNetwork.InstantiateRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
+    //            PhotonNetwork.this.PoolManager.AcquireRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
 
     //            artifactCount++;
 
@@ -312,15 +302,15 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
             spawnHealth = false;
 
             Vector3 spawnPosition = spawns[0];
-
-            GameObject Health = PhotonNetwork.InstantiateRoomObject(health.name, spawnPosition, Quaternion.identity, 0, null);
+                
+            this.PoolManager.Acquire(health, spawnPosition, Quaternion.identity);
 
             healthCount++;
 
             yield return new WaitForSeconds(25);
             spawnHealth = true;
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(.25f);
         }
     }
 
@@ -339,58 +329,42 @@ public class SpawnManager1 : MonoBehaviourPunCallbacks
                 Vector3 spawnPosition = spawns[0];
 
                 GameObject enemyCharacterBoss = bosses[0];
-                PhotonNetwork.InstantiateRoomObject(enemyCharacterBoss.name, spawnPosition, Quaternion.identity, 0, null);
+                this.PoolManager.Acquire(enemyCharacterBoss, spawnPosition, Quaternion.identity);
 
                 enemiesKilled = 0;
-                yield return new WaitForSeconds(30);
+                yield return new WaitForSeconds(10);
             }
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(.25f);
         }
     }
 
-    private void NetworkingClient_EventReceived(ExitGames.Client.Photon.EventData obj)
-    {
-        //if (obj.Code == (byte)PUNEventDatabase.SpawnManager1_UpdateEnemyCount)
-        //{
-        //    UpdateEnemy();
-        //    UpdateEnemyCount();
-        //    return;
-        //}
-    }
-
-    [PunRPC]
-    public void RPC_UpdateEnemy()
+    public void UpdateEnemy()
     {
         enemyCount--;
     }
 
-    [PunRPC]
-    public void RPC_UpdateEnemyCount()
+    public void UpdateEnemyCount()
     {
         enemiesKilled++;
     }
 
-    [PunRPC]
-    public void RPC_UpdateArtifact()
+    public void UpdateArtifact()
     {
         artifactCount--;
     }
 
-    [PunRPC]
     public void RPC_UpdateBombs()
     {
         bombsCount--;
     }
 
-    [PunRPC]
-    public void RPC_UpdateSecurity()
+    public void UpdateSecurity()
     {
         securityCount--;
     }
 
-    [PunRPC]
-    public void RPC_UpdateHealthCount()
+    public void UpdateHealthCount()
     {
         healthCount--;
     }
