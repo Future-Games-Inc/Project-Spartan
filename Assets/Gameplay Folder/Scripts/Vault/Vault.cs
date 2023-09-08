@@ -35,7 +35,8 @@ public class Vault : MonoBehaviour
         activationSlider.maxValue = activationTime;
         activationSlider.value = activationTime;
         startY = transform.position.y;
-        endY = startY + 4f; // Adjust the end position as per your requirement
+        endY = startY + 2.5f; // Adjust the end position as per your requirement
+        keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
     }
 
     void Update()
@@ -49,6 +50,7 @@ public class Vault : MonoBehaviour
 
             if (isMovingUp && isHolding)
             {
+                keycardObject.GetComponent<MeshRenderer>().material = activatedMaterial;
                 radius = 10f;
                 // Move the object up
                 transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
@@ -62,6 +64,7 @@ public class Vault : MonoBehaviour
             }
             else if (isHolding)
             {
+                keycardObject.GetComponent<MeshRenderer>().material = deactivatedMaterial;
                 radius = 10f;
                 // Increment the hold timer
                 holdTimer += Time.deltaTime;
@@ -74,6 +77,7 @@ public class Vault : MonoBehaviour
             }
             else
             {
+                keycardObject.GetComponent<MeshRenderer>().material = lootedMaterial;
                 radius = 4f;
                 // Move the object down
                 transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);

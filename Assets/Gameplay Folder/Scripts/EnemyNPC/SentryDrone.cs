@@ -1,4 +1,3 @@
-using PathologicalGames;
 using System.Collections;
 using Umbrace.Unity.PurePool;
 using UnityEngine;

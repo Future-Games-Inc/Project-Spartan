@@ -1,4 +1,3 @@
-using PathologicalGames;
 using System.Collections;
 using System.Collections.Generic;
 using Umbrace.Unity.PurePool;
@@ -52,7 +51,7 @@ public class SpawnManager1 : MonoBehaviour
 
     void Start()
     {
-        spawnRadius = 100f;
+        spawnRadius = 1000f;
         PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
 
         if (!coroutinesStarted)
@@ -67,7 +66,7 @@ public class SpawnManager1 : MonoBehaviour
         }
 
         // Generate multiple random positions within the spawn radius
-        for (int i = 0; i < 100; i++)  // Increase number of attempts to 100 or more
+        for (int i = 0; i < 300; i++)  // Increase number of attempts to 100 or more
         {
             Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
             randomPosition += transform.position;

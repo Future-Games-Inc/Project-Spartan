@@ -266,45 +266,25 @@ namespace BNG
             if ((other.CompareTag("Enemy")))
             {
                 // select custom functions for damage
-                switch (Type)
-                {
-                    case "Default":
-                        DefaultDamageEnemy(other, arrowDamage);
-                        break;
-                }
+                DefaultDamageEnemy(other, arrowDamage);
             }
 
             if ((other.CompareTag("BossEnemy")))
             {
                 // select custom functions for damage
-                switch (Type)
-                {
-                    case "Default":
-                        DefaultDamageBossEnemy(other, arrowDamage);
-                        break;
-                }
+                DefaultDamageBossEnemy(other, arrowDamage);
             }
 
             if (other.CompareTag("Player") && other != arrowOwner)
             {
                 // select custom functions for damage
-                switch (Type)
-                {
-                    case "Default":
-                        DefaultDamagePlayer(other, arrowDamage);
-                        break;
-                }
+                DefaultDamagePlayer(other, arrowDamage);
             }
 
             if (other.CompareTag("Security"))
             {
                 // select custom functions for damage
-                switch (Type)
-                {
-                    case "Default":
-                        DefaultDamageSecurity(other, arrowDamage);
-                        break;
-                }
+                DefaultDamageSecurity(other, arrowDamage);
             }
             /// <summary> -------------------------------------------------------------------
             ///                           CUSTOME BULLET FUNCTIONS
@@ -321,7 +301,8 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                this.PoolManager.Release(gameObject);
+                if (Type == "Default")
+                    this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamageBossEnemy(Collider target, float damage)
@@ -336,7 +317,8 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                this.PoolManager.Release(gameObject);
+                if (Type == "Default")
+                    this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamagePlayer(Collider target, float damage)
@@ -347,7 +329,8 @@ namespace BNG
                     playerHealth.PlayersKilled();
                 }
                 enemyDamageReg.TakeDamage((int)arrowDamage);
-                this.PoolManager.Release(gameObject);
+                if (Type == "Default")
+                    this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamageSecurity(Collider target, float damage)
@@ -360,7 +343,8 @@ namespace BNG
                     SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                     enemyDamageReg2.TakeDamage((int)arrowDamage);
                 }
-                this.PoolManager.Release(gameObject);
+                if (Type == "Default")
+                    this.PoolManager.Release(gameObject);
             }
         }
 

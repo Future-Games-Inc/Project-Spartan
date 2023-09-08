@@ -17,12 +17,25 @@ public class Rotator : MonoBehaviour
     public bool ReverseY = false;
     public bool ReverseZ = false;
 
+    public bool ForwardXLocal = false;
+    public bool ForwardYLocal = false;
+
     void Update()
     {
         //Forward Direction
         if (ForwardX == true)
         {
             transform.Rotate(Time.deltaTime * speed, 0, 0, Space.World);
+        }
+        //Forward Direction
+        if (ForwardXLocal == true)
+        {
+            transform.Rotate(Time.deltaTime * speed, 0, 0, Space.Self);
+        }
+        //Forward Direction
+        if (ForwardYLocal == true)
+        {
+            transform.Rotate(0, Time.deltaTime * speed, 0, Space.Self);
         }
         if (ForwardY == true)
         {

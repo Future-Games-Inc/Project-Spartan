@@ -9,7 +9,7 @@ public class MinimapCameraFollow : MonoBehaviour
     private void Awake()
     {
         settings = GetComponentInParent<MinimapSettings>();
-        cameraHeight = 20f;
+        cameraHeight = 10f;
     }
 
     void Start()
