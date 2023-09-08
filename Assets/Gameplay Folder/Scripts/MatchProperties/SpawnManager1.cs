@@ -41,18 +41,18 @@ public class SpawnManager1 : MonoBehaviour
     private bool coroutinesStarted = false;
 
 
-    public float spawnRadius = 300.0f;   // Maximum spawn radius
+    public float spawnRadius;   // Maximum spawn radius
 
     public NavMeshSurface navMeshSurface;
     List<Vector3> spawnPositions = new List<Vector3>();  // Dynamic list for valid positions
     float bufferRadius = .5f;  // Replace this with the buffer radius you want
-    public int validPositionsCount;
 
     public GameObjectPoolManager PoolManager;
 
 
     void Start()
     {
+        spawnRadius = 100f;
         PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
 
         if (!coroutinesStarted)

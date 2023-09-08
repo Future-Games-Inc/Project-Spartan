@@ -16,7 +16,6 @@ public class VirtualWorldManager : MonoBehaviour
             return;
         }
         Instance = this;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
     }
 
     public void LeaveRoomAndLoadHomeScene()
@@ -27,6 +26,7 @@ public class VirtualWorldManager : MonoBehaviour
 
     public void TimesUP()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
         player.UpdateSkills(-50);
         SceneManager.LoadScene("TD Main Menu");
     }
