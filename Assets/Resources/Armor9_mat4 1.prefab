@@ -3212,7 +3212,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: 0.1
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!54 &5884015577742174949
@@ -3253,6 +3253,8 @@ MonoBehaviour:
   weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
   fireWeaponBool: 0
   canShoot: 1
+  bulletModifier: 0
+  PoolManager: {fileID: 0}
 --- !u!82 &9009362318184346560
 AudioSource:
   m_ObjectHideFlags: 0

@@ -76,11 +76,23 @@ public class FollowAI : MonoBehaviour
         hitbox.ApplyTagRecursively(gameObject.transform);
         ragdoll.SetUp();
 
-        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-        agent.SetDestination(newPos);
+        NavMeshHit closestHit;
 
-        Patrol();
+        if (NavMesh.SamplePosition(agent.transform.position, out closestHit, 500f, NavMesh.AllAreas))
+        {
+            agent.enabled = false;
+            agent.transform.position = closestHit.position;
+            agent.enabled = true;
+        }
+
+        if (agent.isOnNavMesh)
+        {
+            enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+            agent.SetDestination(newPos);
+
+            Patrol();
+        }
     }
 
     public void FindClosestEnemy()
@@ -107,85 +119,88 @@ public class FollowAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.time >= nextUpdateTime)
+        if (agent.isOnNavMesh)
         {
-            nextUpdateTime = Time.time + 1f; // Update every 1 second
-            FindClosestEnemy();
-        }
-
-        if (!alive) return;
-        // calculates the distance from NPC to player
-        float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
-        animator.SetBool("Agro", Agro);
-
-        if (currentState == States.Shocked)
-        {
-            return;
-        }
-
-        // If the player are seen by the NPC or if the distance is close enough
-        if (distanceToPlayer <= DetectRange && CheckForPlayer())
-        {
-            // When Agro changes
-            Agro = true;
-        }
-
-        // If the enemy has detected the player but doesn't have a clear line of sight
-        if (Agro && !IsLineOfSightClear(targetTransform))
-        {
-            currentState = States.Follow;
-
-            agent.isStopped = false;
-            agent.destination = targetTransform.position; // Move towards the player
-            return; // Don't proceed to other behaviors until we have a clear line of sight
-        }
-        // if it is not agro, then patrol like normal
-        // else then see if the player is in the valid agro range (bigger than detect range) then give chase
-        //          if the player is outside of agro range, drop agro.
-        if (!Agro)
-        {
-            currentState = States.Patrol;
-            agent.isStopped = false;
-            Patrol();
-        }
-        else
-        {
-            // if the NPC is BEYOND the range that it could agro, drop the agro.
-            if (distanceToPlayer > AgroRange)
+            if (Time.time >= nextUpdateTime)
             {
-                // When Agro changes
-                Agro = false;
-                // stop where it is
-                agent.SetDestination(gameObject.transform.position);
+                nextUpdateTime = Time.time + 1f; // Update every 1 second
+                FindClosestEnemy();
+            }
+
+            if (!alive) return;
+            // calculates the distance from NPC to player
+            float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+            animator.SetBool("Agro", Agro);
+
+            if (currentState == States.Shocked)
+            {
                 return;
             }
-            // if in range of attacks
-            if (distanceToPlayer <= AttackRange)
+
+            // If the player are seen by the NPC or if the distance is close enough
+            if (distanceToPlayer <= DetectRange && CheckForPlayer())
             {
-                currentState = States.Attack;
-                LookatTarget(1, 3f);
-                agent.isStopped = true;
-                Attack();
+                // When Agro changes
+                Agro = true;
             }
-            // give chase if not in range
-            else
+
+            // If the enemy has detected the player but doesn't have a clear line of sight
+            if (Agro && !IsLineOfSightClear(targetTransform))
             {
                 currentState = States.Follow;
+
                 agent.isStopped = false;
-                Follow();
+                agent.destination = targetTransform.position; // Move towards the player
+                return; // Don't proceed to other behaviors until we have a clear line of sight
             }
-        }
+            // if it is not agro, then patrol like normal
+            // else then see if the player is in the valid agro range (bigger than detect range) then give chase
+            //          if the player is outside of agro range, drop agro.
+            if (!Agro)
+            {
+                currentState = States.Patrol;
+                agent.isStopped = false;
+                Patrol();
+            }
+            else
+            {
+                // if the NPC is BEYOND the range that it could agro, drop the agro.
+                if (distanceToPlayer > AgroRange)
+                {
+                    // When Agro changes
+                    Agro = false;
+                    // stop where it is
+                    agent.SetDestination(gameObject.transform.position);
+                    return;
+                }
+                // if in range of attacks
+                if (distanceToPlayer <= AttackRange)
+                {
+                    currentState = States.Attack;
+                    LookatTarget(1, 3f);
+                    agent.isStopped = true;
+                    Attack();
+                }
+                // give chase if not in range
+                else
+                {
+                    currentState = States.Follow;
+                    agent.isStopped = false;
+                    Follow();
+                }
+            }
 
-        if (isLookingAtPlayer)
-        {
-            Vector3 direction = targetTransform.position - transform.position;
-            direction.y = 0;
-            Quaternion desiredRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
-        }
+            if (isLookingAtPlayer)
+            {
+                Vector3 direction = targetTransform.position - transform.position;
+                direction.y = 0;
+                Quaternion desiredRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
+            }
 
-        // set the speed for the agent for the blend tree
-        animator.SetFloat("Speed", agent.velocity.magnitude);
+            // set the speed for the agent for the blend tree
+            animator.SetFloat("Speed", agent.velocity.magnitude);
+        }
     }
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)

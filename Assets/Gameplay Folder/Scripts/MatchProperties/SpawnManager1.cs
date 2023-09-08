@@ -1,5 +1,6 @@
 using PathologicalGames;
 using System.Collections;
+using System.Collections.Generic;
 using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,7 +44,8 @@ public class SpawnManager1 : MonoBehaviour
     public float spawnRadius = 300.0f;   // Maximum spawn radius
 
     public NavMeshSurface navMeshSurface;
-    public Vector3[] spawnPositions;
+    List<Vector3> spawnPositions = new List<Vector3>();  // Dynamic list for valid positions
+    float bufferRadius = .5f;  // Replace this with the buffer radius you want
     public int validPositionsCount;
 
     public GameObjectPoolManager PoolManager;
@@ -64,24 +66,26 @@ public class SpawnManager1 : MonoBehaviour
             coroutinesStarted = true;
         }
 
-        // Create an array to store the valid positions
-        spawnPositions = new Vector3[10];
-        validPositionsCount = 0;
-
-
         // Generate multiple random positions within the spawn radius
-        for (int i = 0; i < spawnPositions.Length; i++)
+        for (int i = 0; i < 100; i++)  // Increase number of attempts to 100 or more
         {
             Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
             randomPosition += transform.position;
 
-            // Find the nearest point on the NavMesh to the random position
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
+            int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+
+            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius / 2, walkableMask))
             {
-                // Add the valid position to the array
-                spawnPositions[validPositionsCount] = hit.position;
-                validPositionsCount++;
+                // Check if the hit position is sufficiently far from the closest edge
+                NavMeshHit edgeHit;
+                if (NavMesh.FindClosestEdge(hit.position, out edgeHit, walkableMask))
+                {
+                    if (Vector3.Distance(hit.position, edgeHit.position) > bufferRadius)
+                    {
+                        spawnPositions.Add(hit.position);
+                    }
+                }
             }
         }
     }
@@ -116,6 +120,7 @@ public class SpawnManager1 : MonoBehaviour
         return shuffledArray;
     }
 
+
     IEnumerator SpawnEnemies()
     {
         while (spawnEnemy && enemyCount < enemyCountMax)
@@ -124,21 +129,25 @@ public class SpawnManager1 : MonoBehaviour
                 yield return null;
 
             GameObject[] enemies = ShuffleArray(enemyAI);
-            Vector3[] spawns = ShuffleSpawns(spawnPositions);
+            if (spawnPositions.Count == 0)
+            {
+                yield return new WaitForSeconds(1);
+                continue;
+            }
 
             spawnEnemy = false;
 
-            Vector3 spawnPosition = spawns[0];
+            Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
             GameObject enemyCharacter = enemies[0];
             this.PoolManager.Acquire(enemyCharacter, spawnPosition, Quaternion.identity);
 
             enemyCount++;
 
-            yield return new WaitForSeconds(2); // Replaces await WaitSecondsConverter(10);
+            yield return new WaitForSeconds(2);
             spawnEnemy = true;
 
-            yield return new WaitForSeconds(.25f); // Replaces await WaitSecondsConverter(1);
+            yield return new WaitForSeconds(.25f);
         }
     }
 
@@ -153,11 +162,15 @@ public class SpawnManager1 : MonoBehaviour
             yield return new WaitForSeconds(1);
 
             GameObject[] enemies = ShuffleArray(securityAI);
-            Vector3[] spawns = ShuffleSpawns(spawnPositions);
+            if (spawnPositions.Count == 0)
+            {
+                yield return new WaitForSeconds(1);
+                continue;
+            }
 
             spawnSecurity = false;
 
-            Vector3 spawnPosition = spawns[0];
+            Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
             GameObject securityDrone = enemies[0];
             this.PoolManager.Acquire(securityDrone, spawnPosition, Quaternion.identity);
@@ -180,8 +193,12 @@ public class SpawnManager1 : MonoBehaviour
 
             if (matchProps.spawnReactor && reactorCount < reactorCountMax)
             {
-                Vector3[] spawns = ShuffleSpawns(spawnPositions);
-                Vector3 spawnPosition = spawns[0];
+                if (spawnPositions.Count == 0)
+                {
+                    yield return new WaitForSeconds(1);
+                    continue;
+                }
+                Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
                 this.PoolManager.Acquire(reactor, spawnPosition, Quaternion.identity);
 
@@ -297,12 +314,16 @@ public class SpawnManager1 : MonoBehaviour
             while (!matchProps.startMatchBool)
                 yield return null;
 
-            Vector3[] spawns = ShuffleSpawns(spawnPositions);
+            if (spawnPositions.Count == 0)
+            {
+                yield return new WaitForSeconds(1);
+                continue;
+            }
 
             spawnHealth = false;
 
-            Vector3 spawnPosition = spawns[0];
-                
+            Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
+
             this.PoolManager.Acquire(health, spawnPosition, Quaternion.identity);
 
             healthCount++;
@@ -324,9 +345,13 @@ public class SpawnManager1 : MonoBehaviour
             if (enemiesKilled >= enemiesKilledForBossSpawn)
             {
                 GameObject[] bosses = ShuffleArray(enemyBoss);
-                Vector3[] spawns = ShuffleSpawns(spawnPositions);
+                if (spawnPositions.Count == 0)
+                {
+                    yield return new WaitForSeconds(1);
+                    continue;
+                }
 
-                Vector3 spawnPosition = spawns[0];
+                Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
                 GameObject enemyCharacterBoss = bosses[0];
                 this.PoolManager.Acquire(enemyCharacterBoss, spawnPosition, Quaternion.identity);

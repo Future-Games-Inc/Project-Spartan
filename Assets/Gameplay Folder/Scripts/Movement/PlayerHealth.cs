@@ -148,7 +148,9 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Player Leaderboard Data ------------------------------------")]
     public string leaderboardID = "react_leaderboard";
+    public string leaderboardID2 = "faction_leader";
     public string progressionKey = "cent_prog";
+    public string faction;
 
     [Header("Contract Tracking ------------------------------------")]
     public int bossesKilled;
@@ -184,7 +186,6 @@ public class PlayerHealth : MonoBehaviour
     public SkinnedMeshRenderer[] characterSkins;
     public GameObject aiCompanionDrone;
     public GameObject decoySpawner;
-    private object retrurn;
 
     public GameObjectPoolManager PoolManager;
 
@@ -192,6 +193,7 @@ public class PlayerHealth : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
+        faction = PlayerPrefs.GetString("factionSelected");
         PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
 
         criticalHealth.SetActive(false);
@@ -1196,7 +1198,25 @@ public class PlayerHealth : MonoBehaviour
         playerCints += cintsEarned;
 
         PlayerPrefs.SetInt("CINTS", playerCints);
+        StartCoroutine(SubmitScore(cintsEarned * 2));
+    }
 
+    public IEnumerator SubmitScore(int scoreToUpload)
+    {
+        yield return new WaitForSeconds(1f);
+        bool done = false;
+        LootLockerSDKManager.SubmitScore(faction, scoreToUpload, leaderboardID, (response) =>
+        {
+            if (response.success)
+            {
+                done = true;
+            }
+            else
+            {
+                done = true;
+            }
+        });
+        yield return new WaitWhile(() => done == false);
     }
 
     IEnumerator PrimaryTimer(float time)

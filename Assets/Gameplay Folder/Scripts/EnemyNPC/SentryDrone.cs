@@ -72,6 +72,15 @@ public class SentryDrone : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
+        NavMeshHit closestHit;
+
+        if (NavMesh.SamplePosition(agent.transform.position, out closestHit, 500f, NavMesh.AllAreas))
+        {
+            agent.enabled = false;
+            agent.transform.position = closestHit.position;
+            agent.enabled = true;
+        }
+
         PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
 
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
@@ -140,49 +149,52 @@ public class SentryDrone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.time >= nextUpdateTime)
+        if (agent.isOnNavMesh)
         {
-            nextUpdateTime = Time.time + 1f; // Update every 1 second
-            FindClosestEnemy();
-        }
-
-        float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
-
-        if (patrolling)
-            timer += Time.deltaTime;
-
-        if (distanceToPlayer <= AttackRange)
-        {
-            SwitchStates(States.Attack);
-            LookatTarget(1, 3f);
-            agent.isStopped = true;
-            Attack();
-        }
-        // give chase if not in range
-        else if (distanceToPlayer > AttackRange && distanceToPlayer < AgroRange)
-        {
-            SwitchStates(States.Follow);
-            agent.isStopped = false;
-            Follow();
-        }
-        else
-        {
-            if (previousState != States.Patrol)
+            if (Time.time >= nextUpdateTime)
             {
-                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-                agent.SetDestination(newPos);
+                nextUpdateTime = Time.time + 1f; // Update every 1 second
+                FindClosestEnemy();
             }
-            SwitchStates(States.Patrol);
-            agent.isStopped = false;
-            Patrol();
-        }
 
-        if (isLookingAtPlayer)
-        {
-            Vector3 direction = targetTransform.position - transform.position;
-            direction.y = 0;
-            Quaternion desiredRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
+            float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+
+            if (patrolling)
+                timer += Time.deltaTime;
+
+            if (distanceToPlayer <= AttackRange)
+            {
+                SwitchStates(States.Attack);
+                LookatTarget(1, 3f);
+                agent.isStopped = true;
+                Attack();
+            }
+            // give chase if not in range
+            else if (distanceToPlayer > AttackRange && distanceToPlayer < AgroRange)
+            {
+                SwitchStates(States.Follow);
+                agent.isStopped = false;
+                Follow();
+            }
+            else
+            {
+                if (previousState != States.Patrol)
+                {
+                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                    agent.SetDestination(newPos);
+                }
+                SwitchStates(States.Patrol);
+                agent.isStopped = false;
+                Patrol();
+            }
+
+            if (isLookingAtPlayer)
+            {
+                Vector3 direction = targetTransform.position - transform.position;
+                direction.y = 0;
+                Quaternion desiredRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
+            }
         }
     }
     private bool IsLineOfSightClear(Transform target)

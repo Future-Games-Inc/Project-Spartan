@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
-using PathologicalGames;
 using Umbrace.Unity.PurePool;
 
 public class MatchEffects : MonoBehaviour
@@ -10,12 +9,16 @@ public class MatchEffects : MonoBehaviour
 
     public int matchCountdown = 10;
     public int currentMatchTime;
+
+    public int currentExtractionTimer = 300;
+
     public GameObject spawnManager;
     public GameObject uiCanvas;
     //public GameObject[] artifacts;
     //public Transform[] artifactLocations;
 
     public TextMeshProUGUI countdownText;
+    public TextMeshProUGUI extractionTimer;
 
     private Coroutine timerCoroutine;
 
@@ -104,6 +107,10 @@ public class MatchEffects : MonoBehaviour
     private void Update()
     {
         RefreshTimerUI();
+        if (startMatchBool)
+        {
+            RefreshCountdownTimer();
+        }
     }
 
     IEnumerator SupplyShipAudio()
@@ -119,6 +126,11 @@ public class MatchEffects : MonoBehaviour
         countdownText.text = $"{seconds}";
     }
 
+    void RefreshCountdownTimer()
+    {
+        string seconds = (currentExtractionTimer % 60).ToString("00");
+    }
+
     private void InitializeTimer()
     {
         currentMatchTime = matchCountdown;
@@ -130,27 +142,38 @@ public class MatchEffects : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        currentMatchTime -= 1;
-
-        if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
+        if (!startMatchBool)
         {
-            int clipIndex = currentMatchTime - 1;
-            audioSource.PlayOneShot(countdownClips[clipIndex]);
-        }
+            currentMatchTime -= 1;
 
-        if (currentMatchTime <= 0)
-        {
-            audioSource.PlayOneShot(matchBegan);
-            uiCanvas.SetActive(false);
-            startMatchBool = true;
-            StartCoroutine(SpawnCheckCoroutine());
-            //StartCoroutine(Artifacts());
-            timerCoroutine = null; // Stop the coroutine
+            if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
+            {
+                int clipIndex = currentMatchTime - 1;
+                audioSource.PlayOneShot(countdownClips[clipIndex]);
+            }
+
+            if (currentMatchTime <= 0)
+            {
+                audioSource.PlayOneShot(matchBegan);
+                uiCanvas.SetActive(false);
+                startMatchBool = true;
+                StartCoroutine(SpawnCheckCoroutine());
+                currentExtractionTimer -= 1;
+                //StartCoroutine(Artifacts());
+            }
+            timerCoroutine = StartCoroutine(TimerEvent());
         }
         else
         {
+            currentExtractionTimer -= 1;
             timerCoroutine = StartCoroutine(TimerEvent());
         }
+
+        if(currentMatchTime <= 0 && currentExtractionTimer <= 0)
+        {
+            timerCoroutine = null;
+        }
+
     }
 
     //IEnumerator Artifacts()
