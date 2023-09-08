@@ -23,7 +23,7 @@ public class AIWeapon : MonoBehaviour
     private EnemyType enemyType;
     public GameObjectPoolManager PoolManager;
 
-
+    public FollowAI aiScript;
     public enum EnemyType
     {
         Enemy,
@@ -38,6 +38,8 @@ public class AIWeapon : MonoBehaviour
         maxAmmo = (enemyType == EnemyType.Enemy) ? 10 : 15;
         ammoLeft = maxAmmo;
         bulletModifier = gameObject.CompareTag("Enemy") ? 2 : 3;
+
+        aiScript = GetComponent<FollowAI>();
         StartCoroutine(Fire());
     }
 
@@ -45,7 +47,7 @@ public class AIWeapon : MonoBehaviour
     {
         while (gameObject.activeSelf)
         {
-            if (fireWeaponBool)
+            if (fireWeaponBool && aiScript.fireReady)
             {
                 if (ammoLeft <= 0)
                 {
