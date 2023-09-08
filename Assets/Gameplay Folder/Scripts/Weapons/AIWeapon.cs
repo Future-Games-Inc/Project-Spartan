@@ -1,9 +1,9 @@
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
-using System.Threading.Tasks;
 
-public class AIWeapon : MonoBehaviourPunCallbacks
+public class AIWeapon : MonoBehaviour
 {
     public GameObject bullet;
     public Transform bulletTransform;
@@ -18,8 +18,11 @@ public class AIWeapon : MonoBehaviourPunCallbacks
 
     public bool fireWeaponBool = false;
     public bool canShoot = true;
+    public int bulletModifier;
 
     private EnemyType enemyType;
+    public GameObjectPoolManager PoolManager;
+
 
     public enum EnemyType
     {
@@ -27,120 +30,46 @@ public class AIWeapon : MonoBehaviourPunCallbacks
         BossEnemy
     }
 
-    // Start is called before the first frame update
-    public override void OnEnable()
+    void OnEnable()
     {
-        base.OnEnable();
-        if (gameObject.tag == "Enemy")
-        {
-            maxAmmo = 10;
-            enemyType = EnemyType.Enemy;
-        }
-        else if (gameObject.tag == "BossEnemy")
-        {
-            maxAmmo = 15;
-            enemyType = EnemyType.BossEnemy;
-        }
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
+        enemyType = gameObject.CompareTag("Enemy") ? EnemyType.Enemy : EnemyType.BossEnemy;
+        maxAmmo = (enemyType == EnemyType.Enemy) ? 10 : 15;
         ammoLeft = maxAmmo;
+        bulletModifier = gameObject.CompareTag("Enemy") ? 2 : 3;
         StartCoroutine(Fire());
     }
 
     IEnumerator Fire()
     {
-        while (true)
+        while (gameObject.activeSelf)
         {
-            while (!fireWeaponBool)
-                yield return null;
-
-            if (ammoLeft <= 0)
-            {
-                canShoot = false;
-                ReloadWeapon();
-                continue;
-            }
-
             if (fireWeaponBool)
             {
-                yield return new WaitForSeconds(0.25f);
-                GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
-                spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
-
-                // Check with cached enemy type to save performance
-                if (enemyType.Equals(EnemyType.Enemy))
+                if (ammoLeft <= 0)
                 {
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = 2;
+                    canShoot = false;
+                    StartCoroutine(ReloadWeapon());
                 }
-                if (enemyType.Equals(EnemyType.BossEnemy))
+                else if (canShoot)
                 {
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = 4;
+                    yield return new WaitForSeconds(0.25f);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
+                    ammoLeft--;
                 }
-                shootForce = Random.Range(40, 75);
-                spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
-
-                ammoLeft--;
-                yield return new WaitForSeconds(0.25f);
             }
+            yield return new WaitForSeconds(0.25f);
         }
     }
 
-    // -------------------- OLD FIRE COROUTINE ------------------
-
-    //IEnumerator Fire()
-    //{
-    //    while (true)
-    //    {
-    //        if (ammoLeft >= 1 && fireWeaponBool == true && canShoot == true)
-    //        {
-    //            yield return new WaitForSeconds(0.25f);
-    //            if (!audioSource.isPlaying)
-    //            {
-    //                photonView.RPC("RPC_ShootAudio", RpcTarget.All);
-    //            }
-    //            GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(bullet.name, bulletTransform.position, Quaternion.identity, 0, null);
-    //            if (this.gameObject.tag == "Enemy")
-    //            {
-    //                spawnedBullet.GetComponent<Bullet>().bulletModifier = 2;
-    //            }
-    //            else if (this.gameObject.tag == "BossEnemy")
-    //            {
-    //                spawnedBullet.GetComponent<Bullet>().bulletModifier = 4;
-    //            }
-    //            shootForce = (int)Random.Range(40, 75);
-    //            spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
-
-    //            ammoLeft--;
-    //            yield return new WaitForSeconds(.25f);
-    //        }
-
-    //        else if (ammoLeft <= 0)
-    //        {
-    //            canShoot = false;
-    //            ReloadWeapon();
-    //        }
-
-    //        yield return null;
-    //    }
-    //}
-
-    async void ReloadWeapon()
+    IEnumerator ReloadWeapon()
     {
-        await Task.Delay(2000);
         audioSource2.PlayOneShot(weaponReload);
+        yield return new WaitForSeconds(2);
         ammoLeft = maxAmmo;
         canShoot = true;
     }
-
-    // -------------------- OLD RELOAD WEAPON COROUTINE -----------------------
-
-    //IEnumerator ReloadWeapon()
-    //{
-    //    yield return new WaitForSeconds(0);
-    //    if (!audioSource2.isPlaying)
-    //    {
-    //        photonView.RPC("RPC_Reload1", RpcTarget.All);
-    //    }
-    //    yield return new WaitForSeconds(2);
-    //    ammoLeft = maxAmmo;
-    //    canShoot = true;
-    //}
 }

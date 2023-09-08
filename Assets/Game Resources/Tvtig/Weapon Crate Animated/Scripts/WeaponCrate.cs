@@ -1,28 +1,27 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine.AI;
+using Umbrace.Unity.PurePool;
 
-public class WeaponCrate : MonoBehaviourPunCallbacks
+public class WeaponCrate : MonoBehaviour
 {
     [Header("Cache Effects ------------------------------------------------------")]
     [SerializeField]
-    private VisualEffect _visualEffect;    
-    
+    private VisualEffect _visualEffect;
+
     public Transform spawn1;
     public Transform spawn2;
-    public Transform spawn3;    
-    
+    public Transform spawn3;
+
     public AudioSource cacheAudio;
     public AudioClip cacheClip;
 
     public bool cacheActive;
 
     [Header("Cache Properties ------------------------------------------------------")]
-    public string[] powerups;
-    public string[] weapons;
+    public GameObject[] powerups;
+    public GameObject[] weapons;
 
     public Animator _animator;
 
@@ -35,89 +34,81 @@ public class WeaponCrate : MonoBehaviourPunCallbacks
 
     public MatchEffects matchProps;
 
+    public GameObjectPoolManager PoolManager;
 
 
-    private void Awake()
+    private void Start()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
         _collider = GetComponent<BoxCollider>();
         cacheActive = true;
-    }
-    void Start()
-    {
-
     }
 
     private void Update()
     {
+        if (!cacheActive)
+        {
+            foreach (GameObject cache in cacheBase)
+                cache.GetComponent<Renderer>().material = deactiveMaterial;
+        }
+        else
+        {
+            foreach (GameObject cache in cacheBase)
+                cache.GetComponent<Renderer>().material = activeMaterial;
+        }
+        _collider.enabled = cacheActive;
 
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
+    GameObject[] ShuffleArray(GameObject[] array)
     {
-        // Check if this is the object's current owner and if the new master client exists
-        if (photonView.IsMine && newMasterClient != null)
+        GameObject[] shuffledArray = (GameObject[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
         {
-            // Transfer ownership of the object to the new master client
-            photonView.TransferOwnership(newMasterClient.ActorNumber);
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            GameObject temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
         }
+
+        return shuffledArray;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
-            photonView.RPC("RPC_CacheOpened", RpcTarget.All);
+            _animator.SetBool("Open", true);
+            _visualEffect.SendEvent("OnPlay");
+            cacheAudio.PlayOneShot(cacheClip);
+            cacheActive = false;
+            StartCoroutine(WeaponCache());
         }
     }
 
     IEnumerator WeaponCache()
     {
+        GameObject[] shuffledWeapons = ShuffleArray(weapons);
+        GameObject[] shuffledPowerups = ShuffleArray(powerups);
+        this.PoolManager.Acquire(shuffledWeapons[0], spawn1.position, spawn1.rotation);
+        this.PoolManager.Acquire(shuffledWeapons[2], spawn3.position, spawn3.rotation);
+        this.PoolManager.Acquire(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);
-        PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn1.position, spawn1.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(weapons[Random.Range(0, weapons.Length)], spawn3.position, spawn3.rotation, 0, null);
-        PhotonNetwork.InstantiateRoomObject(powerups[Random.Range(0, powerups.Length)], spawn2.position, spawn2.rotation, 0, null);
+        _animator.SetBool("Open", false);
         StartCoroutine(CacheRespawn());
-        photonView.RPC("RPC_CacheExit", RpcTarget.All);
     }
 
     IEnumerator CacheRespawn()
     {
         yield return new WaitForSeconds(30);
-        photonView.RPC("RPC_CacheClosed", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void RPC_CacheOpened()
-    {
-        if (!photonView.IsMine)
-            return;
-        _collider.enabled = false;
-        _animator.SetBool("Open", true);
-        _visualEffect.SendEvent("OnPlay");
-        cacheAudio.PlayOneShot(cacheClip);
-        cacheActive = false;
-        foreach(GameObject cache in cacheBase)
-            cache.GetComponent<Renderer>().material = deactiveMaterial;
-        StartCoroutine(WeaponCache());
-    }
-
-    [PunRPC]
-    void RPC_CacheClosed()
-    {
-        if (!photonView.IsMine)
-            return;
         _animator.SetBool("Open", false);
         cacheActive = true;
-        foreach (GameObject cache in cacheBase)
-            cache.GetComponent<Renderer>().material = activeMaterial;
-        _collider.enabled = true;
     }
 
-    [PunRPC]
-    void RPC_CacheExit()
+    public void Obstacle(bool state)
     {
-        if (!photonView.IsMine)
-            return;
-        _animator.SetBool("Open", false);
+        GetComponent<NavMeshObstacle>().enabled = state;
+        GetComponent<Rigidbody>().isKinematic = !state;
     }
 }

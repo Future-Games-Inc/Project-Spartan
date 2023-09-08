@@ -4832,7 +4832,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: e43b338cb9cc4ce48a3ed9d51d15b7a1, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4894,8 +4893,6 @@ GameObject:
   - component: {fileID: 4296680985399300}
   - component: {fileID: 82477833726926110}
   - component: {fileID: 114666114058594080}
-  - component: {fileID: 3495869561515107085}
-  - component: {fileID: 7948166364444892592}
   m_Layer: 0
   m_Name: P_EXP_Barrel 1
   m_TagString: Untagged
@@ -5044,45 +5041,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8ab79e12da1853c4f9c1b131df2b9c68, type: 3}
   - {fileID: 8300000, guid: 739db4952129f0242b7aa842bd022a17, type: 3}
   audioSource: {fileID: 82477833726926110}
---- !u!114 &3495869561515107085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126181125208960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 7948166364444892592}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &7948166364444892592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126181125208960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &1189621324720392
 GameObject:
   m_ObjectHideFlags: 0
@@ -6667,8 +6625,8 @@ ParticleSystem:
     - sprite: {fileID: 21300082, guid: 501216200c963de40a28b3a52d2cc505, type: 3}
     - sprite: {fileID: 21300084, guid: 501216200c963de40a28b3a52d2cc505, type: 3}
     - sprite: {fileID: 21300086, guid: 501216200c963de40a28b3a52d2cc505, type: 3}
-    flipU: 1
-    flipV: 1
+    flipU: 0
+    flipV: 0
   VelocityModule:
     enabled: 1
     x:
@@ -9992,7 +9950,7 @@ ParticleSystemRenderer:
   m_ShadowBias: 0
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
-  m_Flip: {x: 0, y: 0, z: 0}
+  m_Flip: {x: 1, y: 1, z: 0}
   m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 0
   m_ApplyActiveColorSpace: 0
@@ -19821,7 +19779,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 33e4edc60bd3b544aa23d5c78ad00ea8, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24704,7 +24661,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 3064a05586bfc724c9e53002a01b53d6, type: 2}
-  - {fileID: 2100000, guid: b1c68c048883aa04e98206611bbd70f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

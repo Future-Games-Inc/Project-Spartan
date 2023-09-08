@@ -877,7 +877,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Detonating Arrows (2sec Delay)
+  m_text: Detonating Arrows (2 sec Delay)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8220415e926d6ea469973ccc954489c2, type: 2}
   m_sharedMaterial: {fileID: 4200626794774265009, guid: 8220415e926d6ea469973ccc954489c2,
@@ -2747,7 +2747,7 @@ GameObject:
   - component: {fileID: 3122054154683900627}
   - component: {fileID: 3122054154683900626}
   - component: {fileID: 3122054154683900628}
-  - component: {fileID: 3764107031110131731}
+  - component: {fileID: 7841558326851667939}
   m_Layer: 2
   m_Name: Slot (3)
   m_TagString: Untagged
@@ -2817,6 +2817,15 @@ MonoBehaviour:
   - Z_BowNormal
   - Z_BowBomb
   - Z_BowEMP
+  - Z_Pistol(Clone)
+  - Z_EMPPistol(Clone)
+  - Z_Shotgun(Clone)
+  - Z_Stinger Shotgun(Clone)
+  - Z_Rifle(Clone)
+  - Z_PulseAR(Clone)
+  - Z_BowNormal(Clone)
+  - Z_BowBomb(Clone)
+  - Z_BowEMP(Clone)
   ExcludeTransformNames: []
   SoundOnSnap: {fileID: 8300000, guid: bb3528c211135544284d9f7362c4bbb3, type: 3}
   SoundOnUnsnap: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
@@ -2898,7 +2907,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3764107031110131731
+--- !u!114 &7841558326851667939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2907,7 +2916,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3122054154683900625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -6277,8 +6286,6 @@ GameObject:
   - component: {fileID: 2622495675680742441}
   - component: {fileID: 2622495675680742446}
   - component: {fileID: 946362165886586060}
-  - component: {fileID: 1729683195}
-  - component: {fileID: 1729683196}
   m_Layer: 0
   m_Name: Fabricator
   m_TagString: Untagged
@@ -6421,46 +6428,6 @@ MonoBehaviour:
     type: 3}
   ZBowEMP: {fileID: 5366973608428439056, guid: 2e7f66d37f94dd241acc31fc815a636c, type: 3}
   bowUpgrade: {fileID: 683632445916207943}
---- !u!114 &1729683195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7681437982492315932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &1729683196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7681437982492315932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1729683195}
-  - {fileID: 3764107031110131731}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &7787111759553870846
 GameObject:
   m_ObjectHideFlags: 0

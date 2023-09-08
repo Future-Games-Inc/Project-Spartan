@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 
-public class EMPPistolNet : MonoBehaviourPunCallbacks
+public class EMPPistolNet : MonoBehaviour
 {
     [Header("Spawning ---------------------------------------")]
     public Transform[] spawnPoint;
@@ -32,8 +33,13 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
     public bool isFiring = false;
     public bool reloadingWeapon = false;
 
+    public GameObjectPoolManager PoolManager;
+
     void OnEnable()
     {
+
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
         reloadingScreen.SetActive(false);
@@ -85,23 +91,34 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = PhotonNetwork.Instantiate(Bullet.name, t.position, Quaternion.identity, 0, null);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(Bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                     spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().playerBullet = true;
                 }
             }
-            photonView.RPC("RPC_EMPFire", RpcTarget.All);
+            ammoLeft--;
+
+            if (ammoLeft <= 0 && reloadingWeapon == false)
+            {
+                reloadingWeapon = true;
+                StartCoroutine(Reload());
+            }
             yield return new WaitForSeconds(0.2f);
         }
     }
 
     IEnumerator Reload()
     {
-        photonView.RPC("RPC_EMPReload", RpcTarget.All);
+        StopCoroutine(FireBullet());
+        reloadingScreen.SetActive(true);
+        audioSource.PlayOneShot(reloadSFX);
+        durability--;
         yield return new WaitForSeconds(2);
-        photonView.RPC("RPC_EMPReload2", RpcTarget.All);
+        ammoLeft = maxAmmo;
+        reloadingScreen.SetActive(false);
+        reloadingWeapon = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -109,7 +126,9 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            photonView.RPC("RPC_EMPTrigger", RpcTarget.All);
+            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            maxAmmo = newMaxAmmo;
+            rotatorScript.enabled = false;
         }
     }
 
@@ -118,58 +137,11 @@ public class EMPPistolNet : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        PhotonNetwork.Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_EMPFire()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft--;
-
-        if (ammoLeft <= 0 && reloadingWeapon == false)
-        {
-            reloadingWeapon = true;
-            StartCoroutine(Reload());
-        }
-    }
-
-    [PunRPC]
-    void RPC_EMPReload()
-    {
-        if (!photonView.IsMine)
-            return;
-        StopCoroutine(FireBullet());
-        reloadingScreen.SetActive(true);
-        audioSource.PlayOneShot(reloadSFX);
-        durability--;
-    }
-
-    [PunRPC]
-    void RPC_EMPReload2()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft = maxAmmo;
-        reloadingScreen.SetActive(false);
-        reloadingWeapon = false;
-    }
-
-    [PunRPC]
-    void RPC_EMPTrigger()
-    {
-        if (!photonView.IsMine)
-            return;
-        var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
-        maxAmmo = newMaxAmmo;
-        rotatorScript.enabled = false;
+        this.PoolManager.Release(gameObject);
     }
 
     public void Rescale()
     {
-        if (!photonView.IsMine)
-            return;
         this.gameObject.transform.localScale = Vector3.one;
     }
 }

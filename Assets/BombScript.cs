@@ -1,10 +1,9 @@
 using InfimaGames.LowPolyShooterPack.Legacy;
-using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BombScript : MonoBehaviourPunCallbacks
+public class BombScript : MonoBehaviour
 {
     public bool explode = false;
     public bool routineStarted = false;
@@ -53,7 +52,32 @@ public class BombScript : MonoBehaviourPunCallbacks
         // If the player is within the trigger, continuously update the vault activation
         if (playerWithinRadius)
         {
-            photonView.RPC("RPC_UpdateVaultActivation", RpcTarget.All, true);
+            if (!activated && playerWithinRadius)
+            {
+                elapsedTime += Time.deltaTime;
+                float remainingTime = activationTime - elapsedTime;
+                activationSlider.value = remainingTime;
+                if (elapsedTime >= activationTime)
+                {
+                    activated = true;
+                    Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+                    foreach (Collider collider in hitColliders)
+                    {
+                        if (collider.CompareTag("Player"))
+                        {
+                            collider.GetComponent<PlayerHealth>().BombNeutralized();
+                            Destroy(gameObject);
+                        }
+                    }
+                }
+            }
+            else if (!playerWithinRadius)
+            {
+                // Reset activation if the player is not within the trigger
+                activated = false;
+                elapsedTime = 0f;
+                activationSlider.value = activationTime;
+            }
         }
     }
 
@@ -63,7 +87,7 @@ public class BombScript : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0.25f);
 
         //Spawn the destroyed barrel prefab
-        PhotonNetwork.Instantiate(smokePrefab.name, transform.position,
+        Instantiate(smokePrefab, transform.position,
                      transform.rotation);
 
         //Explosion force
@@ -120,9 +144,9 @@ public class BombScript : MonoBehaviourPunCallbacks
                 hit.gameObject.GetComponent<GasTankScript>().explosionTimer = 0.05f;
             }
 
-            enemyCounter.photonView.RPC("RPC_UpdateBombs", RpcTarget.AllBuffered);
+            //enemyCounter.UpdateBombs();
             //Destroy the current barrel object
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -130,14 +154,44 @@ public class BombScript : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("EnemyBullet") || other.CompareTag("Bullet"))
         {
-            PhotonNetwork.Destroy(other.gameObject);
-            photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered);
+            Destroy(other.gameObject);
+            Health -= 25;
+
+            if (Health <= 0)
+            {
+                explode = true;
+            }
         }
 
         if(other.CompareTag("Player"))
         {
             playerWithinRadius = true;
-            photonView.RPC("RPC_UpdateVaultActivation", RpcTarget.All, true);
+            if (!activated && playerWithinRadius)
+            {
+                elapsedTime += Time.deltaTime;
+                float remainingTime = activationTime - elapsedTime;
+                activationSlider.value = remainingTime;
+                if (elapsedTime >= activationTime)
+                {
+                    activated = true;
+                    Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+                    foreach (Collider collider in hitColliders)
+                    {
+                        if (collider.CompareTag("Player"))
+                        {
+                            collider.GetComponent<PlayerHealth>().BombNeutralized();
+                            Destroy(gameObject);
+                        }
+                    }
+                }
+            }
+            else if (!playerWithinRadius)
+            {
+                // Reset activation if the player is not within the trigger
+                activated = false;
+                elapsedTime = 0f;
+                activationSlider.value = activationTime;
+            }
         }
     }
 
@@ -146,49 +200,32 @@ public class BombScript : MonoBehaviourPunCallbacks
         if (other.CompareTag("Player"))
         {
             playerWithinRadius = false;
-            photonView.RPC("RPC_UpdateVaultActivation", RpcTarget.All, false);
-        }
-    }
-
-    [PunRPC]
-    void RPC_TakeDamage()
-    {
-        Health -= 25;
-
-        if (Health <= 0)
-        {
-            explode = true;
-        }
-    }
-
-    [PunRPC]
-    void RPC_UpdateVaultActivation(bool playerWithinRadius)
-    {
-        if (!activated && playerWithinRadius)
-        {
-            elapsedTime += Time.deltaTime;
-            float remainingTime = activationTime - elapsedTime;
-            activationSlider.value = remainingTime;
-            if (elapsedTime >= activationTime)
+            if (!activated && !playerWithinRadius)
             {
-                activated = true;
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-                foreach (Collider collider in hitColliders)
+                elapsedTime += Time.deltaTime;
+                float remainingTime = activationTime - elapsedTime;
+                activationSlider.value = remainingTime;
+                if (elapsedTime >= activationTime)
                 {
-                    if (collider.CompareTag("Player"))
+                    activated = true;
+                    Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+                    foreach (Collider collider in hitColliders)
                     {
-                        collider.GetComponent<PlayerHealth>().BombNeutralized();
-                        PhotonNetwork.Destroy(gameObject);
+                        if (collider.CompareTag("Player"))
+                        {
+                            collider.GetComponent<PlayerHealth>().BombNeutralized();
+                            Destroy(gameObject);
+                        }
                     }
                 }
             }
-        }
-        else if (!playerWithinRadius)
-        {
-            // Reset activation if the player is not within the trigger
-            activated = false;
-            elapsedTime = 0f;
-            activationSlider.value = activationTime;
+            else if (playerWithinRadius)
+            {
+                // Reset activation if the player is not within the trigger
+                activated = false;
+                elapsedTime = 0f;
+                activationSlider.value = activationTime;
+            }
         }
     }
 }

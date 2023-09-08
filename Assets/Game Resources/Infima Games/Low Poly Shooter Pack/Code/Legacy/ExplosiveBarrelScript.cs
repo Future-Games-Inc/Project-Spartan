@@ -2,11 +2,10 @@
 
 using UnityEngine;
 using System.Collections;
-using Photon.Pun;
 
 namespace InfimaGames.LowPolyShooterPack.Legacy
 {
-    public class ExplosiveBarrelScript : MonoBehaviourPunCallbacks
+    public class ExplosiveBarrelScript : MonoBehaviour
     {
 
         float randomTime;
@@ -57,7 +56,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
             yield return new WaitForSeconds(randomTime);
 
             //Spawn the destroyed barrel prefab
-            PhotonNetwork.Instantiate(destroyedBarrelPrefab.name, transform.position,
+            Instantiate(destroyedBarrelPrefab, transform.position,
                          transform.rotation);
 
             //Explosion force
@@ -114,12 +113,12 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
                 if (Physics.Raycast(transform.position, Vector3.down, out checkGround, 50))
                 {
                     //Instantiate explosion prefab at hit position
-                    PhotonNetwork.Instantiate(explosionPrefab.name, checkGround.point,
+                    Instantiate(explosionPrefab, checkGround.point,
                         Quaternion.FromToRotation(Vector3.forward, checkGround.normal));
                 }
 
                 //Destroy the current barrel object
-                PhotonNetwork.Destroy(gameObject);
+                Destroy(gameObject);
             }
         }
 
@@ -127,21 +126,13 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
         {
             if (other.CompareTag("EnemyBullet"))
             {
-                PhotonNetwork.Destroy(other.gameObject);
-                photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered);
-            }
-        }
+                Destroy(other.gameObject);
+                Health -= 25;
 
-        [PunRPC]
-        void RPC_TakeDamage()
-        {
-            if (!photonView.IsMine)
-                return;
-            Health -= 25;
-
-            if (Health <= 0)
-            {
-                explode = true;
+                if (Health <= 0)
+                {
+                    explode = true;
+                }
             }
         }
     }

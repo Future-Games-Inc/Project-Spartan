@@ -2108,18 +2108,17 @@ GameObject:
   - component: {fileID: 7247037325887940944}
   - component: {fileID: 7247037325887940945}
   - component: {fileID: 150622578987484770}
-  - component: {fileID: 231465424869455592}
-  - component: {fileID: 6643594335178730184}
   - component: {fileID: 6678311020609035134}
-  - component: {fileID: 4470529645607058932}
   - component: {fileID: 5377935089441958361}
+  - component: {fileID: -3891152054478066181}
+  - component: {fileID: 6157023086734296921}
   m_Layer: 22
   m_Name: Z_BowBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7247037325887940941
 Transform:
   m_ObjectHideFlags: 0
@@ -2186,7 +2185,8 @@ MonoBehaviour:
   BowModel: {fileID: 0}
   ArrowRest: {fileID: 7247037326041550590}
   CanGrabArrowFromKnock: 1
-  ArrowPrefabName: Z_ArrowBomb
+  ArrowPrefabName: {fileID: 4864611388242600556, guid: cdf8464eb5a839948a4494fc87845877,
+    type: 3}
   ArrowRestLeftHanded: {fileID: 0}
   ArrowKnock: {fileID: 7247037325622144265}
   IgnoreXPosition: 0
@@ -2202,7 +2202,6 @@ MonoBehaviour:
   PercentageUI: {fileID: 150622579346544190}
   player: {fileID: 0}
   rotator: {fileID: 6678311020609035134}
-  photonView: {fileID: 231465424869455592}
   BowUp: {x: 0, y: 0, z: 1}
   AlignBowSpeed: 20
 --- !u!65 &7247037325887940947
@@ -2342,46 +2341,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.04, y: 0.12667808, z: 0.04}
   m_Center: {x: -3.0128406e-17, y: -0.009932596, z: 0}
---- !u!114 &231465424869455592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7247037325887940937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6643594335178730184}
-  - {fileID: 4470529645607058932}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &6643594335178730184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7247037325887940937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!114 &6678311020609035134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2401,7 +2360,7 @@ MonoBehaviour:
   ReverseX: 0
   ReverseY: 0
   ReverseZ: 0
---- !u!114 &4470529645607058932
+--- !u!114 &5377935089441958361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2410,7 +2369,104 @@ MonoBehaviour:
   m_GameObject: {fileID: 7247037325887940937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HapticsOnValidPickup: 1
+  HapticsOnValidRemotePickup: 0
+  HapticsOnCollision: 0
+  HapticsOnGrab: 1
+  VibrateFrequency: 0.3
+  VibrateAmplitude: 0.1
+  VibrateDuration: 0.1
+--- !u!114 &-3891152054478066181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7247037325887940937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad179a9e83dba5142adaaf7737678e8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onRelease:
+    m_PersistentCalls:
+      m_Calls: []
+  onBecomesClosestGrabbable:
+    m_PersistentCalls:
+      m_Calls: []
+  onNoLongerClosestGrabbable:
+    m_PersistentCalls:
+      m_Calls: []
+  onBecomesClosestRemoteGrabbable:
+    m_PersistentCalls:
+      m_Calls: []
+  onNoLongerClosestRemoteGrabbable:
+    m_PersistentCalls:
+      m_Calls: []
+  onGrip:
+    m_PersistentCalls:
+      m_Calls: []
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerDown:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onButton1:
+    m_PersistentCalls:
+      m_Calls: []
+  onButton1Down:
+    m_PersistentCalls:
+      m_Calls: []
+  onButton1Up:
+    m_PersistentCalls:
+      m_Calls: []
+  onButton2:
+    m_PersistentCalls:
+      m_Calls: []
+  onButton2Down:
+    m_PersistentCalls:
+      m_Calls: []
+  onButton2Up:
+    m_PersistentCalls:
+      m_Calls: []
+  onSnapZoneEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onSnapZoneExit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3701033817703509625}
+        m_TargetAssemblyTypeName: BNG.BowNet, Assembly-CSharp
+        m_MethodName: Rescale
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6157023086734296921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7247037325887940937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -2421,7 +2477,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 5
+  RemoteGrabDistance: 2
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.125
   BreakDistance: 0.75
@@ -2437,7 +2493,7 @@ MonoBehaviour:
   handPoseType: 1
   SelectedHandPose: {fileID: 0}
   CustomHandPose: 0
-  SecondaryGrabBehavior: 0
+  SecondaryGrabBehavior: 1
   TwoHandedPosition: 0
   TwoHandedPostionLerpAmount: 0.5
   TwoHandedRotation: 1
@@ -2471,25 +2527,6 @@ MonoBehaviour:
   UseCustomInspector: 1
   lastFlickTime: 0
   FlickForce: 1
---- !u!114 &5377935089441958361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7247037325887940937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HapticsOnValidPickup: 1
-  HapticsOnValidRemotePickup: 0
-  HapticsOnCollision: 0
-  HapticsOnGrab: 1
-  VibrateFrequency: 0.3
-  VibrateAmplitude: 0.1
-  VibrateDuration: 0.1
 --- !u!1 &7247037325930971518
 GameObject:
   m_ObjectHideFlags: 0

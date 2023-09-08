@@ -6,6 +6,6 @@ using UnityEngine;
 namespace BNG {
     public class GrabbableChild : MonoBehaviour {
         [Tooltip("The Parent Grabbable Object to be grabbed.")]
-        public NetworkedGrabbable ParentGrabbable;
+        public Grabbable ParentGrabbable;
     }
 }

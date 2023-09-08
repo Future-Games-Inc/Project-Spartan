@@ -14439,21 +14439,19 @@ GameObject:
   - component: {fileID: 72694092025295596}
   - component: {fileID: 72694092025295587}
   - component: {fileID: 72694092025295586}
-  - component: {fileID: 72694092025295585}
-  - component: {fileID: 72694092025295584}
   - component: {fileID: 72694092025295591}
   - component: {fileID: 6096224916237843067}
   - component: {fileID: 4592644526649121053}
   - component: {fileID: 3687774853445144972}
-  - component: {fileID: 8698651688646539343}
   - component: {fileID: -8441536767789204208}
+  - component: {fileID: 6638639980492127903}
   m_Layer: 22
   m_Name: Z_Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &72694092025295611
 Transform:
   m_ObjectHideFlags: 0
@@ -14600,46 +14598,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &72694092025295585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72694092025295610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &72694092025295584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72694092025295610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 72694092025295585}
-  - {fileID: 8698651688646539343}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &72694092025295591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14799,7 +14757,19 @@ MonoBehaviour:
       m_Calls: []
   onSnapZoneExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3687774853445144972}
+        m_TargetAssemblyTypeName: PlayerWeapon, Assembly-CSharp
+        m_MethodName: Rescale
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3687774853445144972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14830,7 +14800,7 @@ MonoBehaviour:
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
   isFiring: 0
---- !u!114 &8698651688646539343
+--- !u!114 &-8441536767789204208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14839,7 +14809,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 72694092025295610}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HapticsOnValidPickup: 1
+  HapticsOnValidRemotePickup: 0
+  HapticsOnCollision: 0
+  HapticsOnGrab: 1
+  VibrateFrequency: 0.3
+  VibrateAmplitude: 0.1
+  VibrateDuration: 0.1
+--- !u!114 &6638639980492127903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72694092025295610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -14847,10 +14836,10 @@ MonoBehaviour:
   Grabtype: 0
   GrabPhysics: 1
   GrabMechanic: 0
-  GrabSpeed: 15
+  GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 5
+  RemoteGrabDistance: 2
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
@@ -14859,7 +14848,7 @@ MonoBehaviour:
   ParentHandModel: 0
   SnapHandModel: 1
   CanBeDropped: 1
-  CanBeSnappedToSnapZone: 1
+  CanBeSnappedToSnapZone: 0
   ForceDisableKinematicOnDrop: 1
   InstantMovement: 1
   MakeChildCollidersGrabbable: 1
@@ -14874,7 +14863,7 @@ MonoBehaviour:
   TwoHandedDropBehavior: 0
   TwoHandedLookVector: 0
   SecondHandLookSpeed: 40
-  SecondaryGrabbable: {fileID: 6415651579299094205}
+  SecondaryGrabbable: {fileID: 7494832702043119331}
   OtherGrabbableMustBeGrabbed: {fileID: 0}
   CollisionSpring: 3000
   CollisionSlerp: 500
@@ -14901,25 +14890,6 @@ MonoBehaviour:
   UseCustomInspector: 1
   lastFlickTime: 0
   FlickForce: 1
---- !u!114 &-8441536767789204208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72694092025295610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HapticsOnValidPickup: 1
-  HapticsOnValidRemotePickup: 0
-  HapticsOnCollision: 0
-  HapticsOnGrab: 1
-  VibrateFrequency: 0.3
-  VibrateAmplitude: 0.1
-  VibrateDuration: 0.1
 --- !u!1 &72694092067928677
 GameObject:
   m_ObjectHideFlags: 0
@@ -19898,7 +19868,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72694092596255729}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.1169, z: -0.415}
+  m_LocalPosition: {x: 0.05, y: 0.1169, z: -0.415}
   m_LocalScale: {x: 0.16728188, y: 0.16728188, z: 0.1672974}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -24736,14 +24706,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72694092696664650}
-  m_LocalRotation: {x: 0.7456267, y: -0.5092081, z: 0.23310092, w: -0.361126}
-  m_LocalPosition: {x: 0.049, y: -0.0033, z: 0.0991}
+  m_LocalRotation: {x: 0.6893051, y: -0.62983644, z: 0.21352677, w: -0.28735158}
+  m_LocalPosition: {x: 0.0332, y: -0.0046, z: 0.0809}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 72694092997308906}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -17.526, y: 131.391, z: 256.625}
+  m_LocalEulerAnglesHint: {x: -7.306, y: 138.569, z: 267.604}
 --- !u!114 &72694092696664756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24792,14 +24762,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72694092804276814}
-  m_LocalRotation: {x: 0.026353596, y: 0.9977035, z: 0.006189378, w: 0.062089056}
-  m_LocalPosition: {x: 0.041, y: 0.075099945, z: -0.0248}
+  m_LocalRotation: {x: 0.026141489, y: 0.9991817, z: 0.007031562, w: 0.030052816}
+  m_LocalPosition: {x: 0.0435, y: 0.0189, z: 0.0255}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 72694092067928678}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -0.52, y: 172.864, z: 3.059}
+  m_LocalEulerAnglesHint: {x: -0.715, y: 176.536, z: 3.019}
 --- !u!114 &72694092804276808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29594,8 +29564,7 @@ GameObject:
   - component: {fileID: 72694092997308906}
   - component: {fileID: 72694092997308885}
   - component: {fileID: 72694092997308884}
-  - component: {fileID: 6415651579299094205}
-  - component: {fileID: 1606975679892283952}
+  - component: {fileID: 7494832702043119331}
   m_Layer: 22
   m_Name: Secondary Hold
   m_TagString: Untagged
@@ -29631,8 +29600,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.023890188, y: 0.052227378, z: 0.19}
-  m_Center: {x: 0.038, y: 0, z: 0.02}
+  m_Size: {x: 0.049562454, y: 0.052227378, z: 0.15526412}
+  m_Center: {x: 0.040110588, y: 0, z: 0.037367932}
 --- !u!82 &72694092997308884
 AudioSource:
   m_ObjectHideFlags: 0
@@ -29729,7 +29698,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6415651579299094205
+--- !u!114 &7494832702043119331
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29738,7 +29707,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 72694092997308905}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -29752,10 +29721,10 @@ MonoBehaviour:
   RemoteGrabDistance: 0.1
   ThrowForceMultiplier: 1.25
   ThrowForceMultiplierAngular: 1.125
-  BreakDistance: 0.5
+  BreakDistance: 0
   HideHandGraphics: 0
-  ParentToHands: 1
-  ParentHandModel: 0
+  ParentToHands: 0
+  ParentHandModel: 1
   SnapHandModel: 1
   CanBeDropped: 1
   CanBeSnappedToSnapZone: 0
@@ -29774,7 +29743,7 @@ MonoBehaviour:
   TwoHandedLookVector: 0
   SecondHandLookSpeed: 40
   SecondaryGrabbable: {fileID: 0}
-  OtherGrabbableMustBeGrabbed: {fileID: 8698651688646539343}
+  OtherGrabbableMustBeGrabbed: {fileID: 6638639980492127903}
   CollisionSpring: 3000
   CollisionSlerp: 500
   CollisionLinearMotionX: 2
@@ -29800,29 +29769,6 @@ MonoBehaviour:
   UseCustomInspector: 1
   lastFlickTime: 0
   FlickForce: 1
---- !u!114 &1606975679892283952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72694092997308905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6415651579299094205}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &72694093043357339
 GameObject:
   m_ObjectHideFlags: 0
@@ -29848,7 +29794,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72694093043357339}
   m_LocalRotation: {x: -0.73494387, y: -0.6081077, z: 0.16685039, w: 0.24944638}
-  m_LocalPosition: {x: 0.0639, y: -0.004, z: 0.0198}
+  m_LocalPosition: {x: 0.0417, y: -0.0072, z: 0.0668}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -29904,7 +29850,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72694093128305521}
   m_LocalRotation: {x: -0.03221182, y: 0.9992625, z: 0.00067333505, w: -0.02088791}
-  m_LocalPosition: {x: 0.0136, y: 0.0232, z: 0.0207}
+  m_LocalPosition: {x: 0.0208, y: 0.017, z: 0.0205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

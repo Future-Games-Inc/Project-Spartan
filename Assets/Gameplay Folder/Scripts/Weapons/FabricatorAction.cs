@@ -1,8 +1,7 @@
 using BNG;
-using Photon.Pun;
 using UnityEngine;
 
-public class FabricatorAction : MonoBehaviourPunCallbacks
+public class FabricatorAction : MonoBehaviour
 {
     public SnapZone snapZone;
     public GameObject pistolUpgrader;
@@ -42,17 +41,17 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
 
     public void EnterFabricator()
     {
-        if (snapZone.HeldItem.gameObject.name == "Z_Pistol" /*|| snapZone.HeldItem.gameObject.name == "Z_EMPPistol"*/)
+        if (snapZone.HeldItem.gameObject.name == "Z_Pistol" || snapZone.HeldItem.gameObject.name == "Z_Pistol(Clone)" /*|| snapZone.HeldItem.gameObject.name == "Z_EMPPistol"*/)
         {
-            if (snapZone.HeldItem.gameObject.name == "Z_Pistol")
-            {
+            //if (snapZone.HeldItem.gameObject.name == "Z_Pistol")
+            //{
                 pistolUpgrader.SetActive(true);
                 empUpgrader.SetActive(false);
                 PlayerWeapon pistol = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
                 pistol.reloadingScreen.SetActive(false);
                 pistol.durabilityText.enabled = false;
                 pistol.ammoText.enabled = false;
-            }
+            //}
             //else if (snapZone.HeldItem.gameObject.name == "Z_EMPPistol")
             //{
             //    empUpgrader.SetActive(true);
@@ -64,17 +63,17 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             //}
         }
 
-        else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun" /*|| snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun"*/)
+        else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun" || snapZone.HeldItem.gameObject.name == "Z_Shotgun(Clone)" /*|| snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun"*/)
         {
-            if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
-            {
+            //if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
+            //{
                 shotgunUpgrader.SetActive(true);
                 stingerUpgrader.SetActive(false);
                 PlayerWeapon shotgun = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
                 shotgun.reloadingScreen.SetActive(false);
                 shotgun.durabilityText.enabled = false;
                 shotgun.ammoText.enabled = false;
-            }
+            //}
             //else if (snapZone.HeldItem.gameObject.name == "Z_Stinger Shotgun")
             //{
             //    stingerUpgrader.SetActive(true);
@@ -86,17 +85,17 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             //}
         }
 
-        else if (snapZone.HeldItem.gameObject.name == "Z_Rifle" /*|| snapZone.HeldItem.gameObject.name == "Z_PulseAR"*/)
+        else if (snapZone.HeldItem.gameObject.name == "Z_Rifle" || snapZone.HeldItem.gameObject.name == "Z_Rifle(Clone)" /*|| snapZone.HeldItem.gameObject.name == "Z_PulseAR"*/)
         {
-            if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
-            {
+            //if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
+            //{
                 rifleUpgrader.SetActive(true);
                 pulseUpgrader.SetActive(false);
                 PlayerWeapon rifle = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
                 rifle.reloadingScreen.SetActive(false);
                 rifle.durabilityText.enabled = false;
                 rifle.ammoText.enabled = false;
-            }
+            //}
             //else if (snapZone.HeldItem.gameObject.name == "Z_PulseAR")
             //{
             //    pulseUpgrader.SetActive(true);
@@ -108,7 +107,7 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
             //}
         }
 
-        else if (snapZone.HeldItem.gameObject.name == "Z_BowNormal" || snapZone.HeldItem.gameObject.name == "Z_BowBomb" || snapZone.HeldItem.gameObject.name == "Z_BowEMP")
+        else if (snapZone.HeldItem.gameObject.name == "Z_BowNormal" || snapZone.HeldItem.gameObject.name == "Z_BowBomb" || snapZone.HeldItem.gameObject.name == "Z_BowEMP" || snapZone.HeldItem.gameObject.name == "Z_BowNormal(Clone)" || snapZone.HeldItem.gameObject.name == "Z_BowBomb(Clone)" || snapZone.HeldItem.gameObject.name == "Z_BowEMP(Clone)")
         {
             bowUpgrade.SetActive(true);
         }
@@ -117,37 +116,37 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
 
     public void ExitFabricator()
     {
-        if (snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol")
+        if (snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol" || snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol(Clone)")
         {
             EMPPistolNet pistol = snapZone.lastHeldItem.gameObject.GetComponent<EMPPistolNet>();
             pistol.durabilityText.enabled = true;
             pistol.ammoText.enabled = true;
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_Pistol")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_Pistol" || snapZone.lastHeldItem.gameObject.name == "Z_Pistol(Clone)")
         {
             PlayerWeapon pistol = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
             pistol.durabilityText.enabled = true;
             pistol.ammoText.enabled = true;
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_Shotgun")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_Shotgun" || snapZone.lastHeldItem.gameObject.name == "Z_Shotgun(Clone)")
         {
             PlayerWeapon shotgun = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
             shotgun.durabilityText.enabled = true;
             shotgun.ammoText.enabled = true;
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun" || snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun(Clone)")
         {
             StingerShotgun stinger = snapZone.HeldItem.gameObject.GetComponent<StingerShotgun>();
             stinger.durabilityText.enabled = true;
             stinger.ammoText.enabled = true;
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_Rifle")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_Rifle" || snapZone.lastHeldItem.gameObject.name == "Z_Rifle(Clone)")
         {
             PlayerWeapon rifle = snapZone.HeldItem.gameObject.GetComponent<PlayerWeapon>();
             rifle.durabilityText.enabled = true;
             rifle.ammoText.enabled = true;
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_PulseAR")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_PulseAR" || snapZone.lastHeldItem.gameObject.name == "Z_PulseAR(Clone)")
         {
             PulseARNet pulseAR = snapZone.HeldItem.gameObject.GetComponent<PulseARNet>();
             pulseAR.durabilityText.enabled = true;
@@ -158,40 +157,40 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
 
     public void Upgrade()
     {
-        if (snapZone.HeldItem.gameObject.name == "Z_Pistol")
+        if (snapZone.HeldItem.gameObject.name == "Z_Pistol" || snapZone.HeldItem.gameObject.name == "Z_Pistol(Clone)")
         {
-            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newEmpPistol = PhotonNetwork.InstantiateRoomObject(empPistol.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+            Destroy(snapZone.HeldItem.gameObject);
+            GameObject newEmpPistol = Instantiate(empPistol, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newEmpPistol.gameObject.name = "Z_EMPPistol";
             EMPPistolNet pistol = newEmpPistol.GetComponent<EMPPistolNet>();
             pistol.reloadingScreen.SetActive(false);
             pistol.durabilityText.enabled = false;
             pistol.ammoText.enabled = false;
-            NetworkedGrabbable newGrabbable = empPistol.GetComponent<NetworkedGrabbable>();
+            Grabbable newGrabbable = empPistol.GetComponent<Grabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
-        else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun")
+        else if (snapZone.HeldItem.gameObject.name == "Z_Shotgun" || snapZone.HeldItem.gameObject.name == "Z_Shotgun(Clone)")
         {
-            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newStingerShotgun = PhotonNetwork.InstantiateRoomObject(stingerShotgun.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+            Destroy(snapZone.HeldItem.gameObject);
+            GameObject newStingerShotgun = Instantiate(stingerShotgun, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newStingerShotgun.gameObject.name = "Z_Stinger Shotgun";
             StingerShotgun stinger = newStingerShotgun.GetComponent<StingerShotgun>();
             stinger.reloadingScreen.SetActive(false);
             stinger.durabilityText.enabled = false;
             stinger.ammoText.enabled = false;
-            NetworkedGrabbable newGrabbable = newStingerShotgun.GetComponent<NetworkedGrabbable>();
+            Grabbable newGrabbable = newStingerShotgun.GetComponent<Grabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
-        else if (snapZone.HeldItem.gameObject.name == "Z_Rifle")
+        else if (snapZone.HeldItem.gameObject.name == "Z_Rifle" || snapZone.HeldItem.gameObject.name == "Z_Rifle(Clone)")
         {
-            PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-            GameObject newPulseAR = PhotonNetwork.InstantiateRoomObject(pulseAR.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+            Destroy(snapZone.HeldItem.gameObject);
+            GameObject newPulseAR = Instantiate(pulseAR, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
             newPulseAR.gameObject.name = "Z_PulseAR";
             PulseARNet AR = newPulseAR.GetComponent<PulseARNet>();
             AR.reloadingScreen.SetActive(false);
             AR.durabilityText.enabled = false;
             AR.ammoText.enabled = false;
-            NetworkedGrabbable newGrabbable = newPulseAR.GetComponent<NetworkedGrabbable>();
+            Grabbable newGrabbable = newPulseAR.GetComponent<Grabbable>();
             snapZone.GrabGrabbable(newGrabbable);
         }
     }
@@ -199,52 +198,52 @@ public class FabricatorAction : MonoBehaviourPunCallbacks
     public void UpgradeBowNormal()
     {
 
-        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowNormal.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = Instantiate(ZBowNormal, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
         newBow.gameObject.name = "Z_BowNormal";
-        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        Grabbable newGrabbable = newBow.GetComponent<Grabbable>();
         snapZone.GrabGrabbable(newGrabbable);
     }
 
     public void UpgradeBowBomb()
     {
 
-        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowBomb.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = Instantiate(ZBowBomb, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
         newBow.gameObject.name = "Z_BowBomb";
-        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        Grabbable newGrabbable = newBow.GetComponent<Grabbable>();
         snapZone.GrabGrabbable(newGrabbable);
     }
 
     public void UpgradeBowEMP()
     {
 
-        PhotonNetwork.Destroy(snapZone.HeldItem.gameObject);
-        GameObject newBow = PhotonNetwork.InstantiateRoomObject(ZBowEMP.name, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation, 0, null);
+        Destroy(snapZone.HeldItem.gameObject);
+        GameObject newBow = Instantiate(ZBowEMP, snapZone.gameObject.transform.position, snapZone.gameObject.transform.rotation);
         newBow.gameObject.name = "Z_BowEMP";
-        NetworkedGrabbable newGrabbable = newBow.GetComponent<NetworkedGrabbable>();
+        Grabbable newGrabbable = newBow.GetComponent<Grabbable>();
         snapZone.GrabGrabbable(newGrabbable);
     }
 
     public void Rescale()
     {
-        if (snapZone.lastHeldItem.gameObject.name == "Z_Pistol" || snapZone.lastHeldItem.gameObject.name == "Z_Shotgun" || snapZone.lastHeldItem.gameObject.name == "Z_Rifle")
+        if (snapZone.lastHeldItem.gameObject.name == "Z_Pistol" || snapZone.lastHeldItem.gameObject.name == "Z_Shotgun" || snapZone.lastHeldItem.gameObject.name == "Z_Rifle" || snapZone.lastHeldItem.gameObject.name == "Z_Pistol(Clone)" || snapZone.lastHeldItem.gameObject.name == "Z_Shotgun(Clone)" || snapZone.lastHeldItem.gameObject.name == "Z_Rifle(Clone)")
         {
             snapZone.lastHeldItem.gameObject.GetComponent<PlayerWeapon>().Rescale();
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol" || snapZone.lastHeldItem.gameObject.name == "Z_EMPPistol(Clone)")
         {
             snapZone.lastHeldItem.gameObject.GetComponent<EMPPistolNet>().Rescale();
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun" || snapZone.lastHeldItem.gameObject.name == "Z_Stinger Shotgun(Clone)")
         {
             snapZone.lastHeldItem.gameObject.GetComponent<StingerShotgun>().Rescale();
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_PulseAR")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_PulseAR" || snapZone.lastHeldItem.gameObject.name == "Z_PulseAR(Clone)")
         {
             snapZone.lastHeldItem.gameObject.GetComponent<PulseARNet>().Rescale();
         }
-        else if (snapZone.lastHeldItem.gameObject.name == "Z_BowNormal" || snapZone.lastHeldItem.gameObject.name == "Z_BowBomb" || snapZone.lastHeldItem.gameObject.name == "Z_BowEMP")
+        else if (snapZone.lastHeldItem.gameObject.name == "Z_BowNormal" || snapZone.lastHeldItem.gameObject.name == "Z_BowBomb" || snapZone.lastHeldItem.gameObject.name == "Z_BowEMP" || snapZone.lastHeldItem.gameObject.name == "Z_BowNormal(Clone)" || snapZone.lastHeldItem.gameObject.name == "Z_BowBomb(Clone)" || snapZone.lastHeldItem.gameObject.name == "Z_BowEMP(Clone)")
         {
             snapZone.lastHeldItem.gameObject.GetComponent<BowNet>().Rescale();
         }

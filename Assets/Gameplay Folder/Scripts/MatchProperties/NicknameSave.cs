@@ -1,5 +1,4 @@
 using LootLocker.Requests;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -9,17 +8,9 @@ public class NicknameSave : MonoBehaviour
 
 {
     public TMP_InputField _inputField;
-    #region Private Constants
-
 
     // Store the PlayerPref Key to avoid typos
     const string playerNamePrefKey = "PlayerName";
-
-
-    #endregion
-
-
-    #region MonoBehaviour CallBacks
 
 
     /// <summary>
@@ -27,15 +18,8 @@ public class NicknameSave : MonoBehaviour
     /// </summary>
     void OnEnable()
     {
-
+        _inputField.text = PlayerPrefs.GetString(playerNamePrefKey);
     }
-
-
-    #endregion
-
-
-    #region Public Methods
-
 
     /// <summary>
     /// Sets the name of the player, and save it in the PlayerPrefs for future sessions.
@@ -51,10 +35,6 @@ public class NicknameSave : MonoBehaviour
         LootLockerSDKManager.SetPlayerName(value, (response) =>
         {
         });
-        PhotonNetwork.NickName = value;
         PlayerPrefs.SetString(playerNamePrefKey, value);
     }
 }
-
-
-#endregion

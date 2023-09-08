@@ -1,12 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 using UnityEngine.AI;
-using ExitGames.Client.Photon;
-using Photon.Realtime;
-using System.Threading.Tasks;
 
-public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
+public class EnemyHealth : MonoBehaviour
 {
     public FollowAI aiScript;
     public GameObject xpDrop;
@@ -29,27 +25,18 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
     }
 
-    public override void OnEnable()
+    public void OnEnable()
     {
-        base.OnEnable();
-        if (PhotonNetwork.IsMasterClient)
-        {
+            alive = true;
             enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
-            RaiseEventOptions options = new RaiseEventOptions() { Receivers = ReceiverGroup.All };
-            PhotonNetwork.RaiseEvent((byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable, null, options, SendOptions.SendUnreliable);
-        }
-        PhotonNetwork.AddCallbackTarget(this);
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
-        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void KillEnemy()
     {
-        photonView.RPC("RPC_KillEnemy", RpcTarget.All);
+        alive = false;
+        aiScript.attackWeapon.fireWeaponBool = false;
+        aiScript.alive = false;
+        DestroyEnemy();
     }
 
     public void DestroyEnemy()
@@ -73,67 +60,23 @@ public class EnemyHealth : MonoBehaviourPunCallbacks, IOnEventCallback
 
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                GameObject DropExtra = PhotonNetwork.InstantiateRoomObject(xpDropExtra.name, t.position, Quaternion.identity, 0, null);
+                GameObject DropExtra = Instantiate(xpDropExtra, t.position, Quaternion.identity);
                 DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
             {
-                GameObject DropNormal = PhotonNetwork.InstantiateRoomObject(xpDrop.name, t.position, Quaternion.identity, 0, null);
+                GameObject DropNormal = Instantiate(xpDrop, t.position, Quaternion.identity);
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
-        Destroy();
+        StartCoroutine(Destroy());
     }
 
-    private async void Destroy()
+    IEnumerator Destroy()
     {
-        await Task.Delay(5000);
-        PhotonNetwork.Destroy(gameObject);
+        enemyCounter.UpdateEnemy();
+        enemyCounter.UpdateEnemyCount();
+        yield return new WaitForSeconds(2);
+        Destroy(gameObject);
     }
-
-    void EnemyHealthEnable()
-    {
-        alive = true;
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code == (byte)PUNEventDatabase.EnemyHealth_EnemyHealthEnable)
-        {
-            EnemyHealthEnable();
-        }
-    }
-
-
-    [PunRPC]
-    void RPC_KillEnemy()
-    {
-        if (!photonView.IsMine)
-            return;
-
-        alive = false;
-        aiScript.attackWeapon.fireWeaponBool = false;
-        aiScript.alive = false;
-
-        //enemyCounter.photonView.RPC("RPC_UpdateEnemy", RpcTarget.All);
-        //enemyCounter.photonView.RPC("RPC_UpdateEnemyCount", RpcTarget.All);
-
-        DestroyEnemy();
-    }
-
-
-    //[PunRPC]
-    //void RPC_EnemyHealthEnable()
-    //{
-    //    alive = true;
-    //}
-
-    //[PunRPC]
-    //void RPC_DestroyEnemy()
-    //{
-    //    this.aiScript.enabled = false;
-    //    ragDoll.SetActive(true);
-    //    agent.isStopped = true;
-    //    deathElectric.SetActive(true);
-    //}
 }

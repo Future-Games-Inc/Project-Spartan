@@ -1,5 +1,7 @@
+using PathologicalGames;
 using Photon.Pun;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class ToxicEffect : MonoBehaviour
@@ -9,9 +11,14 @@ public class ToxicEffect : MonoBehaviour
     public float effectRadius;
     public GameObject playerCharacter;
 
+    public GameObjectPoolManager PoolManager;
+
+
     // Start is called before the first frame update
     private void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         if (this.CompareTag("toxicRadius"))
             StartCoroutine(ToxicHealth());
         //else

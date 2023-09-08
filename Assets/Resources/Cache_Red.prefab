@@ -752,7 +752,6 @@ GameObject:
   - component: {fileID: 7749959745784171726}
   - component: {fileID: 6540516721476157671}
   - component: {fileID: 8824439308652485724}
-  - component: {fileID: 3396642162343881515}
   m_Layer: 0
   m_Name: Cube.013
   m_TagString: Untagged
@@ -852,28 +851,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3396642162343881515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7016656330443953706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &7858985874912574437
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,7 +950,6 @@ GameObject:
   - component: {fileID: 3396642162333061857}
   - component: {fileID: 3396642162333061854}
   - component: {fileID: 3396642162333061855}
-  - component: {fileID: 3396642162333061851}
   m_Layer: 0
   m_Name: Cache_Red
   m_TagString: Cache
@@ -1174,21 +1150,22 @@ MonoBehaviour:
   cacheClip: {fileID: 8300000, guid: f5a70a3f334525e4bb12666da1ebe1ab, type: 3}
   cacheActive: 0
   powerups:
-  - Z_Card_BulletModifier
-  - Z_Card_EMP
-  - Z_Card_Health
-  - Z_Card_Shield
-  - Z_Card_Toxicity
+  - {fileID: 2061012016200997171, guid: 729eb35a1f759fb4386dcdbe70fb92cc, type: 3}
+  - {fileID: 8225411832661770957, guid: 2cf726be2e30b374082419355a952a5b, type: 3}
+  - {fileID: 9182321951181599963, guid: b360ea5e3b572fe4a9c7d0baa88fbdd9, type: 3}
+  - {fileID: 5197660655120443959, guid: c6369f356c48f384ab7cc09ac7eee866, type: 3}
+  - {fileID: 7267884054511853721, guid: 9736af1d23fb185408eaccbc01b2b1c5, type: 3}
+  - {fileID: 2180775378481448717, guid: 9a16a7df0d5d0af48947357f683acd33, type: 3}
   weapons:
-  - Z_Rifle
-  - Z_Shotgun
-  - Z_Railgun
-  - Z_Pulse Rifle
-  - Z_Pistol
-  - Z_Plasma Launcher
-  - Z_ProxGrenade
-  - Z_SmokeGrenade
-  - Z_BowNormal
+  - {fileID: 3505688508792345479, guid: 509fcd81b396a6f40a472c42281b40f5, type: 3}
+  - {fileID: 6583526030529461766, guid: c01341f8560112c4c863f74ff0a3ea78, type: 3}
+  - {fileID: 4187053195921423624, guid: c2cf095411e6c744698ba93f78a6c61a, type: 3}
+  - {fileID: 5270732982293990914, guid: 28026442592ce7f44a98cebd6029f169, type: 3}
+  - {fileID: 1898766244841449746, guid: e4b4a9668917e304cb7f28851a7ed50d, type: 3}
+  - {fileID: 7103567131878025263, guid: 5dd6baadebc872b40946e13691a2da00, type: 3}
+  - {fileID: 72694092025295610, guid: 95e386f4184173041b73570a0534d298, type: 3}
+  - {fileID: 5065441241101702, guid: 2a3fc1edda08f074b96c48c47d77c4ed, type: 3}
+  - {fileID: 7247037325887940937, guid: 1e4ffee8cbb8bf140b567bcfae35615e, type: 3}
   _animator: {fileID: 8824439308652485724}
   cacheBase:
   - {fileID: 3075602106939694779}
@@ -1198,28 +1175,6 @@ MonoBehaviour:
   activeMaterial: {fileID: 2100000, guid: 2866e5e491abecd4b93944b8014e6b67, type: 2}
   deactiveMaterial: {fileID: 2100000, guid: 969c5842c0c749a4381bbd01b43c0242, type: 2}
   matchProps: {fileID: 0}
---- !u!114 &3396642162333061851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8554549136246335726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &8576208478986862396
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,18 +14,15 @@ GameObject:
   - component: {fileID: 4399356359249965958}
   - component: {fileID: 4399356359249965955}
   - component: {fileID: 4399356359249965954}
-  - component: {fileID: 4399356359249965957}
-  - component: {fileID: 4399356359249965956}
   - component: {fileID: 4399356359249965688}
   - component: {fileID: 540293457683071429}
-  - component: {fileID: 540293457683071428}
   m_Layer: 0
   m_Name: Z_SupplyDropShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &879418696288344952
 Transform:
   m_ObjectHideFlags: 0
@@ -78,7 +75,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.87
+  m_Radius: 2.5
   m_Center: {x: 0, y: -1.15, z: 0}
 --- !u!65 &4399356359249965958
 BoxCollider:
@@ -205,46 +202,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4399356359249965957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540293457683071426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &4399356359249965956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540293457683071426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 4399356359249965957}
-  - {fileID: 540293457683071428}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &4399356359249965688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,12 +215,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponPrefabs:
-  - {fileID: 822812647023941006, guid: 45ee1448df9ad4348825839dcf2f7e5b, type: 3}
   - {fileID: 3012952202833435353, guid: 5c16f5539721e664ba01c5e433d01b7b, type: 3}
-  - {fileID: 6583526030529461766, guid: c01341f8560112c4c863f74ff0a3ea78, type: 3}
   - {fileID: 7622321266686136725, guid: 3132bfca42f981b4f93b56016b9b5f14, type: 3}
-  - {fileID: 7103567131878025263, guid: 5dd6baadebc872b40946e13691a2da00, type: 3}
-  - {fileID: 72694092025295610, guid: 95e386f4184173041b73570a0534d298, type: 3}
   - {fileID: 1622295053002393203, guid: 990dd834577fff44cbcd04eb1a12f09a, type: 3}
   - {fileID: 5366973608428439056, guid: 2e7f66d37f94dd241acc31fc815a636c, type: 3}
   - {fileID: 7247037325887940937, guid: 1e4ffee8cbb8bf140b567bcfae35615e, type: 3}
@@ -286,7 +239,7 @@ MonoBehaviour:
   activationTime: 10
   radius: 2
   playAudio: 1
-  forceMagnitude: 80
+  forceMagnitude: 100
 --- !u!95 &540293457683071429
 Animator:
   serializedVersion: 5
@@ -308,24 +261,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &540293457683071428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540293457683071426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers:
-  - SynchronizeType: 2
-    LayerIndex: 0
 --- !u!1 &635915220417472571
 GameObject:
   m_ObjectHideFlags: 0

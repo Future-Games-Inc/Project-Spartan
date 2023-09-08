@@ -1,11 +1,12 @@
-using Photon.Pun;
-using Photon.Realtime;
-using System.Linq;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class VirtualWorldManager : MonoBehaviourPunCallbacks
+public class VirtualWorldManager : MonoBehaviour
 {
     public static VirtualWorldManager Instance;
+    public float extractionTime = 300;
+    public PlayerHealth player; 
 
     private void Awake()
     {
@@ -20,15 +21,14 @@ public class VirtualWorldManager : MonoBehaviourPunCallbacks
     public void LeaveRoomAndLoadHomeScene()
     {
         // Leave the room and load the new scene
-        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("TD Main Menu");
     }
 
-    #region Photon Callback Methods 
-
-    public override void OnLeftRoom()
+    public void TimesUP()
     {
-        PhotonNetwork.LoadLevel("TD Main Menu");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        player.UpdateSkills(-50);
+        SceneManager.LoadScene("TD Main Menu");
     }
 
-    #endregion
 }

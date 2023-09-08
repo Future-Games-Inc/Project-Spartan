@@ -16,8 +16,6 @@ GameObject:
   - component: {fileID: 1371365325884012709}
   - component: {fileID: 1371365325884012708}
   - component: {fileID: 1371365325884012711}
-  - component: {fileID: 1371365325884012710}
-  - component: {fileID: 1371365325884012705}
   - component: {fileID: 1371365325884012704}
   - component: {fileID: 1371365325884012707}
   m_Layer: 9
@@ -26,7 +24,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1375860338570208301
 Transform:
   m_ObjectHideFlags: 0
@@ -122,9 +120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2e6cfd61171a5469e9f7b211f651d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 50
-  AttackRange: 20
-  AgroRange: 30
+  DetectRange: 30
+  AttackRange: 15
+  AgroRange: 25
   currentState: 0
   patrolling: 0
   wanderRadius: 300
@@ -156,16 +154,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bab26a43daff5f94a83a5519d9ea4cca, type: 3}
   - {fileID: 8300000, guid: 8d4851574d898e3489aeed0ae257a80f, type: 3}
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
+  reloadClip: {fileID: 8300000, guid: a61ed39a82ea73e4386638b2d21b35b4, type: 3}
   agent: {fileID: 1371365325884012709}
   targetTransform: {fileID: 0}
   bullet: {fileID: 5451881146956983319, guid: 3958478d9877b9e4bb6a751f1a15f51d, type: 3}
   bulletTransform: {fileID: 2295490710770790003}
-  shootForce: 0
-  ammoLeft: 0
+  shootForce: 65
+  ammoLeft: 10
   maxAmmo: 10
+  nextUpdateTime: 0
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 521
+    m_Bits: 4096
 --- !u!195 &1371365325884012709
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -214,45 +214,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1
   m_Center: {x: 0, y: 1.1744165, z: 0}
---- !u!114 &1371365325884012710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372589312783698695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1371365325884012705}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &1371365325884012705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372589312783698695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!54 &1371365325884012704
 Rigidbody:
   m_ObjectHideFlags: 0

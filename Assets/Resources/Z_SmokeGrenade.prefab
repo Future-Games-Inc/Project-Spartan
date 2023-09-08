@@ -12,21 +12,19 @@ GameObject:
   - component: {fileID: 4698990745356731594}
   - component: {fileID: 7388016243665074244}
   - component: {fileID: 2803436856893800117}
-  - component: {fileID: 1095614072161764427}
-  - component: {fileID: 439084513682831016}
   - component: {fileID: 6688208801860559093}
   - component: {fileID: 264587667648029247}
   - component: {fileID: 2947950905337838402}
   - component: {fileID: 2649803561415672122}
-  - component: {fileID: -502802353560122785}
   - component: {fileID: 1808207903522715680}
+  - component: {fileID: 2402215676945046769}
   m_Layer: 22
   m_Name: Z_SmokeGrenade
   m_TagString: Bomb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8951794830780912159
 Transform:
   m_ObjectHideFlags: 0
@@ -171,46 +169,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.06
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1095614072161764427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5065441241101702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &439084513682831016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5065441241101702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1095614072161764427}
-  - {fileID: -502802353560122785}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!135 &6688208801860559093
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -237,16 +195,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 1
-  Targets: []
   explosionRadius: 10
   maxDamage: 80
   explosionDelay: 3
+  throwForce: 20
+  throwUpwardForce: 5
+  Targets: []
   player: {fileID: 0}
   playerHealth: {fileID: 0}
   explosionEffect: {fileID: 2296808242285592759}
   rb: {fileID: 4698990745356731594}
-  throwForce: 20
-  throwUpwardForce: 5
   audioSource: {fileID: 7388016243665074244}
   objectRenderer: {fileID: 7404052725865799327}
 --- !u!114 &2947950905337838402
@@ -354,7 +312,7 @@ MonoBehaviour:
   onSnapZoneExit:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-502802353560122785
+--- !u!114 &1808207903522715680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -363,7 +321,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 5065441241101702}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aadde3a3e5de5442829b0f765c0d1e8, type: 3}
+  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HapticsOnValidPickup: 1
+  HapticsOnValidRemotePickup: 0
+  HapticsOnCollision: 0
+  HapticsOnGrab: 1
+  VibrateFrequency: 0.3
+  VibrateAmplitude: 0.1
+  VibrateDuration: 0.1
+--- !u!114 &2402215676945046769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065441241101702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BeingHeld: 0
@@ -374,7 +351,7 @@ MonoBehaviour:
   GrabSpeed: 100
   RemoteGrabbable: 1
   RemoteGrabMechanic: 0
-  RemoteGrabDistance: 5
+  RemoteGrabDistance: 2
   ThrowForceMultiplier: 2
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
@@ -425,25 +402,6 @@ MonoBehaviour:
   UseCustomInspector: 1
   lastFlickTime: 0
   FlickForce: 1
---- !u!114 &1808207903522715680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5065441241101702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b90ed01ac5d94e9468b242b4c38496a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HapticsOnValidPickup: 1
-  HapticsOnValidRemotePickup: 0
-  HapticsOnCollision: 0
-  HapticsOnGrab: 1
-  VibrateFrequency: 0.3
-  VibrateAmplitude: 0.1
-  VibrateDuration: 0.1
 --- !u!1 &299342128210431820
 GameObject:
   m_ObjectHideFlags: 0
@@ -6132,7 +6090,6 @@ GameObject:
   - component: {fileID: 7042969605411830109}
   - component: {fileID: 1619486001170735472}
   - component: {fileID: 500627723093294288}
-  - component: {fileID: 2674228639081284981}
   m_Layer: 12
   m_Name: SmokeEffect (1)
   m_TagString: Untagged
@@ -10713,28 +10670,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &2674228639081284981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2296808242285592759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &2546727218661048689
 GameObject:
   m_ObjectHideFlags: 0
@@ -34816,14 +34751,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5946389085794016974}
-  m_LocalRotation: {x: -0, y: 0.8633395, z: -0, w: 0.50462365}
-  m_LocalPosition: {x: 0.0216, y: 0.0548, z: 0.0141}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.026, y: 0.017, z: 0.034}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4319530778615059305}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 119.387, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &4988789391684349570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34872,14 +34807,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6246282188683179720}
-  m_LocalRotation: {x: -0, y: 0.8633395, z: -0, w: 0.50462365}
-  m_LocalPosition: {x: -0.0444, y: 0.0067, z: -0.0248}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.03, y: 0.0067, z: -0.0248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4319530778615059305}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 119.387, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &2559268193246479186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39696,7 +39631,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5392718028881742671}
   - component: {fileID: 5775860951220800723}
-  - component: {fileID: 1259112443355555915}
   m_Layer: 22
   m_Name: Display
   m_TagString: Untagged
@@ -39737,28 +39671,6 @@ MonoBehaviour:
   detachOnStart: 0
   useSmothRotation: 0
   justY: 1
---- !u!114 &1259112443355555915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7404052725865799327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &7783083034230151881
 GameObject:
   m_ObjectHideFlags: 0

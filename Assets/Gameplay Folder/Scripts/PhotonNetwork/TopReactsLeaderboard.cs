@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class TopReactsLeaderboard : MonoBehaviour
 {
     public string leaderboardID = "react_leaderboard";
-    public string leaderboardID2 = "faction_leaderboard";
+    public string leaderboardID2 = "faction_leaders";
     public string progressionKey = "cent_prog";
 
     public bool updater = true;
@@ -16,6 +16,9 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public TextMeshProUGUI playerNames;
     public TextMeshProUGUI playerScores;
+
+    public TextMeshProUGUI factionNames;
+    public TextMeshProUGUI factionScores;
 
     public Slider levelSlider;
     public TextMeshProUGUI currentLevel;
@@ -162,9 +165,48 @@ public class TopReactsLeaderboard : MonoBehaviour
                 }
             });
             yield return new WaitWhile(() => done == false);
-            StartCoroutine(CheckLevel());
+            StartCoroutine(FetchFactionLeaderboard());
             yield return new WaitForSeconds(20);
         }
+    }
+
+    public IEnumerator FetchFactionLeaderboard()
+    {
+            bool done = false;
+            LootLockerSDKManager.GetScoreList(leaderboardID2, 4, 0, (response) =>
+            {
+                if (response.success)
+                {
+                    string tempFactionNames = "Factions\n";
+                    string TempFactionScores = "Scores\n";
+
+                    LootLockerLeaderboardMember[] members = response.items;
+
+                    for (int i = 0; i < members.Length; i++)
+                    {
+                        tempFactionNames += members[i].rank + ". ";
+                        if (members[i].member_id != "")
+                        {
+                            tempFactionNames += members[i].member_id;
+                        }
+                        else
+                        {
+                            tempFactionNames += members[i].member_id;
+                        }
+                        TempFactionScores += members[i].score + "\n";
+                        tempFactionNames += "\n";
+                    }
+                    done = true;
+                    factionNames.text = tempFactionNames;
+                    factionScores.text = TempFactionScores;
+                }
+                else
+                {
+                    done = true;
+                }
+            });
+            yield return new WaitWhile(() => done == false);
+            StartCoroutine(CheckLevel());
     }
 
     public IEnumerator CheckLevel()

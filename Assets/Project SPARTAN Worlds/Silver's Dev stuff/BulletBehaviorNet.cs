@@ -1,8 +1,9 @@
-using Photon.Pun;
+using PathologicalGames;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class BulletBehaviorNet : MonoBehaviourPunCallbacks
+public class BulletBehaviorNet : MonoBehaviour
 {
     [Header("Bullet Properties -------------")]
     [Tooltip("The name that will ID this bullet for it's own separate homing/damage/extra features functions")]
@@ -24,15 +25,21 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
     public AudioClip clip;
     public AudioSource audioSource;
 
+    public GameObjectPoolManager PoolManager;
+
+
     // Start is called before the first frame update
     private void OnEnable()
     {
+
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
         StartCoroutine(Destroy(Duration));
     }
     IEnumerator Destroy(float duration)
     {
         yield return new WaitForSeconds(duration);
-        PhotonNetwork.Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
         // attach clip and play
         // audioSource.PlayOneShot(clip);
     }
@@ -50,7 +57,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
 
         // if break on impact
         if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         if ((other.CompareTag("Enemy")))
         {
             // select custom functions for damage
@@ -59,7 +66,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 case "EMP Bullet":
                     EMPBulletDamageEnemy(other, Damage);
                     break;
-                default:
+                case "Default":
                     DefaultDamageEnemy(other, Damage);
                     break;
             }
@@ -73,7 +80,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 case "EMP Bullet":
                     EMPBulletDamageBossEnemy(other, Damage);
                     break;
-                default:
+                case "Default":
                     DefaultDamageBossEnemy(other, Damage);
                     break;
             }
@@ -87,7 +94,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 case "EMP Bullet":
                     EMPBulletDamagePlayer(other, Damage);
                     break;
-                default:
+                case "Default":
                     DefaultDamagePlayer(other, Damage);
                     break;
             }
@@ -101,7 +108,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 case "EMP Bullet":
                     EMPBulletDamageSecurity(other, Damage);
                     break;
-                default:
+                case "Default":
                     DefaultDamageSecurity(other, Damage);
                     break;
             }
@@ -121,7 +128,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             {
                 enemyDamageReg.TakeDamage(Damage);
             }
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamageEnemy(Collider target, float damage)
         {
@@ -136,7 +143,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 enemyDamageReg.TakeDamage(Damage);
             }
             enemyDamageReg.EMPShock();
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         void DefaultDamageBossEnemy(Collider target, float damage)
@@ -151,7 +158,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             {
                 enemyDamageReg.TakeDamage(Damage);
             }
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamageBossEnemy(Collider target, float damage)
         {
@@ -166,7 +173,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 enemyDamageReg.TakeDamage(Damage);
             }
             enemyDamageReg.EMPShock();
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         void DefaultDamagePlayer(Collider target, float damage)
@@ -177,7 +184,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 playerHealth.PlayersKilled();
             }
             enemyDamageReg.TakeDamage(Damage);
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamagePlayer(Collider target, float damage)
         {
@@ -188,7 +195,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
             }
             enemyDamageReg.TakeDamage(Damage);
             enemyDamageReg.EMPShock();
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         void DefaultDamageSecurity(Collider target, float damage)
@@ -201,7 +208,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                 enemyDamageReg2.TakeDamage(Damage);
             }
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamageSecurity(Collider target, float damage)
         {
@@ -213,7 +220,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
                 SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                 enemyDamageReg2.TakeDamage(Damage * 200);
             }
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -221,7 +228,7 @@ public class BulletBehaviorNet : MonoBehaviourPunCallbacks
     {
         // still need to modify to allow bullets pass through enemies if we want to do that later on
         if (!collision.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
     }
 
 }

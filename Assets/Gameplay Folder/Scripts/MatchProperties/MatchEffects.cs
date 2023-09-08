@@ -1,22 +1,24 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
-using ExitGames.Client.Photon;
 using TMPro;
 using UnityEngine.AI;
+using Umbrace.Unity.PurePool;
 
-public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
+public class MatchEffects : MonoBehaviour
 {
 
     public int matchCountdown = 10;
     public int currentMatchTime;
+
+    public int currentExtractionTimer = 300;
+
     public GameObject spawnManager;
     public GameObject uiCanvas;
     //public GameObject[] artifacts;
     //public Transform[] artifactLocations;
 
     public TextMeshProUGUI countdownText;
+    public TextMeshProUGUI extractionTimer;
 
     private Coroutine timerCoroutine;
 
@@ -41,45 +43,20 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public TextMeshProUGUI nexusCodePanel;
 
-    public enum EventCodes : byte
-    {
-        RefreshTimer
-    }
+    public GameObjectPoolManager PoolManager;
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        // Check if this is the object's current owner and if the new master client exists
-        if (photonView.IsMine && newMasterClient != null)
-        {
-            // Transfer ownership of the object to the new master client
-            photonView.TransferOwnership(newMasterClient.ActorNumber);
-        }
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code >= 200)
-            return;
-
-        EventCodes e = (EventCodes)photonEvent.Code;
-        object[] o = (object[])photonEvent.CustomData;
-
-        switch (e)
-        {
-            case EventCodes.RefreshTimer:
-                RefreshTimer_R(o);
-                break;
-        }
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        InitializeTimer();
-        photonView.RPC("AudioEnter", RpcTarget.All);
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
 
-        // Generate a random 4-digit sequence
-        photonView.RPC("RPC_GenerateSequence", RpcTarget.MasterClient);
+        InitializeTimer(); // Only the Master Client will initialize the timer
+        StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
+
+        // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
+        numSequence = GenerateRandomSequence(4);
+        nexusCodePanel.text = numSequence.ToString();
     }
 
     IEnumerator SpawnCheckCoroutine()
@@ -120,18 +97,27 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
                     // Adjust the y value to be 100 units above the original spawn position
                     spawnPosition.y += 100;
 
-                    PhotonNetwork.InstantiateRoomObject(supplyDropShipPrefab.name, spawnPosition, Quaternion.identity, 0, null);
+                    this.PoolManager.Acquire(supplyDropShipPrefab, spawnPosition, Quaternion.identity);
                     StartCoroutine(SupplyShipAudio());
                     spawned = true;
                 }
             }
         }
     }
+    private void Update()
+    {
+        RefreshTimerUI();
+        if (startMatchBool)
+        {
+            RefreshCountdownTimer();
+        }
+    }
 
     IEnumerator SupplyShipAudio()
     {
         yield return new WaitForSeconds(0);
-        photonView.RPC("PlaySupplyDropAudio", RpcTarget.All);
+        audioSource.PlayOneShot(supplyShip1);
+        StartCoroutine(PlaySupplyDropAudioDelayed());
     }
 
     private void RefreshTimerUI()
@@ -140,10 +126,14 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
         countdownText.text = $"{seconds}";
     }
 
+    void RefreshCountdownTimer()
+    {
+        string seconds = (currentExtractionTimer % 60).ToString("00");
+    }
+
     private void InitializeTimer()
     {
         currentMatchTime = matchCountdown;
-        RefreshTimerUI();
 
         timerCoroutine = StartCoroutine(TimerEvent());
     }
@@ -152,27 +142,38 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         yield return new WaitForSeconds(1f);
 
-        currentMatchTime -= 1;
-
-        if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
+        if (!startMatchBool)
         {
-            photonView.RPC("PlayCountdownAudio", RpcTarget.All, currentMatchTime - 1);
-        }
+            currentMatchTime -= 1;
 
-        if (currentMatchTime <= 0)
-        {
-            photonView.RPC("AudioStart", RpcTarget.All);
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
-            StartCoroutine(SpawnCheckCoroutine());
-            //StartCoroutine(Artifacts());
-            timerCoroutine = null; // Stop the coroutine
+            if (currentMatchTime >= 1 && currentMatchTime <= countdownClips.Length)
+            {
+                int clipIndex = currentMatchTime - 1;
+                audioSource.PlayOneShot(countdownClips[clipIndex]);
+            }
+
+            if (currentMatchTime <= 0)
+            {
+                audioSource.PlayOneShot(matchBegan);
+                uiCanvas.SetActive(false);
+                startMatchBool = true;
+                StartCoroutine(SpawnCheckCoroutine());
+                currentExtractionTimer -= 1;
+                //StartCoroutine(Artifacts());
+            }
+            timerCoroutine = StartCoroutine(TimerEvent());
         }
         else
         {
-            RefreshTimer_S();
+            currentExtractionTimer -= 1;
             timerCoroutine = StartCoroutine(TimerEvent());
         }
+
+        if(currentMatchTime <= 0 && currentExtractionTimer <= 0)
+        {
+            timerCoroutine = null;
+        }
+
     }
 
     //IEnumerator Artifacts()
@@ -182,88 +183,15 @@ public class MatchEffects : MonoBehaviourPunCallbacks, IOnEventCallback
     //    {
     //        for (int i = 0; i < artifacts.Length; i++)
     //        {
-    //            PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
+    //            PhotonNetwork.this.PoolManager.Acquire(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
     //        }
     //    }
     //}
-
-    public void RefreshTimer_S()
-    {
-        object[] package = new object[] { currentMatchTime };
-
-        PhotonNetwork.RaiseEvent(
-            (byte)EventCodes.RefreshTimer, package,
-            new RaiseEventOptions { Receivers = ReceiverGroup.All },
-            new SendOptions { Reliability = true }
-            );
-    }
-
-    public void RefreshTimer_R(object[] data)
-    {
-        currentMatchTime = (int)data[0];
-        RefreshTimerUI();
-    }
-
-    public override void OnEnable()
-    {
-        base.OnEnable();
-        PhotonNetwork.AddCallbackTarget(this);
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
-        PhotonNetwork.RemoveCallbackTarget(this);
-    }
-
-    [PunRPC]
-    void PlayCountdownAudio(int clipIndex)
-    {
-        audioSource.PlayOneShot(countdownClips[clipIndex]);
-    }
-
-    [PunRPC]
-    void PlaySupplyDropAudio()
-    {
-        audioSource.PlayOneShot(supplyShip1);
-        StartCoroutine(PlaySupplyDropAudioDelayed());
-    }
 
     IEnumerator PlaySupplyDropAudioDelayed()
     {
         yield return new WaitForSeconds(supplyShip1.length);
         audioSource.PlayOneShot(supplyShip2);
-    }
-
-    [PunRPC]
-    void AudioStart()
-    {
-        audioSource.PlayOneShot(matchBegan);
-        uiCanvas.SetActive(false);
-        startMatchBool = true;
-    }
-
-    [PunRPC]
-    void AudioEnter()
-    {
-        startMatchBool = false;
-    }
-
-    [PunRPC]
-    void RPC_GenerateSequence()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            numSequence = GenerateRandomSequence(4);
-            photonView.RPC("RPC_ReceiveSequence", RpcTarget.All, numSequence);
-        }
-    }
-
-    [PunRPC]
-    void RPC_ReceiveSequence(string sequence)
-    {
-        numSequence = sequence;
-        nexusCodePanel.text = numSequence.ToString();
     }
 
     private string GenerateRandomSequence(int length)

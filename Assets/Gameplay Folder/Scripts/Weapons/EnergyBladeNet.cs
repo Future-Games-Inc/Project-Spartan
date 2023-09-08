@@ -1,8 +1,9 @@
-using Photon.Pun;
+using PathologicalGames;
 using TMPro;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
-public class EnergyBladeNet : MonoBehaviourPunCallbacks
+public class EnergyBladeNet : MonoBehaviour
 {
     [Header("Blade Characteristics ---------------------------------------------------------------")]
     public TextMeshProUGUI bleedStackText;
@@ -11,12 +12,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     public GameObject hitEffectPrefab;
     public GameObject Blade;
     public PlayerHealth playerHealth;
-
-    private Transform bladeTransform;
-
-    private Vector3 previousPosition;
-
-    private float bladeVelocity;
 
     public Material normal;
     public Material bleed;
@@ -32,6 +27,8 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     public float bleedDuration = 5.0f;
 
     private int _bleedStacks = 0;
+
+    public GameObjectPoolManager PoolManager;
     public int bleedStacks
     {
         get
@@ -50,16 +47,11 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     void OnEnable()
     {
-        bladeTransform = transform;
-        previousPosition = bladeTransform.localPosition;
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (bladeVelocity < 0.2f)
-        {
-            return;  // Check if blade is not moving fast enough
-        }
         int Damage = baseDamage + bleedStacks * bleedDamage;
 
         if (other.CompareTag("Enemy") || other.CompareTag("BossEnemy"))
@@ -123,7 +115,7 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
     private void ApplyEffects(int Damage, Vector3 position)
     {
         // Apply hit effect
-        PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, position, Quaternion.identity, 0, null);
+        GameObject hit = this.PoolManager.Acquire(hitEffectPrefab, position, Quaternion.identity);
 
         // Apply bleed effect
         if (!isBleeding)
@@ -142,11 +134,6 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        // Calculate blade velocity
-        Vector3 displacement = bladeTransform.localPosition - previousPosition;
-        bladeVelocity = displacement.magnitude / Time.deltaTime;
-        previousPosition = bladeTransform.localPosition;
-
         if (bleedStacks > 3)
             isBleeding = true;
 
@@ -169,25 +156,22 @@ public class EnergyBladeNet : MonoBehaviourPunCallbacks
         if (bleedStacks > 3)
         {
             bleedIcon.SetActive(true);
-            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, bleed);
+            RPC_BladeMaterial(bleed);
         }
         else
         {
             bleedIcon.SetActive(false);
-            photonView.RPC("RPC_BladeMaterial", RpcTarget.All, normal);
+            RPC_BladeMaterial(normal);
         }
     }
 
-    [PunRPC]
     void RPC_BladeMaterial(Material material)
     {
-        if (!photonView.IsMine)
-            return;
         Blade.GetComponent<Renderer>().material = material;
     }
 
     public void rescale()
     {
-        this.gameObject.transform.localScale = Vector3.one;
+        this.transform.localScale = Vector3.one;
     }
 }

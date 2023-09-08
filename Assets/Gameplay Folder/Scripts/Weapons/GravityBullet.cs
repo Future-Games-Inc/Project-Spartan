@@ -1,7 +1,6 @@
-using Photon.Pun;
 using UnityEngine;
 
-public class GravityBullet : MonoBehaviourPunCallbacks
+public class GravityBullet : MonoBehaviour
 {
     [Header("Bullet Behavior ---------------------------------------------------")]
     private bool hasHit = false;
@@ -15,12 +14,14 @@ public class GravityBullet : MonoBehaviourPunCallbacks
     public float gravityWellRadius = 10.0f;
     public float gravityWellForce = 100.0f;
 
+    public AudioSource audioSource;
+    public AudioClip clip;
+
     private void Update()
     {
 
     }
 
-    [System.Obsolete]
     private void OnTriggerEnter(Collider other)
     {
         if (!hasHit)
@@ -41,7 +42,7 @@ public class GravityBullet : MonoBehaviourPunCallbacks
                     }
                 }
 
-                if (other.CompareTag("Player"))
+                if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
                 {
                     //critical hit here
                     PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
@@ -58,10 +59,10 @@ public class GravityBullet : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, transform.position, Quaternion.identity, 0, null);
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
 
             // Destroy bullet
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -85,10 +86,10 @@ public class GravityBullet : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            PhotonNetwork.InstantiateRoomObject(hitEffectPrefab.name, transform.position, Quaternion.identity, 0, null);
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
 
             // Destroy bullet
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

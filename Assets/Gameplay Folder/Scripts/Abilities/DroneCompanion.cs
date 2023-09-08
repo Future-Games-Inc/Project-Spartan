@@ -1,4 +1,3 @@
-using Photon.Pun;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -29,18 +28,21 @@ public class DroneCompanion : MonoBehaviour
     private Vector3 directionToTarget;
 
     public float shootDistance = 10f;
-    public float shootForce;
+    public float shootForce = 75;
+
+    public bool fireWeaponBool = false;
 
     public States currentState;
 
-    private void Start()
+    private void OnEnable()
     {
         FindClosestEnemy();
+        StartCoroutine(FireWeapon());
     }
 
     void Update()
     {
-        FindClosestEnemy();        
+        FindClosestEnemy();
         UpdateStates();
     }
 
@@ -82,6 +84,7 @@ public class DroneCompanion : MonoBehaviour
 
     private void Follow()
     {
+        fireWeaponBool = false;
         directionToTarget = targetTransform.position - transform.position;
 
         RaycastHit hitInfo;
@@ -103,7 +106,7 @@ public class DroneCompanion : MonoBehaviour
             currentState = States.Follow;
         }
         LookAtTarget();
-        StartCoroutine(FireWeapon());
+        fireWeaponBool = true;
     }
 
     private void LookAtTarget()
@@ -118,13 +121,17 @@ public class DroneCompanion : MonoBehaviour
 
     IEnumerator FireWeapon()
     {
-        yield return new WaitForSeconds(2);
-        GameObject spawnedBullet = PhotonNetwork.InstantiateRoomObject(droneBullet.name, droneBulletSpawn.position, Quaternion.identity, 0, null);
-        spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
-        spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(1, 4);
-        spawnedBullet.GetComponent<Bullet>().bulletOwner = player;
-        spawnedBullet.GetComponent<Bullet>().playerBullet = true;
-        shootForce = (int)Random.Range(40, 75);
-        spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce;
+        while (true)
+        {
+            while (!fireWeaponBool)
+                yield return null;
+            GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
+            spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
+            spawnedBullet.GetComponent<Bullet>().bulletModifier = (int)Random.Range(1, 4);
+            spawnedBullet.GetComponent<Bullet>().bulletOwner = player;
+            spawnedBullet.GetComponent<Bullet>().playerBullet = true;
+            spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce;
+            yield return new WaitForSeconds(.25f);
+        }
     }
 }

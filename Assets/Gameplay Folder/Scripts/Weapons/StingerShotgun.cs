@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 
-public class StingerShotgun : MonoBehaviourPunCallbacks
+public class StingerShotgun : MonoBehaviour
 {
     [Header("Spawning ---------------------------------------")]
     public Transform[] spawnPoint;
@@ -33,9 +34,12 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
     public float fireSpeed = 20;
     public GameObject bullet;
 
+    public GameObjectPoolManager PoolManager;
+
     // Start is called before the first frame update
     void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
         durability = 5;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
@@ -86,7 +90,7 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = PhotonNetwork.Instantiate(bullet.name, t.position, Quaternion.identity, 0, null);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<StingerBulletNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StingerBulletNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<StingerBulletNet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
@@ -94,17 +98,27 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
                     spawnedBullet.gameObject.GetComponent<StingerBulletNet>().playerBullet = true;
                 }
             }
+            ammoLeft--;
 
-            photonView.RPC("RPC_StingerFire", RpcTarget.All);
+            if (ammoLeft <= 0 && reloadingWeapon == false)
+            {
+                reloadingWeapon = true;
+                StartCoroutine(ReloadWeapon());
+            }
             yield return new WaitForSeconds(0.2f);
         }
     }
 
     IEnumerator ReloadWeapon()
     {
-        photonView.RPC("RPC_StingerReload", RpcTarget.All);
+        StopCoroutine(FireBullet());
+        reloadingScreen.SetActive(true);
+        audioSource.PlayOneShot(weaponReload);
+        durability--;
         yield return new WaitForSeconds(2);
-        photonView.RPC("RPC_StingerReload2", RpcTarget.All);
+        ammoLeft = maxAmmo;
+        reloadingScreen.SetActive(false);
+        reloadingWeapon = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -112,7 +126,9 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            photonView.RPC("RPC_StingerTrigger", RpcTarget.All);
+            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            maxAmmo = newMaxAmmo;
+            rotatorScript.enabled = false;
         }
     }
 
@@ -121,52 +137,7 @@ public class StingerShotgun : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        PhotonNetwork.Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_StingerFire()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft--;
-
-        if (ammoLeft <= 0 && reloadingWeapon == false)
-        {
-            reloadingWeapon = true;
-            StartCoroutine(ReloadWeapon());
-        }
-    }
-
-    [PunRPC]
-    void RPC_StingerReload()
-    {
-        if (!photonView.IsMine)
-            return;
-        StopCoroutine(FireBullet());
-        reloadingScreen.SetActive(true);
-        audioSource.PlayOneShot(weaponReload);
-        durability--;
-    }
-
-    [PunRPC]
-    void RPC_StingerReload2()
-    {
-        if (!photonView.IsMine)
-            return;
-        ammoLeft = maxAmmo;
-        reloadingScreen.SetActive(false);
-        reloadingWeapon = false;
-    }
-
-    [PunRPC]
-    void RPC_StingerTrigger()
-    {
-        if (!photonView.IsMine)
-            return;
-        var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
-        maxAmmo = newMaxAmmo;
-        rotatorScript.enabled = false;
+        this.PoolManager.Release(gameObject);
     }
 
     public void Rescale()

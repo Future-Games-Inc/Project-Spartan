@@ -1,7 +1,7 @@
-﻿using Photon.Pun;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,7 +36,7 @@ namespace BNG {
         public bool CanGrabArrowFromKnock = true;
 
         [Tooltip("Name of the prefab used to create an arrow. Must be in a /Resources/ directory.")]
-        public string ArrowPrefabName = "Arrow2";
+        public GameObject ArrowPrefabName;
 
         [Tooltip("Arrow will rotate around this if bow is being held in right hand")]
         public Transform ArrowRestLeftHanded; // Arrow will rotate around this
@@ -87,10 +87,11 @@ namespace BNG {
         public GameObject player;
 
         public Rotator rotator;
-
-        public PhotonView photonView;
+        public GameObjectPoolManager PoolManager;
 
         void Start() {
+
+            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
             initialKnockPosition = ArrowKnock.localPosition;
             bowGrabbable = GetComponent<Grabbable>();
             audioSource = GetComponent<AudioSource>();
@@ -130,7 +131,7 @@ namespace BNG {
 
             // Grab an arrow by holding trigger in grab area
             if (canGrabArrowFromKnock()) {
-                GameObject arrow = PhotonNetwork.Instantiate(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity, 0, null);
+                GameObject arrow = this.PoolManager.Acquire(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity);
                 arrow.transform.LookAt(getArrowRest());
 
                 // Use trigger when grabbing from knock
@@ -179,7 +180,7 @@ namespace BNG {
             if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
             {
                 player = other.transform.root.gameObject;
-                photonView.RPC("RPC_BowTrigger", RpcTarget.All);
+                rotator.enabled = false;
             }
         }
 
@@ -452,15 +453,6 @@ namespace BNG {
 
         void playBowRelease() {
             playSoundInterval(1.67f, 2.2f, 0.3f);
-        }
-
-
-        [PunRPC]
-        void RPC_BowTrigger()
-        {
-            if (!photonView.IsMine)
-                return;
-            rotator.enabled = false;
         }
 
         public void Rescale()

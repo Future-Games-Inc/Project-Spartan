@@ -34,6 +34,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
 
     public GameObject attachedCache;
     public Transform attachTransform;
+    public float nextUpdateTime;
 
     public enum States
     {
@@ -86,7 +87,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
             isLooting = true;
             positionSet = false;
             agent.SetDestination(targetTransform.position);
-            targetTransform.GetComponent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, false);
+            targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, false);
             timer = 0;
         }
     }
@@ -108,13 +109,13 @@ public class LootDrone : MonoBehaviourPunCallbacks
                 // Move the drone to a new location within the randomNavSphere
                 Vector3 newPosition = RandomNavSphere(transform.position, wanderRadius, -1);
                 agent.SetDestination(newPosition);
-                PauseDelay();
+                StartCoroutine(PauseDelay());
             }
             else if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
             {
                 // Drop the attached cache back on the map
                 attachedCache.transform.parent = null;
-                targetTransform.GetComponent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
+                targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
 
                 // Reset variables for the next loot phase
                 attachedCache = null;
@@ -124,9 +125,9 @@ public class LootDrone : MonoBehaviourPunCallbacks
         }
     }
 
-    private async void PauseDelay()
+    IEnumerator PauseDelay()
     {
-        await Task.Delay(2000);
+        yield return new WaitForSeconds(2);
         agent.isStopped = false;
     }
 
@@ -137,7 +138,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
             if (attachedCache != null)
             {
                 attachedCache.transform.parent = null;
-                targetTransform.GetComponent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
+                targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
                 isLooting = false;
                 patrolling = true;
             }
@@ -162,7 +163,11 @@ public class LootDrone : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            FindClosestEnemy();
+            if (Time.time >= nextUpdateTime)
+            {
+                nextUpdateTime = Time.time + 1f; // Update every 1 second
+                FindClosestEnemy();
+            }
 
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
 

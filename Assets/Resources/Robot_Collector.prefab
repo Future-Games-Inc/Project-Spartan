@@ -173,8 +173,6 @@ GameObject:
   - component: {fileID: 7784772225422173241}
   - component: {fileID: 1337322463001221985}
   - component: {fileID: 561718029665665433}
-  - component: {fileID: 789172449994262910}
-  - component: {fileID: 2811088867937196126}
   - component: {fileID: 7653367449451571236}
   - component: {fileID: 5825507031238871274}
   - component: {fileID: 7686642839091752342}
@@ -184,7 +182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4780382970470657449
 Transform:
   m_ObjectHideFlags: 0
@@ -300,7 +298,6 @@ MonoBehaviour:
   xpDropRate: 0
   audioSource: {fileID: 1337322463001221985}
   bulletHit: {fileID: 8300000, guid: bef3e5c3d3a13f5468e1aaacbe181e22, type: 3}
-  explosionEffect: {fileID: 1030456777416062125}
   audioClip:
   - {fileID: 8300000, guid: c1aab5187857fef49a141537717f66d5, type: 3}
   - {fileID: 8300000, guid: 523d453c6aa986b4aa30d7f0c3e52267, type: 3}
@@ -314,8 +311,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bab26a43daff5f94a83a5519d9ea4cca, type: 3}
   - {fileID: 8300000, guid: 8d4851574d898e3489aeed0ae257a80f, type: 3}
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
+  explosionEffect: {fileID: 1030456777416062125}
   agent: {fileID: 5950993363525062681}
-  type: 
+  type: Collector
 --- !u!82 &1337322463001221985
 AudioSource:
   m_ObjectHideFlags: 0
@@ -425,45 +423,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.7
   m_Center: {x: 0, y: 1.42, z: 0}
---- !u!114 &789172449994262910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4782317824383775665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &2811088867937196126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4782317824383775665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 789172449994262910}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!54 &7653367449451571236
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -520,6 +479,7 @@ MonoBehaviour:
   positionSet: 0
   attachedCache: {fileID: 0}
   attachTransform: {fileID: 1859760057873798603}
+  nextUpdateTime: 0
 --- !u!1 &5893329933340724562
 GameObject:
   m_ObjectHideFlags: 0

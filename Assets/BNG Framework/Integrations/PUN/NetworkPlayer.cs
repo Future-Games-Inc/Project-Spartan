@@ -114,8 +114,15 @@ MonoBehaviourPunCallbacks, IPunObservable, IPunOwnershipCallbacks
             // Remote Player
             if (!photonView.IsMine) 
             {
+                PlayerHeadTransform.gameObject.SetActive(false);
+                PlayerLeftHandTransform.gameObject.SetActive(false);
+                PlayerRightHandTransform.gameObject.SetActive(false);
+                LeftHandController.enabled = false;
+                RightHandController.enabled = false;
+                RightGrabber.enabled = false;
+                LeftGrabber.enabled = false;
 
-                if(disabledObjects) {
+                if (disabledObjects) {
                     toggleObjects(true);
                 }
 
@@ -363,7 +370,7 @@ MonoBehaviourPunCallbacks, IPunObservable, IPunOwnershipCallbacks
 
             bool amOwner = targetView.AmOwner || (targetView.Owner == null && PhotonNetwork.IsMasterClient);
 
-            NetworkedGrabbable netGrabbable = targetView.gameObject.GetComponent<NetworkedGrabbable>();
+            Grabbable netGrabbable = targetView.gameObject.GetComponent<Grabbable>();
             if (netGrabbable != null) {
                 // Authorize transfer of ownership if we're not holding it
                 if (amOwner && !netGrabbable.BeingHeld) {

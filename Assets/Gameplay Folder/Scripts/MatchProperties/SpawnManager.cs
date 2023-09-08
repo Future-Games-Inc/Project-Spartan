@@ -1,6 +1,6 @@
-using System.Collections;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using Photon.Pun;
 using UnityEngine.AI;
 
 public class SpawnManager : MonoBehaviour
@@ -9,64 +9,51 @@ public class SpawnManager : MonoBehaviour
     public bool gameOver;
     public GameObject winnerPlayer;
 
-    public float spawnRadius = 300.0f;   // Maximum spawn radius
+    public float spawnRadius = 300.0f;
 
     public NavMeshSurface navMeshSurface;
     Vector3 spawnPosition;
     public Vector3 respawnPosition;
+    public GameObjectPoolManager PoolManager;
 
-    // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
-        if (PhotonNetwork.IsConnectedAndReady)
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        Vector3 randomPosition = GenerateRandomPosition();
+
+        if (randomPosition != Vector3.zero)
         {
-            StartCoroutine(SpawnPlayer());
+            spawnPosition = randomPosition;
+            respawnPosition = spawnPosition;
+
+            // We then invoke an RPC function to instantiate the player across all clients
+            InstantiatePlayer(spawnPosition);
         }
         gameOver = false;
         winnerPlayer = null;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void InstantiatePlayer(Vector3 spawnPosition)
     {
-
+        object avatarSelectionNumber;
+        if (PlayerPrefs.HasKey("AvatarSelectionNumber"))
+        {
+            avatarSelectionNumber = PlayerPrefs.GetInt("AvatarSelectionNumber");
+            int selectionValue = (int)avatarSelectionNumber;
+            GameObject playter = this.PoolManager.Acquire(playerPrefab[selectionValue], spawnPosition, Quaternion.identity);
+        }
     }
 
-    IEnumerator SpawnPlayer()
+    Vector3 GenerateRandomPosition()
     {
-        yield return new WaitForSeconds(.5f);
-        // Create an array to store the valid positions
-        Vector3[] spawnPositions = new Vector3[10];
-        int validPositionsCount = 0;
+        Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+        randomPosition += transform.position;
 
-        // Generate multiple random positions within the spawn radius
-        for (int i = 0; i < spawnPositions.Length; i++)
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
         {
-            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-            randomPosition += transform.position;
-
-            // Find the nearest point on the NavMesh to the random position
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-            {
-                // Add the valid position to the array
-                spawnPositions[validPositionsCount] = hit.position;
-                validPositionsCount++;
-            }
+            return hit.position;
         }
-
-        // If there are valid positions, choose one randomly for spawning the enemy
-        if (validPositionsCount > 0)
-        {
-            spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
-            respawnPosition = spawnPosition;
-
-            object avatarSelectionNumber;
-            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
-            {
-                int selectionValue = (int)avatarSelectionNumber;
-                PhotonNetwork.Instantiate(playerPrefab[selectionValue].name, spawnPosition, Quaternion.identity);
-            }
-        }
+        return Vector3.zero;
     }
 }

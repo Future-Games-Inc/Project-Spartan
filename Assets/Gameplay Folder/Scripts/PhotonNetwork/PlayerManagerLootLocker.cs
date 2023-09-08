@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using LootLocker.Requests;
-using Photon.Realtime;
 
 public class PlayerManagerLootLocker : MonoBehaviour
 {
@@ -12,11 +10,6 @@ public class PlayerManagerLootLocker : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-
-    }
-
-    public void LoginPlayer()
     {
         StartCoroutine(LoginRoutine());
     }
@@ -40,7 +33,6 @@ public class PlayerManagerLootLocker : MonoBehaviour
         yield return new WaitWhile(() => done == false);
 
         string playerID = PlayerPrefs.GetString("PlayerID");
-        AuthenticationValues authValues = new AuthenticationValues(playerID);
 
         string defaultName = string.Empty;
         if (PlayerPrefs.HasKey(playerNamePrefKey))
@@ -56,6 +48,6 @@ public class PlayerManagerLootLocker : MonoBehaviour
                 }
             });
         }
-        yield return leaderboard.FetchTopHighScores();
+        StartCoroutine(leaderboard.FetchTopHighScores());
     }
 }

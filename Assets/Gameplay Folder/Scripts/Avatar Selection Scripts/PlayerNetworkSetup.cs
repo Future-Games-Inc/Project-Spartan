@@ -1,10 +1,9 @@
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
+public class PlayerNetworkSetup : MonoBehaviour
 {
     public XROrigin localXRRigGameObject;
     public Camera myCamera;
@@ -17,211 +16,56 @@ public class PlayerNetworkSetup : MonoBehaviourPunCallbacks
     public ActionBasedContinuousTurnProvider controllerContinuousTurnProvider;
     public EarlyExtraction earlyExtraction;
 
-
-    //public VRIK_PUN_Player[] punPlayers;
-    //public Animator[] animators;
-
-    //public GameObject[] AvatarModelPrefabs;
-
     public TextMeshProUGUI[] playerNameText;
     public GameObject[] playerInformation;
-
-    //public string characterFaction;
-
-    //public GameObject[] cyberEmblem;
-    //public GameObject[] cintEmblem;
-    //public GameObject[] fedEmblem;
-    //public GameObject[] chaosEmblem;
-    //public GameObject[] muerteEmblem;
 
     const string playerNamePrefKey = "PlayerName";
     // Start is called before the first frame update
 
     void OnEnable()
     {
-        if (photonView != null)
+        foreach (TextMeshProUGUI playerText in playerNameText)
         {
-            if (!photonView.IsMine)
+            playerText.text = "Unknown React";
+        }
+        myCamera.enabled = true;
+        localXRRigGameObject.enabled = true;
+        playerMovement.enabled = true;
+        dash.enabled = true;
+        controllerSnapTurnProvider.enabled = true;
+        controllerContinuousTurnProvider.enabled = true;
+        earlyExtraction.enabled = true;
+        wristUI.enabled = true;
+
+        foreach (GameObject information in playerInformation)
+        {
+            information.SetActive(false);
+        }
+
+        foreach (ActionBasedController controllers in controller)
+        {
+            controllers.enabled = true;
+        }
+
+        foreach (HandPoseAnimator hands in handPoseAnimators)
+        {
+            hands.enabled = true;
+        }
+
+        if (PlayerPrefs.GetString(playerNamePrefKey) != null)
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                myCamera.enabled = false;
-                localXRRigGameObject.enabled = false;
-                playerMovement.enabled = false;
-                dash.enabled = false;
-                wristUI.enabled = false;
-                controllerSnapTurnProvider.enabled = false;
-                controllerContinuousTurnProvider.enabled = false;
-                earlyExtraction.enabled = false;
-
-                foreach (ActionBasedController controllers in controller)
-                {
-                    controllers.enabled = false;
-                }
-
-                foreach (HandPoseAnimator hands in handPoseAnimators)
-                {
-                    hands.enabled = false;
-                }
-
-                if (photonView.Owner.NickName != null)
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = photonView.Owner.NickName;
-                    }
-                }
-                else
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = "Unknown React";
-                    }
-                }
-
-                //photonView.RPC("SetPlayerFaction", RpcTarget.AllBuffered);
+                playerText.text = PlayerPrefs.GetString(playerNamePrefKey);
             }
 
-            else if (photonView.IsMine)
+        }
+        else if (PlayerPrefs.GetString(playerNamePrefKey) == null)
+        {
+            foreach (TextMeshProUGUI playerText in playerNameText)
             {
-                myCamera.enabled = true;
-                localXRRigGameObject.enabled = true;
-                playerMovement.enabled = true;
-                dash.enabled = true;
-                controllerSnapTurnProvider.enabled = true;
-                controllerContinuousTurnProvider.enabled = true;
-                earlyExtraction.enabled = true;
-                wristUI.enabled = true;
-
-                foreach (GameObject information in playerInformation)
-                {
-                    information.SetActive(false);
-                }
-
-                foreach (ActionBasedController controllers in controller)
-                {
-                    controllers.enabled = true;
-                }
-
-                foreach (HandPoseAnimator hands in handPoseAnimators)
-                {
-                    hands.enabled = true;
-                }
-
-
-                //object avatarSelectionNumber;
-                //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.AVATAR_SELECTION_NUMBER, out avatarSelectionNumber))
-                //{
-                //    photonView.RPC("InitializeSelectedAvatarModel", RpcTarget.AllBuffered, (int)avatarSelectionNumber);
-                //}
-
-                if (photonView.Owner.NickName != null)
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = photonView.Owner.NickName;
-                    }
-
-                }
-                else if (photonView.Owner.NickName == null)
-                {
-                    foreach (TextMeshProUGUI playerText in playerNameText)
-                    {
-                        playerText.text = "Unknown React";
-                    }
-                }
-
-                //object faction;
-                //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
-                //{
-                //    characterFaction = "Cyber SK Gang".ToString();
-                //    foreach (GameObject emblem in cyberEmblem)
-                //        emblem.SetActive(true);
-                //}
-                //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
-                //{
-                //    characterFaction = "Muerte De Dios".ToString();
-                //    foreach (GameObject emblem in muerteEmblem)
-                //        emblem.SetActive(true);
-                //}
-                //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
-                //{
-                //    characterFaction = "Chaos Cartel".ToString();
-                //    foreach (GameObject emblem in chaosEmblem)
-                //        emblem.SetActive(true);
-                //}
-                //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
-                //{
-                //    characterFaction = "CintSix Cartel".ToString();
-                //    foreach (GameObject emblem in cintEmblem)
-                //        emblem.SetActive(true);
-                //}
-                //else if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
-                //{
-                //    characterFaction = "Federation Zone Authority".ToString();
-                //    foreach (GameObject emblem in fedEmblem)
-                //        emblem.SetActive(true);
-                //}
+                playerText.text = "Unknown React";
             }
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    //[PunRPC]
-    //public void InitializeSelectedAvatarModel(int avatarSelectionNumber)
-    //{
-    //    for (int i = 0; i < AvatarModelPrefabs.Length; i++)
-    //    {
-    //        if (AvatarModelPrefabs[avatarSelectionNumber] == AvatarModelPrefabs[i])
-    //        {
-    //            AvatarModelPrefabs[i].SetActive(true);
-    //            punPlayers[i].enabled = true;
-    //            animators[i].enabled = true;
-    //        }
-    //        else
-    //        {
-    //            AvatarModelPrefabs[i].SetActive(false);
-    //            punPlayers[i].enabled = false;
-    //            animators[i].enabled = false;
-    //        }
-    //    }
-    //}
-
-    //[PunRPC]
-    //public void SetPlayerFaction()
-    //{
-    //    object faction;
-    //    if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.CYBER_SK_GANG, out faction) && (int)faction >= 1)
-    //    {
-    //        characterFaction = "Cyber SK Gang".ToString();
-    //        foreach (GameObject emblem in cyberEmblem)
-    //            emblem.SetActive(true);
-    //    }
-    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.MUERTE_DE_DIOS, out faction) && (int)faction >= 1)
-    //    {
-    //        characterFaction = "Muerte De Dios".ToString();
-    //        foreach (GameObject emblem in muerteEmblem)
-    //            emblem.SetActive(true);
-    //    }
-    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.CHAOS_CARTEL, out faction) && (int)faction >= 1)
-    //    {
-    //        characterFaction = "Chaos Cartel".ToString();
-    //        foreach (GameObject emblem in chaosEmblem)
-    //            emblem.SetActive(true);
-    //    }
-    //    else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.CINTSIX_CARTEL, out faction) && (int)faction >= 1)
-    //    {
-    //        characterFaction = "CintSix Cartel".ToString();
-    //        foreach (GameObject emblem in cintEmblem)
-    //            emblem.SetActive(true);
-    //    }
-    //else if (photonView.Owner.CustomProperties.TryGetValue(MultiplayerVRConstants.FEDZONE_AUTHORITY, out faction) && (int)faction >= 1)
-    //{
-    //    characterFaction = "Federation Zone Authority".ToString();
-    //    foreach (GameObject emblem in fedEmblem)
-    //        emblem.SetActive(true);
-    //}
 }

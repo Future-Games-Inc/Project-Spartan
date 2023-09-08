@@ -2,12 +2,11 @@
 
 using UnityEngine;
 using System.Collections;
-using Photon.Pun;
 using Unity.VisualScripting;
 
 namespace InfimaGames.LowPolyShooterPack.Legacy
 {
-    public class GasTankScript : MonoBehaviourPunCallbacks
+    public class GasTankScript : MonoBehaviour
     {
 
         float randomRotationValue;
@@ -71,15 +70,23 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void Start()
         {
-            photonView.RPC("RPC_Start", RpcTarget.AllBuffered);
+            //Make sure the light is off at start
+            lightObject.intensity = 0;
+            //Get a random value for the rotation
+            randomValue = Random.Range(-50, 50);
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("EnemyBullet"))
             {
-                PhotonNetwork.Destroy(other.gameObject);
-                photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered);
+                Destroy(other.gameObject);
+                Health -= 25;
+
+                if (Health <= 0)
+                {
+                    isHit = true;
+                }
             }
         }
 
@@ -135,8 +142,8 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void OnCollisionEnter(Collision collision)
         {
-            photonView.RPC("RPC_PlaySound", RpcTarget.AllBuffered);
-        }
+                impactSound.Play();
+            }
 
         private IEnumerator Explode()
         {
@@ -204,37 +211,11 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
             }
 
             //Spawn the explosion prefab
-            PhotonNetwork.Instantiate(explosionPrefab.name, transform.position,
+            Instantiate(explosionPrefab, transform.position,
                 transform.rotation);
 
             //Destroy the current gas tank object
-            PhotonNetwork.Destroy(gameObject);
-        }
-
-        [PunRPC]
-        void RPC_TakeDamage()
-        {
-            Health -= 25;
-
-            if (Health <= 0)
-            {
-                isHit = true;
-            }
-        }
-
-        [PunRPC]
-        void RPC_Start()
-        {
-            //Make sure the light is off at start
-            lightObject.intensity = 0;
-            //Get a random value for the rotation
-            randomValue = Random.Range(-50, 50);
-        }
-
-        [PunRPC]
-        void RPC_PlaySound()
-        {
-            impactSound.Play();
+            Destroy(gameObject);
         }
     }
 }

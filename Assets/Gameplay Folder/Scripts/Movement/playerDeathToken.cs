@@ -1,8 +1,7 @@
-using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
-public class playerDeathToken : MonoBehaviourPunCallbacks
+public class playerDeathToken : MonoBehaviour
 {
     public int tokenValue;
     public string faction;
@@ -27,35 +26,15 @@ public class playerDeathToken : MonoBehaviourPunCallbacks
         if (other.CompareTag("Player") && tokenActivated == true && other.GetComponent<PlayerHealth>().alive == true)
         {
             player = other.GetComponent<PlayerHealth>();
-            photonView.RPC("RPC_DestroyToken", RpcTarget.All);
+            player.UpdateSkills(tokenValue);
+            tokenValue = 0;
+            Destroy(gameObject);
         }
     }
 
     private IEnumerator TokenActivation()
     {
         yield return new WaitForSeconds(1f);
-        photonView.RPC("RPC_TokenActivated", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void RPC_TokenActivated()
-    {
-        if (!photonView.IsMine)
-            return;
-        tokenActivated = true;       
-    }
-
-    [PunRPC]
-    void RPC_DestroyToken()
-    {
-        if (!photonView.IsMine)
-            return;
-        player.UpdateSkills(tokenValue);
-        tokenValue = 0;
-        //if (faction.ToString() != player.characterFaction.ToString())
-        //{
-            player.FactionDataCard();
-            PhotonNetwork.Destroy(gameObject);
-        //}
+        tokenActivated = true;
     }
 }

@@ -24566,8 +24566,6 @@ GameObject:
   - component: {fileID: 4105048232667012}
   - component: {fileID: 82205955150813466}
   - component: {fileID: 114907282554163928}
-  - component: {fileID: 933337128290461578}
-  - component: {fileID: 3074719615084046442}
   m_Layer: 0
   m_Name: P_EXP_GasTank
   m_TagString: Untagged
@@ -24715,42 +24713,3 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8ab79e12da1853c4f9c1b131df2b9c68, type: 3}
   - {fileID: 8300000, guid: 739db4952129f0242b7aa842bd022a17, type: 3}
   audioSource: {fileID: 82205955150813466}
---- !u!114 &933337128290461578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1924146031275744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 3074719615084046442}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &3074719615084046442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1924146031275744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1

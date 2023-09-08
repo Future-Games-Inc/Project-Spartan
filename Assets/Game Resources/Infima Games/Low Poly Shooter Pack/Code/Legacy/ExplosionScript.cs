@@ -2,7 +2,8 @@
 
 using UnityEngine;
 using System.Collections;
-using Photon.Pun;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 
 namespace InfimaGames.LowPolyShooterPack.Legacy
 {
@@ -19,10 +20,15 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
     	[Header("Audio")]
     	public AudioClip[] explosionSounds;
     	public AudioSource audioSource;
-    
-    	private void Start () {
-    		//Start the coroutines
-    		StartCoroutine (DestroyTimer ());
+        public GameObjectPoolManager PoolManager;
+
+
+        private void Start () {
+
+            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+
+            //Start the coroutines
+            StartCoroutine(DestroyTimer ());
     		StartCoroutine (LightFlash ());
     
     		//Get a random impact sound from the array
@@ -44,7 +50,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
     	private IEnumerator DestroyTimer () {
     		//Destroy the explosion prefab after set amount of seconds
     		yield return new WaitForSeconds (despawnTime);
-    		PhotonNetwork.Destroy (gameObject);
+    		this.PoolManager.Release(gameObject);
     	}
     }
 }

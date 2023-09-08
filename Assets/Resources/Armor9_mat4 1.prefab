@@ -3021,9 +3021,6 @@ GameObject:
   - component: {fileID: 95041060471394524}
   - component: {fileID: 26474372960577008}
   - component: {fileID: 8484980518805742075}
-  - component: {fileID: 7339452733834057934}
-  - component: {fileID: 7306123440519216289}
-  - component: {fileID: 8605988088643653146}
   - component: {fileID: 3888885654817260172}
   - component: {fileID: 1799011468459518908}
   - component: {fileID: 5884015577742174949}
@@ -3037,7 +3034,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4795955159597824
 Transform:
   m_ObjectHideFlags: 0
@@ -3145,14 +3142,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 50
-  AttackRange: 20
-  AgroRange: 30
+  DetectRange: 30
+  AttackRange: 15
+  AgroRange: 25
   wanderRadius: 500
   Health: 200
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 521
+    m_Bits: 4096
   agent: {fileID: 1799011468459518908}
   targetTransform: {fileID: 0}
   enemyHealth: {fileID: 26474372960577008}
@@ -3180,79 +3177,8 @@ MonoBehaviour:
   enemyCounter: {fileID: 0}
   hitbox: {fileID: 4261834905359773967}
   ragdoll: {fileID: 4847406465161416308}
---- !u!114 &7339452733834057934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &7306123440519216289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 1
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 7339452733834057934}
-  - {fileID: 8605988088643653146}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &8605988088643653146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824041771042350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 2
-    Name: Death
-  - Type: 9
-    SynchronizeType: 2
-    Name: Shock
-  - Type: 4
-    SynchronizeType: 2
-    Name: ShockDone
-  - Type: 1
-    SynchronizeType: 2
-    Name: Speed
-  - Type: 4
-    SynchronizeType: 2
-    Name: Agro
-  m_SynchronizeLayers:
-  - SynchronizeType: 2
-    LayerIndex: 0
+  stuck: 0
+  stickySpeed: 0
 --- !u!136 &3888885654817260172
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3286,7 +3212,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: 0.1
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!54 &5884015577742174949
@@ -3319,15 +3245,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
   bulletTransform: {fileID: 421824761609566074}
-  shootForce: 100
-  ammoLeft: 0
+  shootForce: 65
+  ammoLeft: 15
   maxAmmo: 0
   audioSource: {fileID: 3239117333501985060}
   audioSource2: {fileID: 2642686913866406122}
-  weaponFire: {fileID: 8300000, guid: 2a60d8d2e4715ab44af8212f1a286db0, type: 3}
   weaponReload: {fileID: 8300000, guid: cb0bea9ffab5f18479f381573896a54b, type: 3}
   fireWeaponBool: 0
   canShoot: 1
+  bulletModifier: 0
+  PoolManager: {fileID: 0}
 --- !u!82 &9009362318184346560
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4562,7 +4489,6 @@ GameObject:
   - component: {fileID: 127992825112233615}
   - component: {fileID: 94745359215350607}
   - component: {fileID: 5481211016585601555}
-  - component: {fileID: 8866694923741945739}
   m_Layer: 5
   m_Name: Canvas (1)
   m_TagString: Untagged
@@ -4652,28 +4578,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8866694923741945739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409444301976251970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &7083778687504522725
 GameObject:
   m_ObjectHideFlags: 0
@@ -4801,7 +4705,6 @@ GameObject:
   - component: {fileID: 3442240805993948228}
   - component: {fileID: 3239117333501985060}
   - component: {fileID: 2642686913866406122}
-  - component: {fileID: 1159376828157048658}
   m_Layer: 19
   m_Name: P_SMG02
   m_TagString: Untagged
@@ -5072,28 +4975,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1159376828157048658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7285257760279942639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &7389349561724954807
 GameObject:
   m_ObjectHideFlags: 0

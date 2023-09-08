@@ -1,16 +1,13 @@
-﻿using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using static NetworkGrenade;
 
 namespace BNG
 {
     /// <summary>
     /// A Grabbable object that can stick to objects and deal damage
     /// </summary>
-    public class ArrowNet : MonoBehaviourPunCallbacks
+    public class ArrowNet : MonoBehaviour
     {
         Rigidbody rb;
         Grabbable grab;
@@ -36,15 +33,20 @@ namespace BNG
         Coroutine queueDestroy;
 
         public Projectile ProjectileObject;
+        public GameObject bubble;
 
         public GameObject arrowOwner;
+        public GameObject surgeBubble;
 
         // Get this value from the ProjectileObject
         float arrowDamage;
 
         public PlayerHealth playerHealth;
+        public bool activated = false;
 
         public string Type = "Default";
+        public GameObjectPoolManager PoolManager;
+
 
         public struct TargetInfo
         {
@@ -54,6 +56,7 @@ namespace BNG
         // Start is called before the first frame update
         void OnEnable()
         {
+            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
             rb = GetComponent<Rigidbody>();
             impactSound = GetComponent<AudioSource>();
             ShaftCollider = GetComponent<Collider>();
@@ -85,6 +88,7 @@ namespace BNG
 
             if (Flying)
             {
+                gameObject.GetComponent<TrailRenderer>().enabled = true;
                 flightTime += Time.fixedDeltaTime;
             }
 
@@ -118,7 +122,7 @@ namespace BNG
 
             if (grab != null && !grab.BeingHeld && transform.parent == null)
             {
-                PhotonNetwork.Destroy(this.gameObject);
+                this.PoolManager.Release(this.gameObject);
             }
         }
 
@@ -168,7 +172,7 @@ namespace BNG
         IEnumerator Destroy(float duration)
         {
             yield return new WaitForSeconds(duration);
-            PhotonNetwork.Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
             // attach clip and play
             // audioSource.PlayOneShot(clip);
         }
@@ -317,7 +321,7 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamageBossEnemy(Collider target, float damage)
@@ -332,7 +336,7 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamagePlayer(Collider target, float damage)
@@ -343,7 +347,7 @@ namespace BNG
                     playerHealth.PlayersKilled();
                 }
                 enemyDamageReg.TakeDamage((int)arrowDamage);
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             void DefaultDamageSecurity(Collider target, float damage)
@@ -356,7 +360,7 @@ namespace BNG
                     SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                     enemyDamageReg2.TakeDamage((int)arrowDamage);
                 }
-                PhotonNetwork.Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
         }
 
@@ -387,7 +391,7 @@ namespace BNG
                 }
             }
 
-            float delay = .25f;
+            float delay = 2f;
             StartCoroutine(Destroy(delay));
         }
 
@@ -395,6 +399,8 @@ namespace BNG
         {
             yield return new WaitForSeconds(EMPDelay);
             explosionEffect.SetActive(true);
+            StartCoroutine(GrowBubbleCoroutine());
+            StartCoroutine(DestroyBubbleCoroutine());
 
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
             foreach (var target in Targets)
@@ -408,8 +414,27 @@ namespace BNG
                 }
             }
 
-            float delay = .25f;
+            float delay = 2f;
             StartCoroutine(Destroy(delay));
+        }
+
+        IEnumerator GrowBubbleCoroutine()
+        {
+            surgeBubble = this.PoolManager.Acquire(bubble, transform.position, Quaternion.identity);
+            while (true)
+            {
+                float scaleIncrease = 8f * Time.deltaTime;
+                surgeBubble.transform.localScale += new Vector3(scaleIncrease, scaleIncrease, scaleIncrease);
+
+                yield return null;
+            }
+        }
+
+        IEnumerator DestroyBubbleCoroutine()
+        {
+            yield return new WaitForSeconds(1.25f);
+            StopCoroutine(GrowBubbleCoroutine());
+            this.PoolManager.Release(surgeBubble);
         }
 
         void HandleDamage(Collider collider, TargetInfo target)
@@ -422,7 +447,7 @@ namespace BNG
             {
                 case "Enemy":
                     // Handle enemy damage
-                    FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("Normal");
@@ -435,7 +460,7 @@ namespace BNG
                     break;
                 case "BossEnemy":
                     // Handle boss enemy damage
-                    FollowAI BossenemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("BossEnemy");
@@ -448,18 +473,18 @@ namespace BNG
                     break;
                 case "Security":
                     // Handle security damage
-                    DroneHealth DroneenemyDamageCrit = collider.GetComponent<DroneHealth>();
+                    DroneHealth DroneenemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                     if (DroneenemyDamageCrit != null)
                         DroneenemyDamageCrit.TakeDamage(damage);
                     else
                     {
-                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponent<SentryDrone>();
+                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
                         SentryenemyDamageCrit2.TakeDamage(damage);
                     }
                     break;
                 case "Player":
                     // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponent<PlayerHealth>();
+                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
                     if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
                     {
                         playerHealth.PlayersKilled();
@@ -484,7 +509,7 @@ namespace BNG
             {
                 case "Enemy":
                     // Handle enemy damage
-                    FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("Normal");
@@ -498,7 +523,7 @@ namespace BNG
                     break;
                 case "BossEnemy":
                     // Handle boss enemy damage
-                    FollowAI BossenemyDamageCrit = collider.GetComponent<FollowAI>();
+                    FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                     if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.EnemyKilled("BossEnemy");
@@ -512,18 +537,18 @@ namespace BNG
                     break;
                 case "Security":
                     // Handle security damage
-                    DroneHealth DroneenemyDamageCrit = collider.GetComponent<DroneHealth>();
+                    DroneHealth DroneenemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                     if (DroneenemyDamageCrit != null)
                         DroneenemyDamageCrit.TakeDamage(damage * 2);
                     else
                     {
-                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponent<SentryDrone>();
+                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
                         SentryenemyDamageCrit2.TakeDamage(damage * 2);
                     }
                     break;
                 case "Player":
                     // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponent<PlayerHealth>();
+                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
                     if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
                     {
                         playerHealth.PlayersKilled();

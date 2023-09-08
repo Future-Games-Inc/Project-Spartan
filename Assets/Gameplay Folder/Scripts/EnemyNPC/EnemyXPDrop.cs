@@ -1,18 +1,23 @@
 using UnityEngine;
-using Photon.Pun;
 using BNG;
+using PathologicalGames;
+using Umbrace.Unity.PurePool;
 
-public class EnemyXPDrop : MonoBehaviourPunCallbacks
+public class EnemyXPDrop : MonoBehaviour
 {
     public Pickup pickupData; // Reference to the Pickup ScriptableObject
     public SpawnManager1 spawnManager;
     public LayerMask groundLayer;
     private Rigidbody rb;
-    public NetworkedGrabbable grabbable;
+    public Grabbable grabbable;
+
+    public GameObjectPoolManager PoolManager;
+
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         switch (pickupData.pickupType)
         {
@@ -42,13 +47,13 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                     {
                         playerHealth.UpdateSkills(pickupData.xpAmount / 2);
                     }
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "Health":
-                    spawnManager.photonView.RPC("RPC_UpdateHealthCount", RpcTarget.All);
+                    spawnManager.UpdateHealthCount();
                     playerHealth.AddHealth(pickupData.healthAmount);
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "EMP":
@@ -67,26 +72,26 @@ public class EnemyXPDrop : MonoBehaviourPunCallbacks
                             enemyDamageCrit.EMPShock();
                         }
                     }
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "toxicDrop":
                     playerHealth.Toxicity(pickupData.toxicAmount);
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "bulletModifier":
                     playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "Shield":
                     playerHealth.AddArmor(pickupData.armorAmount);
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 default:
-                    PhotonNetwork.Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
             }
         }

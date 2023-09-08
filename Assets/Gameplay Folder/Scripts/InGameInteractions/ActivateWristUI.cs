@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Photon.Pun;
 
 public class ActivateWristUI : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public class ActivateWristUI : MonoBehaviour
 
     public GameObject uiCanvas;
     public GameObject miniMap;
-    public GameObject scoreboard;
     public GameObject BossIcon;
     public GameObject BombIcon;
     public GameObject IntelIcon;
@@ -26,7 +24,6 @@ public class ActivateWristUI : MonoBehaviour
         activated = false;
         uiCanvas.SetActive(activated);
         miniMap.SetActive(activated);
-        scoreboard.SetActive(activated);
         BossIcon.SetActive(activated);
         BombIcon.SetActive(activated);
         IntelIcon.SetActive(activated);
@@ -54,24 +51,23 @@ public class ActivateWristUI : MonoBehaviour
 
         uiCanvas.SetActive(activated);
         miniMap.SetActive(activated);
-        scoreboard.SetActive(activated);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuest, out object contractState) && (bool)contractState == true)
+        if (PlayerPrefs.HasKey("BossQuest") && PlayerPrefs.GetInt("BossQuest") == 1)
             BossIcon.SetActive(activated);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuest, out object contractState2) && (bool)contractState2 == true)
+        if (PlayerPrefs.HasKey("ArtifactQuest") && PlayerPrefs.GetInt("ArtifactQuest") == 1)
             ArtifactIcon.SetActive(activated);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuest, out object contractState3) && (bool)contractState3 == true)
+        if (PlayerPrefs.HasKey("BombQuest") && PlayerPrefs.GetInt("BombQuest") == 1)
             BombIcon.SetActive(activated);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuest, out object contractState4) && (bool)contractState4 == true)
+        if (PlayerPrefs.HasKey("GuardianQuest") && PlayerPrefs.GetInt("GuardianQuest") == 1)
             GuardianIcon.SetActive(activated);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuest, out object contractState5) && (bool)contractState5 == true)
+        if (PlayerPrefs.HasKey("IntelQuest") && PlayerPrefs.GetInt("IntelQuest") == 1)
             IntelIcon.SetActive(activated);
 
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuest, out object contractState6) && (bool)contractState6 == true)
-            ArtifactIcon.SetActive(activated);
+        if (PlayerPrefs.HasKey("CollectorQuest") && PlayerPrefs.GetInt("CollectorQuest") == 1)
+            CollectorIcon.SetActive(activated);
     }
 }
