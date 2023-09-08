@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System;
+using Unity.XR.CoreUtils;
+using System.Linq;
 
 public class FollowAI : MonoBehaviour
 {
@@ -24,6 +26,8 @@ public class FollowAI : MonoBehaviour
     public LayerMask obstacleMask;
 
     private float DistanceToPlayer;
+
+    public bool fireReady = false;
 
     public NavMeshAgent agent;
     public Transform targetTransform;
@@ -97,23 +101,23 @@ public class FollowAI : MonoBehaviour
 
     public void FindClosestEnemy()
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        GameObject closest = null;
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
+        //players = FindObjectsOfType<XROrigin>().ToList<>;
+        //GameObject closest = null;
+        //float distance = Mathf.Infinity;
+        //Vector3 position = transform.position;
 
-        foreach (GameObject go in players)
-        {
-            Vector3 diff = go.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
-            {
-                closest = go;
-                distance = curDistance;
-            }
-        }
+        //foreach (GameObject go in players)
+        //{
+        //    Vector3 diff = go.transform.position - position;
+        //    float curDistance = diff.sqrMagnitude;
+        //    if (curDistance < distance)
+        //    {
+        //        closest = go;
+        //        distance = curDistance;
+        //    }
+        //}
 
-        targetTransform = closest.transform;
+        targetTransform = FindObjectOfType<XROrigin>().transform;
     }
 
     // Update is called once per frame
