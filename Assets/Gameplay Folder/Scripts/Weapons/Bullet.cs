@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
-        
+
 
         StartCoroutine(DestroyBullet());
     }
@@ -207,7 +207,7 @@ public class Bullet : MonoBehaviour
                     playerDamage.TakeDamage(5 * bulletModifier);
                 }
             }
-            else if(!playerBullet)
+            else if (!playerBullet)
             {
                 float criticalChance = 5f;
                 if (Random.Range(0, 100f) < criticalChance)
@@ -225,6 +225,15 @@ public class Bullet : MonoBehaviour
             }
         }
 
+        else if (other.CompareTag("Tower"))
+        {
+            if (playerBullet)
+            {
+                //critical hit here
+                ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
+                reactorcover.TakeDamage(5 * bulletModifier);
+            }
+        }
         Destroy(gameObject);
     }
 

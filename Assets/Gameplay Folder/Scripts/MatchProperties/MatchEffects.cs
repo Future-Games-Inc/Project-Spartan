@@ -34,6 +34,7 @@ public class MatchEffects : MonoBehaviour
 
     public bool startMatchBool = false;
     public bool spawnReactor = false;
+    public bool codeFound = false;
     public bool spawned = false;
     public bool DE_supplyDrop;
 

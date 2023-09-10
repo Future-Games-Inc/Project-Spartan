@@ -124,6 +124,16 @@ public class StingerBulletMiniNet : MonoBehaviour
             Explode();
             return;
         }
+
+        else if (other.CompareTag("Tower"))
+        {
+            if (playerBullet)
+            {
+                //critical hit here
+                ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
+                reactorcover.TakeDamage(10);
+            }
+        }
     }
 
     private void Explode()
