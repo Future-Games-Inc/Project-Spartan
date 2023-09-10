@@ -13,6 +13,9 @@ public class SpawnManager1 : MonoBehaviour
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject[] artifacts;
     [SerializeField] private GameObject[] bombs;
+    public Transform reactorSpawnLocation;
+    public GameObject reactorPlaceholder;
+
 
     [SerializeField] private MatchEffects matchProps;
 
@@ -44,15 +47,13 @@ public class SpawnManager1 : MonoBehaviour
 
     public NavMeshSurface navMeshSurface;
     List<Vector3> spawnPositions = new List<Vector3>();  // Dynamic list for valid positions
-    float bufferRadius = .5f;  // Replace this with the buffer radius you want
-
-    public GameObjectPoolManager PoolManager;
+    float bufferRadius = .25f;  // Replace this with the buffer radius you want
 
 
     void Start()
     {
         spawnRadius = 1000f;
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         if (!coroutinesStarted)
         {
@@ -139,7 +140,7 @@ public class SpawnManager1 : MonoBehaviour
             Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
             GameObject enemyCharacter = enemies[0];
-            this.PoolManager.Acquire(enemyCharacter, spawnPosition, Quaternion.identity);
+            Instantiate(enemyCharacter, spawnPosition, Quaternion.identity);
 
             enemyCount++;
 
@@ -172,7 +173,7 @@ public class SpawnManager1 : MonoBehaviour
             Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
             GameObject securityDrone = enemies[0];
-            this.PoolManager.Acquire(securityDrone, spawnPosition, Quaternion.identity);
+            Instantiate(securityDrone, spawnPosition, Quaternion.identity);
 
             securityCount++;
 
@@ -192,14 +193,10 @@ public class SpawnManager1 : MonoBehaviour
 
             if (matchProps.spawnReactor && reactorCount < reactorCountMax)
             {
-                if (spawnPositions.Count == 0)
-                {
-                    yield return new WaitForSeconds(1);
-                    continue;
-                }
-                Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
+                reactorSpawnLocation = reactorPlaceholder.transform;
+                Destroy(reactorPlaceholder);
 
-                this.PoolManager.Acquire(reactor, spawnPosition, Quaternion.identity);
+                Instantiate(reactor, reactorSpawnLocation.position, Quaternion.identity);
 
                 reactorCount++;
 
@@ -244,7 +241,7 @@ public class SpawnManager1 : MonoBehaviour
     //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
 
     //            GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
-    //            PhotonNetwork.this.PoolManager.AcquireRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
+    //            PhotonNetwork.InstantiateRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
 
     //            bombsCount++;
 
@@ -293,7 +290,7 @@ public class SpawnManager1 : MonoBehaviour
     //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
 
     //            GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
-    //            PhotonNetwork.this.PoolManager.AcquireRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
+    //            PhotonNetwork.InstantiateRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
 
     //            artifactCount++;
 
@@ -323,7 +320,7 @@ public class SpawnManager1 : MonoBehaviour
 
             Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
-            this.PoolManager.Acquire(health, spawnPosition, Quaternion.identity);
+            Instantiate(health, spawnPosition, Quaternion.identity);
 
             healthCount++;
 
@@ -353,7 +350,7 @@ public class SpawnManager1 : MonoBehaviour
                 Vector3 spawnPosition = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
 
                 GameObject enemyCharacterBoss = bosses[0];
-                this.PoolManager.Acquire(enemyCharacterBoss, spawnPosition, Quaternion.identity);
+                Instantiate(enemyCharacterBoss, spawnPosition, Quaternion.identity);
 
                 enemiesKilled = 0;
                 yield return new WaitForSeconds(10);

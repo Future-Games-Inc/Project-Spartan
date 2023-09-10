@@ -4,6 +4,7 @@ using TMPro;
 using BNG;
 using PathologicalGames;
 using Umbrace.Unity.PurePool;
+using static Oni;
 
 public class PulseARNet : MonoBehaviour
 {
@@ -46,13 +47,14 @@ public class PulseARNet : MonoBehaviour
 
     public bool SecondaryTrigger = false;
 
-    public GameObjectPoolManager PoolManager;
+
+    public bool contact;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
@@ -60,6 +62,15 @@ public class PulseARNet : MonoBehaviour
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
         StartCoroutine(TextUpdate());
+        StartCoroutine(NoContact());
+    }
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
     }
     IEnumerator TextUpdate()
     {
@@ -122,7 +133,7 @@ public class PulseARNet : MonoBehaviour
                 {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = this.PoolManager.Acquire(PulseBullet, t.position, Quaternion.identity);
+                        GameObject spawnedBullet = Instantiate(PulseBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                         spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
@@ -148,7 +159,7 @@ public class PulseARNet : MonoBehaviour
                 {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = this.PoolManager.Acquire(playerBullet, spawnPoint[0].position, Quaternion.identity);
+                        GameObject spawnedBullet = Instantiate(playerBullet, spawnPoint[0].position, Quaternion.identity);
                         spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                         spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
@@ -188,6 +199,7 @@ public class PulseARNet : MonoBehaviour
             var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
+            contact = true;
         }
     }
 
@@ -196,7 +208,7 @@ public class PulseARNet : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     public void Rescale()

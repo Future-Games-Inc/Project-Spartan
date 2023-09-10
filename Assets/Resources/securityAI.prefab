@@ -1978,13 +1978,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9e2262e05e1884082e0044932123b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyAI: []
+  detectedEnemies: []
+  detectionRange: 100
   alarmSource: {fileID: 8218046683117436121}
   alarmClip: {fileID: 8300000, guid: bf387dbe6b242b44caf2efe279be38c8, type: 3}
   securityDrone: {fileID: 3941197441095112601}
   detectedPlayer: {fileID: 0}
-  beamMaterial: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
-  beamColor: {r: 0, g: 0.78039217, b: 1, a: 0}
+  beamMaterialNormal: {fileID: 2100000, guid: 5987dc40b6be6534a8711688cbe75000, type: 2}
+  beamMaterialDetected: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c,
+    type: 2}
+  securityBeam: {fileID: 5285654596892484075}
   lost: 1
   neverFound: 1
   lostTimer: 0
@@ -7284,7 +7287,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 49a5c93670d30b94c85eadfc3ea80f0c, type: 2}
+      objectReference: {fileID: 2100000, guid: 5987dc40b6be6534a8711688cbe75000, type: 2}
     - target: {fileID: 919132149155446097, guid: 1db60d6f05bfc504ea0b73ae74b0ae63,
         type: 3}
       propertyPath: m_Name

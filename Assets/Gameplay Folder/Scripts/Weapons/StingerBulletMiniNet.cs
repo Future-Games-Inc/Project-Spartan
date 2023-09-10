@@ -18,11 +18,10 @@ public class StingerBulletMiniNet : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip clip;
 
-    public GameObjectPoolManager PoolManager;
 
     private void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
     }
     public void SetTarget(Transform target, float lifetime)
@@ -129,7 +128,7 @@ public class StingerBulletMiniNet : MonoBehaviour
 
     private void Explode()
     {
-        this.PoolManager.Acquire(explosionPrefab, transform.position, Quaternion.identity);
-        this.PoolManager.Release(gameObject);
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

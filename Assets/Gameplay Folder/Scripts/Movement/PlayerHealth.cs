@@ -1,8 +1,6 @@
 using LootLocker.Requests;
-using PathologicalGames;
 using System.Collections;
 using TMPro;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.XR;
@@ -187,14 +185,14 @@ public class PlayerHealth : MonoBehaviour
     public GameObject aiCompanionDrone;
     public GameObject decoySpawner;
 
-    public GameObjectPoolManager PoolManager;
+    public int factionScore;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
         faction = PlayerPrefs.GetString("factionSelected");
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         criticalHealth.SetActive(false);
 
@@ -538,6 +536,12 @@ public class PlayerHealth : MonoBehaviour
         // Perform time-based actions
         if (reactorHeld)
             UpdateReactor();
+
+        if (Health <= 30)
+            criticalHealth.SetActive(true);
+        else
+            criticalHealth.SetActive(false);
+
         UpdatePowerups();
 
         // Check win conditions
@@ -794,7 +798,7 @@ public class PlayerHealth : MonoBehaviour
             leechBubble.SetActive(true);
             shouldCallAbilities4True = false;
         }
-        else if (leechEffectTimer > leechEffectDuration && !shouldCallAbilities4False && leechEffect == false)
+        else if (leechEffectTimer > leechEffectDuration && !shouldCallAbilities4False && leechEffect == true)
         {
             shouldCallAbilities4False = true;
             leechBubble.SetActive(false);
@@ -815,7 +819,7 @@ public class PlayerHealth : MonoBehaviour
             }
             shouldCallAbilities5True = false;
         }
-        else if (activeCamoTimer > activeCamoDuration && !shouldCallAbilities5False || activeCamo == false && !shouldCallAbilities5False)
+        else if (activeCamoTimer > activeCamoDuration && !shouldCallAbilities5False || activeCamo == true && !shouldCallAbilities5False)
         {
             shouldCallAbilities5False = true;
             activeCamo = false;
@@ -839,7 +843,7 @@ public class PlayerHealth : MonoBehaviour
             }
             shouldCallAbilities6True = false;
         }
-        else if (stealthTimer > stealthDuration && !shouldCallAbilities6False || stealth == false && !shouldCallAbilities6False)
+        else if (stealthTimer > stealthDuration && !shouldCallAbilities6False || stealth == true && !shouldCallAbilities6False)
         {
             shouldCallAbilities6False = true;
             stealth = false;
@@ -887,7 +891,7 @@ public class PlayerHealth : MonoBehaviour
             }
             shouldCallAbilities10True = false;
         }
-        else if (berserkerEffectTimer > berserkerFuryDuration && !shouldCallAbilities10False || berserker == false && !shouldCallAbilities10False)
+        else if (berserkerEffectTimer > berserkerFuryDuration && !shouldCallAbilities10False || berserker == true && !shouldCallAbilities10False)
         {
             shouldCallAbilities10False = true;
             if (berserkerActivated)
@@ -996,7 +1000,7 @@ public class PlayerHealth : MonoBehaviour
         int cintUpdate = (playerCints / 10);
         StartCoroutine(sceneFader.ScreenFade());
         alive = false;
-        GameObject playerDeathTokenObject = this.PoolManager.Acquire(deathToken, tokenDropLocation.position, Quaternion.identity);
+        GameObject playerDeathTokenObject = Instantiate(deathToken, tokenDropLocation.position, Quaternion.identity);
         playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = cintUpdate;
         playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
@@ -1005,7 +1009,7 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
                 PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") >= 1)
         {
-            GameObject bomb = this.PoolManager.Acquire(bombDeath, tokenDropLocation.position, Quaternion.identity);
+            GameObject bomb = Instantiate(bombDeath, tokenDropLocation.position, Quaternion.identity);
             bomb.GetComponent<Rigidbody>().isKinematic = false;
             bomb.GetComponent<Rigidbody>().useGravity = true;
             NetworkGrenade grenade = bomb.GetComponent<NetworkGrenade>();
@@ -1205,7 +1209,18 @@ public class PlayerHealth : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         bool done = false;
-        LootLockerSDKManager.SubmitScore(faction, scoreToUpload, leaderboardID, (response) =>
+        LootLockerSDKManager.GetMemberRank(leaderboardID2, faction, (response) =>
+        {
+            if (response.success)
+            {
+                factionScore = response.score;
+            }
+            else
+            {
+
+            }
+        });
+        LootLockerSDKManager.SubmitScore(faction, (factionScore + scoreToUpload), leaderboardID2, (response) =>
         {
             if (response.success)
             {
@@ -1385,21 +1400,21 @@ public class PlayerHealth : MonoBehaviour
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect = this.PoolManager.Acquire(shockEffect, transform.position, Quaternion.identity);
+            GameObject effect = Instantiate(shockEffect, transform.position, Quaternion.identity);
             yield return new WaitForSeconds(1);
-            this.PoolManager.Release(effect);
-            yield return new WaitForSeconds(1);
-            TakeDamage(5);
-            // play shock effect
-            GameObject effect2 = this.PoolManager.Acquire(shockEffect, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(1);
-            this.PoolManager.Release(effect2);
+            Destroy(effect);
             yield return new WaitForSeconds(1);
             TakeDamage(5);
             // play shock effect
-            GameObject effect3 = this.PoolManager.Acquire(shockEffect, transform.position, Quaternion.identity);
+            GameObject effect2 = Instantiate(shockEffect, transform.position, Quaternion.identity);
             yield return new WaitForSeconds(1);
-            this.PoolManager.Release(effect3);
+            Destroy(effect2);
+            yield return new WaitForSeconds(1);
+            TakeDamage(5);
+            // play shock effect
+            GameObject effect3 = Instantiate(shockEffect, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(1);
+            Destroy(effect3);
             // enable movement
 
             activeState = States.Normal;
@@ -1416,5 +1431,6 @@ public class PlayerHealth : MonoBehaviour
         LootLockerSDKManager.AddPointsToPlayerProgression(progressionKey, (ulong)XP, response =>
         {
         });
+        StartCoroutine(SubmitScore(XP * 2));
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
-using LootLocker.Requests;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class SaveData : MonoBehaviour
 {
@@ -26,9 +25,18 @@ public class SaveData : MonoBehaviour
     public TopReactsLeaderboard leaderboard;
     public BlackMarketManager blackMarketManager;
 
+    string[] settings = { "BULLET_MODIFIER", "REACTOR_EXTRACTION", "TOXICITY_DAMAGE", "DAMAGAE_TAKEN", "PLAYER_SPEED", "PLAYER_HEALTH", "PLAYER_ARMOR", "PLAYER_DASH", "HEALTH_POWERUP", "DASH_COOLDOWN", "AMMO_OVERLOAD", "HEALTH_REGEN", "HEALTH_STIM", "LEECH",
+    "ACTIVE_CAMO", "STEALTH","EXPLOSIVE_DEATH", "BERSERKER_FURY","AI_COMPANION", "DECOY_DEPLOYMENT","SAVING_GRACE", "HEALTH_STIM_SLOT","LEECH_SLOT", "ACTIVE_CAMO_SLOT","STEALTH_SLOT", "EXPLOSIVE_DEATH_SLOT","BERSERKER_FURY_SLOT", "AI_COMPANION_SLOT","DECOY_DEPLOYMENT_SLOT", "SAVING_GRACE_SLOT", "AVATAR_SELECTION_NUMBER"
+    , "REACTOR_EXTRACTION", "EnemyKills", "PlayersKilled", "BUTTON_ASSIGN"};
+
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < settings.Length; i++)
+        {
+            if (PlayerPrefs.HasKey(settings[i]))
+                PlayerPrefs.DeleteKey(settings[i]);
+        }
         if (PlayerPrefs.HasKey("BossKilled"))
         {
             bossesKilled = PlayerPrefs.GetInt("BossKilled");
@@ -101,11 +109,11 @@ public class SaveData : MonoBehaviour
     public void UpdateSkills(int skills)
     {
         SkillPoints += skills;
-        PlayerPrefs.SetInt("BossKilled", bossesKilled);
+        PlayerPrefs.SetInt("Cints", SkillPoints);
+        leaderboard.SubmitScore(SkillPoints);
         Save();
     }
 
-    [System.Obsolete]
     public void BossUpdateSkills(int skills)
     {
         bossesKilled += skills;
@@ -116,36 +124,35 @@ public class SaveData : MonoBehaviour
     public void ArtifactUpdateSkills(int skills)
     {
         artifactsRecovered += skills;
-        PlayerPrefs.SetInt("BossKilled", bossesKilled);
+        PlayerPrefs.SetInt("ArtifactFound", artifactsRecovered);
         ArtifactSave();
     }
 
-    [System.Obsolete]
     public void BombUpdateSkills(int skills)
     {
         bombsDestroyed += skills;
-        PlayerPrefs.SetInt("BossKilled", bossesKilled);
+        PlayerPrefs.SetInt("BombDestroyed", bombsDestroyed);
         BombSave();
     }
 
     public void GuardianUpdateSkills(int skills)
     {
         guardiansDestroyed += skills;
-        PlayerPrefs.SetInt("BossKilled", bossesKilled);
+        PlayerPrefs.SetInt("GuardianDestroyed", guardiansDestroyed);
         GuardianSave();
     }
 
     public void IntelUpdateSkills(int skills)
     {
         intelSecured += skills;
-        PlayerPrefs.SetInt("BossKilled", bossesKilled);
+        PlayerPrefs.SetInt("IntelFound", intelSecured);
         IntelSave();
     }
 
     public void CollectorUpdateSkills(int skills)
     {
         collectorsDestroyed += skills;
-        PlayerPrefs.SetInt("BossKilled", bossesKilled);
+        PlayerPrefs.SetInt("CollectorDestroyed", collectorsDestroyed);
         CollectorSave();
     }
 
@@ -201,10 +208,11 @@ public class SaveData : MonoBehaviour
         if (PlayerPrefs.HasKey("Cints"))
         {
             SkillPoints = PlayerPrefs.GetInt("CINTS");
-            if (SkillPoints != leaderboard.Score && SkillPoints < leaderboard.Score)
-                SkillPoints = leaderboard.Score;
+            if (SkillPoints != leaderboard.Score)
+                leaderboard.SubmitScore(SkillPoints);
         }
-        SkillPoints = leaderboard.Score;
+        else
+            SkillPoints = leaderboard.Score;
 
         PlayerPrefs.SetInt("CINTS", SkillPoints);
 
@@ -216,11 +224,11 @@ public class SaveData : MonoBehaviour
         if (PlayerPrefs.HasKey("PlayerLevel"))
         {
             playerLevelCurrent = PlayerPrefs.GetInt("PlayerLevel");
-            if (playerLevelCurrent != currentLevelInt && playerLevelCurrent < currentLevelInt)
-                playerLevelCurrent = currentLevelInt;
-
+            if (playerLevelCurrent != currentLevelInt)
+                leaderboard.AddProgression(playerLevelCurrent - leaderboard.currentLevelInt);
         }
-        playerLevelCurrent = leaderboard.currentLevelInt;
+        else
+            playerLevelCurrent = leaderboard.currentLevelInt;
 
         PlayerPrefs.SetInt("PlayerLevel", playerLevelCurrent);
 
@@ -232,7 +240,8 @@ public class SaveData : MonoBehaviour
                 awarded = true;
             }
         }
-        playerPrestigeCurrent = playerPrestigeCurrent / prestigeIncrement + 1;
+        else
+            playerPrestigeCurrent = playerPrestigeCurrent / prestigeIncrement + 1;
 
         PlayerLevelSave();
         Save();

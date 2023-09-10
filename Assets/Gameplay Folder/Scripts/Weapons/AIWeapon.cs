@@ -21,7 +21,6 @@ public class AIWeapon : MonoBehaviour
     public int bulletModifier;
 
     private EnemyType enemyType;
-    public GameObjectPoolManager PoolManager;
 
     public FollowAI aiScript;
     public enum EnemyType
@@ -32,7 +31,7 @@ public class AIWeapon : MonoBehaviour
 
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         enemyType = gameObject.CompareTag("Enemy") ? EnemyType.Enemy : EnemyType.BossEnemy;
         maxAmmo = (enemyType == EnemyType.Enemy) ? 10 : 15;
@@ -57,7 +56,7 @@ public class AIWeapon : MonoBehaviour
                 else if (canShoot)
                 {
                     yield return new WaitForSeconds(0.25f);
-                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
+                    GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
                     spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
                     ammoLeft--;

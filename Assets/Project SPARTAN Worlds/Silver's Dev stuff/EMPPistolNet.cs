@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using PathologicalGames;
 using Umbrace.Unity.PurePool;
+using static Oni;
 
 public class EMPPistolNet : MonoBehaviour
 {
@@ -33,12 +34,12 @@ public class EMPPistolNet : MonoBehaviour
     public bool isFiring = false;
     public bool reloadingWeapon = false;
 
-    public GameObjectPoolManager PoolManager;
+    public bool contact;
 
     void OnEnable()
     {
 
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
@@ -46,6 +47,15 @@ public class EMPPistolNet : MonoBehaviour
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
         StartCoroutine(TextUpdate());
+        StartCoroutine(NoContact());
+    }
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator TextUpdate()
@@ -91,7 +101,7 @@ public class EMPPistolNet : MonoBehaviour
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = this.PoolManager.Acquire(Bullet, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = Instantiate(Bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                     spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
@@ -129,6 +139,7 @@ public class EMPPistolNet : MonoBehaviour
             var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
+            contact = true;
         }
     }
 
@@ -137,7 +148,7 @@ public class EMPPistolNet : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     public void Rescale()

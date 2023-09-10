@@ -1,7 +1,7 @@
 using UnityEngine;
 using BNG;
-using PathologicalGames;
 using Umbrace.Unity.PurePool;
+using System.Collections;
 
 public class EnemyXPDrop : MonoBehaviour
 {
@@ -11,13 +11,13 @@ public class EnemyXPDrop : MonoBehaviour
     private Rigidbody rb;
     public Grabbable grabbable;
 
-    public GameObjectPoolManager PoolManager;
+    public bool contact;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         switch (pickupData.pickupType)
         {
@@ -27,10 +27,23 @@ public class EnemyXPDrop : MonoBehaviour
                 rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
                 break;
         }
+        StartCoroutine(NoContact());
+    }
+
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+            contact = true;
+
         if (other.CompareTag("PickupSlot"))
         {
             PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
@@ -47,13 +60,13 @@ public class EnemyXPDrop : MonoBehaviour
                     {
                         playerHealth.UpdateSkills(pickupData.xpAmount / 2);
                     }
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
 
                 case "Health":
                     spawnManager.UpdateHealthCount();
                     playerHealth.AddHealth(pickupData.healthAmount);
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
 
                 case "EMP":
@@ -72,26 +85,26 @@ public class EnemyXPDrop : MonoBehaviour
                             enemyDamageCrit.EMPShock();
                         }
                     }
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
 
                 case "toxicDrop":
                     playerHealth.Toxicity(pickupData.toxicAmount);
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
 
                 case "bulletModifier":
                     playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
 
                 case "Shield":
                     playerHealth.AddArmor(pickupData.armorAmount);
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
 
                 default:
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
                     break;
             }
         }

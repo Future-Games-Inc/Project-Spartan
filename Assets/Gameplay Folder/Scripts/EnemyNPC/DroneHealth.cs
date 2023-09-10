@@ -50,7 +50,8 @@ public class DroneHealth : MonoBehaviour
     private void TriggerDeathEffects()
     {
         explosionEffect.SetActive(true);
-        agent.enabled = false;
+        if (agent != null)
+            agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = false;
         SpawnLoot();
         enemyCounter.UpdateSecurity();

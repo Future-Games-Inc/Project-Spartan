@@ -172,41 +172,41 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator FetchFactionLeaderboard()
     {
-            bool done = false;
-            LootLockerSDKManager.GetScoreList(leaderboardID2, 4, 0, (response) =>
+        bool done = false;
+        LootLockerSDKManager.GetScoreList(leaderboardID2, 4, 0, (response) =>
+        {
+            if (response.success)
             {
-                if (response.success)
+                string tempFactionNames = "Factions\n";
+                string TempFactionScores = "Scores\n";
+
+                LootLockerLeaderboardMember[] members = response.items;
+
+                for (int i = 0; i < members.Length; i++)
                 {
-                    string tempFactionNames = "Factions\n";
-                    string TempFactionScores = "Scores\n";
-
-                    LootLockerLeaderboardMember[] members = response.items;
-
-                    for (int i = 0; i < members.Length; i++)
+                    tempFactionNames += members[i].rank + ". ";
+                    if (members[i].member_id != "")
                     {
-                        tempFactionNames += members[i].rank + ". ";
-                        if (members[i].member_id != "")
-                        {
-                            tempFactionNames += members[i].member_id;
-                        }
-                        else
-                        {
-                            tempFactionNames += members[i].member_id;
-                        }
-                        TempFactionScores += members[i].score + "\n";
-                        tempFactionNames += "\n";
+                        tempFactionNames += members[i].member_id;
                     }
-                    done = true;
-                    factionNames.text = tempFactionNames;
-                    factionScores.text = TempFactionScores;
+                    else
+                    {
+                        tempFactionNames += members[i].member_id;
+                    }
+                    TempFactionScores += members[i].score + "\n";
+                    tempFactionNames += "\n";
                 }
-                else
-                {
-                    done = true;
-                }
-            });
-            yield return new WaitWhile(() => done == false);
-            StartCoroutine(CheckLevel());
+                done = true;
+                factionNames.text = tempFactionNames;
+                factionScores.text = TempFactionScores;
+            }
+            else
+            {
+                done = true;
+            }
+        });
+        yield return new WaitWhile(() => done == false);
+        StartCoroutine(CheckLevel());
     }
 
     public IEnumerator CheckLevel()
@@ -251,5 +251,12 @@ public class TopReactsLeaderboard : MonoBehaviour
         yield return blackMarketManager.DisplayAvailableContracts();
         yield return saveData.PlayerLevelRoutine();
         yield return progressionBadges.UpdateBadges();
+    }
+
+    public void AddProgression(int XP)
+    {
+        LootLockerSDKManager.AddPointsToPlayerProgression(progressionKey, (ulong)XP, response =>
+        {
+        });
     }
 }

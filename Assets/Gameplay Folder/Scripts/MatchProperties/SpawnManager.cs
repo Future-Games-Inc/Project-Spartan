@@ -13,11 +13,10 @@ public class SpawnManager : MonoBehaviour
     public NavMeshSurface navMeshSurface;
     Vector3 spawnPosition;
     public Vector3 respawnPosition;
-    public GameObjectPoolManager PoolManager;
 
     void Start()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
         Vector3 randomPosition = GenerateRandomPosition();
 
         if (randomPosition != Vector3.zero)
@@ -39,7 +38,7 @@ public class SpawnManager : MonoBehaviour
         {
             avatarSelectionNumber = PlayerPrefs.GetInt("AvatarSelectionNumber");
             int selectionValue = (int)avatarSelectionNumber;
-            GameObject playter = this.PoolManager.Acquire(playerPrefab[selectionValue], spawnPosition, Quaternion.identity);
+            GameObject playter = Instantiate(playerPrefab[selectionValue], spawnPosition, Quaternion.identity);
         }
     }
 

@@ -25,21 +25,20 @@ public class BulletBehaviorNet : MonoBehaviour
     public AudioClip clip;
     public AudioSource audioSource;
 
-    public GameObjectPoolManager PoolManager;
 
 
     // Start is called before the first frame update
     private void OnEnable()
     {
 
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         StartCoroutine(Destroy(Duration));
     }
     IEnumerator Destroy(float duration)
     {
         yield return new WaitForSeconds(duration);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
         // attach clip and play
         // audioSource.PlayOneShot(clip);
     }
@@ -57,7 +56,7 @@ public class BulletBehaviorNet : MonoBehaviour
 
         // if break on impact
         if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         if ((other.CompareTag("Enemy")))
         {
             // select custom functions for damage
@@ -128,7 +127,7 @@ public class BulletBehaviorNet : MonoBehaviour
             {
                 enemyDamageReg.TakeDamage(Damage);
             }
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
         void EMPBulletDamageEnemy(Collider target, float damage)
         {
@@ -143,7 +142,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 enemyDamageReg.TakeDamage(Damage);
             }
             enemyDamageReg.EMPShock();
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
 
         void DefaultDamageBossEnemy(Collider target, float damage)
@@ -158,7 +157,7 @@ public class BulletBehaviorNet : MonoBehaviour
             {
                 enemyDamageReg.TakeDamage(Damage);
             }
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
         void EMPBulletDamageBossEnemy(Collider target, float damage)
         {
@@ -173,7 +172,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 enemyDamageReg.TakeDamage(Damage);
             }
             enemyDamageReg.EMPShock();
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
 
         void DefaultDamagePlayer(Collider target, float damage)
@@ -184,7 +183,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 playerHealth.PlayersKilled();
             }
             enemyDamageReg.TakeDamage(Damage);
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
         void EMPBulletDamagePlayer(Collider target, float damage)
         {
@@ -195,7 +194,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
             enemyDamageReg.TakeDamage(Damage);
             enemyDamageReg.EMPShock();
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
 
         void DefaultDamageSecurity(Collider target, float damage)
@@ -208,7 +207,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                 enemyDamageReg2.TakeDamage(Damage);
             }
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
         void EMPBulletDamageSecurity(Collider target, float damage)
         {
@@ -220,7 +219,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
                 enemyDamageReg2.TakeDamage(Damage * 200);
             }
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -228,7 +227,7 @@ public class BulletBehaviorNet : MonoBehaviour
     {
         // still need to modify to allow bullets pass through enemies if we want to do that later on
         if (!collision.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
     }
 
 }

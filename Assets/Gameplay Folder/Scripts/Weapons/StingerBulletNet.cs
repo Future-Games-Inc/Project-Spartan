@@ -25,13 +25,11 @@ public class StingerBulletNet : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip clip;
 
-    public GameObjectPoolManager PoolManager;
-
 
     private void OnEnable()
     {
         StartCoroutine(ExplodeBullets());
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
     }
 
@@ -192,7 +190,7 @@ public class StingerBulletNet : MonoBehaviour
         // Create smaller bullets and target nearby enemies
         for (int i = 0; i < numSmallBullets; i++)
         {
-            GameObject smallBullet = this.PoolManager.Acquire(smallBulletPrefab, transform.position, Quaternion.identity);
+            GameObject smallBullet = Instantiate(smallBulletPrefab, transform.position, Quaternion.identity);
             smallBullet.GetComponent<StingerBulletMiniNet>().audioSource.PlayOneShot(smallBullet.GetComponent<StingerBulletMiniNet>().clip);
             smallBullet.transform.forward = Random.insideUnitSphere;
             smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
@@ -206,7 +204,7 @@ public class StingerBulletNet : MonoBehaviour
         }
 
         // Create explosion effect and destroy bullet
-        this.PoolManager.Acquire(explosionPrefab, transform.position, Quaternion.identity);
-        this.PoolManager.Release(gameObject);
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

@@ -29,6 +29,7 @@ public class ReactorGrab : MonoBehaviour
     {
         if (other.CompareTag("ReactorInteractor"))
         {
+            playerHealth = other.GetComponentInParent<PlayerHealth>();
             playerHealth.reactorHeld = true;
 
 

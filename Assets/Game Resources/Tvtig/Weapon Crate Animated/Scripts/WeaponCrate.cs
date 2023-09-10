@@ -34,12 +34,11 @@ public class WeaponCrate : MonoBehaviour
 
     public MatchEffects matchProps;
 
-    public GameObjectPoolManager PoolManager;
 
 
     private void Start()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
         _collider = GetComponent<BoxCollider>();
         cacheActive = true;
     }
@@ -89,11 +88,12 @@ public class WeaponCrate : MonoBehaviour
 
     IEnumerator WeaponCache()
     {
+        yield return new WaitForSeconds(.5f);
         GameObject[] shuffledWeapons = ShuffleArray(weapons);
         GameObject[] shuffledPowerups = ShuffleArray(powerups);
-        this.PoolManager.Acquire(shuffledWeapons[0], spawn1.position, spawn1.rotation);
-        this.PoolManager.Acquire(shuffledWeapons[2], spawn3.position, spawn3.rotation);
-        this.PoolManager.Acquire(shuffledPowerups[0], spawn2.position, spawn2.rotation);
+        Instantiate(shuffledWeapons[0], spawn1.position, spawn1.rotation);
+        Instantiate(shuffledWeapons[2], spawn3.position, spawn3.rotation);
+        Instantiate(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);
         _animator.SetBool("Open", false);
         StartCoroutine(CacheRespawn());

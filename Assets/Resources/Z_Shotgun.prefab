@@ -14617,6 +14617,8 @@ MonoBehaviour:
   ReverseX: 0
   ReverseY: 0
   ReverseZ: 0
+  ForwardXLocal: 0
+  ForwardYLocal: 0
 --- !u!114 &6096224916237843067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14719,6 +14721,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: -8441536767789204208}
+        m_TargetAssemblyTypeName: BNG.GrabbableHaptics, Assembly-CSharp
+        m_MethodName: ShootHaptics
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onTriggerUp:
     m_PersistentCalls:
       m_Calls:
@@ -14800,6 +14814,8 @@ MonoBehaviour:
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
   isFiring: 0
+  PoolManager: {fileID: 0}
+  contact: 0
 --- !u!114 &-8441536767789204208
 MonoBehaviour:
   m_ObjectHideFlags: 0

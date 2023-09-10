@@ -28,7 +28,6 @@ public class EnergyBladeNet : MonoBehaviour
 
     private int _bleedStacks = 0;
 
-    public GameObjectPoolManager PoolManager;
     public int bleedStacks
     {
         get
@@ -47,7 +46,7 @@ public class EnergyBladeNet : MonoBehaviour
 
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -115,7 +114,7 @@ public class EnergyBladeNet : MonoBehaviour
     private void ApplyEffects(int Damage, Vector3 position)
     {
         // Apply hit effect
-        GameObject hit = this.PoolManager.Acquire(hitEffectPrefab, position, Quaternion.identity);
+        GameObject hit = Instantiate(hitEffectPrefab, position, Quaternion.identity);
 
         // Apply bleed effect
         if (!isBleeding)

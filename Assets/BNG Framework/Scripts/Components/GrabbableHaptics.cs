@@ -19,6 +19,10 @@ namespace BNG {
         public float VibrateAmplitude = 0.1f;
         public float VibrateDuration = 0.1f;
 
+        public float ShootFrequency = 0.6f;
+        public float ShootAmplitude = 0.3f;
+        public float ShootDuration = 0.3f;
+
         Grabber currentGrabber;
 
         public override void OnGrab(Grabber grabber) {
@@ -62,6 +66,12 @@ namespace BNG {
                     input.VibrateController(0.1f, 0.1f, 0.1f, currentGrabber.HandSide);
                 }
             }
+        }
+
+        public void ShootHaptics()
+        {
+            ControllerHand touchingHand = currentGrabber.HandSide;
+            input.VibrateController(ShootFrequency, ShootAmplitude, ShootDuration, touchingHand);
         }
     }
 }

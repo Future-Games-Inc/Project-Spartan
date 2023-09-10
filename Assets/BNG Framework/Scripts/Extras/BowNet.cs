@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.UI;
+using static Oni;
 
 namespace BNG {
 
@@ -87,11 +89,12 @@ namespace BNG {
         public GameObject player;
 
         public Rotator rotator;
-        public GameObjectPoolManager PoolManager;
 
-        void Start() {
+        public bool contact;
 
-            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        void OnEnable() {
+
+            
             initialKnockPosition = ArrowKnock.localPosition;
             bowGrabbable = GetComponent<Grabbable>();
             audioSource = GetComponent<AudioSource>();
@@ -107,6 +110,15 @@ namespace BNG {
                 { new DrawDefinition() { DrawPercentage = 90f, HapticAmplitude = 0.1f, HapticFrequency = 0.9f } },
                 { new DrawDefinition() { DrawPercentage = 100f, HapticAmplitude = 0.1f, HapticFrequency = 1f } },
             };
+            StartCoroutine(NoContact());
+        }
+        IEnumerator NoContact()
+        {
+            yield return new WaitForSeconds(10);
+            if (contact == false)
+            {
+                Destroy(gameObject);
+            }
         }
 
         void Update() {
@@ -131,7 +143,7 @@ namespace BNG {
 
             // Grab an arrow by holding trigger in grab area
             if (canGrabArrowFromKnock()) {
-                GameObject arrow = this.PoolManager.Acquire(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity);
+                GameObject arrow = Instantiate(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity);
                 arrow.transform.LookAt(getArrowRest());
 
                 // Use trigger when grabbing from knock
@@ -181,6 +193,7 @@ namespace BNG {
             {
                 player = other.transform.root.gameObject;
                 rotator.enabled = false;
+                contact = true;
             }
         }
 

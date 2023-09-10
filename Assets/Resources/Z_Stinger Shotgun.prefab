@@ -1232,6 +1232,8 @@ MonoBehaviour:
   ReverseX: 0
   ReverseY: 0
   ReverseZ: 0
+  ForwardXLocal: 0
+  ForwardYLocal: 0
 --- !u!114 &1622295053002393200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1262,6 +1264,8 @@ MonoBehaviour:
   isFiring: 0
   fireSpeed: 20
   bullet: {fileID: 2228136128379212152, guid: da63ec868c1f55a45b4f12730f5a351a, type: 3}
+  PoolManager: {fileID: 0}
+  contact: 0
 --- !u!114 &1017881006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1340,6 +1344,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1622295053002393200}
         m_TargetAssemblyTypeName: StingerShotgun, Assembly-CSharp
         m_MethodName: StartFireBullet
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: -1535681244786993448}
+        m_TargetAssemblyTypeName: BNG.GrabbableHaptics, Assembly-CSharp
+        m_MethodName: ShootHaptics
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

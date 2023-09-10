@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using Umbrace.Unity.PurePool;
+using static Oni;
 
 public class PlayerWeapon : MonoBehaviour
 {
@@ -26,14 +27,12 @@ public class PlayerWeapon : MonoBehaviour
 
     public bool reloadingWeapon = false;
     public bool isFiring = false;
-
-    public GameObjectPoolManager PoolManager;
-
+    public bool contact;
 
     // Start is called before the first frame update
     public void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
@@ -41,6 +40,15 @@ public class PlayerWeapon : MonoBehaviour
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
         UpdateText();
+        StartCoroutine(NoContact());
+    }
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -75,7 +83,7 @@ public class PlayerWeapon : MonoBehaviour
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = Instantiate(bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
@@ -116,6 +124,7 @@ public class PlayerWeapon : MonoBehaviour
             var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
+            contact = true;
         }
     }
 
@@ -124,7 +133,7 @@ public class PlayerWeapon : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(.5f);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     void UpdateText()

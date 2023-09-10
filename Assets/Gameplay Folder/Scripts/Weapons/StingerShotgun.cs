@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using PathologicalGames;
 using Umbrace.Unity.PurePool;
+using static Oni;
 
 public class StingerShotgun : MonoBehaviour
 {
@@ -34,17 +35,26 @@ public class StingerShotgun : MonoBehaviour
     public float fireSpeed = 20;
     public GameObject bullet;
 
-    public GameObjectPoolManager PoolManager;
+    public bool contact;
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
         durability = 5;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
         ammoText.text = ammoLeft.ToString();
         StartCoroutine(TextUpdate());
+        StartCoroutine(NoContact());
+    }
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator TextUpdate()
@@ -90,7 +100,7 @@ public class StingerShotgun : MonoBehaviour
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = Instantiate(bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<StingerBulletNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StingerBulletNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<StingerBulletNet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
@@ -129,6 +139,7 @@ public class StingerShotgun : MonoBehaviour
             var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
+            contact = true;
         }
     }
 
@@ -137,7 +148,7 @@ public class StingerShotgun : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     public void Rescale()

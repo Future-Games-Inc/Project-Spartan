@@ -45,7 +45,6 @@ namespace BNG
         public bool activated = false;
 
         public string Type = "Default";
-        public GameObjectPoolManager PoolManager;
 
 
         public struct TargetInfo
@@ -56,7 +55,14 @@ namespace BNG
         // Start is called before the first frame update
         void OnEnable()
         {
-            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+            
+
+            Targets = new TargetInfo[4];  // Initializing the array with 3 elements
+            Targets[0] = new TargetInfo { Tag = "Enemy" };  // Populating individual elements
+            Targets[1] = new TargetInfo { Tag = "BossEnemy" };
+            Targets[2] = new TargetInfo { Tag = "Security" };
+            Targets[3] = new TargetInfo { Tag = "Player" };
+
             rb = GetComponent<Rigidbody>();
             impactSound = GetComponent<AudioSource>();
             ShaftCollider = GetComponent<Collider>();
@@ -122,7 +128,7 @@ namespace BNG
 
             if (grab != null && !grab.BeingHeld && transform.parent == null)
             {
-                this.PoolManager.Release(this.gameObject);
+                Destroy(this.gameObject);
             }
         }
 
@@ -172,7 +178,7 @@ namespace BNG
         IEnumerator Destroy(float duration)
         {
             yield return new WaitForSeconds(duration);
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
             // attach clip and play
             // audioSource.PlayOneShot(clip);
         }
@@ -302,7 +308,7 @@ namespace BNG
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
                 if (Type == "Default")
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
             }
 
             void DefaultDamageBossEnemy(Collider target, float damage)
@@ -318,7 +324,7 @@ namespace BNG
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
                 if (Type == "Default")
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
             }
 
             void DefaultDamagePlayer(Collider target, float damage)
@@ -330,7 +336,7 @@ namespace BNG
                 }
                 enemyDamageReg.TakeDamage((int)arrowDamage);
                 if (Type == "Default")
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
             }
 
             void DefaultDamageSecurity(Collider target, float damage)
@@ -344,7 +350,7 @@ namespace BNG
                     enemyDamageReg2.TakeDamage((int)arrowDamage);
                 }
                 if (Type == "Default")
-                    this.PoolManager.Release(gameObject);
+                    Destroy(gameObject);
             }
         }
 
@@ -404,7 +410,7 @@ namespace BNG
 
         IEnumerator GrowBubbleCoroutine()
         {
-            surgeBubble = this.PoolManager.Acquire(bubble, transform.position, Quaternion.identity);
+            surgeBubble = Instantiate(bubble, transform.position, Quaternion.identity);
             while (true)
             {
                 float scaleIncrease = 8f * Time.deltaTime;
@@ -418,7 +424,7 @@ namespace BNG
         {
             yield return new WaitForSeconds(1.25f);
             StopCoroutine(GrowBubbleCoroutine());
-            this.PoolManager.Release(surgeBubble);
+            Destroy(surgeBubble);
         }
 
         void HandleDamage(Collider collider, TargetInfo target)

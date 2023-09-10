@@ -12,13 +12,11 @@ public class Bullet : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip clip;
 
-    public GameObjectPoolManager PoolManager;
-
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         StartCoroutine(DestroyBullet());
     }
@@ -227,17 +225,17 @@ public class Bullet : MonoBehaviour
             }
         }
 
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     IEnumerator DestroyBullet()
     {
         yield return new WaitForSeconds(5);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
     IEnumerator DestroyBulletCollision()
     {
         yield return new WaitForSeconds(0.15f);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 }

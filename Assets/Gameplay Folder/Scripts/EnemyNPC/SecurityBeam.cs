@@ -1,29 +1,30 @@
-using Photon.Pun;
 using System.Collections;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class SecurityBeam : MonoBehaviour
 {
-    public GameObject[] enemyAI;
+    public List<GameObject> detectedEnemies; // List to store the enemies detected in range
+
+    public float detectionRange = 100f; // Range within which to find enemies
 
     public AudioSource alarmSource;
     public AudioClip alarmClip;
 
     public GameObject securityDrone;
     public GameObject detectedPlayer;
-    public Material beamMaterial;
-    public Color beamColor;
+    public Material beamMaterialNormal;
+    public Material beamMaterialDetected;
+    public GameObject securityBeam;
 
     public bool lost = true;
     public bool neverFound = true;
     public float lostTimer;
 
-    // Start is called before the first frame update
     void OnEnable()
     {
-        beamMaterial.color = beamColor;
+        detectedEnemies = new List<GameObject>();
         detectedPlayer = null;
         InvokeRepeating("AlarmSound", 5f, 3f);
         StartCoroutine(Lost());
@@ -34,18 +35,23 @@ public class SecurityBeam : MonoBehaviour
         lost = true;
         neverFound = true;
 
-        beamMaterial.color = beamColor;
+        securityBeam.GetComponent<MeshRenderer>().material = beamMaterialNormal;
         detectedPlayer = null;
         securityDrone.GetComponent<WanderingAI>().enabled = true;
         securityDrone.GetComponent<SecuityCamera>().enabled = true;
         securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f;
-        enemyAI = GameObject.FindGameObjectsWithTag("Enemy"); // Look for other options
-        foreach (GameObject enemy in enemyAI)
+
+        // Reset the properties for enemies in the detectedEnemies list
+        foreach (GameObject enemy in detectedEnemies)
         {
             if (enemy.TryGetComponent(out FollowAI followAi))
             {
                 followAi.AgroRange = 25f;
-                followAi.agent.speed = 1.5f; ;
+                followAi.DetectRange = 30f;
+                if (enemy.tag == "Enemy")
+                    followAi.agent.speed = 1.5f;
+                else
+                    followAi.agent.speed = 0.8f;
             }
         }
     }
@@ -56,21 +62,32 @@ public class SecurityBeam : MonoBehaviour
         lost = false;
         neverFound = false;
 
-        beamMaterial.color = Color.red;
+        securityBeam.GetComponent<MeshRenderer>().material = beamMaterialDetected;
         securityDrone.GetComponent<WanderingAI>().enabled = false;
         securityDrone.GetComponent<SecuityCamera>().enabled = false;
         securityDrone.GetComponent<NavMeshAgent>().speed = 2;
-        //droneAgent.SetDestination(detectedPlayer.transform.position);
-        enemyAI = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject enemy in enemyAI)
+
+        // Find and store enemies within a certain range
+        Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRange);
+        detectedEnemies.Clear(); // Clear the previous list
+        foreach (Collider col in colliders)
         {
-            if (enemy.TryGetComponent(out FollowAI followAi))
+            if (col.CompareTag("Enemy") || col.CompareTag("BossEnemy"))
             {
-                followAi.AgroRange = 500;
-                followAi.agent.speed = 3;
+                detectedEnemies.Add(col.gameObject);
             }
         }
 
+        // Update the properties for enemies in the detectedEnemies list
+        foreach (GameObject enemy in detectedEnemies)
+        {
+            if (enemy.TryGetComponent(out FollowAI followAi))
+            {
+                followAi.AgroRange = 40f;
+                followAi.DetectRange = 50f;
+                followAi.agent.speed = 3f;
+            }
+        }
     }
 
     IEnumerator Lost()

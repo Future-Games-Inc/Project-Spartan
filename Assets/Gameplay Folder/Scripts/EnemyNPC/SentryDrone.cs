@@ -1,5 +1,6 @@
 using System.Collections;
 using Umbrace.Unity.PurePool;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -58,8 +59,6 @@ public class SentryDrone : MonoBehaviour
 
     public int bulletModifier = 2;
 
-    public GameObjectPoolManager PoolManager;
-
 
     public enum States
     {
@@ -80,7 +79,7 @@ public class SentryDrone : MonoBehaviour
             agent.enabled = true;
         }
 
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
@@ -93,23 +92,23 @@ public class SentryDrone : MonoBehaviour
 
     public void FindClosestEnemy()
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        GameObject closest = null;
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
+        //players = FindObjectsOfType<XROrigin>().ToList<>;
+        //GameObject closest = null;
+        //float distance = Mathf.Infinity;
+        //Vector3 position = transform.position;
 
-        foreach (GameObject go in players)
-        {
-            Vector3 diff = go.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
-            {
-                closest = go;
-                distance = curDistance;
-            }
-        }
+        //foreach (GameObject go in players)
+        //{
+        //    Vector3 diff = go.transform.position - position;
+        //    float curDistance = diff.sqrMagnitude;
+        //    if (curDistance < distance)
+        //    {
+        //        closest = go;
+        //        distance = curDistance;
+        //    }
+        //}
 
-        targetTransform = closest.transform;
+        targetTransform = FindObjectOfType<XROrigin>().transform;
     }
 
     public void SwitchStates(States input)
@@ -252,13 +251,12 @@ public class SentryDrone : MonoBehaviour
                 else if (IsLineOfSightClear(targetTransform))
                 {
                     yield return new WaitForSeconds(0.25f);
-                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
+                    GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
                     ammoLeft--;
                 }
             }
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(2f);
         }
     }
 
@@ -297,18 +295,18 @@ public class SentryDrone : MonoBehaviour
             xpDropRate = 10f;
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                GameObject DropExtra = this.PoolManager.Acquire(xpDropExtra, t.position, Quaternion.identity);
+                GameObject DropExtra = Instantiate(xpDropExtra, t.position, Quaternion.identity);
                 DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
             {
-                GameObject DropNormal = this.PoolManager.Acquire(xpDrop, t.position, Quaternion.identity);
+                GameObject DropNormal = Instantiate(xpDrop, t.position, Quaternion.identity);
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
 
         //yield return new WaitForSeconds(.75f);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     public void RandomSFX()

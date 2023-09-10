@@ -20,12 +20,11 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
     	[Header("Audio")]
     	public AudioClip[] explosionSounds;
     	public AudioSource audioSource;
-        public GameObjectPoolManager PoolManager;
 
 
         private void Start () {
 
-            PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+            
 
             //Start the coroutines
             StartCoroutine(DestroyTimer ());
@@ -50,7 +49,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
     	private IEnumerator DestroyTimer () {
     		//Destroy the explosion prefab after set amount of seconds
     		yield return new WaitForSeconds (despawnTime);
-    		this.PoolManager.Release(gameObject);
+    		Destroy(gameObject);
     	}
     }
 }

@@ -34,12 +34,10 @@ public class SupplyDropCrate : MonoBehaviour
 
     public float forceMagnitude;
 
-    public GameObjectPoolManager PoolManager;
-
 
     private void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
         StartCoroutine(PlayAudioLoop());
@@ -84,7 +82,7 @@ public class SupplyDropCrate : MonoBehaviour
 
                 if (elapsedTime >= activationTime)
                 {
-                    tInstantiateWeapons();
+                    InstantiateWeapons();
                 }
 
                 foreach (GameObject vfx in effects)
@@ -119,7 +117,7 @@ public class SupplyDropCrate : MonoBehaviour
         return false;
     }
 
-    void tInstantiateWeapons()
+    void InstantiateWeapons()
     {
         isActive = true;
         activationSlider.gameObject.SetActive(false);
@@ -132,10 +130,10 @@ public class SupplyDropCrate : MonoBehaviour
         audioSource.PlayOneShot(spawnClip);
 
         GameObject[] shuffledWeapons = ShuffleArray(weaponPrefabs);
-        // this.PoolManager.Acquire a weapon for each spawn point
-        this.PoolManager.Acquire(shuffledWeapons[0], spawn1.position, spawn1.rotation);
-        this.PoolManager.Acquire(shuffledWeapons[1], spawn2.position, spawn2.rotation);
-        this.PoolManager.Acquire(shuffledWeapons[2], spawn3.position, spawn3.rotation);
+        // Instantiate a weapon for each spawn point
+        Instantiate(shuffledWeapons[0], spawn1.position, spawn1.rotation);
+        Instantiate(shuffledWeapons[1], spawn2.position, spawn2.rotation);
+        Instantiate(shuffledWeapons[2], spawn3.position, spawn3.rotation);
 
         StartCoroutine(Destroy());
     }
@@ -161,7 +159,7 @@ public class SupplyDropCrate : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         matchProps.lastSpawnTime = Time.time;
         matchProps.spawned = false;
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 
     IEnumerator NoContact()
@@ -172,7 +170,7 @@ public class SupplyDropCrate : MonoBehaviour
             matchProps.lastSpawnTime = Time.time;
             matchProps.spawned = false;
             yield return new WaitForSeconds(.75f);
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
     }
 }

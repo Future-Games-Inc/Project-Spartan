@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,7 @@ public class ActivateWristUI : MonoBehaviour
     public float timer;
 
     public bool activated;
+    public TextMeshProUGUI countdownText;
     public MatchEffects matchEffects;
 
     public GameObject identifier;
@@ -94,29 +96,34 @@ public class ActivateWristUI : MonoBehaviour
             {
                 identifier.GetComponent<MeshRenderer>().material = deactivated;
                 rotator.speed = 10f;
+                countdownText.text = "";
+            }
+            else if (matchEffects.startMatchBool) 
+            {
+                countdownText.text = matchEffects.currentExtractionTimer.ToString();
             }
 
-            else if (matchEffects.startMatchBool && !matchEffects.spawnReactor)
+            if (matchEffects.startMatchBool && !matchEffects.spawnReactor)
             {
                 Vector3 pointA = this.gameObject.transform.position;
                 Vector3 pointB = codeScreen.gameObject.transform.position;
                 float distance = Vector3.Distance(pointA, pointB);
-                if (distance >= 100f)
+                if (distance >= 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = deactivated;
                     rotator.speed = 10f;
                 }
-                else if (distance >= 80f && distance < 100f)
+                else if (distance >= 60f && distance < 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = far;
                     rotator.speed = 15f;
                 }
-                else if (distance >= 40f && distance < 80f)
+                else if (distance >= 20f && distance < 60f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = medium;
                     rotator.speed = 20f;
                 }
-                else if (distance >= 20f && distance < 40f)
+                else if (distance >= 0f && distance < 20f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = close;
                     rotator.speed = 30f;
@@ -129,22 +136,22 @@ public class ActivateWristUI : MonoBehaviour
                 Vector3 pointA = this.gameObject.transform.position;
                 Vector3 pointB = reactor.gameObject.transform.position;
                 float distance = Vector3.Distance(pointA, pointB);
-                if (distance >= 100f)
+                if (distance >= 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = deactivated;
                     rotator.speed = 10f;
                 }
-                else if (distance >= 80f && distance < 100f)
+                else if (distance >= 60f && distance < 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = far;
                     rotator.speed = 15f;
                 }
-                else if (distance >= 40f && distance < 80f)
+                else if (distance >= 20f && distance < 60f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = medium;
                     rotator.speed = 20f;
                 }
-                else if (distance >= 0f && distance < 40f)
+                else if (distance >= 0f && distance < 20f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = close;
                     rotator.speed = 30f;

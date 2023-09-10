@@ -43,13 +43,12 @@ public class MatchEffects : MonoBehaviour
 
     public TextMeshProUGUI nexusCodePanel;
 
-    public GameObjectPoolManager PoolManager;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        
 
         InitializeTimer(); // Only the Master Client will initialize the timer
         StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
@@ -97,7 +96,7 @@ public class MatchEffects : MonoBehaviour
                     // Adjust the y value to be 100 units above the original spawn position
                     spawnPosition.y += 100;
 
-                    this.PoolManager.Acquire(supplyDropShipPrefab, spawnPosition, Quaternion.identity);
+                    Instantiate(supplyDropShipPrefab, spawnPosition, Quaternion.identity);
                     StartCoroutine(SupplyShipAudio());
                     spawned = true;
                 }
@@ -183,7 +182,7 @@ public class MatchEffects : MonoBehaviour
     //    {
     //        for (int i = 0; i < artifacts.Length; i++)
     //        {
-    //            PhotonNetwork.this.PoolManager.Acquire(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
+    //            PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
     //        }
     //    }
     //}
