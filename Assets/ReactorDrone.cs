@@ -29,16 +29,22 @@ public class ReactorDrone : MonoBehaviour
     public States currentState;
     public LayerMask obstacleMask;
 
+    public MatchEffects matchEffects;
+
 
     private void Start()
     {
         StartCoroutine(FireWeapon());
+        matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
     }
 
     void Update()
     {
-        FindClosestEnemy();
-        UpdateStates();
+        if (!matchEffects.codeFound)
+        {
+            FindClosestEnemy();
+            UpdateStates();
+        }
     }
 
     private void UpdateStates()
@@ -135,7 +141,7 @@ public class ReactorDrone : MonoBehaviour
     {
         while (true)
         {
-            if (fireWeaponBool)
+            if (fireWeaponBool && !matchEffects.codeFound)
             {
                 GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);

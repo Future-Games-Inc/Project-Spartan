@@ -31,7 +31,7 @@ public class BulletBehaviorNet : MonoBehaviour
     private void OnEnable()
     {
 
-        
+
 
         StartCoroutine(Destroy(Duration));
     }
@@ -109,6 +109,17 @@ public class BulletBehaviorNet : MonoBehaviour
                     break;
                 case "Default":
                     DefaultDamageSecurity(other, Damage);
+                    break;
+            }
+        }
+
+        if (other.CompareTag("Tower"))
+        {
+            // select custom functions for damage
+            switch (Type)
+            {
+                case "Default":
+                    ReactorCover(other, Damage);
                     break;
             }
         }
@@ -220,6 +231,16 @@ public class BulletBehaviorNet : MonoBehaviour
                 enemyDamageReg2.TakeDamage(Damage * 200);
             }
             Destroy(gameObject);
+        }
+
+        void ReactorCover(Collider target, int damage)
+        {
+            if (playerBullet)
+            {
+                //critical hit here
+                ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
+                reactorcover.TakeDamage(damage);
+            }
         }
     }
 

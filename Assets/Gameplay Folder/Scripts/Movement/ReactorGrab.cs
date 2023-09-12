@@ -12,8 +12,10 @@ public class ReactorGrab : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip extractionClip;
 
+    public bool held;
+
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         reactorCore.GetComponent<Renderer>().material = normalMaterial;
         InvokeRepeating("ExtractionChirp", 0f, 5f);
@@ -22,7 +24,15 @@ public class ReactorGrab : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (held)
+        {
+            if (playerHealth.reactorExtraction >= 50)
+            {
+                reactorCore.GetComponent<Renderer>().material = criticalMaterial;
+            }
+            else
+                reactorCore.GetComponent<Renderer>().material = mediumMaterial;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,17 +41,7 @@ public class ReactorGrab : MonoBehaviour
         {
             playerHealth = other.GetComponentInParent<PlayerHealth>();
             playerHealth.reactorHeld = true;
-
-
-            if (playerHealth.reactorExtraction < 50)
-            {
-                reactorCore.GetComponent<Renderer>().material = mediumMaterial;
-            }
-
-            if (playerHealth.reactorExtraction >= 50)
-            {
-                reactorCore.GetComponent<Renderer>().material = criticalMaterial;
-            }
+            held = true;
         }
     }
 
@@ -50,6 +50,7 @@ public class ReactorGrab : MonoBehaviour
         if (other.CompareTag("ReactorInteractor"))
         {
             playerHealth.reactorHeld = false;
+            held = false;
             reactorCore.GetComponent<Renderer>().material = normalMaterial;
         }
     }

@@ -9,12 +9,13 @@ public class IntelScript : MonoBehaviour
     private Rigidbody rb;
     public Grabbable grabbable;
 
+    public GameObjectPoolManager PoolManager;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
         rb = GetComponent<Rigidbody>();
         // Freeze X and Z initially
         rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
@@ -31,7 +32,7 @@ public class IntelScript : MonoBehaviour
         if (other.CompareTag("PickupSlot"))
         {
             other.GetComponentInParent<PlayerHealth>().IntelFound();
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 

@@ -2,7 +2,6 @@ using LootLocker.Requests;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -28,8 +27,6 @@ public class PlayerHealth : MonoBehaviour
     public bool alive;
     public bool reactorHeld;
     public bool extractionWinner;
-    public bool playerWinner;
-    public bool enemyWinner;
 
     public string characterFaction;
 
@@ -55,6 +52,7 @@ public class PlayerHealth : MonoBehaviour
     public int armorLevel;
     public int Armor = 100;
     public int reactorExtraction;
+    public TextMeshProUGUI reactorText;
 
     [Header("Player State Effects ------------------------------------")]
     public GameObject shockEffect;
@@ -62,7 +60,6 @@ public class PlayerHealth : MonoBehaviour
     [Header("Player UI ------------------------------------")]
     public GameObject reactorIcon;
     public GameObject shipIcon;
-    public GameObject[] playerObjects;
     public GameObject[] shieldObjects;
     public GameObject healthBarObject;
     public GameObject armorBarObject;
@@ -216,8 +213,6 @@ public class PlayerHealth : MonoBehaviour
         enemiesKilled = 0;
         alive = true;
         extractionWinner = false;
-        playerWinner = false;
-        enemyWinner = false;
         toxicEffectActive = false;
         leechEffect = false;
         activeCamo = false;
@@ -535,7 +530,12 @@ public class PlayerHealth : MonoBehaviour
     {
         // Perform time-based actions
         if (reactorHeld)
+        {
             UpdateReactor();
+            reactorText.text = reactorExtraction.ToString() + "%";
+        }
+        else if (!reactorHeld)
+            reactorText.text = "";
 
         if (Health <= 30)
             criticalHealth.SetActive(true);

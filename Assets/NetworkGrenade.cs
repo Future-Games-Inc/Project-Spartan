@@ -31,36 +31,18 @@ public class NetworkGrenade : MonoBehaviour
     public AudioSource audioSource;
     public GameObject objectRenderer;
 
-
-    public bool contact;
+    public GameObjectPoolManager PoolManager;
 
 
     private void OnEnable()
     {
-        
-
-        Targets = new TargetInfo[4];  // Initializing the array with 3 elements
-        Targets[0] = new TargetInfo { Tag = "Enemy" };  // Populating individual elements
-        Targets[1] = new TargetInfo { Tag = "BossEnemy" };
-        Targets[2] = new TargetInfo { Tag = "Security" };
-        Targets[3] = new TargetInfo { Tag = "Player" };
-        StartCoroutine(NoContact());
+        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
     }
-    IEnumerator NoContact()
-    {
-        yield return new WaitForSeconds(10);
-        if (contact == false)
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            contact = true;
         }
     }
 
@@ -163,6 +145,6 @@ public class NetworkGrenade : MonoBehaviour
     {
         objectRenderer.SetActive(false);
         yield return new WaitForSeconds(delay);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

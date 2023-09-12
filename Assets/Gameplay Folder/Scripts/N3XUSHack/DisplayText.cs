@@ -12,6 +12,8 @@ public class DisplayText : MonoBehaviour
     public GameObject granted;
     public GameObject denied;
 
+    public bool codeFound;
+
     // Start is called before the first frame update
    void Start()
     {
@@ -48,6 +50,7 @@ public class DisplayText : MonoBehaviour
             displayText.fontSize = 24;
             displayText.text = "Access Granted";
             matchEffects.spawnReactor = true;
+            matchEffects.codeFound = true;
             foreach(GameObject keys in keyButtons)
                 keys.SetActive(false);
             granted.SetActive(true);

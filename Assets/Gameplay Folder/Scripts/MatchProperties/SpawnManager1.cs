@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -47,7 +46,7 @@ public class SpawnManager1 : MonoBehaviour
 
     public NavMeshSurface navMeshSurface;
     List<Vector3> spawnPositions = new List<Vector3>();  // Dynamic list for valid positions
-    float bufferRadius = .25f;  // Replace this with the buffer radius you want
+    public float bufferRadius = .15f;
 
 
     void Start()
