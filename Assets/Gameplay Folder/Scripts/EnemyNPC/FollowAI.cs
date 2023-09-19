@@ -235,7 +235,7 @@ public class FollowAI : MonoBehaviour
         RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, DetectRange, obstacleMask);
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Hand"))
             {
                 return true;
             }
@@ -308,7 +308,7 @@ public class FollowAI : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
-            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Hand"))
             {
                 return true;
             }

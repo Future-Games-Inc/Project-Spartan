@@ -93,6 +93,9 @@ public class Vault : MonoBehaviour
                 }
             }
         }
+
+        if(matchProps.spawnReactor)
+            Destroy(gameObject);
     }
 
     void UpdateVaultActivation(bool playerWithinRadius)

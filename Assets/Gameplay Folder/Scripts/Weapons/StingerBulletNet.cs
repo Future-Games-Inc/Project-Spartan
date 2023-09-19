@@ -146,34 +146,6 @@ public class StingerBulletNet : MonoBehaviour
             }
         }
 
-        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
-        {
-            float criticalChance = 10f;
-
-            if (Random.Range(0, 100f) < criticalChance)
-            {
-                //critical hit here
-                PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
-                if (playerDamageCrit.Health <= (10 * bulletModifier) && playerDamageCrit.alive == true && playerHealth != null)
-                {
-                    playerHealth.PlayersKilled();
-                }
-                playerDamageCrit.TakeDamage((10 * bulletModifier));
-                Explode();
-            }
-
-            else
-            {
-                PlayerHealth playerDamage = other.GetComponent<PlayerHealth>();
-                if (playerDamage.Health <= (5 * bulletModifier) && playerDamage.alive == true && playerHealth != null)
-                {
-                    playerHealth.PlayersKilled();
-                }
-                playerDamage.TakeDamage((5 * bulletModifier));
-                Explode();
-            }
-        }
-
         else if (other.CompareTag("Tower"))
         {
             if (playerBullet)

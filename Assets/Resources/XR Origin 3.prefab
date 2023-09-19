@@ -812,6 +812,7 @@ Transform:
   - {fileID: 439788777949049147}
   - {fileID: 5348299557139331769}
   - {fileID: 5233601815016857992}
+  - {fileID: 4473734157682557616}
   m_Father: {fileID: 439788778926290556}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1275,7 +1276,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.16
+  near clip plane: 0.08
   far clip plane: 150
   field of view: 60.000004
   orthographic: 0
@@ -1490,12 +1491,6 @@ Transform:
   - {fileID: 9193352250746582827}
   - {fileID: 2140480699328679751}
   - {fileID: 1987160813369017118}
-  - {fileID: 3677856903884941039}
-  - {fileID: 5775377656103704467}
-  - {fileID: 176429684797516399}
-  - {fileID: 1411696182408196898}
-  - {fileID: 5819825209685975159}
-  - {fileID: 9017398016070933603}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1665,7 +1660,7 @@ MonoBehaviour:
   primaryButtonPressed: 0
   secondaryButtonPressed: 0
   leaderboardID: react_leaderboard
-  leaderboardID2: faction_leaders
+  leaderboardID2: faction_leader
   progressionKey: cent_prog
   faction: 
   bossesKilled: 0
@@ -3280,7 +3275,7 @@ GameObject:
   - component: {fileID: 9176154450876224192}
   m_Layer: 12
   m_Name: SK_CPStreetGirl_bag
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4745,7 +4740,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2475516855084421598
 Transform:
   m_ObjectHideFlags: 0
@@ -8930,7 +8925,7 @@ GameObject:
   - component: {fileID: 5405542031584081190}
   m_Layer: 12
   m_Name: root
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10898,12 +10893,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4473923315225675968}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.219, y: 1.0843, z: 0.161}
+  m_LocalPosition: {x: 0.219, y: -0.5057, z: 0.24379998}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 8
+  m_Father: {fileID: 4473734157682557616}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4730830404342383244
 MeshFilter:
@@ -11450,13 +11445,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4613175003504065177}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.282, y: 0.983, z: 0.071}
+  m_LocalPosition: {x: -0.282, y: -0.5057, z: 0.1538}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 172871236653445721}
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 5
+  m_Father: {fileID: 4473734157682557616}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6411285340924201336
 MeshFilter:
@@ -11720,7 +11715,7 @@ GameObject:
   - component: {fileID: 5377315877478689272}
   m_Layer: 12
   m_Name: SK_CPStreetGirl_bodyarm
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14365,7 +14360,7 @@ MonoBehaviour:
   m_LineType: 0
   m_BlendVisualLinePoints: 1
   m_MaxRaycastDistance: 4
-  m_RayOriginTransform: {fileID: 0}
+  m_RayOriginTransform: {fileID: 131126196317775290}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
   m_Acceleration: 9.8
@@ -15430,7 +15425,7 @@ MonoBehaviour:
   m_LineType: 0
   m_BlendVisualLinePoints: 1
   m_MaxRaycastDistance: 4
-  m_RayOriginTransform: {fileID: 0}
+  m_RayOriginTransform: {fileID: 7518693794469629370}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
   m_Acceleration: 9.8
@@ -16005,7 +16000,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3117794978448482123
 Transform:
   m_ObjectHideFlags: 0
@@ -17341,7 +17336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &744294582627159779
 Transform:
   m_ObjectHideFlags: 0
@@ -17645,12 +17640,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7478405504969178706}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.298, y: 0.983, z: 0.071}
-  m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
+  m_LocalPosition: {x: 0.336, y: -0.531, z: 0.062}
+  m_LocalScale: {x: 0.13429548, y: 0.12954657, z: 0.2676591}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 9
+  m_Father: {fileID: 4473734157682557616}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2614677425909999729
 MeshFilter:
@@ -18565,7 +18560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6988752653212988488
 Transform:
   m_ObjectHideFlags: 0
@@ -18946,7 +18941,7 @@ GameObject:
   - component: {fileID: 9100515906392480864}
   m_Layer: 12
   m_Name: SK_CPStreetGirl_MergedA
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21070,6 +21065,57 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &8748653516335907866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4473734157682557616}
+  - component: {fileID: 5357254880281005032}
+  m_Layer: 12
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4473734157682557616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748653516335907866}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.75, z: 0.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3677856903884941039}
+  - {fileID: 5775377656103704467}
+  - {fileID: 176429684797516399}
+  - {fileID: 1411696182408196898}
+  - {fileID: 5819825209685975159}
+  - {fileID: 9017398016070933603}
+  m_Father: {fileID: 439788778392037282}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5357254880281005032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748653516335907866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa85e4dd89b6e60428800a48c887f070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 439788778509456222}
 --- !u!1 &8839766335972656758
 GameObject:
   m_ObjectHideFlags: 0
@@ -21133,12 +21179,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8891723654146062968}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.009000011, y: 1.0843, z: 0.161}
+  m_LocalPosition: {x: -0.009000011, y: -0.5057, z: 0.24379998}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 7
+  m_Father: {fileID: 4473734157682557616}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4935917101738739518
 MeshFilter:
@@ -21395,7 +21441,7 @@ GameObject:
   - component: {fileID: 6077423696527035699}
   m_Layer: 12
   m_Name: SK_CPStreetGirl_bodytorso
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21683,12 +21729,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9062432033127100847}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.201, y: 1.0843, z: 0.161}
+  m_LocalPosition: {x: -0.201, y: -0.5057, z: 0.24379998}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 6
+  m_Father: {fileID: 4473734157682557616}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6889800857351969589
 MeshFilter:
@@ -21978,7 +22024,7 @@ GameObject:
   - component: {fileID: 8869967596542159320}
   m_Layer: 12
   m_Name: SK_CPStreetGirl_bodyleg
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22123,7 +22169,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 439788778926290556}
+    m_TransformParent: {fileID: 4473734157682557616}
     m_Modifications:
     - target: {fileID: 9017398015425729478, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
@@ -22143,7 +22189,7 @@ PrefabInstance:
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
@@ -22153,12 +22199,12 @@ PrefabInstance:
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4102
+      value: -0.17980003
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.906
+      value: -0.8232001
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}

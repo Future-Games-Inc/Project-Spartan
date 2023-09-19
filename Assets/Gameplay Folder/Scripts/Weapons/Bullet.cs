@@ -188,22 +188,12 @@ public class Bullet : MonoBehaviour
                 {
                     //critical hit here
                     PlayerHealth playerDamageCrit = other.GetComponentInParent<PlayerHealth>();
-                    if (playerDamageCrit.Health <= (10 * bulletModifier) && playerDamageCrit.alive == true && playerHealth != null)
-                    {
-                        playerHealth.PlayersKilled();
-                    }
-
                     playerDamageCrit.TakeDamage(10 * bulletModifier);
                 }
 
                 else
                 {
                     PlayerHealth playerDamage = other.GetComponentInParent<PlayerHealth>();
-                    if (playerDamage.Health <= (5 * bulletModifier) && playerDamage.alive == true && playerHealth != null)
-                    {
-                        playerHealth.PlayersKilled();
-                    }
-
                     playerDamage.TakeDamage(5 * bulletModifier);
                 }
             }

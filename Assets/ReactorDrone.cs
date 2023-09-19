@@ -43,6 +43,8 @@ public class ReactorDrone : MonoBehaviour
         if (!matchEffects.codeFound)
         {
             FindClosestEnemy();
+            directionToTarget = targetTransform.position - transform.position;
+
             UpdateStates();
         }
     }
@@ -85,7 +87,6 @@ public class ReactorDrone : MonoBehaviour
     private void Follow()
     {
         fireWeaponBool = false;
-        directionToTarget = targetTransform.position - transform.position;
 
         if (directionToTarget.magnitude <= shootDistance && CheckForPlayer())
         {
@@ -106,12 +107,17 @@ public class ReactorDrone : MonoBehaviour
         if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
             return false;
 
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, shootDistance, obstacleMask);
-        foreach (RaycastHit hit in hits)
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, shootDistance, obstacleMask))
         {
-            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            // Debugging line
+            if (hit.collider != null)
             {
-                return true;
+                // More debugging
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Hand"))
+                {
+                    return true;
+                }
             }
         }
 
@@ -141,7 +147,7 @@ public class ReactorDrone : MonoBehaviour
     {
         while (true)
         {
-            if (fireWeaponBool && !matchEffects.codeFound)
+            if (fireWeaponBool && !matchEffects.codeFound && matchEffects.startMatchBool)
             {
                 GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);

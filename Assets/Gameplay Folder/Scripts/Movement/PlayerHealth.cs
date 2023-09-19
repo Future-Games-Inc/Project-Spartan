@@ -183,13 +183,14 @@ public class PlayerHealth : MonoBehaviour
     public GameObject decoySpawner;
 
     public int factionScore;
+    const string factionSelected = "SelectedFaction";
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        faction = PlayerPrefs.GetString("factionSelected");
-        
+        if (PlayerPrefs.HasKey(factionSelected))
+            faction = PlayerPrefs.GetString(factionSelected);
 
         criticalHealth.SetActive(false);
 
@@ -555,6 +556,7 @@ public class PlayerHealth : MonoBehaviour
         //    CheckAbility2();
         if (bulletImproved)
             CheckAbility3();
+
         CheckAbility4();
         CheckAbility5();
         CheckAbility6();
@@ -726,7 +728,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("ArtifactQuestTarget", artifactsRecovered);
         }
         else
-            GetXP(100);
+            GetXP(20);
     }
 
     public void IntelFound()
@@ -738,7 +740,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("IntelQuestTarget", intelCollected);
         }
         else
-            GetXP(100);
+            GetXP(20);
     }
 
     public void BombNeutralized()
@@ -750,7 +752,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("BombQuestTarget", bombsDestroyed);
         }
         else
-            GetXP(100);
+            GetXP(20);
     }
 
     void CheckAbility1()
@@ -1142,25 +1144,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public void PlayersKilled()
-    {
-        playersKilled++;
-
-        PlayerPrefs.SetInt("PlayersKilled", playersKilled);
-
-        int playAudio = Random.Range(0, 100);
-        if (!audioSource.isPlaying && playAudio <= 50)
-        {
-            if (male)
-            {
-                audioSource.PlayOneShot(winClipsMale[Random.Range(0, winClipsMale.Length)]);
-            }
-            else
-                audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
-        }
-        StartCoroutine(GetXP(15));
-    }
-
     void ExtractionGame()
     {
         StartCoroutine(GetXP(100));
@@ -1207,31 +1190,34 @@ public class PlayerHealth : MonoBehaviour
 
     public IEnumerator SubmitScore(int scoreToUpload)
     {
-        yield return new WaitForSeconds(1f);
-        bool done = false;
-        LootLockerSDKManager.GetMemberRank(leaderboardID2, faction, (response) =>
+        if (PlayerPrefs.HasKey(factionSelected))
         {
-            if (response.success)
+            yield return new WaitForSeconds(1f);
+            bool done = false;
+            LootLockerSDKManager.GetMemberRank(leaderboardID2, faction, (response) =>
             {
-                factionScore = response.score;
-            }
-            else
-            {
+                if (response.success)
+                {
+                    factionScore = response.score;
+                }
+                else
+                {
 
-            }
-        });
-        LootLockerSDKManager.SubmitScore(faction, (factionScore + scoreToUpload), leaderboardID2, (response) =>
-        {
-            if (response.success)
+                }
+            });
+            LootLockerSDKManager.SubmitScore(faction, (factionScore + scoreToUpload), leaderboardID2, (response) =>
             {
-                done = true;
-            }
-            else
-            {
-                done = true;
-            }
-        });
-        yield return new WaitWhile(() => done == false);
+                if (response.success)
+                {
+                    done = true;
+                }
+                else
+                {
+                    done = true;
+                }
+            });
+            yield return new WaitWhile(() => done == false);
+        }
     }
 
     IEnumerator PrimaryTimer(float time)
@@ -1408,13 +1394,6 @@ public class PlayerHealth : MonoBehaviour
             // play shock effect
             GameObject effect2 = Instantiate(shockEffect, transform.position, Quaternion.identity);
             yield return new WaitForSeconds(1);
-            Destroy(effect2);
-            yield return new WaitForSeconds(1);
-            TakeDamage(5);
-            // play shock effect
-            GameObject effect3 = Instantiate(shockEffect, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(1);
-            Destroy(effect3);
             // enable movement
 
             activeState = States.Normal;

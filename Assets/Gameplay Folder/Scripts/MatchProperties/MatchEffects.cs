@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
-using Umbrace.Unity.PurePool;
 
 public class MatchEffects : MonoBehaviour
 {
@@ -27,7 +26,6 @@ public class MatchEffects : MonoBehaviour
     public AudioClip supplyShip1;
     public AudioClip supplyShip2;
 
-    public GameObject supplyDropShipPrefab;
     public float spawnInterval; // 5 minutes in seconds
     public float lastSpawnTime;
 
@@ -42,14 +40,12 @@ public class MatchEffects : MonoBehaviour
     public float spawnRadius = 300.0f;
 
     public TextMeshProUGUI nexusCodePanel;
-
-
+    public VirtualWorldManager worldManager;
+    public SpawnManager1 spawner;
 
     // Start is called before the first frame update
     void Start()
     {
-        
-
         InitializeTimer(); // Only the Master Client will initialize the timer
         StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
 
@@ -68,38 +64,10 @@ public class MatchEffects : MonoBehaviour
             {
                 lastSpawnTime = Time.time;
                 // Create an array to store the valid positions
-                Vector3[] spawnPositions = new Vector3[10];
-                int validPositionsCount = 0;
+                StartCoroutine(SupplyShipAudio());
+                spawned = true;
+                StartCoroutine(spawner.SpawnSupplyDrop());
 
-
-                // Generate multiple random positions within the spawn radius
-                for (int i = 0; i < spawnPositions.Length; i++)
-                {
-                    Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-                    randomPosition += transform.position;
-
-                    // Find the nearest point on the NavMesh to the random position
-                    NavMeshHit hit;
-                    if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-                    {
-                        // Add the valid position to the array
-                        spawnPositions[validPositionsCount] = hit.position;
-                        validPositionsCount++;
-                    }
-                }
-
-                // If there are valid positions, choose one randomly for spawning the enemy
-                if (validPositionsCount > 0)
-                {
-                    Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
-
-                    // Adjust the y value to be 100 units above the original spawn position
-                    spawnPosition.y += 100;
-
-                    Instantiate(supplyDropShipPrefab, spawnPosition, Quaternion.identity);
-                    StartCoroutine(SupplyShipAudio());
-                    spawned = true;
-                }
             }
         }
     }
@@ -168,8 +136,9 @@ public class MatchEffects : MonoBehaviour
             timerCoroutine = StartCoroutine(TimerEvent());
         }
 
-        if(currentMatchTime <= 0 && currentExtractionTimer <= 0)
+        if (currentMatchTime <= 0 && currentExtractionTimer <= 0)
         {
+            worldManager.TimesUP();
             timerCoroutine = null;
         }
 

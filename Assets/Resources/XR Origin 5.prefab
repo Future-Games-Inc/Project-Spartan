@@ -2449,7 +2449,7 @@ MonoBehaviour:
   m_LineType: 0
   m_BlendVisualLinePoints: 1
   m_MaxRaycastDistance: 4
-  m_RayOriginTransform: {fileID: 0}
+  m_RayOriginTransform: {fileID: 210276795}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
   m_Acceleration: 9.8
@@ -4502,7 +4502,7 @@ MonoBehaviour:
   m_LineType: 0
   m_BlendVisualLinePoints: 1
   m_MaxRaycastDistance: 4
-  m_RayOriginTransform: {fileID: 0}
+  m_RayOriginTransform: {fileID: 1032524912}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
   m_Acceleration: 9.8
@@ -5021,11 +5021,11 @@ GameObject:
   - component: {fileID: 7327591640272417509}
   m_Layer: 12
   m_Name: Helmet_Filters
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1111506718775364196
 Transform:
   m_ObjectHideFlags: 0
@@ -5205,7 +5205,7 @@ GameObject:
   - component: {fileID: 907811063039601741}
   m_Layer: 12
   m_Name: Camera.001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5800,7 +5800,7 @@ GameObject:
   - component: {fileID: 862561538733450888}
   m_Layer: 12
   m_Name: Armor_2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6339,6 +6339,7 @@ Transform:
   - {fileID: 439788777949049147}
   - {fileID: 817101766}
   - {fileID: 2006127478}
+  - {fileID: 284751430834311532}
   m_Father: {fileID: 439788778926290556}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6802,7 +6803,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.16
+  near clip plane: 0.08
   far clip plane: 150
   field of view: 60.000004
   orthographic: 0
@@ -7017,12 +7018,6 @@ Transform:
   - {fileID: 9193352250746582827}
   - {fileID: 2140480699328679751}
   - {fileID: 1661930908760876082}
-  - {fileID: 7142869316503958574}
-  - {fileID: 2825801715966613773}
-  - {fileID: 2269717104593563978}
-  - {fileID: 5346882282940580151}
-  - {fileID: 8730353345156216381}
-  - {fileID: 9017398016140631452}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7217,7 +7212,7 @@ MonoBehaviour:
   primaryButtonPressed: 0
   secondaryButtonPressed: 0
   leaderboardID: react_leaderboard
-  leaderboardID2: faction_leaders
+  leaderboardID2: faction_leader
   progressionKey: cent_prog
   faction: 
   bossesKilled: 0
@@ -8031,7 +8026,7 @@ GameObject:
   - component: {fileID: 798237192862088523}
   m_Layer: 12
   m_Name: Chest_Lower
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8731,7 +8726,7 @@ GameObject:
   - component: {fileID: 5761622558132879620}
   m_Layer: 12
   m_Name: Arm_Button
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8980,7 +8975,7 @@ GameObject:
   - component: {fileID: 8947741380380448684}
   m_Layer: 12
   m_Name: Spine
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9216,12 +9211,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118916214517928266}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.009000011, y: 1.0843, z: 0.1945}
+  m_LocalPosition: {x: -0.009000011, y: -0.5057, z: 0.28149995}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 7
+  m_Father: {fileID: 284751430834311532}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7628745002211589401
 MeshFilter:
@@ -9510,7 +9505,7 @@ GameObject:
   - component: {fileID: 4398390210267693611}
   m_Layer: 12
   m_Name: Jacket_Back
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9903,7 +9898,7 @@ GameObject:
   - component: {fileID: 2329659049755474619}
   m_Layer: 12
   m_Name: Body.001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11121,11 +11116,11 @@ GameObject:
   - component: {fileID: 7111848940584234333}
   m_Layer: 12
   m_Name: Helmet_Pipes
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7976409567803468176
 Transform:
   m_ObjectHideFlags: 0
@@ -12445,7 +12440,7 @@ GameObject:
   - component: {fileID: 4880433549404462642}
   m_Layer: 12
   m_Name: Spine_End
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12598,7 +12593,7 @@ GameObject:
   - component: {fileID: 3648287695894208999}
   m_Layer: 12
   m_Name: Chain_Buttons
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13042,7 +13037,7 @@ GameObject:
   - component: {fileID: 1978520716874418496}
   m_Layer: 12
   m_Name: metarig
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13604,7 +13599,7 @@ GameObject:
   - component: {fileID: 1049501079166992775}
   m_Layer: 12
   m_Name: Boots
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13788,11 +13783,11 @@ GameObject:
   - component: {fileID: 4640199954671481269}
   m_Layer: 12
   m_Name: Helmet
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4132910289523173614
 Transform:
   m_ObjectHideFlags: 0
@@ -13941,7 +13936,7 @@ GameObject:
   - component: {fileID: 6466519304307496500}
   m_Layer: 12
   m_Name: Spine_End_Blocks
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14126,11 +14121,11 @@ GameObject:
   - component: {fileID: 1833616151670661096}
   m_Layer: 12
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8113560771181493344
 Transform:
   m_ObjectHideFlags: 0
@@ -14753,7 +14748,7 @@ GameObject:
   - component: {fileID: 8859273190246435286}
   m_Layer: 12
   m_Name: Sun.001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14785,7 +14780,7 @@ GameObject:
   - component: {fileID: 3786201761575117557}
   m_Layer: 12
   m_Name: Arm_Holder
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14938,7 +14933,7 @@ GameObject:
   - component: {fileID: 5571133515213162515}
   m_Layer: 12
   m_Name: Belt_Legs
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16380,11 +16375,11 @@ GameObject:
   - component: {fileID: 5986829714530020433}
   m_Layer: 12
   m_Name: Helmet_Bolts
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8272322293747798461
 Transform:
   m_ObjectHideFlags: 0
@@ -16812,7 +16807,7 @@ GameObject:
   - component: {fileID: 8505789664965323162}
   m_Layer: 12
   m_Name: Spine_End_Element
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17332,7 +17327,7 @@ GameObject:
   - component: {fileID: 6945183763409572951}
   m_Layer: 12
   m_Name: Cables
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17962,7 +17957,7 @@ GameObject:
   - component: {fileID: 991164532916755370}
   m_Layer: 12
   m_Name: Jacket
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18656,7 +18651,7 @@ GameObject:
   - component: {fileID: 229235164719952048}
   m_Layer: 12
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18855,7 +18850,7 @@ GameObject:
   - component: {fileID: 7295229689190076788}
   m_Layer: 12
   m_Name: Arm_Button_2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20050,7 +20045,7 @@ GameObject:
   - component: {fileID: 8251368415845324444}
   m_Layer: 12
   m_Name: Armor_Circle_2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20222,12 +20217,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5537108614270621749}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.219, y: 1.0843, z: 0.1945}
+  m_LocalPosition: {x: 0.219, y: -0.5057, z: 0.28149995}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 8
+  m_Father: {fileID: 284751430834311532}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &590636512867284804
 MeshFilter:
@@ -20515,7 +20510,7 @@ GameObject:
   - component: {fileID: 1661930908760876082}
   m_Layer: 12
   m_Name: Pilot_pf (1)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20789,7 +20784,7 @@ GameObject:
   - component: {fileID: 4961241058207520347}
   m_Layer: 12
   m_Name: Armor_Circle
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20959,12 +20954,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5756281807537744229}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.282, y: 0.983, z: 0.071}
-  m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
+  m_LocalPosition: {x: 0.347, y: -0.55, z: 0.073}
+  m_LocalScale: {x: 0.15907043, y: 0.14898126, z: 0.29878587}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 9
+  m_Father: {fileID: 284751430834311532}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8164256866146894992
 MeshFilter:
@@ -21170,13 +21165,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5783689950475901825}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.282, y: 0.983, z: 0.071}
+  m_LocalPosition: {x: -0.282, y: -0.5057, z: 0.15799996}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6781061452476620177}
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 5
+  m_Father: {fileID: 284751430834311532}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3573115615217272024
 MeshFilter:
@@ -21560,7 +21555,7 @@ GameObject:
   - component: {fileID: 9165941219374487111}
   m_Layer: 12
   m_Name: Chest
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21713,7 +21708,7 @@ GameObject:
   - component: {fileID: 3967684288182561486}
   m_Layer: 12
   m_Name: Arm_Filter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22138,11 +22133,11 @@ GameObject:
   - component: {fileID: 2344020713371298247}
   m_Layer: 12
   m_Name: Eyes
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4409022170669063184
 Transform:
   m_ObjectHideFlags: 0
@@ -22525,11 +22520,11 @@ GameObject:
   - component: {fileID: 4053825154220846261}
   m_Layer: 12
   m_Name: face_new_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1260924646009146997
 Transform:
   m_ObjectHideFlags: 0
@@ -22677,7 +22672,7 @@ GameObject:
   - component: {fileID: 5596066094972580430}
   m_Layer: 12
   m_Name: Camera.002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23136,6 +23131,57 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!1 &6508661673863210848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 284751430834311532}
+  - component: {fileID: 3274623524580677015}
+  m_Layer: 12
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &284751430834311532
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508661673863210848}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.75, z: 0.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7142869316503958574}
+  - {fileID: 2825801715966613773}
+  - {fileID: 2269717104593563978}
+  - {fileID: 5346882282940580151}
+  - {fileID: 8730353345156216381}
+  - {fileID: 9017398016140631452}
+  m_Father: {fileID: 439788778392037282}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3274623524580677015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508661673863210848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa85e4dd89b6e60428800a48c887f070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 439788778509456222}
 --- !u!1 &6575708644701392170
 GameObject:
   m_ObjectHideFlags: 0
@@ -23148,7 +23194,7 @@ GameObject:
   - component: {fileID: 9010857964771238017}
   m_Layer: 12
   m_Name: Belt_Ass
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23586,7 +23632,7 @@ GameObject:
   - component: {fileID: 6080671535192555278}
   m_Layer: 12
   m_Name: sci_fi_pilot_girl
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24074,12 +24120,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6673632982018792635}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.201, y: 1.0843, z: 0.1945}
+  m_LocalPosition: {x: -0.201, y: -0.5057, z: 0.28149995}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 6
+  m_Father: {fileID: 284751430834311532}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7909077779690455825
 MeshFilter:
@@ -24627,7 +24673,7 @@ GameObject:
   - component: {fileID: 5285366497570139630}
   m_Layer: 12
   m_Name: Armor
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24855,7 +24901,7 @@ GameObject:
   - component: {fileID: 5810762770880033863}
   m_Layer: 12
   m_Name: Sun
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25086,11 +25132,11 @@ GameObject:
   - component: {fileID: 6843812956604163694}
   m_Layer: 12
   m_Name: Earphones
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5543637762397237147
 Transform:
   m_ObjectHideFlags: 0
@@ -26370,7 +26416,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2415071251789376153
 Transform:
   m_ObjectHideFlags: 0
@@ -27183,7 +27229,7 @@ GameObject:
   - component: {fileID: 8433800172311492613}
   m_Layer: 12
   m_Name: Belly_Buttons
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28835,7 +28881,7 @@ GameObject:
   - component: {fileID: 6385949676050847181}
   m_Layer: 12
   m_Name: Armor_3
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29885,11 +29931,11 @@ GameObject:
   - component: {fileID: 863816076721006836}
   m_Layer: 12
   m_Name: Eye shit
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5141163342043001541
 Transform:
   m_ObjectHideFlags: 0
@@ -31195,11 +31241,11 @@ GameObject:
   - component: {fileID: 831979169618001756}
   m_Layer: 12
   m_Name: Helmet_Pipes_Lids
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8591689544339387173
 Transform:
   m_ObjectHideFlags: 0
@@ -31341,7 +31387,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 439788778926290556}
+    m_TransformParent: {fileID: 284751430834311532}
     m_Modifications:
     - target: {fileID: 9017398015425729478, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
@@ -31361,7 +31407,7 @@ PrefabInstance:
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
@@ -31371,12 +31417,12 @@ PrefabInstance:
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4102
+      value: -0.17980003
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.906
+      value: -0.819
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}

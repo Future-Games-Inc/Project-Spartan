@@ -17,7 +17,7 @@ public class EnemyXPDrop : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
-        
+
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         switch (pickupData.pickupType)
         {
@@ -42,12 +42,9 @@ public class EnemyXPDrop : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
-            contact = true;
-
-        if (other.CompareTag("PickupSlot"))
         {
+            contact = true;
             PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
-
             switch (pickupData.pickupType)
             {
                 case "XP":
@@ -62,50 +59,58 @@ public class EnemyXPDrop : MonoBehaviour
                     }
                     Destroy(gameObject);
                     break;
+            }
+        }
+
+        if (other.CompareTag("PickupSlot"))
+        {
+            PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
+            switch (pickupData.pickupType)
+            {
 
                 case "Health":
-                    spawnManager.UpdateHealthCount();
-                    playerHealth.AddHealth(pickupData.healthAmount);
-                    Destroy(gameObject);
-                    break;
+                spawnManager.UpdateHealthCount();
+                playerHealth.AddHealth(pickupData.healthAmount);
+                Destroy(gameObject);
+                break;
 
-                case "EMP":
-                    Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
-                    foreach (Collider collider in colliders)
+            case "EMP":
+                Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
+                foreach (Collider collider in colliders)
+                {
+                    if (collider.CompareTag("Security"))
                     {
-                        if (collider.CompareTag("Security"))
-                        {
-                            DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
-                            enemyDamageCrit.TakeDamage(200);
-                        }
-                        if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
-                        {
-                            FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-                            enemyDamageCrit.TakeDamage(75);
-                            enemyDamageCrit.EMPShock();
-                        }
+                        DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
+                        enemyDamageCrit.TakeDamage(200);
                     }
-                    Destroy(gameObject);
-                    break;
+                    if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
+                    {
+                        FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                        enemyDamageCrit.TakeDamage(75);
+                        enemyDamageCrit.EMPShock();
+                    }
+                }
+                Destroy(gameObject);
+                break;
 
-                case "toxicDrop":
-                    playerHealth.Toxicity(pickupData.toxicAmount);
-                    Destroy(gameObject);
-                    break;
+            case "toxicDrop":
+                playerHealth.Toxicity(pickupData.toxicAmount);
+                Destroy(gameObject);
+                break;
 
-                case "bulletModifier":
-                    playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
-                    Destroy(gameObject);
-                    break;
+            case "bulletModifier":
+                playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
+                Destroy(gameObject);
+                break;
 
-                case "Shield":
-                    playerHealth.AddArmor(pickupData.armorAmount);
-                    Destroy(gameObject);
-                    break;
+            case "Shield":
+                playerHealth.AddArmor(pickupData.armorAmount);
+                Destroy(gameObject);
+                break;
 
-                default:
-                    Destroy(gameObject);
-                    break;
+            default:
+                Destroy(gameObject);
+                break;
             }
         }
     }

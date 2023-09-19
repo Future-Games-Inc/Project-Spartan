@@ -57,7 +57,7 @@ public class BulletBehaviorNet : MonoBehaviour
         // if break on impact
         if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
             Destroy(gameObject);
-        if ((other.CompareTag("Enemy")))
+        if (other.CompareTag("Enemy") && playerBullet == true)
         {
             // select custom functions for damage
             switch (Type)
@@ -71,7 +71,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if ((other.CompareTag("BossEnemy")))
+        if (other.CompareTag("BossEnemy") && playerBullet == true && playerBullet == true)
         {
             // select custom functions for damage
             switch (Type)
@@ -99,7 +99,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Security"))
+        if (other.CompareTag("Security") && playerBullet == true)
         {
             // select custom functions for damage
             switch (Type)
@@ -113,7 +113,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Tower"))
+        if (other.CompareTag("Tower") && playerBullet == true)
         {
             // select custom functions for damage
             switch (Type)
@@ -134,7 +134,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 playerHealth.EnemyKilled("Normal");
                 enemyDamageReg.TakeDamage(Damage);
             }
-            else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+            else if (enemyDamageReg.Health > (Damage) && enemyDamageReg.alive == true && playerHealth != null)
             {
                 enemyDamageReg.TakeDamage(Damage);
             }
@@ -143,14 +143,14 @@ public class BulletBehaviorNet : MonoBehaviour
         void EMPBulletDamageEnemy(Collider target, float damage)
         {
             FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
-            if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
+            if (enemyDamageReg.Health <= (Damage * 10) && enemyDamageReg.alive == true && playerHealth != null)
             {
                 playerHealth.EnemyKilled("Normal");
-                enemyDamageReg.TakeDamage(Damage);
+                enemyDamageReg.TakeDamage(Damage * 10);
             }
-            else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+            else if (enemyDamageReg.Health > (Damage * 10) && enemyDamageReg.alive == true && playerHealth != null)
             {
-                enemyDamageReg.TakeDamage(Damage);
+                enemyDamageReg.TakeDamage(Damage * 10);
             }
             enemyDamageReg.EMPShock();
             Destroy(gameObject);
@@ -164,7 +164,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 playerHealth.EnemyKilled("Boss");
                 enemyDamageReg.TakeDamage(Damage);
             }
-            else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+            else if (enemyDamageReg.Health > (Damage) && enemyDamageReg.alive == true && playerHealth != null)
             {
                 enemyDamageReg.TakeDamage(Damage);
             }
@@ -176,11 +176,11 @@ public class BulletBehaviorNet : MonoBehaviour
             if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
             {
                 playerHealth.EnemyKilled("Boss");
-                enemyDamageReg.TakeDamage(Damage);
+                enemyDamageReg.TakeDamage(Damage * 10);
             }
-            else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+            else if (enemyDamageReg.Health > (Damage) && enemyDamageReg.alive == true && playerHealth != null)
             {
-                enemyDamageReg.TakeDamage(Damage);
+                enemyDamageReg.TakeDamage(Damage * 10);
             }
             enemyDamageReg.EMPShock();
             Destroy(gameObject);
@@ -189,20 +189,12 @@ public class BulletBehaviorNet : MonoBehaviour
         void DefaultDamagePlayer(Collider target, float damage)
         {
             PlayerHealth enemyDamageReg = target.GetComponent<PlayerHealth>();
-            if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
-            {
-                playerHealth.PlayersKilled();
-            }
             enemyDamageReg.TakeDamage(Damage);
             Destroy(gameObject);
         }
         void EMPBulletDamagePlayer(Collider target, float damage)
         {
             PlayerHealth enemyDamageReg = target.GetComponent<PlayerHealth>();
-            if (enemyDamageReg.Health <= (Damage) && enemyDamageReg.alive == true && playerHealth != null)
-            {
-                playerHealth.PlayersKilled();
-            }
             enemyDamageReg.TakeDamage(Damage);
             enemyDamageReg.EMPShock();
             Destroy(gameObject);
@@ -224,11 +216,11 @@ public class BulletBehaviorNet : MonoBehaviour
         {
             DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
             if (enemyDamageReg != null)
-                enemyDamageReg.TakeDamage(Damage);
+                enemyDamageReg.TakeDamage(Damage * 10);
             else
             {
                 SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
-                enemyDamageReg2.TakeDamage(Damage * 200);
+                enemyDamageReg2.TakeDamage(Damage * 5);
             }
             Destroy(gameObject);
         }

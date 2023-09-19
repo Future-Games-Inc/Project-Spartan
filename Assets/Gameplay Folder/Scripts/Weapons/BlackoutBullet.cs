@@ -70,17 +70,6 @@ public class BlackoutBullet : MonoBehaviour
                 enemyDamageCrit.TakeDamage(15);
             }
 
-            else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
-            {
-                //critical hit here
-                PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
-                if (playerDamageCrit.Health <= (5) && playerDamageCrit.alive == true && playerHealth != null)
-                {
-                    playerHealth.PlayersKilled();
-                }
-                playerDamageCrit.TakeDamage(5);
-            }
-
             // Apply hit effect
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
             Instantiate(smoke,transform.position, Quaternion.identity);

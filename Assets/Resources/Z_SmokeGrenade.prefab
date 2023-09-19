@@ -198,8 +198,6 @@ MonoBehaviour:
   explosionRadius: 10
   maxDamage: 80
   explosionDelay: 3
-  throwForce: 20
-  throwUpwardForce: 5
   Targets: []
   player: {fileID: 0}
   playerHealth: {fileID: 0}
@@ -207,6 +205,7 @@ MonoBehaviour:
   rb: {fileID: 4698990745356731594}
   audioSource: {fileID: 7388016243665074244}
   objectRenderer: {fileID: 7404052725865799327}
+  contact: 0
 --- !u!114 &2947950905337838402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +330,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &2402215676945046769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,7 +358,7 @@ MonoBehaviour:
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
   HideHandGraphics: 0
-  ParentToHands: 1
+  ParentToHands: 0
   ParentHandModel: 0
   SnapHandModel: 1
   CanBeDropped: 1

@@ -157,7 +157,7 @@ MonoBehaviour:
   reloadClip: {fileID: 8300000, guid: a61ed39a82ea73e4386638b2d21b35b4, type: 3}
   agent: {fileID: 1371365325884012709}
   targetTransform: {fileID: 0}
-  bullet: {fileID: 2228136128379212152, guid: ab00aab2c5a22fb4bb087868bb0fefb4, type: 3}
+  bullet: {fileID: 2228136128379212152, guid: 07534a5e27f4e40429fee7277ebd57df, type: 3}
   bulletTransform: {fileID: 2295490710770790003}
   shootForce: 65
   ammoLeft: 10
@@ -165,8 +165,9 @@ MonoBehaviour:
   nextUpdateTime: 0
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4105
   bulletModifier: 2
+  hit: 0
 --- !u!195 &1371365325884012709
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -416,7 +417,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5874723054350058501}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.202, z: 0.788}
+  m_LocalPosition: {x: 0, y: 1.202, z: 1.593}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -448,7 +449,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6249592771982788462}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.42, z: 0}
+  m_LocalPosition: {x: 0, y: 4.492, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

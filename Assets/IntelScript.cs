@@ -1,5 +1,5 @@
 using BNG;
-using Umbrace.Unity.PurePool;
+using System.Collections;
 using UnityEngine;
 
 public class IntelScript : MonoBehaviour
@@ -8,56 +8,41 @@ public class IntelScript : MonoBehaviour
     public LayerMask groundLayer;
     private Rigidbody rb;
     public Grabbable grabbable;
-
-    public GameObjectPoolManager PoolManager;
+    public bool contact;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
-        rb = GetComponent<Rigidbody>();
-        // Freeze X and Z initially
-        rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        StartCoroutine(NoContact());
+    }
+
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckGroundDistance();
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        {
+            contact = true;
+        }
+
         if (other.CompareTag("PickupSlot"))
         {
             other.GetComponentInParent<PlayerHealth>().IntelFound();
-            this.PoolManager.Release(gameObject);
+            Destroy(gameObject);
         }
     }
-
-    public void FreezeConstraints()
-    {
-        CheckGroundDistance();
-    }
-
-    private void CheckGroundDistance()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, groundLayer))
-        {
-            if (hit.distance < 0.2f  && !grabbable.BeingHeld)
-            {
-                // When the object is less than 0.2m from the ground, unfreeze X and Z
-                rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
-                rb.constraints &= ~RigidbodyConstraints.FreezePositionZ;
-            }
-            else
-            {
-                rb.constraints &= RigidbodyConstraints.FreezePositionX;
-                rb.constraints &= RigidbodyConstraints.FreezePositionZ;
-            }
-        }
-    }
-
 }
