@@ -1,6 +1,4 @@
-using PathologicalGames;
 using System.Collections;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -86,30 +84,30 @@ public class Bullet : MonoBehaviour
             {
                 //critical hit here
                 FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
-                if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                if (enemyDamageCrit.Health <= (15 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled("Boss");
-                    enemyDamageCrit.TakeDamage((20 * bulletModifier));
+                    enemyDamageCrit.TakeDamage((15 * bulletModifier));
                 }
 
-                else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                else if (enemyDamageCrit.Health > (15 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                 {
-                    enemyDamageCrit.TakeDamage(20 * bulletModifier);
+                    enemyDamageCrit.TakeDamage(15 * bulletModifier);
                 }
             }
 
             else
             {
                 FollowAI enemyDamage = other.GetComponentInParent<FollowAI>();
-                if (enemyDamage.Health <= (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+                if (enemyDamage.Health <= (5 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled("Boss");
-                    enemyDamage.TakeDamage(10 * bulletModifier);
+                    enemyDamage.TakeDamage(5 * bulletModifier);
                 }
 
-                else if (enemyDamage.Health > (10 * bulletModifier) && !enemyDamage.alive == true && playerHealth != null)
+                else if (enemyDamage.Health > (5 * bulletModifier) && !enemyDamage.alive == true && playerHealth != null)
                 {
-                    enemyDamage.TakeDamage(10 * bulletModifier);
+                    enemyDamage.TakeDamage(5 * bulletModifier);
                 }
             }
         }
@@ -125,26 +123,26 @@ public class Bullet : MonoBehaviour
                 DroneHealth enemyDamageCrit = other.GetComponentInParent<DroneHealth>();
                 if (enemyDamageCrit != null)
                 {
-                    if (enemyDamageCrit.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                    if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
                     {
                         playerHealth.DroneKilled(other.GetComponentInParent<DroneHealth>().type.ToString(), other.gameObject);
-                        enemyDamageCrit.TakeDamage(30 * bulletModifier);
+                        enemyDamageCrit.TakeDamage(20 * bulletModifier);
                     }
 
-                    else if (enemyDamageCrit.Health > (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
-                        enemyDamageCrit.TakeDamage(30 * bulletModifier);
+                    else if (enemyDamageCrit.Health > (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                        enemyDamageCrit.TakeDamage(20 * bulletModifier);
                 }
                 else
                 {
                     SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
-                    if (enemyDamageCrit2.Health <= (30 * bulletModifier) && enemyDamageCrit2.alive == true && playerHealth != null)
+                    if (enemyDamageCrit2.Health <= (20 * bulletModifier) && enemyDamageCrit2.alive == true && playerHealth != null)
                     {
                         playerHealth.GuardianKilled();
-                        enemyDamageCrit2.TakeDamage(30 * bulletModifier);
+                        enemyDamageCrit2.TakeDamage(20 * bulletModifier);
                     }
 
-                    else if (enemyDamageCrit2.Health > (30 * bulletModifier) && enemyDamageCrit2.alive == true && playerHealth != null)
-                        enemyDamageCrit2.TakeDamage(30 * bulletModifier);
+                    else if (enemyDamageCrit2.Health > (20 * bulletModifier) && enemyDamageCrit2.alive == true && playerHealth != null)
+                        enemyDamageCrit2.TakeDamage(20 * bulletModifier);
                 }
             }
 
@@ -153,26 +151,26 @@ public class Bullet : MonoBehaviour
                 DroneHealth enemyDamage = other.GetComponentInParent<DroneHealth>();
                 if (enemyDamage != null)
                 {
-                    if (enemyDamage.Health <= (30 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+                    if (enemyDamage.Health <= (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
                     {
                         playerHealth.DroneKilled(other.GetComponentInParent<DroneHealth>().type.ToString(), other.gameObject);
-                        enemyDamage.TakeDamage(30 * bulletModifier);
+                        enemyDamage.TakeDamage(10 * bulletModifier);
                     }
 
-                    else if (enemyDamage.Health > (30 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
-                        enemyDamage.TakeDamage(30 * bulletModifier);
+                    else if (enemyDamage.Health > (10 * bulletModifier) && enemyDamage.alive == true && playerHealth != null)
+                        enemyDamage.TakeDamage(10 * bulletModifier);
                 }
                 else
                 {
                     SentryDrone enemyDamage2 = other.GetComponentInParent<SentryDrone>();
-                    if (enemyDamage2.Health <= (30 * bulletModifier) && enemyDamage2.alive == true && playerHealth != null)
+                    if (enemyDamage2.Health <= (10 * bulletModifier) && enemyDamage2.alive == true && playerHealth != null)
                     {
                         playerHealth.GuardianKilled();
-                        enemyDamage2.TakeDamage(30 * bulletModifier);
+                        enemyDamage2.TakeDamage(10 * bulletModifier);
                     }
 
-                    else if (enemyDamage2.Health > (30 * bulletModifier) && enemyDamage2.alive == true && playerHealth != null)
-                        enemyDamage2.TakeDamage(30 * bulletModifier);
+                    else if (enemyDamage2.Health > (10 * bulletModifier) && enemyDamage2.alive == true && playerHealth != null)
+                        enemyDamage2.TakeDamage(10 * bulletModifier);
                 }
             }
         }
@@ -180,31 +178,14 @@ public class Bullet : MonoBehaviour
 
         else if (other.CompareTag("Player"))
         {
-            if (playerBullet && other.transform.root.gameObject != bulletOwner)
+            if (!playerBullet)
             {
-                float criticalChance = 10f;
-
+                float criticalChance = 20f;
                 if (Random.Range(0, 100f) < criticalChance)
                 {
                     //critical hit here
                     PlayerHealth playerDamageCrit = other.GetComponentInParent<PlayerHealth>();
-                    playerDamageCrit.TakeDamage(10 * bulletModifier);
-                }
-
-                else
-                {
-                    PlayerHealth playerDamage = other.GetComponentInParent<PlayerHealth>();
-                    playerDamage.TakeDamage(5 * bulletModifier);
-                }
-            }
-            else if (!playerBullet)
-            {
-                float criticalChance = 5f;
-                if (Random.Range(0, 100f) < criticalChance)
-                {
-                    //critical hit here
-                    PlayerHealth playerDamageCrit = other.GetComponentInParent<PlayerHealth>();
-                    playerDamageCrit.TakeDamage(3 * bulletModifier);
+                    playerDamageCrit.TakeDamage(5 * bulletModifier);
                 }
 
                 else
@@ -234,7 +215,7 @@ public class Bullet : MonoBehaviour
     }
     IEnumerator DestroyBulletCollision()
     {
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.05f);
         Destroy(gameObject);
     }
 }

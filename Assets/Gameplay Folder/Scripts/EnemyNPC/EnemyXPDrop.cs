@@ -1,6 +1,5 @@
 using UnityEngine;
 using BNG;
-using Umbrace.Unity.PurePool;
 using System.Collections;
 
 public class EnemyXPDrop : MonoBehaviour
@@ -10,8 +9,12 @@ public class EnemyXPDrop : MonoBehaviour
     public LayerMask groundLayer;
     private Rigidbody rb;
     public Grabbable grabbable;
+    public GameObject buffText;
+    public AudioSource audioSource;
+    public AudioClip pickupClip;
 
     public bool contact;
+    public MatchEffects matchEffects;
 
 
     // Start is called before the first frame update
@@ -19,6 +22,7 @@ public class EnemyXPDrop : MonoBehaviour
     {
 
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
         switch (pickupData.pickupType)
         {
             case "XP":
@@ -48,6 +52,7 @@ public class EnemyXPDrop : MonoBehaviour
             switch (pickupData.pickupType)
             {
                 case "XP":
+                    audioSource.PlayOneShot(pickupClip);
                     float xpDrop = 10f;
                     if (Random.Range(0, 100f) < xpDrop)
                     {
@@ -69,48 +74,53 @@ public class EnemyXPDrop : MonoBehaviour
             {
 
                 case "Health":
-                spawnManager.UpdateHealthCount();
-                playerHealth.AddHealth(pickupData.healthAmount);
-                Destroy(gameObject);
-                break;
+                    spawnManager.UpdateHealthCount();
+                    playerHealth.AddHealth(pickupData.healthAmount);
+                    Destroy(gameObject);
+                    break;
 
-            case "EMP":
-                Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
-                foreach (Collider collider in colliders)
-                {
-                    if (collider.CompareTag("Security"))
+                case "EMP":
+                    Collider[] colliders = Physics.OverlapSphere(transform.position, 20f);
+                    foreach (Collider collider in colliders)
                     {
-                        DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
-                        enemyDamageCrit.TakeDamage(200);
+                        if (collider.CompareTag("Security"))
+                        {
+                            DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
+                            enemyDamageCrit.TakeDamage(200);
+                        }
+                        if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
+                        {
+                            FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                            enemyDamageCrit.TakeDamage(75);
+                            enemyDamageCrit.EMPShock();
+                        }
                     }
-                    if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
-                    {
-                        FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-                        enemyDamageCrit.TakeDamage(75);
-                        enemyDamageCrit.EMPShock();
-                    }
-                }
-                Destroy(gameObject);
-                break;
+                    Destroy(gameObject);
+                    break;
 
-            case "toxicDrop":
-                playerHealth.Toxicity(pickupData.toxicAmount);
-                Destroy(gameObject);
-                break;
+                case "toxicDrop":
+                    playerHealth.Toxicity(pickupData.toxicAmount);
+                    Destroy(gameObject);
+                    break;
 
-            case "bulletModifier":
-                playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
-                Destroy(gameObject);
-                break;
+                case "bulletModifier":
+                    playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
+                    Destroy(gameObject);
+                    break;
 
-            case "Shield":
-                playerHealth.AddArmor(pickupData.armorAmount);
-                Destroy(gameObject);
-                break;
+                case "Shield":
+                    playerHealth.AddArmor(pickupData.armorAmount);
+                    Destroy(gameObject);
+                    break;
 
-            default:
-                Destroy(gameObject);
-                break;
+                case "CUAHack":
+                    matchEffects.currentExtractionTimer += 30;
+                    Destroy(gameObject);
+                    break;
+
+                default:
+                    Destroy(gameObject);
+                    break;
             }
         }
     }
@@ -147,6 +157,16 @@ public class EnemyXPDrop : MonoBehaviour
                 rb.constraints &= RigidbodyConstraints.FreezePositionZ;
             }
         }
+    }
+
+    public void EnableText()
+    {
+        buffText.SetActive(true);
+    }
+
+    public void EDisableText()
+    {
+        buffText.SetActive(false);
     }
 
     public void rescale()

@@ -62,6 +62,8 @@ public class SpawnManager1 : MonoBehaviour
             StartCoroutine(SpawnReactor());
             StartCoroutine(SpawnHealth());
             StartCoroutine(SpawnBoss());
+            StartCoroutine(SpawnBombs());
+            StartCoroutine(SpawnArtifacts());
 
             coroutinesStarted = true;
         }
@@ -185,102 +187,59 @@ public class SpawnManager1 : MonoBehaviour
         }
     }
 
-    //public async void SpawnBombs()
-    //{
-    //    while (spawnBombs && bombsCount < bombsCountMax)
-    //    {
-    //        await Task.Run(() => matchProps.startMatchBool);
+    IEnumerator SpawnBombs()
+    {
+        while (spawnBombs && bombsCount < bombsCountMax)
+        {
+            while (!matchProps.startMatchBool)
+                yield return null;
 
-    //        spawnBombs = false;
+            yield return new WaitForSeconds(1);
 
-    //        // Create an array to store the valid positions
-    //        Vector3[] spawnPositions = new Vector3[10];
-    //        int validPositionsCount = 0;
+            GameObject[] bomb = ShuffleArray(bombs);
 
+            spawnBombs = false;
 
-    //        // Generate multiple random positions within the spawn radius
-    //        for (int i = 0; i < spawnPositions.Length; i++)
-    //        {
-    //            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-    //            randomPosition += transform.position;
+            Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
-    //            // Find the nearest point on the NavMesh to the random position
-    //            NavMeshHit hit;
-    //            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-    //            {
-    //                // Add the valid position to the array
-    //                spawnPositions[validPositionsCount] = hit.position;
-    //                validPositionsCount++;
-    //            }
-    //        }
+            GameObject securityDrone = bomb[0];
+            Instantiate(securityDrone, spawnPosition[0].position, Quaternion.identity);
 
-    //        // If there are valid positions, choose one randomly for spawning the enemy
-    //        if (validPositionsCount > 0)
-    //        {
-    //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
+            bombsCount++;
 
-    //            GameObject bombObject = bombs[Random.Range(0, bombs.Length)];
-    //            PhotonNetwork.InstantiateRoomObject(bombObject.name, spawnPosition, Quaternion.identity, 0, null);
+            yield return new WaitForSeconds(12);
+            spawnBombs = true;
 
-    //            bombsCount++;
+            yield return new WaitForSeconds(.25f);
+        }
+    }
 
-    //            await WaitSecondsConverter(10);
+    IEnumerator SpawnArtifacts()
+    {
+        while (spawnArtifacts && artifactCount < artifactCountMax)
+        {
+            while (!matchProps.startMatchBool)
+                yield return null;
 
-    //            spawnBombs = true;
+            yield return new WaitForSeconds(1);
 
-    //            await WaitSecondsConverter(1);
-    //        }
+            GameObject[] artifact = ShuffleArray(artifacts);
 
-    //    }
-    //}
+            spawnArtifacts = false;
 
-    //private async void SpawnArtifacts()
-    //{
-    //    while (spawnArtifacts && artifactCount < artifactCountMax)
-    //    {
-    //        await Task.Run(() => matchProps.startMatchBool);
+            Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
-    //        spawnArtifacts = false;
+            GameObject securityDrone = artifact[0];
+            Instantiate(securityDrone, spawnPosition[0].position, Quaternion.identity);
 
-    //        // Create an array to store the valid positions
-    //        Vector3[] spawnPositions = new Vector3[10];
-    //        int validPositionsCount = 0;
+            artifactCount++;
 
+            yield return new WaitForSeconds(20);
+            spawnArtifacts = true;
 
-    //        // Generate multiple random positions within the spawn radius
-    //        for (int i = 0; i < spawnPositions.Length; i++)
-    //        {
-    //            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-    //            randomPosition += transform.position;
-
-    //            // Find the nearest point on the NavMesh to the random position
-    //            NavMeshHit hit;
-    //            if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-    //            {
-    //                // Add the valid position to the array
-    //                spawnPositions[validPositionsCount] = hit.position;
-    //                validPositionsCount++;
-    //            }
-    //        }
-
-    //        // If there are valid positions, choose one randomly for spawning the enemy
-    //        if (validPositionsCount > 0)
-    //        {
-    //            Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
-
-    //            GameObject artifactObject = artifacts[Random.Range(0, artifacts.Length)];
-    //            PhotonNetwork.InstantiateRoomObject(artifactObject.name, spawnPosition, Quaternion.identity, 0, null);
-
-    //            artifactCount++;
-
-    //            await WaitSecondsConverter(15);
-
-    //            spawnArtifacts = true;
-
-    //            await WaitSecondsConverter(1);
-    //        }
-    //    }
-    //}
+            yield return new WaitForSeconds(.25f);
+        }
+    }
 
     IEnumerator SpawnHealth()
     {
@@ -342,7 +301,7 @@ public class SpawnManager1 : MonoBehaviour
         artifactCount--;
     }
 
-    public void RPC_UpdateBombs()
+    public void UpdateBombs()
     {
         bombsCount--;
     }

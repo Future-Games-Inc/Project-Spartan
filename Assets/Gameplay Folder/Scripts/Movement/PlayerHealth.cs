@@ -1,3 +1,4 @@
+using BNG;
 using LootLocker.Requests;
 using System.Collections;
 using TMPro;
@@ -115,6 +116,8 @@ public class PlayerHealth : MonoBehaviour
     public bool primaryPowerupTimer;
     public TextMeshProUGUI primaryPowerupText;
     public TextMeshProUGUI secondaryPowerupText;
+    public TextMeshProUGUI inventoryText;
+    public SnapZone inventoryZone;
     public bool secondaryPowerupTimer;
     public float activeCamoTimer;
     public float stealthTimer;
@@ -543,6 +546,29 @@ public class PlayerHealth : MonoBehaviour
         else
             criticalHealth.SetActive(false);
 
+        if (inventoryZone.HeldItem != null)
+        {
+            string fullName = inventoryZone.HeldItem.name.ToString();
+            int startIndex = fullName.IndexOf("Z_") + 2; // Find the index of "Z_" and add 2 to skip "Z_"
+            int endIndex = fullName.IndexOf("(Clone)"); // Find the index of "(clone)"
+
+            // Extract the substring between startIndex and endIndex
+            if (startIndex >= 0 && endIndex >= 0)
+            {
+                string extractedName = fullName.Substring(startIndex, endIndex - startIndex);
+                inventoryText.text = extractedName;
+            }
+            else
+            {
+                // Fallback to the full name if the substring could not be extracted
+                inventoryText.text = fullName;
+            }
+        }
+        else
+        {
+            inventoryText.text = "";
+        }
+
         UpdatePowerups();
 
         // Check win conditions
@@ -577,9 +603,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (bossesKilled >= bossesRequired)
         {
-            if (PlayerPrefs.HasKey("BossQuestCompleted") && PlayerPrefs.GetInt("BossQuestCompleted") == 1)
+            if (PlayerPrefs.HasKey("BossQuestCompleted") && PlayerPrefs.GetInt("BossQuestCompleted") == 0)
             {
-                PlayerPrefs.SetInt("BossQuestCompleted", 0);
+                PlayerPrefs.SetInt("BossQuestCompleted", 1);
 
                 expReward = PlayerPrefs.GetInt("BossQuestExpTarget");
                 GetXP(expReward);
@@ -590,9 +616,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (collectorsDestroyed >= collectorsRequired)
         {
-            if (PlayerPrefs.HasKey("CollectorQuestCompleted") && PlayerPrefs.GetInt("CollectorQuestCompleted") == 1)
+            if (PlayerPrefs.HasKey("CollectorQuestCompleted") && PlayerPrefs.GetInt("CollectorQuestCompleted") == 0)
             {
-                PlayerPrefs.SetInt("CollectorQuestCompleted", 0);
+                PlayerPrefs.SetInt("CollectorQuestCompleted", 1);
 
                 expReward = PlayerPrefs.GetInt("CollectorQuestExpTarget");
                 GetXP(expReward);
@@ -603,9 +629,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (guardiansDestroyed >= guardianRequired)
         {
-            if (PlayerPrefs.HasKey("GuardianQuestCompleted") && PlayerPrefs.GetInt("GuardianQuestCompleted") == 1)
+            if (PlayerPrefs.HasKey("GuardianQuestCompleted") && PlayerPrefs.GetInt("GuardianQuestCompleted") == 0)
             {
-                PlayerPrefs.SetInt("GuardianQuestCompleted", 0);
+                PlayerPrefs.SetInt("GuardianQuestCompleted", 1);
 
                 expReward = PlayerPrefs.GetInt("GuardianQuestExpTarget");
                 GetXP(expReward);
@@ -616,9 +642,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (intelCollected >= intelRequired)
         {
-            if (PlayerPrefs.HasKey("IntelQuestCompleted") && PlayerPrefs.GetInt("IntelQuestCompleted") == 1)
+            if (PlayerPrefs.HasKey("IntelQuestCompleted") && PlayerPrefs.GetInt("IntelQuestCompleted") == 0)
             {
-                PlayerPrefs.SetInt("IntelQuestCompleted", 0);
+                PlayerPrefs.SetInt("IntelQuestCompleted", 1);
 
                 expReward = PlayerPrefs.GetInt("IntelQuestExpTarget");
                 GetXP(expReward);
@@ -629,9 +655,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (bombsDestroyed >= bombsRequired)
         {
-            if (PlayerPrefs.HasKey("BombQuestCompleted") && PlayerPrefs.GetInt("BombQuestCompleted") == 1)
+            if (PlayerPrefs.HasKey("BombQuestCompleted") && PlayerPrefs.GetInt("BombQuestCompleted") == 0)
             {
-                PlayerPrefs.SetInt("BombQuestCompleted", 0);
+                PlayerPrefs.SetInt("BombQuestCompleted", 1);
 
                 expReward = PlayerPrefs.GetInt("BombQuestExpTarget");
                 GetXP(expReward);
@@ -642,9 +668,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (artifactsRecovered >= artifactsRequired)
         {
-            if (PlayerPrefs.HasKey("ArtifactQuestCompleted") && PlayerPrefs.GetInt("ArtifactQuestCompleted") == 1)
+            if (PlayerPrefs.HasKey("ArtifactQuestCompleted") && PlayerPrefs.GetInt("ArtifactQuestCompleted") == 0)
             {
-                PlayerPrefs.SetInt("ArtifactQuestCompleted", 0);
+                PlayerPrefs.SetInt("ArtifactQuestCompleted", 1);
 
                 expReward = PlayerPrefs.GetInt("ArtifactQuestExpTarget");
                 GetXP(expReward);
@@ -728,7 +754,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("ArtifactQuestTarget", artifactsRecovered);
         }
         else
-            GetXP(20);
+            GetXP(10);
     }
 
     public void IntelFound()
@@ -740,7 +766,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("IntelQuestTarget", intelCollected);
         }
         else
-            GetXP(20);
+            GetXP(10);
     }
 
     public void BombNeutralized()
@@ -752,7 +778,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("BombQuestTarget", bombsDestroyed);
         }
         else
-            GetXP(20);
+            GetXP(10);
     }
 
     void CheckAbility1()
@@ -1115,7 +1141,7 @@ public class PlayerHealth : MonoBehaviour
                 else
                     audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            StartCoroutine(GetXP(5));
+            StartCoroutine(GetXP(2));
         }
 
         else if (type == "Boss")
@@ -1140,13 +1166,13 @@ public class PlayerHealth : MonoBehaviour
                 else
                     audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            StartCoroutine(GetXP(10));
+            StartCoroutine(GetXP(5));
         }
     }
 
     void ExtractionGame()
     {
-        StartCoroutine(GetXP(100));
+        StartCoroutine(GetXP(50));
 
         StartCoroutine(DisplayMessage());
     }

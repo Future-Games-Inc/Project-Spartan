@@ -109,7 +109,7 @@ public class LootDrone : MonoBehaviour
                 agent.SetDestination(newPosition);
                 StartCoroutine(PauseDelay());
             }
-            else if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+            else if (agent.remainingDistance <= agent.stoppingDistance + 10 && !agent.pathPending)
             {
                 // Drop the attached cache back on the map
                 attachedCache.transform.parent = null;

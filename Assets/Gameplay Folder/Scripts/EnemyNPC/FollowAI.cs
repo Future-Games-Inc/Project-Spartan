@@ -146,15 +146,18 @@ public class FollowAI : MonoBehaviour
             {
                 // When Agro changes
                 Agro = true;
+                // set the speed for the agent for the blend tree
+                animator.SetFloat("Speed", agent.velocity.magnitude);
             }
 
             // If the enemy has detected the player but doesn't have a clear line of sight
             if (Agro && !IsLineOfSightClear(targetTransform))
             {
                 currentState = States.Follow;
-
                 agent.isStopped = false;
                 agent.destination = targetTransform.position; // Move towards the player
+                                                              // set the speed for the agent for the blend tree
+                animator.SetFloat("Speed", agent.velocity.magnitude);
                 return; // Don't proceed to other behaviors until we have a clear line of sight
             }
             // if it is not agro, then patrol like normal
@@ -164,6 +167,8 @@ public class FollowAI : MonoBehaviour
             {
                 currentState = States.Patrol;
                 agent.isStopped = false;
+                // set the speed for the agent for the blend tree
+                animator.SetFloat("Speed", agent.velocity.magnitude);
                 Patrol();
             }
             else
@@ -173,8 +178,11 @@ public class FollowAI : MonoBehaviour
                 {
                     // When Agro changes
                     Agro = false;
+                    attackWeapon.fireWeaponBool = false;
                     // stop where it is
                     agent.SetDestination(gameObject.transform.position);
+                    // set the speed for the agent for the blend tree
+                    animator.SetFloat("Speed", agent.velocity.magnitude);
                     return;
                 }
                 // if in range of attacks
@@ -183,6 +191,8 @@ public class FollowAI : MonoBehaviour
                     currentState = States.Attack;
                     LookatTarget(1, 3f);
                     agent.isStopped = true;
+                    // set the speed for the agent for the blend tree
+                    animator.SetFloat("Speed", agent.velocity.magnitude);
                     Attack();
                 }
                 // give chase if not in range
@@ -190,8 +200,15 @@ public class FollowAI : MonoBehaviour
                 {
                     currentState = States.Follow;
                     agent.isStopped = false;
+                    // set the speed for the agent for the blend tree
+                    animator.SetFloat("Speed", agent.velocity.magnitude);
                     Follow();
                 }
+            }
+
+            if (CheckForPlayer())
+            {
+                LookatTarget(1f, 3f);  // make the enemy turn towards the player
             }
 
             if (isLookingAtPlayer)
@@ -200,6 +217,11 @@ public class FollowAI : MonoBehaviour
                 direction.y = 0;
                 Quaternion desiredRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
+
+                if (IsLineOfSightClear(targetTransform))
+                {
+                    Attack();
+                }
             }
 
             // set the speed for the agent for the blend tree
@@ -225,23 +247,7 @@ public class FollowAI : MonoBehaviour
         if (playerPOS == null)
             return false;
 
-        if (Vector3.Distance(transform.position, playerPOS.position) > DetectRange)
-            return false;
-
-        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
-        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
-            return false;
-
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, DetectRange, obstacleMask);
-        foreach (RaycastHit hit in hits)
-        {
-            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Hand"))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return Vector3.Distance(transform.position, playerPOS.position) <= DetectRange;
     }
 
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
@@ -308,7 +314,7 @@ public class FollowAI : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
-            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Hand"))
+            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor"))
             {
                 return true;
             }

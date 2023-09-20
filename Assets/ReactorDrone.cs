@@ -114,7 +114,7 @@ public class ReactorDrone : MonoBehaviour
             if (hit.collider != null)
             {
                 // More debugging
-                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Hand"))
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor"))
                 {
                     return true;
                 }

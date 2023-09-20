@@ -363,8 +363,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4329286760915649623}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0005, y: 0.0013, z: 0.3667}
-  m_LocalScale: {x: 0.08083948, y: 0.08083948, z: 0.08083948}
+  m_LocalPosition: {x: -0.004, y: 0.003, z: 0.841}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4368010228686686593}
@@ -878,6 +878,7 @@ MonoBehaviour:
   reactorCore: {fileID: 1844788686662568316}
   audioSource: {fileID: 8009862462240811676}
   extractionClip: {fileID: 8300000, guid: 21e1d4024b30a9e4f80a220896ad9c97, type: 3}
+  held: 0
 --- !u!114 &7237616892407742963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,6 +898,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &3488524354592897170
 MonoBehaviour:
   m_ObjectHideFlags: 0
