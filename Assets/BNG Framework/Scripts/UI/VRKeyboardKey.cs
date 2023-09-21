@@ -51,9 +51,11 @@ namespace BNG {
             OnKeyHit(UseShiftKey && !string.IsNullOrEmpty(KeycodeShift) ? KeycodeShift : Keycode);
         }
 
-        public virtual void OnKeyHit(string key) {
-            if(vrKeyboard != null) {
-                vrKeyboard.PressKey(key);
+        public virtual void OnKeyHit(string key)
+        {
+            if (vrKeyboard != null)
+            {
+                vrKeyboard.EnqueueKey(key);
             }
         }
     }

@@ -30235,10 +30235,10 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627370891586873586}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.075
+  m_Radius: 0.06
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &3053963929951490477
 SphereCollider:
@@ -30251,7 +30251,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.085
+  m_Radius: 0.05
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1135662520056417896
 MonoBehaviour:
@@ -30269,8 +30269,6 @@ MonoBehaviour:
   explosionRadius: 10
   maxDamage: 100
   explosionDelay: 3
-  throwForce: 20
-  throwUpwardForce: 10
   Targets: []
   player: {fileID: 0}
   playerHealth: {fileID: 0}
@@ -30278,6 +30276,7 @@ MonoBehaviour:
   rb: {fileID: 6886929121846228404}
   audioSource: {fileID: 2505928930888588758}
   objectRenderer: {fileID: 1356119046537709550}
+  contact: 0
 --- !u!114 &5858675408560043313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30402,6 +30401,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &8132387503354044476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30427,7 +30429,7 @@ MonoBehaviour:
   ThrowForceMultiplierAngular: 1.5
   BreakDistance: 0
   HideHandGraphics: 0
-  ParentToHands: 1
+  ParentToHands: 0
   ParentHandModel: 0
   SnapHandModel: 1
   CanBeDropped: 1

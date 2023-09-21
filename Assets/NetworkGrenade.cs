@@ -1,5 +1,4 @@
 using System.Collections;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class NetworkGrenade : MonoBehaviour
@@ -14,8 +13,6 @@ public class NetworkGrenade : MonoBehaviour
     public float explosionRadius = 5f;
     public int maxDamage = 80;
     public float explosionDelay = 5f;
-    public float throwForce;
-    public float throwUpwardForce;
 
     [System.Serializable]
     public struct TargetInfo
@@ -30,24 +27,36 @@ public class NetworkGrenade : MonoBehaviour
     public Rigidbody rb;
     public AudioSource audioSource;
     public GameObject objectRenderer;
+    public bool contact;
 
-    public GameObjectPoolManager PoolManager;
 
 
     private void OnEnable()
     {
-        PoolManager = GameObject.FindGameObjectWithTag("Pool").GetComponent<GameObjectPoolManager>();
+        StartCoroutine(NoContact());
     }
+
+    IEnumerator NoContact()
+    {
+        yield return new WaitForSeconds(10);
+        if (contact == false)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
+            contact = true;
         }
     }
 
     public void Throw()
     {
+        this.gameObject.layer = 20;
         audioSource.Play();
         StartCoroutine(ExplodeDelayed());
     }
@@ -88,9 +97,6 @@ public class NetworkGrenade : MonoBehaviour
             case "Security":
                 HandleSecurityDamage(collider, damage);
                 break;
-            case "Player":
-                HandlePlayerDamage(collider, damage);
-                break;
                 // Add more cases as needed
         }
     }
@@ -122,20 +128,6 @@ public class NetworkGrenade : MonoBehaviour
         }
     }
 
-    void HandlePlayerDamage(Collider collider, int damage)
-    {
-        // Simplified player damage handling logic here
-        PlayerHealth playerHealthCrit = collider.GetComponent<PlayerHealth>();
-        if (playerHealthCrit.alive && collider.transform.root.gameObject != player)
-        {
-            playerHealthCrit.TakeDamage(damage);
-            if (playerHealthCrit.Health <= damage && playerHealth != null)
-            {
-                playerHealth.PlayersKilled();
-            }
-        }
-    }
-
     int CalculateDamage(float distance)
     {
         return (int)((1f - distance / explosionRadius) * maxDamage);
@@ -145,6 +137,6 @@ public class NetworkGrenade : MonoBehaviour
     {
         objectRenderer.SetActive(false);
         yield return new WaitForSeconds(delay);
-        this.PoolManager.Release(gameObject);
+        Destroy(gameObject);
     }
 }

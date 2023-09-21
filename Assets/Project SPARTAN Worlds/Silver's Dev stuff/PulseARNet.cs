@@ -1,10 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using BNG;
-using PathologicalGames;
-using Umbrace.Unity.PurePool;
-using static Oni;
 
 public class PulseARNet : MonoBehaviour
 {
@@ -136,9 +132,8 @@ public class PulseARNet : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(PulseBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
-                        spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
-                        spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
-                        spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
+                        spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
+                        spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().playerBullet = true;
                     }
                     ammoLeft -= 3;
 
@@ -162,9 +157,8 @@ public class PulseARNet : MonoBehaviour
                         GameObject spawnedBullet = Instantiate(playerBullet, spawnPoint[0].position, Quaternion.identity);
                         spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
-                        spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
-                        spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
-                        spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
+                        spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
+                        spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().playerBullet = true;
                     }
                     ammoLeft--;
 

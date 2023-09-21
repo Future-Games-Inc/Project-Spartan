@@ -649,7 +649,7 @@ GameObject:
   - component: {fileID: 4391144988015095737}
   m_Layer: 12
   m_Name: shoes_spheres_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -898,11 +898,11 @@ GameObject:
   - component: {fileID: 7876374538887498038}
   m_Layer: 12
   m_Name: ears_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7126509952820238772
 Transform:
   m_ObjectHideFlags: 0
@@ -1647,6 +1647,7 @@ Transform:
   - {fileID: 439788777949049147}
   - {fileID: 6796253883831593162}
   - {fileID: 7778456714680022694}
+  - {fileID: 6597817664259988107}
   m_Father: {fileID: 439788778926290556}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2110,7 +2111,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.16
+  near clip plane: 0.08
   far clip plane: 150
   field of view: 60.000004
   orthographic: 0
@@ -2325,12 +2326,6 @@ Transform:
   - {fileID: 9193352250746582827}
   - {fileID: 2140480699328679751}
   - {fileID: 417686969215462276}
-  - {fileID: 7900288163903662304}
-  - {fileID: 2054345594710279603}
-  - {fileID: 5026917779210607762}
-  - {fileID: 5267608746789332087}
-  - {fileID: 5070268225054645539}
-  - {fileID: 9017398016778033953}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2387,6 +2382,9 @@ MonoBehaviour:
   directInteractors:
   - {fileID: 439788778409400105}
   - {fileID: 439788777949049150}
+  grabbableHands:
+  - {fileID: 1653463940714768421}
+  - {fileID: 5336521365995222352}
   male: 0
   alive: 0
   reactorHeld: 0
@@ -2548,6 +2546,8 @@ MonoBehaviour:
   primaryPowerupTimer: 0
   primaryPowerupText: {fileID: 9015416358523547054}
   secondaryPowerupText: {fileID: 6430545851710552551}
+  inventoryText: {fileID: 796002177218723055}
+  inventoryZone: {fileID: 7549281085108096147}
   secondaryPowerupTimer: 0
   activeCamoTimer: 0
   stealthTimer: 0
@@ -2556,7 +2556,7 @@ MonoBehaviour:
   primaryButtonPressed: 0
   secondaryButtonPressed: 0
   leaderboardID: react_leaderboard
-  leaderboardID2: faction_leaders
+  leaderboardID2: faction_leader
   progressionKey: cent_prog
   faction: 
   bossesKilled: 0
@@ -3299,7 +3299,7 @@ GameObject:
   - component: {fileID: 1025252583604232710}
   m_Layer: 12
   m_Name: sleeve_curve_top_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3453,7 +3453,7 @@ GameObject:
   - component: {fileID: 2082578563436647478}
   m_Layer: 12
   m_Name: sleeves_cylinder_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3903,7 +3903,7 @@ GameObject:
   - component: {fileID: 4347349807748253628}
   m_Layer: 12
   m_Name: belt_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4185,7 +4185,7 @@ GameObject:
   - component: {fileID: 8153902533426056745}
   m_Layer: 12
   m_Name: pants_pod_01_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4882,11 +4882,11 @@ GameObject:
   - component: {fileID: 6369564836384152118}
   m_Layer: 12
   m_Name: ear_pad_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2545434268937943427
 Transform:
   m_ObjectHideFlags: 0
@@ -6097,7 +6097,7 @@ GameObject:
   - component: {fileID: 7533396176784285291}
   m_Layer: 12
   m_Name: pants_triangles_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7263,7 +7263,7 @@ GameObject:
   - component: {fileID: 649491621347130681}
   m_Layer: 12
   m_Name: body_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7999,7 +7999,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653463940714768421}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8007,7 +8007,7 @@ Transform:
   - {fileID: 3502472906460092076}
   m_Father: {fileID: 439788778392037282}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1663875500175705503
 GameObject:
   m_ObjectHideFlags: 0
@@ -8020,7 +8020,7 @@ GameObject:
   - component: {fileID: 5207607735114090890}
   m_Layer: 12
   m_Name: pants_bottom_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8206,7 +8206,7 @@ GameObject:
   - component: {fileID: 3992959311325139502}
   m_Layer: 12
   m_Name: shoes_main_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8360,7 +8360,7 @@ GameObject:
   - component: {fileID: 4706292526106141955}
   m_Layer: 12
   m_Name: pants_cheese_sphere_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8668,7 +8668,7 @@ GameObject:
   - component: {fileID: 8022909124401852782}
   m_Layer: 12
   m_Name: pliers_metal_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9499,8 +9499,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1953103722064480865}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.872, z: 0.037000023}
-  m_LocalScale: {x: 0.89999986, y: 0.8999996, z: 0.8999999}
+  m_LocalPosition: {x: 0, y: 5.58, z: 0.037000023}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8622622808829335996}
@@ -9571,11 +9571,11 @@ GameObject:
   - component: {fileID: 4781698080407463096}
   m_Layer: 12
   m_Name: mask_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1968704966479380750
 Transform:
   m_ObjectHideFlags: 0
@@ -10069,7 +10069,7 @@ GameObject:
   - component: {fileID: 7154654088000148375}
   m_Layer: 12
   m_Name: tape_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10654,7 +10654,7 @@ GameObject:
   - component: {fileID: 3020915907651288283}
   m_Layer: 12
   m_Name: belt_fancy_holder_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10808,7 +10808,7 @@ GameObject:
   - component: {fileID: 1570141884370159058}
   m_Layer: 12
   m_Name: pliers_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11217,11 +11217,11 @@ GameObject:
   - component: {fileID: 4985049626023099281}
   m_Layer: 12
   m_Name: eyes_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8131668370338909268
 Transform:
   m_ObjectHideFlags: 0
@@ -11434,7 +11434,7 @@ GameObject:
   - component: {fileID: 4448318538520250581}
   m_Layer: 12
   m_Name: mouse_logo_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11942,7 +11942,7 @@ GameObject:
   - component: {fileID: 7742630233639927448}
   m_Layer: 12
   m_Name: neck_metal_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12095,7 +12095,7 @@ GameObject:
   - component: {fileID: 4234763444866611946}
   m_Layer: 12
   m_Name: metarig
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12314,11 +12314,11 @@ GameObject:
   - component: {fileID: 1416348870584708147}
   m_Layer: 12
   m_Name: ears_rim_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3002853411558383738
 Transform:
   m_ObjectHideFlags: 0
@@ -12468,7 +12468,7 @@ GameObject:
   - component: {fileID: 6555282732787228752}
   m_Layer: 12
   m_Name: shoes_border_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12654,7 +12654,7 @@ GameObject:
   - component: {fileID: 3706571756894865240}
   m_Layer: 12
   m_Name: sleeve_curve_bottom_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13049,7 +13049,7 @@ GameObject:
   - component: {fileID: 5230134481796270071}
   m_Layer: 12
   m_Name: neck_belt_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13306,6 +13306,7 @@ RectTransform:
   - {fileID: 6964438323755612772}
   - {fileID: 1279529752388383289}
   - {fileID: 8006241942186543901}
+  - {fileID: 6295487935135901773}
   m_Father: {fileID: 439788778509456225}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13463,7 +13464,7 @@ GameObject:
   - component: {fileID: 1153456176339335823}
   m_Layer: 12
   m_Name: sleeve_tool_belt_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14157,7 +14158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5686784855531252176
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14288,7 +14289,7 @@ GameObject:
   - component: {fileID: 63293948499849614}
   m_Layer: 12
   m_Name: pants_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14442,11 +14443,11 @@ GameObject:
   - component: {fileID: 7746324968039019941}
   m_Layer: 12
   m_Name: head_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5551058260726750627
 Transform:
   m_ObjectHideFlags: 0
@@ -16119,14 +16120,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3440599252159964579}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.219, y: 1.0843, z: 0.308}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0.219, y: -0.5057, z: 0.42}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 6597817664259988107}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &6648239495696624014
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -16381,7 +16382,7 @@ GameObject:
   - component: {fileID: 5897867084289519361}
   m_Layer: 12
   m_Name: spine
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17266,7 +17267,7 @@ MonoBehaviour:
   m_LineType: 0
   m_BlendVisualLinePoints: 1
   m_MaxRaycastDistance: 4
-  m_RayOriginTransform: {fileID: 0}
+  m_RayOriginTransform: {fileID: 4259901505881293623}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
   m_Acceleration: 9.8
@@ -17551,7 +17552,7 @@ GameObject:
   - component: {fileID: 6165291585831172511}
   m_Layer: 12
   m_Name: neck_belt_outer_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17751,7 +17752,7 @@ GameObject:
   - component: {fileID: 5196665180820447351}
   m_Layer: 12
   m_Name: shoulder_belt_end_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18934,11 +18935,11 @@ GameObject:
   - component: {fileID: 4822116087653519781}
   m_Layer: 12
   m_Name: laces_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2771507256542633880
 Transform:
   m_ObjectHideFlags: 0
@@ -19106,14 +19107,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4353787650016161475}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.009000011, y: 1.0843, z: 0.308}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.009000011, y: -0.5057, z: 0.42}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 6597817664259988107}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &4822871287776525642
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -19745,7 +19746,7 @@ GameObject:
   - component: {fileID: 7195090142554430458}
   m_Layer: 12
   m_Name: shoes_metal_low.001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20256,7 +20257,7 @@ GameObject:
   - component: {fileID: 4495322401400839656}
   m_Layer: 12
   m_Name: shoes_y_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20586,7 +20587,7 @@ GameObject:
   - component: {fileID: 417686969215462276}
   m_Layer: 12
   m_Name: Bomber_Alt_pf Variant (1)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21137,6 +21138,142 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &4731714900745508890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6295487935135901773}
+  - component: {fileID: 2296214829300796369}
+  - component: {fileID: 796002177218723055}
+  m_Layer: 12
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6295487935135901773
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731714900745508890}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.80555, y: 0.80555, z: 0.80555}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5488698142561954116}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 313, y: 124}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2296214829300796369
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731714900745508890}
+  m_CullTransparentMesh: 1
+--- !u!114 &796002177218723055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731714900745508890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 194c956b3d864664890e731c63fd4a02, type: 2}
+  m_sharedMaterial: {fileID: 21704438749789640, guid: 194c956b3d864664890e731c63fd4a02,
+    type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 24
+  m_fontSizeBase: 24
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: -87.91746, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &4754128906121224798
 GameObject:
   m_ObjectHideFlags: 0
@@ -21149,7 +21286,7 @@ GameObject:
   - component: {fileID: 5916297899279607388}
   m_Layer: 12
   m_Name: shoes_tag_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23340,7 +23477,7 @@ MonoBehaviour:
   m_LineType: 0
   m_BlendVisualLinePoints: 1
   m_MaxRaycastDistance: 4
-  m_RayOriginTransform: {fileID: 0}
+  m_RayOriginTransform: {fileID: 1025361471415518654}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
   m_Acceleration: 9.8
@@ -24400,7 +24537,7 @@ GameObject:
   - component: {fileID: 5639451331569378603}
   m_Layer: 12
   m_Name: chest_armor_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24554,7 +24691,7 @@ GameObject:
   - component: {fileID: 5032705495673252119}
   m_Layer: 12
   m_Name: shoulders_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24719,7 +24856,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5336521365995222352}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -24727,7 +24864,7 @@ Transform:
   - {fileID: 2404758189823331422}
   m_Father: {fileID: 439788778392037282}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &5339825454317588238
 GameObject:
   m_ObjectHideFlags: 0
@@ -24760,6 +24897,301 @@ Transform:
   m_Father: {fileID: 4296532993993333958}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5346076942733930278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5356762184879264293}
+  - component: {fileID: 2715642337031084829}
+  - component: {fileID: 3588313559153071181}
+  - component: {fileID: 5066185590829279252}
+  - component: {fileID: 2885156261873557541}
+  - component: {fileID: 5597246683749941213}
+  - component: {fileID: 7549281085108096147}
+  - component: {fileID: 985090963977171580}
+  m_Layer: 0
+  m_Name: BackStock
+  m_TagString: PickupStorage
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5356762184879264293
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.016, y: -0.449, z: -0.694}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6597817664259988107}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2715642337031084829
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &3588313559153071181
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 9d94b81de4a33734d93e490033348a51, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5066185590829279252
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: -0.003312108, y: 0.021301595, z: -0.02}
+--- !u!114 &2885156261873557541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d5be54ff720e43488e1738e2db6b6fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnGrabEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7549281085108096147}
+        m_TargetAssemblyTypeName: BNG.SnapZone, Assembly-CSharp
+        m_MethodName: GrabEquipped
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5597246683749941213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d4b3aeee51a5bd48bf569efd03b09ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ClosestGrabbable: {fileID: 0}
+  ClosestRemoteGrabbable: {fileID: 0}
+  FireGrabbableEvents: 0
+  RaycastRemoteGrabbables: 0
+  RemoteGrabbablesMustBeVisible: 0
+  RemoteCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 1
+--- !u!114 &7549281085108096147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55b646e2949ffb74c9ca8c512b4411df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HeldItem: {fileID: 0}
+  lastHeldItem: {fileID: 0}
+  StartingItem: {fileID: 0}
+  CanDropItem: 1
+  CanSwapItem: 1
+  CanRemoveItem: 1
+  ScaleItem: 1
+  DisableColliders: 0
+  DuplicateItemOnGrab: 0
+  MaxDropTime: 0.1
+  LastSnapTime: 0
+  OnlyAllowNames:
+  - Z_EMPPistol
+  - Z_MultiLauncher
+  - Z_Pistol
+  - Z_Plasma Launcher
+  - Z_Pulse Rifle
+  - Z_PulseAR
+  - Z_Railgun
+  - Z_Rifle
+  - Z_Shotgun
+  - Z_Stinger Shotgun
+  - Z_EMPPistol(Clone)
+  - Z_MultiLauncher(Clone)
+  - Z_Pistol(Clone)
+  - Z_Plasma Launcher(Clone)
+  - Z_Pulse Rifle(Clone)
+  - Z_PulseAR(Clone)
+  - Z_Railgun(Clone)
+  - Z_Rifle(Clone)
+  - Z_Shotgun(Clone)
+  - Z_Stinger Shotgun(Clone)
+  ExcludeTransformNames: []
+  SoundOnSnap: {fileID: 8300000, guid: fffd065b51473d349b5e0240ddff6e6e, type: 3}
+  SoundOnUnsnap: {fileID: 8300000, guid: af8b30b7989f8dd41a2e9a1a430ba57e, type: 3}
+  OnSnapEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3588313559153071181}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDetachEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3588313559153071181}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  ClosestGrabbable: {fileID: 0}
+--- !u!114 &985090963977171580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346076942733930278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cdea428d48e2bb488d33d5f75c39bb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BeingHeld: 0
+  GrabButton: 0
+  Grabtype: 0
+  GrabPhysics: 2
+  GrabMechanic: 1
+  GrabSpeed: 15
+  RemoteGrabbable: 0
+  RemoteGrabMechanic: 0
+  RemoteGrabDistance: 2
+  ThrowForceMultiplier: 2
+  ThrowForceMultiplierAngular: 1.5
+  BreakDistance: 0
+  HideHandGraphics: 0
+  ParentToHands: 0
+  ParentHandModel: 0
+  SnapHandModel: 1
+  CanBeDropped: 1
+  CanBeSnappedToSnapZone: 1
+  ForceDisableKinematicOnDrop: 0
+  InstantMovement: 0
+  MakeChildCollidersGrabbable: 0
+  handPoseType: 1
+  SelectedHandPose: {fileID: 0}
+  CustomHandPose: 0
+  SecondaryGrabBehavior: 0
+  TwoHandedPosition: 0
+  TwoHandedPostionLerpAmount: 0.5
+  TwoHandedRotation: 1
+  TwoHandedRotationLerpAmount: 0.5
+  TwoHandedDropBehavior: 0
+  TwoHandedLookVector: 0
+  SecondHandLookSpeed: 40
+  SecondaryGrabbable: {fileID: 0}
+  OtherGrabbableMustBeGrabbed: {fileID: 0}
+  CollisionSpring: 3000
+  CollisionSlerp: 500
+  CollisionLinearMotionX: 2
+  CollisionLinearMotionY: 2
+  CollisionLinearMotionZ: 2
+  CollisionAngularMotionX: 2
+  CollisionAngularMotionY: 2
+  CollisionAngularMotionZ: 2
+  ApplyCorrectiveForce: 1
+  MoveVelocityForce: 3000
+  MoveAngularVelocityForce: 90
+  LastGrabTime: 0
+  LastDropTime: 0
+  AddControllerVelocityOnDrop: 1
+  collisions: []
+  ActiveGrabPoint: {fileID: 0}
+  SecondaryLookOffset: {x: 0, y: 0, z: 0}
+  SecondaryLookAtTransform: {fileID: 0}
+  LocalOffsetTransform: {fileID: 0}
+  GrabPoints: []
+  UseCustomInspector: 1
+  lastFlickTime: 0
+  FlickForce: 1
 --- !u!1 &5348236998051402219
 GameObject:
   m_ObjectHideFlags: 0
@@ -24771,7 +25203,7 @@ GameObject:
   - component: {fileID: 5764002760939354179}
   m_Layer: 12
   m_Name: root
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25177,7 +25609,7 @@ GameObject:
   - component: {fileID: 896676130578301553}
   m_Layer: 12
   m_Name: shoulder_belt_fix_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25425,7 +25857,7 @@ GameObject:
   - component: {fileID: 2451274899673438146}
   m_Layer: 12
   m_Name: pants_cheese_back_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25887,7 +26319,7 @@ GameObject:
   - component: {fileID: 5605226050149645729}
   m_Layer: 12
   m_Name: pliers_metal_back_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26559,7 +26991,7 @@ GameObject:
   - component: {fileID: 4790873503202508775}
   m_Layer: 12
   m_Name: pants_metal_spinner_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27162,11 +27594,11 @@ GameObject:
   - component: {fileID: 6690196868153526938}
   m_Layer: 12
   m_Name: hair_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4026477431013478009
 Transform:
   m_ObjectHideFlags: 0
@@ -27525,7 +27957,7 @@ GameObject:
   - component: {fileID: 3577368810159253449}
   m_Layer: 12
   m_Name: pants_belts_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27711,7 +28143,7 @@ GameObject:
   - component: {fileID: 52319351719410861}
   m_Layer: 12
   m_Name: shoes_metal_01_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28441,7 +28873,7 @@ GameObject:
   - component: {fileID: 2800171699421009265}
   m_Layer: 12
   m_Name: pliers_handle_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28595,11 +29027,11 @@ GameObject:
   - component: {fileID: 3742749795210943800}
   m_Layer: 12
   m_Name: breath_pad_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6544140929018056274
 Transform:
   m_ObjectHideFlags: 0
@@ -29375,7 +29807,7 @@ GameObject:
   - component: {fileID: 7994321298638429751}
   m_Layer: 12
   m_Name: shoulder_belt_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29565,7 +29997,7 @@ GameObject:
   - component: {fileID: 1077368645131121321}
   m_Layer: 12
   m_Name: pants_metal_frame_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30147,7 +30579,7 @@ GameObject:
   - component: {fileID: 2828653083771278498}
   m_Layer: 12
   m_Name: Bomber
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30589,7 +31021,7 @@ GameObject:
   - component: {fileID: 7218607373419270206}
   m_Layer: 12
   m_Name: bag_01_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30731,6 +31163,58 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0006986161, y: 0.0026197238, z: -0.008269625}
     m_Extent: {x: 0.00053900905, y: 0.00024248334, z: 0.0005421883}
   m_DirtyAABB: 0
+--- !u!1 &6758583661413020771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6597817664259988107}
+  - component: {fileID: 8957605727723456053}
+  m_Layer: 12
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6597817664259988107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6758583661413020771}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.75, z: 0.08}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7900288163903662304}
+  - {fileID: 2054345594710279603}
+  - {fileID: 5026917779210607762}
+  - {fileID: 5267608746789332087}
+  - {fileID: 5070268225054645539}
+  - {fileID: 9017398016778033953}
+  - {fileID: 5356762184879264293}
+  m_Father: {fileID: 439788778392037282}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8957605727723456053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6758583661413020771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa85e4dd89b6e60428800a48c887f070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 439788778509456222}
 --- !u!1 &6790025225291990605
 GameObject:
   m_ObjectHideFlags: 0
@@ -31028,7 +31512,7 @@ GameObject:
   - component: {fileID: 5561814377939929414}
   m_Layer: 12
   m_Name: belt_holder_element_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31201,13 +31685,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6817154488978639342}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.282, y: 0.983, z: 0.197}
+  m_LocalPosition: {x: -0.282, y: -0.5057, z: 0.309}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2054731236723100989}
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 5
+  m_Father: {fileID: 6597817664259988107}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5008751999924768591
 MeshFilter:
@@ -31991,7 +32475,7 @@ GameObject:
   - component: {fileID: 4936605183705785346}
   m_Layer: 12
   m_Name: panties_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32230,7 +32714,7 @@ GameObject:
   - component: {fileID: 3993328075743590400}
   m_Layer: 12
   m_Name: antenna_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32702,7 +33186,7 @@ GameObject:
   - component: {fileID: 568926700257757500}
   m_Layer: 12
   m_Name: tape_end_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32856,7 +33340,7 @@ GameObject:
   - component: {fileID: 5809616284286119343}
   m_Layer: 12
   m_Name: tool_belt_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33180,11 +33664,11 @@ GameObject:
   - component: {fileID: 2195258288469860790}
   m_Layer: 12
   m_Name: ears_element_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4953482074358300988
 Transform:
   m_ObjectHideFlags: 0
@@ -33366,7 +33850,7 @@ GameObject:
   - component: {fileID: 8226949649702286457}
   m_Layer: 12
   m_Name: belt_holder_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33660,7 +34144,7 @@ GameObject:
   - component: {fileID: 9156338087644078540}
   m_Layer: 12
   m_Name: chest_armor_belt_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35299,14 +35783,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7830772821106226413}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.201, y: 1.0843, z: 0.308}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.201, y: -0.5057, z: 0.42}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 6597817664259988107}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &1569583474519551762
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -35662,7 +36146,7 @@ GameObject:
   - component: {fileID: 48628430623671888}
   m_Layer: 12
   m_Name: neck_belt_metal_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36303,11 +36787,11 @@ GameObject:
   - component: {fileID: 8044739669273056933}
   m_Layer: 12
   m_Name: Teeth
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4853783682044112601
 Transform:
   m_ObjectHideFlags: 0
@@ -36673,7 +37157,7 @@ GameObject:
   - component: {fileID: 4985000922781702151}
   m_Layer: 12
   m_Name: sleeve_metal_spots_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37140,11 +37624,11 @@ GameObject:
   - component: {fileID: 2797814040351307667}
   m_Layer: 12
   m_Name: breath_pad_stick_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &466643269365832698
 Transform:
   m_ObjectHideFlags: 0
@@ -37522,7 +38006,7 @@ GameObject:
   - component: {fileID: 1467329169044191864}
   m_Layer: 12
   m_Name: shoulder_belt_roll_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37853,7 +38337,7 @@ GameObject:
   - component: {fileID: 3741391678387317502}
   m_Layer: 12
   m_Name: rope_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -38143,7 +38627,7 @@ GameObject:
   - component: {fileID: 3525357976835085691}
   m_Layer: 12
   m_Name: sleeves_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -38714,7 +39198,7 @@ GameObject:
   - component: {fileID: 409645874358659014}
   m_Layer: 12
   m_Name: belts_buttons_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39618,7 +40102,7 @@ GameObject:
   - component: {fileID: 8525459614100805506}
   m_Layer: 12
   m_Name: sleeve_interior_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39772,7 +40256,7 @@ GameObject:
   - component: {fileID: 2776647530445732958}
   m_Layer: 12
   m_Name: pants_belt_square_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40668,12 +41152,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8933472917868013227}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.271, y: 0.983, z: 0.197}
-  m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
+  m_LocalPosition: {x: 0.347, y: -0.53, z: 0.237}
+  m_LocalScale: {x: 0.14729673, y: 0.14416961, z: 0.27066076}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 439788778926290556}
-  m_RootOrder: 9
+  m_Father: {fileID: 6597817664259988107}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9049462259988834781
 MeshFilter:
@@ -41520,7 +42004,7 @@ GameObject:
   - component: {fileID: 3623157638924771659}
   m_Layer: 12
   m_Name: tool_leather_low
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41699,7 +42183,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 439788778926290556}
+    m_TransformParent: {fileID: 6597817664259988107}
     m_Modifications:
     - target: {fileID: 9017398015425729478, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
@@ -41719,7 +42203,7 @@ PrefabInstance:
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
@@ -41729,12 +42213,12 @@ PrefabInstance:
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4102
+      value: -0.17980003
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.906
+      value: -0.794
       objectReference: {fileID: 0}
     - target: {fileID: 9017398016391809628, guid: 90c2975393eae0e45bde611339a9baf4,
         type: 3}

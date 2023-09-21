@@ -10,6 +10,7 @@ public class CuaTerminal : MonoBehaviour
     public PlayerHealth playerHealth;
     public float radius = 2f;
     public string terminalName;
+    public GameObject activatedIcon;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,8 @@ public class CuaTerminal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        activatedIcon.SetActive(HasTerminalAccess());
+       
     }
 
     private void OnTriggerExit(Collider other)
@@ -50,7 +52,7 @@ public class CuaTerminal : MonoBehaviour
                     playerHealth = health;
                     if (!HasTerminalAccess())
                     {
-                        SaveTerminalAccess(75);
+                        SaveTerminalAccess(15);
                     }
                 }
             }

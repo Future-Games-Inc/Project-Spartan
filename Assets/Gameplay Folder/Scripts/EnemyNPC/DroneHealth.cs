@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +17,7 @@ public class DroneHealth : MonoBehaviour
     public AudioClip[] audioClip;
     public GameObject explosionEffect;
     public NavMeshAgent agent;
+    public bool hit;
 
     public string type;
 
@@ -39,12 +41,23 @@ public class DroneHealth : MonoBehaviour
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
+        if (!hit)
+            StartCoroutine(Hit());
 
         if (Health <= 0 && alive)
         {
             alive = false;
             TriggerDeathEffects();
         }
+    }
+
+    IEnumerator Hit()
+    {
+        hit = true;
+        explosionEffect.SetActive(true);
+        yield return new WaitForSeconds(1);
+        explosionEffect.SetActive(false);
+        hit = false;
     }
 
     private void TriggerDeathEffects()

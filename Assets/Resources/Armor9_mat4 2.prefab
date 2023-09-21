@@ -3149,7 +3149,8 @@ MonoBehaviour:
   Health: 200
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4617
+  fireReady: 0
   agent: {fileID: 1799011468459518908}
   targetTransform: {fileID: 0}
   enemyHealth: {fileID: 26474372960577008}
@@ -3243,7 +3244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
+  bullet: {fileID: 5451881146956983319, guid: e4bd26536620caf429a3c0e1d6f4fb19, type: 3}
   bulletTransform: {fileID: 421824761609566074}
   shootForce: 65
   ammoLeft: 15
@@ -3254,7 +3255,7 @@ MonoBehaviour:
   fireWeaponBool: 0
   canShoot: 1
   bulletModifier: 0
-  PoolManager: {fileID: 0}
+  aiScript: {fileID: 0}
 --- !u!82 &9009362318184346560
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5329,8 +5330,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8977907269225695152}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.238, z: -0.074}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: 0, y: 5.6, z: -0.074}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4795955159597824}

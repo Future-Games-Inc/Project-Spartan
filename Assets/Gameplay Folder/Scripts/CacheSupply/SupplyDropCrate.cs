@@ -1,7 +1,5 @@
-using PathologicalGames;
 using System.Collections;
 using TMPro;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,8 +35,6 @@ public class SupplyDropCrate : MonoBehaviour
 
     private void OnEnable()
     {
-        
-
         matchProps = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
         StartCoroutine(PlayAudioLoop());
         activationSlider.maxValue = activationTime;

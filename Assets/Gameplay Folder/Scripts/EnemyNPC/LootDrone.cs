@@ -1,10 +1,8 @@
-using Photon.Pun;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class LootDrone : MonoBehaviourPunCallbacks
+public class LootDrone : MonoBehaviour
 {
     public float DetectRange = 20;
     public float LootRange = 3;
@@ -87,7 +85,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
             isLooting = true;
             positionSet = false;
             agent.SetDestination(targetTransform.position);
-            targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, false);
+            targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(false);
             timer = 0;
         }
     }
@@ -111,11 +109,11 @@ public class LootDrone : MonoBehaviourPunCallbacks
                 agent.SetDestination(newPosition);
                 StartCoroutine(PauseDelay());
             }
-            else if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+            else if (agent.remainingDistance <= agent.stoppingDistance + 10 && !agent.pathPending)
             {
                 // Drop the attached cache back on the map
                 attachedCache.transform.parent = null;
-                targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
+                targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(true);
 
                 // Reset variables for the next loot phase
                 attachedCache = null;
@@ -138,7 +136,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
             if (attachedCache != null)
             {
                 attachedCache.transform.parent = null;
-                targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
+                targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(true);
                 isLooting = false;
                 patrolling = true;
             }
@@ -161,50 +159,47 @@ public class LootDrone : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (Time.time >= nextUpdateTime)
         {
-            if (Time.time >= nextUpdateTime)
-            {
-                nextUpdateTime = Time.time + 1f; // Update every 1 second
-                FindClosestEnemy();
-            }
+            nextUpdateTime = Time.time + 1f; // Update every 1 second
+            FindClosestEnemy();
+        }
 
-            float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
 
-            if (patrolling)
-            {
-                SwitchStates(States.Patrol);
-                timer += Time.deltaTime;
-                Patrol();
-            }
+        if (patrolling)
+        {
+            SwitchStates(States.Patrol);
+            timer += Time.deltaTime;
+            Patrol();
+        }
 
-            if (isLooting)
-            {
-                SwitchStates(States.Loot);
-                if (attachedCache == null)
-                    LookatTarget(1, 3f);
-                Loot();
-            }
+        if (isLooting)
+        {
+            SwitchStates(States.Loot);
+            if (attachedCache == null)
+                LookatTarget(1, 3f);
+            Loot();
+        }
 
-            // Check if the loot is completed
-            if (attachedCache != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-            {
-                // Drop the attached cache back on the map
-                attachedCache.transform.parent = null;
+        // Check if the loot is completed
+        if (attachedCache != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        {
+            // Drop the attached cache back on the map
+            attachedCache.transform.parent = null;
 
-                // Reset variables for the next loot phase
-                attachedCache = null;
-                isLooting = false;
-                patrolling = true;
-            }
+            // Reset variables for the next loot phase
+            attachedCache = null;
+            isLooting = false;
+            patrolling = true;
+        }
 
-            if (isLookingAtPlayer)
-            {
-                Vector3 direction = targetTransform.position - transform.position;
-                direction.y = 0;
-                Quaternion desiredRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
-            }
+        if (isLookingAtPlayer)
+        {
+            Vector3 direction = targetTransform.position - transform.position;
+            direction.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
         }
     }
 

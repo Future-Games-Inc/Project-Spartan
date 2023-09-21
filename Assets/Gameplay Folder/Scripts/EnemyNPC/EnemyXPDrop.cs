@@ -1,6 +1,5 @@
 using UnityEngine;
 using BNG;
-using Umbrace.Unity.PurePool;
 using System.Collections;
 
 public class EnemyXPDrop : MonoBehaviour
@@ -10,15 +9,20 @@ public class EnemyXPDrop : MonoBehaviour
     public LayerMask groundLayer;
     private Rigidbody rb;
     public Grabbable grabbable;
+    public GameObject buffText;
+    public AudioSource audioSource;
+    public AudioClip pickupClip;
 
     public bool contact;
+    public MatchEffects matchEffects;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        
+
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
         switch (pickupData.pickupType)
         {
             case "XP":
@@ -42,15 +46,13 @@ public class EnemyXPDrop : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
-            contact = true;
-
-        if (other.CompareTag("PickupSlot"))
         {
+            contact = true;
             PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
-
             switch (pickupData.pickupType)
             {
                 case "XP":
+                    audioSource.PlayOneShot(pickupClip);
                     float xpDrop = 10f;
                     if (Random.Range(0, 100f) < xpDrop)
                     {
@@ -62,6 +64,14 @@ public class EnemyXPDrop : MonoBehaviour
                     }
                     Destroy(gameObject);
                     break;
+            }
+        }
+
+        if (other.CompareTag("PickupSlot"))
+        {
+            PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
+            switch (pickupData.pickupType)
+            {
 
                 case "Health":
                     spawnManager.UpdateHealthCount();
@@ -70,7 +80,7 @@ public class EnemyXPDrop : MonoBehaviour
                     break;
 
                 case "EMP":
-                    Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
+                    Collider[] colliders = Physics.OverlapSphere(transform.position, 20f);
                     foreach (Collider collider in colliders)
                     {
                         if (collider.CompareTag("Security"))
@@ -100,6 +110,11 @@ public class EnemyXPDrop : MonoBehaviour
 
                 case "Shield":
                     playerHealth.AddArmor(pickupData.armorAmount);
+                    Destroy(gameObject);
+                    break;
+
+                case "CUAHack":
+                    matchEffects.currentExtractionTimer += 30;
                     Destroy(gameObject);
                     break;
 
@@ -142,6 +157,16 @@ public class EnemyXPDrop : MonoBehaviour
                 rb.constraints &= RigidbodyConstraints.FreezePositionZ;
             }
         }
+    }
+
+    public void EnableText()
+    {
+        buffText.SetActive(true);
+    }
+
+    public void EDisableText()
+    {
+        buffText.SetActive(false);
     }
 
     public void rescale()

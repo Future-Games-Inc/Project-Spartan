@@ -109,7 +109,7 @@ public class SaveData : MonoBehaviour
     public void UpdateSkills(int skills)
     {
         SkillPoints += skills;
-        PlayerPrefs.SetInt("Cints", SkillPoints);
+        PlayerPrefs.SetInt("CINTS", SkillPoints);
         leaderboard.SubmitScore(SkillPoints);
         Save();
     }
@@ -159,7 +159,6 @@ public class SaveData : MonoBehaviour
     public void Save()
     {
         ES3.Save("SkillPoints", SkillPoints);
-        StartCoroutine(leaderboard.SubmitScoreRoutine(SkillPoints));
     }
 
     public void BossSave()
@@ -205,7 +204,7 @@ public class SaveData : MonoBehaviour
     public IEnumerator PlayerLevelRoutine()
     {
         yield return new WaitForSeconds(.75f);
-        if (PlayerPrefs.HasKey("Cints"))
+        if (PlayerPrefs.HasKey("CINTS"))
         {
             SkillPoints = PlayerPrefs.GetInt("CINTS");
             if (SkillPoints != leaderboard.Score)
@@ -225,10 +224,15 @@ public class SaveData : MonoBehaviour
         {
             playerLevelCurrent = PlayerPrefs.GetInt("PlayerLevel");
             if (playerLevelCurrent != currentLevelInt)
-                leaderboard.AddProgression(playerLevelCurrent - leaderboard.currentLevelInt);
+            {
+                if(playerLevelCurrent > currentLevelInt)
+                    leaderboard.AddProgression(playerLevelCurrent - currentLevelInt);
+                else if(playerLevelCurrent < currentLevelInt)
+                    playerLevelCurrent = currentLevelInt;
+            }
         }
         else
-            playerLevelCurrent = leaderboard.currentLevelInt;
+            playerLevelCurrent = currentLevelInt;
 
         PlayerPrefs.SetInt("PlayerLevel", playerLevelCurrent);
 
@@ -239,6 +243,8 @@ public class SaveData : MonoBehaviour
             {
                 awarded = true;
             }
+            else
+                awarded = false;
         }
         else
             playerPrestigeCurrent = playerPrestigeCurrent / prestigeIncrement + 1;

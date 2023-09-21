@@ -2471,7 +2471,8 @@ MonoBehaviour:
   Health: 100
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4617
+  fireReady: 0
   agent: {fileID: 1132709368}
   targetTransform: {fileID: 0}
   enemyHealth: {fileID: 1132709375}
@@ -2605,7 +2606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 5451881146956983319, guid: 59147f895cb18ff4e9abd643281d697b, type: 3}
+  bullet: {fileID: 5451881146956983319, guid: dcb1eeb283ebcab49acae93c3192ffa8, type: 3}
   bulletTransform: {fileID: 8579373721277181630}
   shootForce: 65
   ammoLeft: 10
@@ -2616,7 +2617,7 @@ MonoBehaviour:
   fireWeaponBool: 0
   canShoot: 1
   bulletModifier: 0
-  PoolManager: {fileID: 0}
+  aiScript: {fileID: 0}
 --- !u!82 &2494510491955849962
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4279,8 +4280,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5894185528883808934}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 3.824, z: -0.074}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: 0, y: 5.6, z: -0.074}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4795955159597824}
@@ -4329,7 +4330,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -122496617620796665, guid: fe42c8b526e77e54ab91d0590272d9e8,
     type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.95268476, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

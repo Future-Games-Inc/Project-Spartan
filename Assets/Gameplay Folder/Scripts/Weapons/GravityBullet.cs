@@ -41,23 +41,6 @@ public class GravityBullet : MonoBehaviour
                         rb.AddForce(direction * gravityWellForce, ForceMode.Impulse);
                     }
                 }
-
-                if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
-                {
-                    //critical hit here
-                    PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
-                    if (playerDamageCrit.Health <= (5) && playerDamageCrit.alive == true && playerHealth != null)
-                    {
-                        playerHealth.PlayersKilled();
-                    }
-                    Rigidbody rb = collider.GetComponent<Rigidbody>();
-                    if (rb != null)
-                    {
-                        Vector3 direction = (collider.transform.position - transform.position).normalized;
-                        rb.AddForce(direction * gravityWellForce, ForceMode.Impulse);
-                        playerDamageCrit.TakeDamage(5);
-                    }
-                }
             }
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
 

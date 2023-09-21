@@ -16,6 +16,7 @@ namespace BNG {
         public AudioClip KeyPressSound;
 
         List<VRKeyboardKey> KeyboardKeys;
+        private Queue<string> keyQueue = new Queue<string>();
 
         void Awake() {
             KeyboardKeys = transform.GetComponentsInChildren<VRKeyboardKey>().ToList();
@@ -26,9 +27,20 @@ namespace BNG {
             if(AttachedInputField != null) {
                 UpdateInputField(key);
             }
-            else {
-                //Debug.Log("Pressed Key : " + key);
+        }
+
+        void Update()
+        {
+            if (keyQueue.Count > 0)
+            {
+                string key = keyQueue.Dequeue();
+                PressKey(key);
             }
+        }
+
+        public void EnqueueKey(string key)
+        {
+            keyQueue.Enqueue(key);
         }
 
         public void UpdateInputField(string key) {

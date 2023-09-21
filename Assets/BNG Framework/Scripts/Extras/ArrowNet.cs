@@ -57,11 +57,10 @@ namespace BNG
         {
             
 
-            Targets = new TargetInfo[4];  // Initializing the array with 3 elements
+            Targets = new TargetInfo[3];  // Initializing the array with 3 elements
             Targets[0] = new TargetInfo { Tag = "Enemy" };  // Populating individual elements
             Targets[1] = new TargetInfo { Tag = "BossEnemy" };
             Targets[2] = new TargetInfo { Tag = "Security" };
-            Targets[3] = new TargetInfo { Tag = "Player" };
 
             rb = GetComponent<Rigidbody>();
             impactSound = GetComponent<AudioSource>();
@@ -281,12 +280,6 @@ namespace BNG
                 DefaultDamageBossEnemy(other, arrowDamage);
             }
 
-            if (other.CompareTag("Player") && other != arrowOwner)
-            {
-                // select custom functions for damage
-                DefaultDamagePlayer(other, arrowDamage);
-            }
-
             if (other.CompareTag("Security"))
             {
                 // select custom functions for damage
@@ -323,18 +316,6 @@ namespace BNG
                 {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
-                if (Type == "Default")
-                    Destroy(gameObject);
-            }
-
-            void DefaultDamagePlayer(Collider target, float damage)
-            {
-                PlayerHealth enemyDamageReg = target.GetComponent<PlayerHealth>();
-                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.PlayersKilled();
-                }
-                enemyDamageReg.TakeDamage((int)arrowDamage);
                 if (Type == "Default")
                     Destroy(gameObject);
             }
@@ -472,20 +453,6 @@ namespace BNG
                         SentryenemyDamageCrit2.TakeDamage(damage);
                     }
                     break;
-                case "Player":
-                    // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
-                    if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
-                    {
-                        playerHealth.PlayersKilled();
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (PlayerenemyDamageCrit.Health > damage && PlayerenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                    }
-                    break;
-                    // Add more cases as needed
             }
         }
 
@@ -536,21 +503,6 @@ namespace BNG
                         SentryenemyDamageCrit2.TakeDamage(damage * 2);
                     }
                     break;
-                case "Player":
-                    // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
-                    if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
-                    {
-                        playerHealth.PlayersKilled();
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (PlayerenemyDamageCrit.Health > damage && PlayerenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                        PlayerenemyDamageCrit.EMPShock();
-                    }
-                    break;
-                    // Add more cases as needed
             }
         }
     }

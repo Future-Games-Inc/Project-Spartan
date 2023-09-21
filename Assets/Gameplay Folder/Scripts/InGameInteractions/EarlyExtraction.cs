@@ -1,10 +1,9 @@
-using Photon.Pun;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EarlyExtraction : MonoBehaviourPunCallbacks
+public class EarlyExtraction : MonoBehaviour
 {
     public InputActionProperty leftSelectButton;
     public GameObject extractionIcon;
@@ -57,14 +56,15 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
             //    bool artifact = (bool)player.GetType().GetProperty("Artifact" + i).GetValue(player, null);
             //    if (artifact)
             //    {
-            //        StartCoroutine(player.GetXP(100));
+            //        StartCoroutine(player.
+            //
+            //        (100));
             //        player.GetType().GetProperty("Artifact" + i).SetValue(player, false, null);
             //    }
             //}
 
             // Use the null-conditional operator for simplicity
-            if (photonView.IsMine)
-                VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+            VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
         }
     }
 

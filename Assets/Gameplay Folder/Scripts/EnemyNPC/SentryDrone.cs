@@ -1,5 +1,4 @@
 using System.Collections;
-using Umbrace.Unity.PurePool;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -59,6 +58,8 @@ public class SentryDrone : MonoBehaviour
 
     public int bulletModifier = 2;
 
+    public bool hit;
+
 
     public enum States
     {
@@ -79,7 +80,7 @@ public class SentryDrone : MonoBehaviour
             agent.enabled = true;
         }
 
-        
+
 
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
@@ -115,7 +116,7 @@ public class SentryDrone : MonoBehaviour
     {
         previousState = currentState;
 
-       currentState = input;
+        currentState = input;
     }
 
     public void Patrol()
@@ -195,16 +196,30 @@ public class SentryDrone : MonoBehaviour
             }
         }
     }
-    private bool IsLineOfSightClear(Transform target)
+    private bool CheckForPlayer()
     {
-        Vector3 directionToTarget = target.position - transform.position;
+        Transform playerPOS = targetTransform;
+        if (playerPOS == null)
+            return false;
+
+        if (Vector3.Distance(transform.position, playerPOS.position) > AttackRange)
+            return false;
+
+        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
+            return false;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, AttackRange, obstacleMask))
         {
-            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
+            // Debugging line
+            if (hit.collider != null)
             {
-                return true;
+                // More debugging
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor"))
+                {
+                    return true;
+                }
             }
         }
 
@@ -248,7 +263,7 @@ public class SentryDrone : MonoBehaviour
                     isFiring = false;
                     StartCoroutine(ReloadWeapon());
                 }
-                else if (IsLineOfSightClear(targetTransform))
+                else if (CheckForPlayer())
                 {
                     yield return new WaitForSeconds(0.25f);
                     GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
@@ -256,7 +271,7 @@ public class SentryDrone : MonoBehaviour
                     ammoLeft--;
                 }
             }
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(6f);
         }
     }
 
@@ -272,6 +287,8 @@ public class SentryDrone : MonoBehaviour
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
+        if (!hit)
+            StartCoroutine(Hit());
 
         if (Health <= 0 && alive == true)
         {
@@ -286,6 +303,15 @@ public class SentryDrone : MonoBehaviour
 
             DestroyEnemy();
         }
+    }
+
+    IEnumerator Hit()
+    {
+        hit = true;
+        explosionEffect.SetActive(true);
+        yield return new WaitForSeconds(1);
+        explosionEffect.SetActive(false);
+        hit = false;
     }
 
     private void DestroyEnemy()

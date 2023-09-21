@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.AI;
-using Umbrace.Unity.PurePool;
 
 public class WeaponCrate : MonoBehaviour
 {
@@ -88,7 +87,7 @@ public class WeaponCrate : MonoBehaviour
 
     IEnumerator WeaponCache()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1.5f);
         GameObject[] shuffledWeapons = ShuffleArray(weapons);
         GameObject[] shuffledPowerups = ShuffleArray(powerups);
         Instantiate(shuffledWeapons[0], spawn1.position, spawn1.rotation);

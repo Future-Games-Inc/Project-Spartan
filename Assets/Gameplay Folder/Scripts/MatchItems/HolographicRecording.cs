@@ -12,6 +12,7 @@ public class HolographicRecording : MonoBehaviour
     public PlayerHealth playerHealth;
 
     public string terminalName;
+    public GameObject activatedIcon;
 
     private void Update()
     {
@@ -24,6 +25,8 @@ public class HolographicRecording : MonoBehaviour
                 StopPlayingRecording();
             }
         }
+
+        activatedIcon.SetActive(HasTerminalAccess());
     }
 
     public void ActivateRecording()
@@ -52,7 +55,7 @@ public class HolographicRecording : MonoBehaviour
                     playerHealth = health;
                     if (!HasTerminalAccess())
                     {
-                        SaveTerminalAccess(75);
+                        SaveTerminalAccess(15);
                     }
                 }
             }
