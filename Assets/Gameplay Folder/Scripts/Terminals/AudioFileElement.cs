@@ -38,7 +38,10 @@ public class AudioFileElement : MonoBehaviour
         {
             textView.SetActive(false);
             // Play the audio file
-            audioSource.PlayOneShot(audioClip);
+            if (!audioSource.isPlaying)
+                audioSource.PlayOneShot(audioClip);
+            else
+                audioSource.Stop();
         }
     }
 

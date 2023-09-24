@@ -49,7 +49,7 @@ public class HolographicRecording : MonoBehaviour
         {
             if (collider.CompareTag("Player"))
             {
-                PlayerHealth health = collider.GetComponent<PlayerHealth>();
+                PlayerHealth health = collider.GetComponentInParent<PlayerHealth>();
                 if (health != null)
                 {
                     playerHealth = health;

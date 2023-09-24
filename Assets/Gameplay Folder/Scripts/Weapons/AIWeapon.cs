@@ -2,6 +2,7 @@ using PathologicalGames;
 using System.Collections;
 using Umbrace.Unity.PurePool;
 using UnityEngine;
+using static DroneHealth;
 
 public class AIWeapon : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class AIWeapon : MonoBehaviour
 
     void OnEnable()
     {
-        
+
 
         enemyType = gameObject.CompareTag("Enemy") ? EnemyType.Enemy : EnemyType.BossEnemy;
         maxAmmo = (enemyType == EnemyType.Enemy) ? 10 : 15;
@@ -58,7 +59,7 @@ public class AIWeapon : MonoBehaviour
                     yield return new WaitForSeconds(0.25f);
                     GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce * GlobalSpeedManager.SpeedMultiplier;
                     ammoLeft--;
                 }
             }

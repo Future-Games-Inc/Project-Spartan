@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class SpawnManager1 : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class SpawnManager1 : MonoBehaviour
     private bool spawnEnemy = true;
     private bool spawnSecurity = true;
     private bool spawnHealth = true;
-    private bool spawnBombs = false;
+    private bool spawnBombs = true;
     private bool spawnArtifacts = true;
     private bool coroutinesStarted = false;
 
@@ -52,20 +53,38 @@ public class SpawnManager1 : MonoBehaviour
 
     void Start()
     {
-        spawnRadius = 5000f;
-
-
-        if (!coroutinesStarted)
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
         {
-            StartCoroutine(SpawnEnemies());
-            StartCoroutine(SpawnSecurity());
-            StartCoroutine(SpawnReactor());
-            StartCoroutine(SpawnHealth());
-            StartCoroutine(SpawnBoss());
-            StartCoroutine(SpawnBombs());
-            StartCoroutine(SpawnArtifacts());
+            if (PlayerPrefs.HasKey("BombQuest") && PlayerPrefs.GetInt("BombQuest") == 1)
+            {
+                spawnBombs = true;
+                StartCoroutine(SpawnBombs());
+            }
+            else
+                spawnBombs = false;
 
-            coroutinesStarted = true;
+            if (PlayerPrefs.HasKey("ArtifactQuest") && PlayerPrefs.GetInt("ArtifactQuest") == 1)
+            {
+                spawnArtifacts = true;
+                StartCoroutine(SpawnArtifacts());
+            }
+            else
+                spawnArtifacts = false;
+
+
+            spawnRadius = 5000f;
+
+
+            if (!coroutinesStarted)
+            {
+                StartCoroutine(SpawnEnemies());
+                StartCoroutine(SpawnSecurity());
+                StartCoroutine(SpawnReactor());
+                StartCoroutine(SpawnHealth());
+                StartCoroutine(SpawnBoss());
+
+                coroutinesStarted = true;
+            }
         }
     }
 

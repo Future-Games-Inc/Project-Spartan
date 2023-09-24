@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
+using static DroneHealth;
 
 public class SentryDrone : MonoBehaviour
 {
@@ -123,7 +124,7 @@ public class SentryDrone : MonoBehaviour
     {
         patrolling = true;
         isFiring = false;
-        agent.speed = 1f;
+        agent.speed = 1f * GlobalSpeedManager.SpeedMultiplier;
         if (timer >= wanderTimer && agent.enabled == true)
         {
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
@@ -228,7 +229,7 @@ public class SentryDrone : MonoBehaviour
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {
-        TurnSpeed = RotationSpeed;
+        TurnSpeed = RotationSpeed * GlobalSpeedManager.SpeedMultiplier;
         IEnumerator start()
         {
             isLookingAtPlayer = true;
@@ -243,7 +244,7 @@ public class SentryDrone : MonoBehaviour
         patrolling = false;
         isFiring = false;
         agent.destination = targetTransform.position;
-        agent.speed = 2.5f;
+        agent.speed = 2.5f * GlobalSpeedManager.SpeedMultiplier;
     }
     private void Attack()
     {
@@ -267,11 +268,11 @@ public class SentryDrone : MonoBehaviour
                 {
                     yield return new WaitForSeconds(0.25f);
                     GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce * GlobalSpeedManager.SpeedMultiplier;
                     ammoLeft--;
                 }
             }
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);
         }
     }
 

@@ -1,3 +1,4 @@
+using LootLocker.Requests;
 using System;
 using UnityEngine;
 
@@ -20,9 +21,16 @@ public class FactionSelection : MonoBehaviour
     public GameObject leaveButton;
 
     public float factionTimer;
+    public float depositTimer;
 
     const string factionSelected = "SelectedFaction";
     const string factionSelectionDate = "FactionSelectionDate";
+    const string factionDepositDate = "FactionDepositDate";
+    public string progressionKey = "cent_prog";
+
+
+    public SaveData saveData;
+
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -62,9 +70,26 @@ public class FactionSelection : MonoBehaviour
             {
                 leaveButton.SetActive(false);
             }
+            else if (difference.TotalDays >= 7)
+            {
+                leaveButton.SetActive(true);
+            }
         }
         else if(!PlayerPrefs.HasKey(factionSelectionDate))
             leaveButton.SetActive(false);
+
+        if (PlayerPrefs.HasKey(factionDepositDate))
+        {
+            DateTime savedDate = DateTime.Parse(PlayerPrefs.GetString(factionDepositDate));
+            DateTime currentDate = DateTime.Now;
+            TimeSpan difference = currentDate - savedDate;
+
+            if (difference.TotalDays >= 1)
+            {
+                saveData.UpdateSkills(50);
+                PlayerPrefs.SetString(factionDepositDate, DateTime.Now.ToString());
+            }
+        }
     }
 
     // Update is called once per frame
@@ -153,6 +178,9 @@ public class FactionSelection : MonoBehaviour
 
         factionDecision.SetActive(false);
         SaveCurrentDate();
+
+        if (PlayerPrefs.GetString(factionSelected) == "CintSix Cartel")
+            PlayerPrefs.SetString(factionDepositDate, DateTime.Now.ToString());
     }
 
     public void LeaveFaction()
@@ -170,6 +198,9 @@ public class FactionSelection : MonoBehaviour
             muerteBanner.SetActive(false);
             chaosBanner.SetActive(false);
             cintBanner.SetActive(false);
+            LootLockerSDKManager.ResetPlayerProgression(progressionKey, response =>
+            {
+            });
         }
     }
 }

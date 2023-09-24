@@ -3,6 +3,7 @@ using LootLocker.Requests;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -69,10 +70,13 @@ public class PlayerHealth : MonoBehaviour
     public GameObject[] minimapSymbol;
     public GameObject primaryActive;
     public GameObject secondaryActive;
-    public GameObject deathToken;
     public GameObject bombDeath;
     public GameObject model;
     public Transform meleeAttach;
+
+    public GameObject extractCanvas;
+    public GameObject earlyCanvas;
+    public GameObject hackCanvas;
 
     public Transform bombDropLocation;
     public Transform tokenDropLocation;
@@ -177,6 +181,7 @@ public class PlayerHealth : MonoBehaviour
     public bool stealth;
     public bool berserker;
     public bool berserkerActivated = false;
+    public bool shocked;
     public float stealthDuration = 30;
     public float aiCompanionDuration = 30;
     public float decoyDeployDuration = 30;
@@ -188,10 +193,17 @@ public class PlayerHealth : MonoBehaviour
     public int factionScore;
     const string factionSelected = "SelectedFaction";
 
+    public GameObject shockedObject;
+    public GameObject shockedText;
+
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        hackCanvas.SetActive(false);
+        earlyCanvas.SetActive(false);
+        extractCanvas.SetActive(false);
+
         if (PlayerPrefs.HasKey(factionSelected))
             faction = PlayerPrefs.GetString(factionSelected);
 
@@ -206,7 +218,10 @@ public class PlayerHealth : MonoBehaviour
 
         InitAvatarSelection();
 
-        spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
+        {
+            spawnManager = GameObject.FindGameObjectWithTag("playerSpawnManager").GetComponent<SpawnManager>();
+        }
         playerLives = 3;
 
         StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
@@ -245,7 +260,13 @@ public class PlayerHealth : MonoBehaviour
 
         InitIntelGathered();
 
-        startingBulletModifier = bulletModifier;
+        if (faction == "Chaos Cartel")
+        {
+            bulletModifier += 2;
+            startingBulletModifier = bulletModifier;
+        }
+        else
+            startingBulletModifier = bulletModifier;
 
         healthBarObject.SetActive(true);
         armorBarObject.SetActive(true);
@@ -428,7 +449,7 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("AvatarSelectionNumber"))
         {
             characterInt = PlayerPrefs.GetInt("AvatarSelectionNumber");
-            male = characterInt <= 4 ? true : false;
+            male = characterInt <= 2 ? true : false;
         }
     }
 
@@ -441,7 +462,7 @@ public class PlayerHealth : MonoBehaviour
     private void InitMaxAmmo()
     {
         maxAmmo = PlayerPrefs.HasKey("AMMO_OVERLOAD") && PlayerPrefs.GetInt("AMMO_OVERLOAD") >= 1
-            ? bulletModifier * 5 : 0;
+            ? 1 + PlayerPrefs.GetInt("AMMO_OVERLOAD") : 0;
     }
 
     private void InitHealthRegen()
@@ -532,6 +553,8 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        shockedObject.SetActive(shocked);
+        shockedText.SetActive(shocked);
         // Perform time-based actions
         if (reactorHeld)
         {
@@ -703,7 +726,17 @@ public class PlayerHealth : MonoBehaviour
         reactorTimer += Time.deltaTime;
         if (reactorTimer > 5f)
         {
-            StartCoroutine(ReactorExtraction());
+            int buff;
+            if (faction == "Cyber Sk Gang")
+                buff = 4;
+            else
+                buff = 2;
+            if (PlayerPrefs.HasKey("REACTOR_EXTRACTION") && PlayerPrefs.GetInt("REACTOR_EXTRACTION") >= 1)
+                reactorExtraction += (buff + PlayerPrefs.GetInt("REACTOR_EXTRACTION"));
+            else
+                reactorExtraction += buff;
+
+            reactorTimer = 0;
         }
     }
 
@@ -715,11 +748,14 @@ public class PlayerHealth : MonoBehaviour
 
     void CheckExtractionWinCondition()
     {
-        extractionWinner = true;
-        spawnManager.gameOver = true;
-        spawnManager.winnerPlayer = this.gameObject;
-        UpdateSkills(200);
-        ExtractionGame();
+        if (SceneManager.GetActiveScene().name == "WeaponTest")
+        {
+            extractionWinner = true;
+            spawnManager.gameOver = true;
+            spawnManager.winnerPlayer = this.gameObject;
+            UpdateSkills(200);
+            ExtractionGame();
+        }
     }
 
     public void DroneKilled(string type, GameObject drone)
@@ -946,42 +982,45 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        audioSource.PlayOneShot(bulletHit);
-        StartCoroutine(Cracked());
+        if (!spawnManager.gameOver)
+        {
+            audioSource.PlayOneShot(bulletHit);
+            StartCoroutine(Cracked());
 
-        if (PlayerPrefs.HasKey("DAMAGAE_TAKEN") && PlayerPrefs.GetInt("DAMAGAE_TAKEN") == 1)
-            damageTaken = (damage - (PlayerPrefs.GetInt("DAMAGAE_TAKEN") / 4));
-        else
-            damageTaken = damage;
-        if (Armor >= damage)
-        {
-            Armor -= damage;
-            StartCoroutine(ShieldBuffNormal());
-        }
-        else if (Armor < damage && Armor > 0)
-        {
-            Health -= (damage - Armor);
-            Armor = 0;
-            StartCoroutine(ShieldBuffCritical());
-        }
-        else if (Armor <= 0)
-        {
-            Health -= damage;
-        }
+            if (PlayerPrefs.HasKey("DAMAGAE_TAKEN") && PlayerPrefs.GetInt("DAMAGAE_TAKEN") == 1)
+                damageTaken = (damage - (PlayerPrefs.GetInt("DAMAGAE_TAKEN") / 4));
+            else
+                damageTaken = damage;
+            if (Armor >= damage)
+            {
+                Armor -= damage;
+                StartCoroutine(ShieldBuffNormal());
+            }
+            else if (Armor < damage && Armor > 0)
+            {
+                Health -= (damage - Armor);
+                Armor = 0;
+                StartCoroutine(ShieldBuffCritical());
+            }
+            else if (Armor <= 0)
+            {
+                Health -= damage;
+            }
 
-        if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
-        {
-            alive = false;
-            StartCoroutine(PlayerRespawn());
-        }
+            if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
+            {
+                alive = false;
+                StartCoroutine(PlayerRespawn());
+            }
 
-        else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
-        {
-            alive = false;
-            StartCoroutine(PlayerDeath());
+            else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
+            {
+                alive = false;
+                StartCoroutine(PlayerDeath());
+            }
+            CheckArmorStatus();
+            CheckHealthStatus();
         }
-        CheckArmorStatus();
-        CheckHealthStatus();
     }
 
     public void AddHealth(int health)
@@ -1024,25 +1063,12 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator PlayerDeath()
     {
-        yield return new WaitForSeconds(0);
         int cintUpdate = (playerCints / 10);
         StartCoroutine(sceneFader.ScreenFade());
         alive = false;
-        GameObject playerDeathTokenObject = Instantiate(deathToken, tokenDropLocation.position, Quaternion.identity);
-        playerDeathTokenObject.GetComponent<playerDeathToken>().tokenValue = cintUpdate;
-        playerDeathTokenObject.GetComponent<playerDeathToken>().faction = characterFaction.ToString();
 
         UpdateSkills(-cintUpdate);
 
-        if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
-                PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") >= 1)
-        {
-            GameObject bomb = Instantiate(bombDeath, tokenDropLocation.position, Quaternion.identity);
-            bomb.GetComponent<Rigidbody>().isKinematic = false;
-            bomb.GetComponent<Rigidbody>().useGravity = true;
-            NetworkGrenade grenade = bomb.GetComponent<NetworkGrenade>();
-            grenade.StartCoroutine(grenade.ExplodeDelayed());
-        }
         yield return new WaitForSeconds(.15f);
         // Leave the room
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
@@ -1050,11 +1076,19 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator PlayerRespawn()
     {
-        yield return new WaitForSeconds(0);
-
         foreach (XRDirectInteractor direct in directInteractors)
         {
             direct.enabled = false;
+        }
+
+        if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
+        PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") >= 1)
+        {
+            GameObject bomb = Instantiate(bombDeath, tokenDropLocation.position, Quaternion.identity);
+            bomb.GetComponent<Rigidbody>().isKinematic = false;
+            bomb.GetComponent<Rigidbody>().useGravity = true;
+            NetworkGrenade grenade = bomb.GetComponent<NetworkGrenade>();
+            grenade.StartCoroutine(grenade.ExplodeDelayed());
         }
 
         StartCoroutine(sceneFader.Respawn());
@@ -1068,6 +1102,8 @@ public class PlayerHealth : MonoBehaviour
         alive = true;
         model.SetActive(true);
 
+        yield return new WaitForSeconds(0.15f);
+
         foreach (XRDirectInteractor direct in directInteractors)
         {
             direct.enabled = true;
@@ -1078,7 +1114,6 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator ShieldBuffNormal()
     {
-        yield return new WaitForSeconds(0);
         foreach (GameObject shield in shieldObjects)
         {
             shield.SetActive(true);
@@ -1092,7 +1127,6 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator ShieldBuffCritical()
     {
-        yield return new WaitForSeconds(0);
         foreach (GameObject shield in shieldObjects)
         {
             shield.SetActive(true);
@@ -1107,20 +1141,6 @@ public class PlayerHealth : MonoBehaviour
     public void ApplyBlindEffect(float duration)
     {
         StartCoroutine(sceneFader.BlackOut(duration));
-    }
-
-    IEnumerator ReactorExtraction()
-    {
-        yield return new WaitForSeconds(0);
-
-        if (PlayerPrefs.HasKey("REACTOR_EXTRACTION") && PlayerPrefs.GetInt("REACTOR_EXTRACTION") >= 1)
-            reactorExtraction += (2 + PlayerPrefs.GetInt("REACTOR_EXTRACTION"));
-        else
-            reactorExtraction += 2;
-
-        PlayerPrefs.SetInt("ReactorExtraction", reactorExtraction);
-
-        reactorTimer = 0;
     }
 
     public void EnemyKilled(string type)
@@ -1141,7 +1161,12 @@ public class PlayerHealth : MonoBehaviour
                 else
                     audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            StartCoroutine(GetXP(2));
+            if (faction == "Muerte De Dios")
+            {
+                StartCoroutine(GetXP(12));
+            }
+            else
+                StartCoroutine(GetXP(2));
         }
 
         else if (type == "Boss")
@@ -1166,20 +1191,26 @@ public class PlayerHealth : MonoBehaviour
                 else
                     audioSource.PlayOneShot(winClipsFemale[Random.Range(0, winClipsFemale.Length)]);
             }
-            StartCoroutine(GetXP(5));
+            if (faction == "Muerte De Dios")
+            {
+                StartCoroutine(GetXP(15));
+            }
+            else
+                StartCoroutine(GetXP(5));
         }
     }
 
     void ExtractionGame()
     {
         StartCoroutine(GetXP(50));
-
+        extractCanvas.SetActive(true);
         StartCoroutine(DisplayMessage());
+        
     }
 
     IEnumerator DisplayMessage()
     {
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(3);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 
@@ -1406,6 +1437,7 @@ public class PlayerHealth : MonoBehaviour
         {
             //States preState = currentState;
             activeState = States.Shocked;
+            shocked = true;
             movement.enabled = false;
 
             // apply damage
@@ -1423,6 +1455,7 @@ public class PlayerHealth : MonoBehaviour
             // enable movement
 
             activeState = States.Normal;
+            shocked = false;
             movement.enabled = true;
         }
         // if already shocked, ignore effects

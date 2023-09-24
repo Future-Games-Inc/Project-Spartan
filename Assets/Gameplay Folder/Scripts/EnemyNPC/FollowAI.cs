@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
-using System;
 using Unity.XR.CoreUtils;
-using System.Linq;
+using static DroneHealth;
 
 public class FollowAI : MonoBehaviour
 {
@@ -123,6 +122,9 @@ public class FollowAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (!alive) return;
+
         if (agent.isOnNavMesh)
         {
             if (Time.time >= nextUpdateTime)
@@ -131,7 +133,6 @@ public class FollowAI : MonoBehaviour
                 FindClosestEnemy();
             }
 
-            if (!alive) return;
             // calculates the distance from NPC to player
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
             animator.SetBool("Agro", Agro);
@@ -147,7 +148,7 @@ public class FollowAI : MonoBehaviour
                 // When Agro changes
                 Agro = true;
                 // set the speed for the agent for the blend tree
-                animator.SetFloat("Speed", agent.velocity.magnitude);
+                animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
             }
 
             // If the enemy has detected the player but doesn't have a clear line of sight
@@ -157,7 +158,7 @@ public class FollowAI : MonoBehaviour
                 agent.isStopped = false;
                 agent.destination = targetTransform.position; // Move towards the player
                                                               // set the speed for the agent for the blend tree
-                animator.SetFloat("Speed", agent.velocity.magnitude);
+                animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                 return; // Don't proceed to other behaviors until we have a clear line of sight
             }
             // if it is not agro, then patrol like normal
@@ -168,7 +169,7 @@ public class FollowAI : MonoBehaviour
                 currentState = States.Patrol;
                 agent.isStopped = false;
                 // set the speed for the agent for the blend tree
-                animator.SetFloat("Speed", agent.velocity.magnitude);
+                animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                 Patrol();
             }
             else
@@ -182,7 +183,7 @@ public class FollowAI : MonoBehaviour
                     // stop where it is
                     agent.SetDestination(gameObject.transform.position);
                     // set the speed for the agent for the blend tree
-                    animator.SetFloat("Speed", agent.velocity.magnitude);
+                    animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     return;
                 }
                 // if in range of attacks
@@ -192,7 +193,7 @@ public class FollowAI : MonoBehaviour
                     LookatTarget(1, 3f);
                     agent.isStopped = true;
                     // set the speed for the agent for the blend tree
-                    animator.SetFloat("Speed", agent.velocity.magnitude);
+                    animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     Attack();
                 }
                 // give chase if not in range
@@ -201,7 +202,7 @@ public class FollowAI : MonoBehaviour
                     currentState = States.Follow;
                     agent.isStopped = false;
                     // set the speed for the agent for the blend tree
-                    animator.SetFloat("Speed", agent.velocity.magnitude);
+                    animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     Follow();
                 }
             }
@@ -225,13 +226,13 @@ public class FollowAI : MonoBehaviour
             }
 
             // set the speed for the agent for the blend tree
-            animator.SetFloat("Speed", agent.velocity.magnitude);
+            animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
         }
     }
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {
-        TurnSpeed = RotationSpeed;
+        TurnSpeed = RotationSpeed * GlobalSpeedManager.SpeedMultiplier;
         IEnumerator start()
         {
             isLookingAtPlayer = true;
@@ -267,9 +268,9 @@ public class FollowAI : MonoBehaviour
     {
         attackWeapon.fireWeaponBool = false;
         if (!stuck)
-            agent.speed = 1.5f;
+            agent.speed = 1.5f * GlobalSpeedManager.SpeedMultiplier;
         else if (stuck)
-            agent.speed = stickySpeed;
+            agent.speed = stickySpeed * GlobalSpeedManager.SpeedMultiplier;
         Agro = false;
         // patrols from one place to the next
         if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
@@ -295,9 +296,9 @@ public class FollowAI : MonoBehaviour
         attackWeapon.fireWeaponBool = false;
         agent.destination = targetTransform.position;
         if (!stuck)
-            agent.speed = 2.5f;
+            agent.speed = 2.5f * GlobalSpeedManager.SpeedMultiplier;
         else if (stuck)
-            agent.speed = stickySpeed;
+            agent.speed = stickySpeed * GlobalSpeedManager.SpeedMultiplier;
     }
 
     private void Attack()

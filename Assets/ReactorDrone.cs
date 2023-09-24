@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using static DroneHealth;
 
 public class ReactorDrone : MonoBehaviour
 {
@@ -140,7 +141,7 @@ public class ReactorDrone : MonoBehaviour
 
         Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * 80);
+        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * 80 * GlobalSpeedManager.SpeedMultiplier);
     }
 
     IEnumerator FireWeapon()
@@ -152,7 +153,7 @@ public class ReactorDrone : MonoBehaviour
                 GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
-                spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce;
+                spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
             }
             yield return new WaitForSeconds(.25f);
         }

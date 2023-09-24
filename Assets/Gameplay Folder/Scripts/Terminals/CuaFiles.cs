@@ -10,6 +10,7 @@ public class CuaFiles : MonoBehaviour
     public AudioSource audioSource;
 
     public string textFileKey;
+    public RectTransform rectTransform;
 
     public void Start()
     {
@@ -46,6 +47,7 @@ public class CuaFiles : MonoBehaviour
                 child.gameObject.SetActive(false);
             }
             textfile.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
         }
     }
 }

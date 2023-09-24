@@ -25,7 +25,6 @@ public class ActivateWristUI : MonoBehaviour
     public MatchEffects matchEffects;
 
     public GameObject identifier;
-    public Rotator rotator;
     public Material deactivated;
     public Material far;
     public Material medium;
@@ -95,7 +94,6 @@ public class ActivateWristUI : MonoBehaviour
             if (!matchEffects.startMatchBool)
             {
                 identifier.GetComponent<MeshRenderer>().material = deactivated;
-                rotator.speed = 10f;
                 countdownText.text = "";
             }
             else if (matchEffects.startMatchBool) 
@@ -111,22 +109,18 @@ public class ActivateWristUI : MonoBehaviour
                 if (distance >= 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = deactivated;
-                    rotator.speed = 10f;
                 }
                 else if (distance >= 60f && distance < 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = far;
-                    rotator.speed = 15f;
                 }
                 else if (distance >= 20f && distance < 60f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = medium;
-                    rotator.speed = 20f;
                 }
                 else if (distance >= 0f && distance < 20f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = close;
-                    rotator.speed = 30f;
                 }
             }
 
@@ -139,22 +133,18 @@ public class ActivateWristUI : MonoBehaviour
                 if (distance >= 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = deactivated;
-                    rotator.speed = 10f;
                 }
                 else if (distance >= 60f && distance < 80f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = far;
-                    rotator.speed = 15f;
                 }
                 else if (distance >= 20f && distance < 60f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = medium;
-                    rotator.speed = 20f;
                 }
                 else if (distance >= 0f && distance < 20f)
                 {
                     identifier.GetComponent<MeshRenderer>().material = close;
-                    rotator.speed = 30f;
                 }
             }
             yield return new WaitForSeconds(1f);

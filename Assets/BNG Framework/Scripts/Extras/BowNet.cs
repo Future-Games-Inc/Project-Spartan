@@ -206,6 +206,8 @@ namespace BNG {
             if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
             {
                 player = other.transform.root.gameObject;
+                var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxArrows;
+                maxArrows = newMaxAmmo;
                 rotator.enabled = false;
                 contact = true;
             }

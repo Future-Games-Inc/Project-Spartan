@@ -134,16 +134,16 @@ public class EnergyBladeNet : MonoBehaviour
         if (bleedStacks > 3)
         {
             bleedIcon.SetActive(true);
-            RPC_BladeMaterial(bleed);
+            BladeMaterial(bleed);
         }
         else
         {
             bleedIcon.SetActive(false);
-            RPC_BladeMaterial(normal);
+            BladeMaterial(normal);
         }
     }
 
-    void RPC_BladeMaterial(Material material)
+    void BladeMaterial(Material material)
     {
         Blade.GetComponent<Renderer>().material = material;
     }

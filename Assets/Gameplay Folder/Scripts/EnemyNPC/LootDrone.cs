@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using static DroneHealth;
 
 public class LootDrone : MonoBehaviour
 {
@@ -78,7 +79,7 @@ public class LootDrone : MonoBehaviour
         positionSet = true;
         patrolling = true;
         isLooting = false;
-        agent.speed = 1f;
+        agent.speed = 1f * GlobalSpeedManager.SpeedMultiplier;
         if (timer >= wanderTimer)
         {
             patrolling = false;
@@ -92,7 +93,7 @@ public class LootDrone : MonoBehaviour
 
     public void Loot()
     {
-        agent.speed = 2f;
+        agent.speed = 2f * GlobalSpeedManager.SpeedMultiplier;
         if (agent.remainingDistance <= LootRange)
         {
             if (attachedCache == null)
@@ -205,7 +206,7 @@ public class LootDrone : MonoBehaviour
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {
-        TurnSpeed = RotationSpeed;
+        TurnSpeed = RotationSpeed * GlobalSpeedManager.SpeedMultiplier;
         IEnumerator start()
         {
             isLookingAtPlayer = true;

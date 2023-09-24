@@ -29,11 +29,17 @@ public class DroneHealth : MonoBehaviour
         alive = true;
     }
 
+    public static class GlobalSpeedManager
+    {
+        public static float SpeedMultiplier = 1f;
+    }
+
     void Update()
     {
         if (agent != null && !agent.isOnNavMesh)
         {
-            TakeDamage(300);
+            enemyCounter.UpdateSecurity();
+            Destroy(gameObject);
         }
     }
 

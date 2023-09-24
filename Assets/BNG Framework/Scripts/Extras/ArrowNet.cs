@@ -17,8 +17,8 @@ namespace BNG
         public TargetInfo[] Targets;
 
         public float explosionRadius = 5f;
-        public int maxDamage = 80;
-        public int maxEMPDamage = 40;
+        public int maxDamage = 30;
+        public int maxEMPDamage = 20;
         public float explosionDelay = 2f;
         public float EMPDelay = 3f;
 
@@ -70,7 +70,7 @@ namespace BNG
             if (ProjectileObject == null)
             {
                 ProjectileObject = gameObject.AddComponent<Projectile>();
-                ProjectileObject.Damage = 50;
+                ProjectileObject.Damage = 15;
                 ProjectileObject.StickToObject = true;
                 ProjectileObject.enabled = false;
             }

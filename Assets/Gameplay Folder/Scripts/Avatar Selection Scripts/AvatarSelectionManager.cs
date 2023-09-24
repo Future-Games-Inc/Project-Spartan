@@ -111,7 +111,6 @@ public class AvatarSelectionManager : MonoBehaviour
         }
 
         loadableAvatarModels[avatarIndex].SetActive(true);
-        loadableAvatarModels[avatarIndex].GetComponent<Animator>().enabled = true;
 
         PlayerPrefs.SetInt("AvatarSelectionNumber", avatarSelectionNumber);
     }

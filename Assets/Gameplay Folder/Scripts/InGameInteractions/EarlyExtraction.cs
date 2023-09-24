@@ -17,8 +17,6 @@ public class EarlyExtraction : MonoBehaviour
     private bool hasLeftRoom = false;
     private bool activatedExtraction;
 
-    public static readonly byte ExtractEarly = 40;
-
     // Cache frequently accessed components
     private void Start()
     {
@@ -64,7 +62,8 @@ public class EarlyExtraction : MonoBehaviour
             //}
 
             // Use the null-conditional operator for simplicity
-            VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+            player.earlyCanvas.SetActive(true);
+            StartCoroutine(Leave());
         }
     }
 
@@ -78,5 +77,11 @@ public class EarlyExtraction : MonoBehaviour
             }
             yield return new WaitForSecondsRealtime(1);
         }
+    }
+
+    IEnumerator Leave()
+    {
+        yield return new WaitForSeconds(2);
+        VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 }

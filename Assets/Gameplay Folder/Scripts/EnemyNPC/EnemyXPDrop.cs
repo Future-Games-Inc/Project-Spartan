@@ -15,6 +15,7 @@ public class EnemyXPDrop : MonoBehaviour
 
     public bool contact;
     public MatchEffects matchEffects;
+    public bool active = true;
 
 
     // Start is called before the first frame update
@@ -52,17 +53,21 @@ public class EnemyXPDrop : MonoBehaviour
             switch (pickupData.pickupType)
             {
                 case "XP":
-                    audioSource.PlayOneShot(pickupClip);
-                    float xpDrop = 10f;
-                    if (Random.Range(0, 100f) < xpDrop)
+                    if (active)
                     {
-                        playerHealth.UpdateSkills(pickupData.xpAmount);
+                        active = false;
+                        audioSource.PlayOneShot(pickupClip);
+                        float xpDrop = 10f;
+                        if (Random.Range(0, 100f) < xpDrop)
+                        {
+                            playerHealth.UpdateSkills(pickupData.xpAmount);
+                        }
+                        else
+                        {
+                            playerHealth.UpdateSkills(pickupData.xpAmount / 2);
+                        }
+                        StartCoroutine(DelayDestroy());
                     }
-                    else
-                    {
-                        playerHealth.UpdateSkills(pickupData.xpAmount / 2);
-                    }
-                    Destroy(gameObject);
                     break;
             }
         }
@@ -172,5 +177,11 @@ public class EnemyXPDrop : MonoBehaviour
     public void rescale()
     {
         this.gameObject.transform.localScale = Vector3.one;
+    }
+
+    IEnumerator DelayDestroy()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class MatchEffects : MonoBehaviour
 {
@@ -13,8 +13,6 @@ public class MatchEffects : MonoBehaviour
 
     public GameObject spawnManager;
     public GameObject uiCanvas;
-    //public GameObject[] artifacts;
-    //public Transform[] artifactLocations;
 
     public TextMeshProUGUI countdownText;
 
@@ -46,12 +44,15 @@ public class MatchEffects : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InitializeTimer(); // Only the Master Client will initialize the timer
-        StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
+        {
+            InitializeTimer(); // Only the Master Client will initialize the timer
+            StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
 
-        // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
-        numSequence = GenerateRandomSequence(4);
-        nexusCodePanel.text = numSequence.ToString();
+            // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
+            numSequence = GenerateRandomSequence(4);
+            nexusCodePanel.text = numSequence.ToString();
+        }
     }
 
     IEnumerator SpawnCheckCoroutine()
@@ -73,10 +74,13 @@ public class MatchEffects : MonoBehaviour
     }
     private void Update()
     {
-        RefreshTimerUI();
-        if (startMatchBool)
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
         {
-            RefreshCountdownTimer();
+            RefreshTimerUI();
+            if (startMatchBool)
+            {
+                RefreshCountdownTimer();
+            }
         }
     }
 
@@ -143,18 +147,6 @@ public class MatchEffects : MonoBehaviour
         }
 
     }
-
-    //IEnumerator Artifacts()
-    //{
-    //    yield return new WaitForSeconds(1f);
-    //    if (PhotonNetwork.IsMasterClient)
-    //    {
-    //        for (int i = 0; i < artifacts.Length; i++)
-    //        {
-    //            PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
-    //        }
-    //    }
-    //}
 
     IEnumerator PlaySupplyDropAudioDelayed()
     {
