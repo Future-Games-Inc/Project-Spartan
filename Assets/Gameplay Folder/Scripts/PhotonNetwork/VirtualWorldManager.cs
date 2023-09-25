@@ -29,6 +29,7 @@ public class VirtualWorldManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
         player.hackCanvas.SetActive(true);
         player.UpdateSkills(-50);
+        StartCoroutine(Leave());
     }
 
     IEnumerator Leave()

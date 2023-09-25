@@ -2395,9 +2395,6 @@ MonoBehaviour:
   spawnManager: {fileID: 0}
   movement: {fileID: 8466841071859713464}
   sceneFader: {fileID: 3710049853266333615}
-  directInteractors:
-  - {fileID: 439788778409400105}
-  - {fileID: 439788777949049150}
   male: 0
   alive: 0
   reactorHeld: 0
@@ -2406,8 +2403,6 @@ MonoBehaviour:
   startingSpeed: 0
   reactorTimer: 0
   playerLives: 3
-  datacards: 0
-  playersKilled: 0
   enemiesKilled: 0
   startingBulletModifier: 0
   playerCints: 0
@@ -2428,63 +2423,6 @@ MonoBehaviour:
   shockEffect: {fileID: 100000, guid: a9a6f8e950cc72e478555efcf743d741, type: 3}
   reactorIcon: {fileID: 4587834701493701759}
   shipIcon: {fileID: 7003806799414706699}
-  shieldObjects:
-  - {fileID: 6449055710082921978}
-  - {fileID: 593867948024241234}
-  - {fileID: 3525460058825414950}
-  - {fileID: 2125818272642788921}
-  - {fileID: 4690436293297463698}
-  - {fileID: 3497392987811944875}
-  - {fileID: 1505817787206490898}
-  - {fileID: 1524065970050840872}
-  - {fileID: 5022346312768768520}
-  - {fileID: 8976888599193838272}
-  - {fileID: 3394771300256432623}
-  - {fileID: 8231531874751635400}
-  - {fileID: 1306654486515988259}
-  - {fileID: 1293197973269364888}
-  - {fileID: 1462124063427620121}
-  - {fileID: 1570784595159870780}
-  - {fileID: 3338762558207856871}
-  - {fileID: 5148284454292882086}
-  - {fileID: 319045357269912189}
-  - {fileID: 6196765133533839478}
-  - {fileID: 4695289954024388980}
-  - {fileID: 3224621832599183921}
-  - {fileID: 1436733310059665986}
-  - {fileID: 8600873761473882571}
-  - {fileID: 6968381842276019451}
-  - {fileID: 4268011267555507234}
-  - {fileID: 1928419838892553087}
-  - {fileID: 5770350703695570893}
-  - {fileID: 5780862884323831432}
-  - {fileID: 1352959727829002288}
-  - {fileID: 2103449503164443871}
-  - {fileID: 3179206173397286964}
-  - {fileID: 7504329113527318587}
-  - {fileID: 8526655487644562545}
-  - {fileID: 6608833021878010559}
-  - {fileID: 4823190930557619752}
-  - {fileID: 4961008965527797434}
-  - {fileID: 7738101215558507835}
-  - {fileID: 7158897398483295185}
-  - {fileID: 5860104649743678274}
-  - {fileID: 8054898792332495548}
-  - {fileID: 5582055751815344260}
-  - {fileID: 2404419369506095938}
-  - {fileID: 417201198608713761}
-  - {fileID: 2673925954580293083}
-  - {fileID: 3189320655065343464}
-  - {fileID: 6295210742509759576}
-  - {fileID: 7537213654721397931}
-  - {fileID: 2427366763701532529}
-  - {fileID: 2081645374104380865}
-  - {fileID: 7745524610635295234}
-  - {fileID: 1857052907458333808}
-  - {fileID: 6885331720970496535}
-  - {fileID: 3216521967748011794}
-  - {fileID: 6808714693992333971}
-  - {fileID: 4497637882607318132}
   healthBarObject: {fileID: 164572737413859105}
   armorBarObject: {fileID: 4710277863242706755}
   criticalHealth: {fileID: 3025577891601931067}
@@ -2500,6 +2438,7 @@ MonoBehaviour:
   extractCanvas: {fileID: 990811327916930916}
   earlyCanvas: {fileID: 4286062215558235608}
   hackCanvas: {fileID: 8457984240343862208}
+  deathCanvas: {fileID: 0}
   bombDropLocation: {fileID: 4782225921789746073}
   tokenDropLocation: {fileID: 4782225921789746073}
   activateWristUI: {fileID: 6016826935182032225}
@@ -2560,7 +2499,9 @@ MonoBehaviour:
   secondaryButtonPressed: 0
   leaderboardID: react_leaderboard
   leaderboardID2: faction_leader
+  leaderboardID3: react_kills
   progressionKey: cent_prog
+  leaderboardID4: extraction_times
   faction: 
   bossesKilled: 0
   bossesRequired: 0
@@ -2661,6 +2602,7 @@ MonoBehaviour:
   factionScore: 0
   shockedObject: {fileID: 1767423502127218090}
   shockedText: {fileID: 779538038085022742}
+  scene: 
 --- !u!136 &8069833781336750505
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -16401,14 +16343,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3440599252159964579}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: 0.14, y: -0.64170015, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6597817664259988107}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &6648239495696624014
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -19721,14 +19663,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4353787650016161475}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: -0.009000011, y: -0.64170015, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6597817664259988107}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &4822871287776525642
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -33321,6 +33263,7 @@ MonoBehaviour:
   thisControllerModel: 
   OffsetPosition: {x: 0, y: 0, z: 0}
   OffsetRotation: {x: 0, y: 0, z: 0}
+  completed: 0
 --- !u!1 &6968381842276019451
 GameObject:
   m_ObjectHideFlags: 0
@@ -36962,14 +36905,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7830772821106226413}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: -0.156, y: -0.64170015, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6597817664259988107}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &1569583474519551762
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -39110,6 +39053,7 @@ MonoBehaviour:
   thisControllerModel: 
   OffsetPosition: {x: 0, y: 0, z: 0}
   OffsetRotation: {x: 0, y: 0, z: 0}
+  completed: 0
 --- !u!1 &8314523094932561838
 GameObject:
   m_ObjectHideFlags: 0

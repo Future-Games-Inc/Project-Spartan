@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using LootLocker.Requests;
 
 public class MatchEffects : MonoBehaviour
 {
@@ -37,22 +38,56 @@ public class MatchEffects : MonoBehaviour
 
     public float spawnRadius = 300.0f;
 
-    public TextMeshProUGUI nexusCodePanel;
+    public TextMeshProUGUI[] nexusCodePanel;
     public VirtualWorldManager worldManager;
     public SpawnManager1 spawner;
+
+    public bool active = true;
+    public string owner;
+    public string scene;
+
+    public GameObject[] gameObjects; // assuming you have 4 gameObjects corresponding to 4 owner strings
+    public GameObject[] codePanels; 
 
     // Start is called before the first frame update
     void Start()
     {
         if (SceneManager.GetActiveScene().name != "WeaponTest")
         {
+            int panel = Random.Range(0, codePanels.Length);
+            codePanels[panel].SetActive(true);
             InitializeTimer(); // Only the Master Client will initialize the timer
             StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
 
             // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
             numSequence = GenerateRandomSequence(4);
-            nexusCodePanel.text = numSequence.ToString();
+            foreach(TextMeshProUGUI text in nexusCodePanel)
+                text.text = numSequence.ToString();
         }
+
+        LootLockerSDKManager.GetMemberRank(scene.ToString(), scene.ToString(), (response) =>
+        {
+            if (response.success)
+            {
+                owner = response.metadata;
+                ActivateCorrespondingGameObject();
+            }
+        });
+    }
+
+    void ActivateCorrespondingGameObject()
+    {
+        // Deactivate all GameObjects first
+        foreach (var obj in gameObjects)
+        {
+            obj.SetActive(false);
+        }
+
+        // Activate the corresponding GameObject based on the value of owner
+        if (owner == "Cyber SK Gang") gameObjects[0].SetActive(true);
+        else if (owner == "Muerte De Dios") gameObjects[1].SetActive(true);
+        else if (owner == "Chaos Cartel") gameObjects[2].SetActive(true);
+        else if (owner == "CintSix Cartel") gameObjects[3].SetActive(true);
     }
 
     IEnumerator SpawnCheckCoroutine()
@@ -82,6 +117,9 @@ public class MatchEffects : MonoBehaviour
                 RefreshCountdownTimer();
             }
         }
+
+        if (currentExtractionTimer <= 0)
+            currentExtractionTimer = 0;
     }
 
     IEnumerator SupplyShipAudio()
@@ -140,10 +178,11 @@ public class MatchEffects : MonoBehaviour
             timerCoroutine = StartCoroutine(TimerEvent());
         }
 
-        if (currentMatchTime <= 0 && currentExtractionTimer <= 0)
+        if (currentMatchTime <= 0 && currentExtractionTimer <= 0 && active)
         {
             worldManager.TimesUP();
             timerCoroutine = null;
+            active = false;
         }
 
     }

@@ -135,6 +135,13 @@ public class GrappleGun : MonoBehaviour
 
     public void Swing()
     {
+        if (playerGameObject.GetComponent<Rigidbody>() == null)
+        {
+            playerRb = playerGameObject.AddComponent<Rigidbody>();
+            playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+            playerRb.useGravity = false; // Optional: This depends on if you want gravity to affect the player during the swing.
+        }
+
         sight.SetActive(false);
         audioSource.PlayOneShot(grappleClip);
         characterController.enabled = false;
@@ -153,13 +160,6 @@ public class GrappleGun : MonoBehaviour
 
         springJoint.damper = 450f;
         springJoint.spring = 500f;
-
-        if (playerGameObject.GetComponent<Rigidbody>() == null)
-        {
-            playerRb = playerGameObject.AddComponent<Rigidbody>();
-            playerRb.constraints = RigidbodyConstraints.FreezeRotation;
-            playerRb.useGravity = false; // Optional: This depends on if you want gravity to affect the player during the swing.
-        }
     }
 
     IEnumerator Recharge()

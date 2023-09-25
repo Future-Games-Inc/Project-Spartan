@@ -9,6 +9,7 @@ public class TopReactsLeaderboard : MonoBehaviour
 {
     public string leaderboardID = "react_leaderboard";
     public string leaderboardID2 = "faction_leaders";
+    public string leaderboardID3 = "react_kills";
     public string progressionKey = "cent_prog";
 
     public bool updater = true;
@@ -39,7 +40,6 @@ public class TopReactsLeaderboard : MonoBehaviour
     public BlackMarketManager blackMarketManager;
     public ProgressionBadges progressionBadges;
     public SaveData saveData;
-    public WhiteLabelManager whiteLabelManager;
 
     // Start is called before the first frame update
     void Start()
@@ -112,8 +112,7 @@ public class TopReactsLeaderboard : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         bool done = false;
-        playerID = whiteLabelManager.playerID;
-        LootLockerSDKManager.SubmitScore(playerID, scoreToUpload, leaderboardID, (response) =>
+        LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, scoreToUpload, leaderboardID3, (response) =>
         {
             if (response.success)
             {
@@ -132,12 +131,12 @@ public class TopReactsLeaderboard : MonoBehaviour
         while (updater)
         {
             bool done = false;
-            LootLockerSDKManager.GetScoreList(leaderboardID, 5, 0, (response) =>
+            LootLockerSDKManager.GetScoreList(leaderboardID3, 5, 0, (response) =>
             {
                 if (response.success)
                 {
-                    string tempPlayerNames = "Names\n";
-                    string TempPlayerScores = "Scores\n";
+                    string tempPlayerNames = "Reacts\n";
+                    string TempPlayerScores = "CUA Eliminated\n";
 
                     LootLockerLeaderboardMember[] members = response.items;
 
@@ -236,16 +235,17 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator SetScore()
     {
-        playerID = whiteLabelManager.playerID;
-        LootLockerSDKManager.GetMemberRank(leaderboardID, playerID, (response) =>
+        if (PlayerPrefs.HasKey("EnemyKills"))
+        {
+            LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, PlayerPrefs.GetInt("EnemyKills"), leaderboardID3, (response) =>
+            {
+            });
+        }
+        LootLockerSDKManager.GetMemberRank(leaderboardID3, WhiteLabelManager.playerID, (response) =>
         {
             if (response.success)
             {
                 Score = response.score;
-            }
-            else
-            {
-
             }
         });
         yield return blackMarketManager.DisplayAvailableContracts();

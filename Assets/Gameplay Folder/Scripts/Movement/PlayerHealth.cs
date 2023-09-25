@@ -2,6 +2,7 @@ using BNG;
 using LootLocker.Requests;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
@@ -23,8 +24,6 @@ public class PlayerHealth : MonoBehaviour
     public PlayerMovement movement;
     public SceneFader sceneFader;
 
-    public XRDirectInteractor[] directInteractors;
-
     public bool male;
     public bool alive;
     public bool reactorHeld;
@@ -36,8 +35,6 @@ public class PlayerHealth : MonoBehaviour
     public float reactorTimer = 0;
 
     public int playerLives = 3;
-    public int datacards = 0;
-    public int playersKilled;
     public int enemiesKilled;
     public int startingBulletModifier;
     public int playerCints;
@@ -62,7 +59,6 @@ public class PlayerHealth : MonoBehaviour
     [Header("Player UI ------------------------------------")]
     public GameObject reactorIcon;
     public GameObject shipIcon;
-    public GameObject[] shieldObjects;
     public GameObject healthBarObject;
     public GameObject armorBarObject;
     public GameObject criticalHealth;
@@ -77,6 +73,7 @@ public class PlayerHealth : MonoBehaviour
     public GameObject extractCanvas;
     public GameObject earlyCanvas;
     public GameObject hackCanvas;
+    public GameObject deathCanvas;
 
     public Transform bombDropLocation;
     public Transform tokenDropLocation;
@@ -151,7 +148,9 @@ public class PlayerHealth : MonoBehaviour
     [Header("Player Leaderboard Data ------------------------------------")]
     public string leaderboardID = "react_leaderboard";
     public string leaderboardID2 = "faction_leader";
+    public string leaderboardID3 = "react_kills";
     public string progressionKey = "cent_prog";
+    public string leaderboardID4 = "Playground";
     public string faction;
 
     [Header("Contract Tracking ------------------------------------")]
@@ -196,10 +195,20 @@ public class PlayerHealth : MonoBehaviour
     public GameObject shockedObject;
     public GameObject shockedText;
 
+    const string EnemyKills = "EnemyKills";
+    public string scene;
+
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        if (PlayerPrefs.HasKey(EnemyKills))
+            enemiesKilled = PlayerPrefs.GetInt(EnemyKills);
+        else
+            enemiesKilled = 0;
+
+        scene = SceneManager.GetActiveScene().name;
+
         hackCanvas.SetActive(false);
         earlyCanvas.SetActive(false);
         extractCanvas.SetActive(false);
@@ -228,8 +237,6 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
 
         reactorExtraction = 0;
-        playersKilled = 0;
-        enemiesKilled = 0;
         alive = true;
         extractionWinner = false;
         toxicEffectActive = false;
@@ -536,19 +543,6 @@ public class PlayerHealth : MonoBehaviour
             playerLives += 1;
         }
     }
-    private int SetMaxHealthFromHealthLevel()
-    {
-        // TODO: Create Formula to improve health upon level up of character. int 10 can be changed. 
-        maxHealth = Health;
-        return maxHealth;
-    }
-
-    private int SetMaxArmorFromArmorLevel()
-    {
-        // TODO: Create Formula to improve health upon level up of character. int 10 can be changed. 
-        maxArmor = Armor;
-        return maxArmor;
-    }
 
     // Update is called once per frame
     void Update()
@@ -748,12 +742,26 @@ public class PlayerHealth : MonoBehaviour
 
     void CheckExtractionWinCondition()
     {
-        if (SceneManager.GetActiveScene().name == "WeaponTest")
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
         {
+            MatchEffects match = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
             extractionWinner = true;
             spawnManager.gameOver = true;
             spawnManager.winnerPlayer = this.gameObject;
             UpdateSkills(200);
+            int score = (int)(300 - (int)match.currentExtractionTimer);
+            LootLockerSDKManager.GetMemberRank(leaderboardID4, scene, (response) =>
+            {
+                if (response.success)
+                {
+                    if(response.score > score)
+                    {
+                        LootLockerSDKManager.SubmitScore(scene, score, leaderboardID4, faction, (response) =>
+                        {
+                        });
+                    }
+                }
+            });
             ExtractionGame();
         }
     }
@@ -994,13 +1002,11 @@ public class PlayerHealth : MonoBehaviour
             if (Armor >= damage)
             {
                 Armor -= damage;
-                StartCoroutine(ShieldBuffNormal());
             }
             else if (Armor < damage && Armor > 0)
             {
                 Health -= (damage - Armor);
                 Armor = 0;
-                StartCoroutine(ShieldBuffCritical());
             }
             else if (Armor <= 0)
             {
@@ -1068,18 +1074,15 @@ public class PlayerHealth : MonoBehaviour
         alive = false;
 
         UpdateSkills(-cintUpdate);
+        deathCanvas.SetActive(true);
 
-        yield return new WaitForSeconds(.15f);
+        yield return new WaitForSeconds(2f);
         // Leave the room
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 
     IEnumerator PlayerRespawn()
     {
-        foreach (XRDirectInteractor direct in directInteractors)
-        {
-            direct.enabled = false;
-        }
 
         if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
         PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") >= 1)
@@ -1104,43 +1107,7 @@ public class PlayerHealth : MonoBehaviour
 
         yield return new WaitForSeconds(0.15f);
 
-        foreach (XRDirectInteractor direct in directInteractors)
-        {
-            direct.enabled = true;
-        }
-
         respawnUI.UpdateRespawnUI();
-    }
-
-    IEnumerator ShieldBuffNormal()
-    {
-        foreach (GameObject shield in shieldObjects)
-        {
-            shield.SetActive(true);
-        }
-        yield return new WaitForSeconds(.75f);
-        foreach (GameObject shield in shieldObjects)
-        {
-            shield.SetActive(false);
-        }
-    }
-
-    IEnumerator ShieldBuffCritical()
-    {
-        foreach (GameObject shield in shieldObjects)
-        {
-            shield.SetActive(true);
-        }
-        yield return new WaitForSeconds(.75f);
-        foreach (GameObject shield in shieldObjects)
-        {
-            shield.SetActive(false);
-        }
-    }
-
-    public void ApplyBlindEffect(float duration)
-    {
-        StartCoroutine(sceneFader.BlackOut(duration));
     }
 
     public void EnemyKilled(string type)
@@ -1198,6 +1165,10 @@ public class PlayerHealth : MonoBehaviour
             else
                 StartCoroutine(GetXP(5));
         }
+
+        LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, enemiesKilled, leaderboardID3, (response) =>
+        {
+        });
     }
 
     void ExtractionGame()

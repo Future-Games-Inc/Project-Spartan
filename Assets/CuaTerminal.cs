@@ -15,47 +15,35 @@ public class CuaTerminal : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         activatedIcon.SetActive(HasTerminalAccess());
-       
+
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-                logo.SetActive(true);
-                button.SetActive(true);
-                panel.SetActive(true);
-                foreach(GameObject hologram in holograms)
-                {
-                    hologram.SetActive(false);
-                }
+            logo.SetActive(true);
+            button.SetActive(true);
+            panel.SetActive(true);
+            foreach (GameObject hologram in holograms)
+            {
+                hologram.SetActive(false);
+            }
         }
     }
 
     public void Activate()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider collider in hitColliders)
+        if (!HasTerminalAccess())
         {
-            if (collider.CompareTag("Player"))
-            {
-                PlayerHealth health = collider.GetComponentInParent<PlayerHealth>();
-                if (health != null)
-                {
-                    playerHealth = health;
-                    if (!HasTerminalAccess())
-                    {
-                        SaveTerminalAccess(15);
-                    }
-                }
-            }
+            SaveTerminalAccess(15);
         }
     }
 

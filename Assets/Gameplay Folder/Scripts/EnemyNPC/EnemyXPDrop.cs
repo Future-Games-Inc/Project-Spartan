@@ -60,11 +60,17 @@ public class EnemyXPDrop : MonoBehaviour
                         float xpDrop = 10f;
                         if (Random.Range(0, 100f) < xpDrop)
                         {
-                            playerHealth.UpdateSkills(pickupData.xpAmount);
+                            if (playerHealth.faction == "CintSix Cartel")
+                                playerHealth.UpdateSkills(pickupData.xpAmount + 5);
+                            else
+                                playerHealth.UpdateSkills(pickupData.xpAmount);
                         }
                         else
                         {
-                            playerHealth.UpdateSkills(pickupData.xpAmount / 2);
+                            if (playerHealth.faction == "CintSix Cartel")
+                                playerHealth.UpdateSkills(pickupData.xpAmount/2 + 5);
+                            else
+                                playerHealth.UpdateSkills(pickupData.xpAmount/2);
                         }
                         StartCoroutine(DelayDestroy());
                     }

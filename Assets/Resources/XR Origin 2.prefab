@@ -1961,8 +1961,6 @@ MonoBehaviour:
   spawnManager: {fileID: 0}
   movement: {fileID: 8466841071859713464}
   sceneFader: {fileID: 9210680486442517581}
-  directInteractors:
-  - {fileID: 439788778409400105}
   male: 0
   alive: 0
   reactorHeld: 0
@@ -1971,8 +1969,6 @@ MonoBehaviour:
   startingSpeed: 0
   reactorTimer: 0
   playerLives: 3
-  datacards: 0
-  playersKilled: 0
   enemiesKilled: 0
   startingBulletModifier: 0
   playerCints: 0
@@ -1993,9 +1989,6 @@ MonoBehaviour:
   shockEffect: {fileID: 100000, guid: a9a6f8e950cc72e478555efcf743d741, type: 3}
   reactorIcon: {fileID: 2927143699820059621}
   shipIcon: {fileID: 1221079692429766973}
-  shieldObjects:
-  - {fileID: 1736028085067332769}
-  - {fileID: 3621250086967274537}
   healthBarObject: {fileID: 2692133899826410499}
   armorBarObject: {fileID: 2312391060045910752}
   criticalHealth: {fileID: 7130097727816693708}
@@ -2011,6 +2004,7 @@ MonoBehaviour:
   extractCanvas: {fileID: 6687155694295977863}
   earlyCanvas: {fileID: 7034106683540877222}
   hackCanvas: {fileID: 7398737007218018165}
+  deathCanvas: {fileID: 0}
   bombDropLocation: {fileID: 4782225921789746073}
   tokenDropLocation: {fileID: 4782225921789746073}
   activateWristUI: {fileID: 6016826935182032225}
@@ -2074,7 +2068,9 @@ MonoBehaviour:
   secondaryButtonPressed: 0
   leaderboardID: react_leaderboard
   leaderboardID2: faction_leader
+  leaderboardID3: react_kills
   progressionKey: cent_prog
+  leaderboardID4: extraction_times
   faction: 
   bossesKilled: 0
   bossesRequired: 0
@@ -2109,6 +2105,7 @@ MonoBehaviour:
   factionScore: 0
   shockedObject: {fileID: 1787655651833989393}
   shockedText: {fileID: 5805070644076276605}
+  scene: 
 --- !u!136 &8069833781336750505
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3501,14 +3498,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1228317959439764170}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: -0.009000011, y: -0.64170015, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 191115907773094508}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &10483302302831062
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4440,6 +4437,7 @@ MonoBehaviour:
   thisControllerModel: 
   OffsetPosition: {x: 0, y: 0, z: 0}
   OffsetRotation: {x: 0, y: 0, z: 0}
+  completed: 0
 --- !u!1 &1623405422761527525
 GameObject:
   m_ObjectHideFlags: 0
@@ -5029,14 +5027,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1764899543794935664}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: 0.14, y: -0.64170015, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 191115907773094508}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &2600353698272486140
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -17487,14 +17485,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7647431764349221280}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: -0.156, y: -0.64170015, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 191115907773094508}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &8928026300360200635
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -18777,6 +18775,7 @@ MonoBehaviour:
   thisControllerModel: 
   OffsetPosition: {x: 0, y: 0, z: 0}
   OffsetRotation: {x: 0, y: 0, z: 0}
+  completed: 0
 --- !u!1 &8200850981108129930
 GameObject:
   m_ObjectHideFlags: 0

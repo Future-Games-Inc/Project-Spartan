@@ -1349,7 +1349,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.005
+    widthMultiplier: 0.01
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -1935,7 +1935,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.005
+    widthMultiplier: 0.01
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -3264,9 +3264,6 @@ MonoBehaviour:
   spawnManager: {fileID: 0}
   movement: {fileID: 8466841071859713464}
   sceneFader: {fileID: 4758347663205818700}
-  directInteractors:
-  - {fileID: 439788778409400105}
-  - {fileID: 439788777949049150}
   male: 0
   alive: 0
   reactorHeld: 0
@@ -3275,8 +3272,6 @@ MonoBehaviour:
   startingSpeed: 0
   reactorTimer: 0
   playerLives: 3
-  datacards: 0
-  playersKilled: 0
   enemiesKilled: 0
   startingBulletModifier: 0
   playerCints: 0
@@ -3297,11 +3292,6 @@ MonoBehaviour:
   shockEffect: {fileID: 100000, guid: a9a6f8e950cc72e478555efcf743d741, type: 3}
   reactorIcon: {fileID: 7014045480335570997}
   shipIcon: {fileID: 7537622712827892262}
-  shieldObjects:
-  - {fileID: 281044757086537723}
-  - {fileID: 1924892861521729407}
-  - {fileID: 5936169946367038913}
-  - {fileID: 1763375232673130211}
   healthBarObject: {fileID: 8653444981483815736}
   armorBarObject: {fileID: 1491367866137173322}
   criticalHealth: {fileID: 4646471824422425884}
@@ -3317,6 +3307,7 @@ MonoBehaviour:
   extractCanvas: {fileID: 7372888396489931606}
   earlyCanvas: {fileID: 2701471657523395618}
   hackCanvas: {fileID: 564077395647033237}
+  deathCanvas: {fileID: 0}
   bombDropLocation: {fileID: 4782225921789746073}
   tokenDropLocation: {fileID: 4782225921789746073}
   activateWristUI: {fileID: 6016826935182032225}
@@ -3381,7 +3372,9 @@ MonoBehaviour:
   secondaryButtonPressed: 0
   leaderboardID: react_leaderboard
   leaderboardID2: faction_leader
+  leaderboardID3: react_kills
   progressionKey: cent_prog
+  leaderboardID4: extraction_times
   faction: 
   bossesKilled: 0
   bossesRequired: 0
@@ -3418,6 +3411,7 @@ MonoBehaviour:
   factionScore: 0
   shockedObject: {fileID: 2044427961825024124}
   shockedText: {fileID: 3708190955509069728}
+  scene: 
 --- !u!136 &8069833781336750505
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4081,7 +4075,7 @@ GameObject:
   - component: {fileID: 2679002505961528633}
   - component: {fileID: 4219231437481441612}
   - component: {fileID: 1732787225222758625}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4609,7 +4603,7 @@ GameObject:
   - component: {fileID: 8710876740322405405}
   - component: {fileID: 6690890173180750944}
   - component: {fileID: 4690334759294007143}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7695,8 +7689,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2405455152052338549}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.0023, y: 0.0483, z: -0.1138}
+  m_LocalRotation: {x: -4.6566118e-10, y: 1, z: -0.0000000037252894, w: 0.0000000028812785}
+  m_LocalPosition: {x: 0.0020000793, y: 0.04799996, z: -0.14400005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9285,6 +9279,7 @@ MonoBehaviour:
   thisControllerModel: 
   OffsetPosition: {x: 0, y: 0, z: 0}
   OffsetRotation: {x: 0, y: 0, z: 0}
+  completed: 0
 --- !u!1 &3659287059572206541
 GameObject:
   m_ObjectHideFlags: 0
@@ -9348,14 +9343,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3699324097994167806}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: -0.156, y: -0.6417, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8435003316094387220}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &4710079353080196615
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10601,6 +10596,7 @@ MonoBehaviour:
   thisControllerModel: 
   OffsetPosition: {x: 0, y: 0, z: 0}
   OffsetRotation: {x: 0, y: 0, z: 0}
+  completed: 0
 --- !u!1 &4186871787582775021
 GameObject:
   m_ObjectHideFlags: 0
@@ -13201,14 +13197,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4970573438596627007}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: -0.009000011, y: -0.6417, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8435003316094387220}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &2224646239341055185
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -15584,14 +15580,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6332966386861445873}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: 0.13052624, w: 0}
+  m_LocalRotation: {x: 0, y: 0.97629607, z: 0.21643952, w: 0}
   m_LocalPosition: {x: 0.14, y: -0.6417, z: 0.1568}
   m_LocalScale: {x: 0.089602, y: 0.089602, z: 0.089602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8435003316094387220}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -15, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -25, y: 180, z: 0}
 --- !u!33 &59675375053427358
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -15963,7 +15959,7 @@ GameObject:
   - component: {fileID: 406508917065861499}
   - component: {fileID: 9144076243996025726}
   - component: {fileID: 2798194489297357856}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22151,7 +22147,7 @@ GameObject:
   - component: {fileID: 2264239125556569145}
   - component: {fileID: 6580146167725190221}
   - component: {fileID: 8066308455784501222}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23874,6 +23870,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8617501973223375325}
     m_Modifications:
+    - target: {fileID: 1831832568912854067, guid: 2ed984a58a974166bf92c82a74380454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 4769098102207602864, guid: 2ed984a58a974166bf92c82a74380454,
         type: 3}
       propertyPath: m_RootOrder
@@ -23949,6 +23950,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Interactable Instant Pyramid
       objectReference: {fileID: 0}
+    - target: {fileID: 4769098102207602867, guid: 2ed984a58a974166bf92c82a74380454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 4769098102207602868, guid: 2ed984a58a974166bf92c82a74380454,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -23958,6 +23964,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_InteractableSource
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996374721305249028, guid: 2ed984a58a974166bf92c82a74380454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4769098102207602865, guid: 2ed984a58a974166bf92c82a74380454, type: 3}

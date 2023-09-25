@@ -77,19 +77,6 @@ public class FactionSelection : MonoBehaviour
         }
         else if(!PlayerPrefs.HasKey(factionSelectionDate))
             leaveButton.SetActive(false);
-
-        if (PlayerPrefs.HasKey(factionDepositDate))
-        {
-            DateTime savedDate = DateTime.Parse(PlayerPrefs.GetString(factionDepositDate));
-            DateTime currentDate = DateTime.Now;
-            TimeSpan difference = currentDate - savedDate;
-
-            if (difference.TotalDays >= 1)
-            {
-                saveData.UpdateSkills(50);
-                PlayerPrefs.SetString(factionDepositDate, DateTime.Now.ToString());
-            }
-        }
     }
 
     // Update is called once per frame
@@ -164,23 +151,6 @@ public class FactionSelection : MonoBehaviour
                 leaveButton.SetActive(false);
             }
         }
-    }
-
-
-    public void CintSelect()
-    {
-        PlayerPrefs.SetString(factionSelected, "CintSix Cartel");
-
-        cyberGang = false;
-        muerteGang = false;
-        chaosGang = false;
-        cintGang = true;
-
-        factionDecision.SetActive(false);
-        SaveCurrentDate();
-
-        if (PlayerPrefs.GetString(factionSelected) == "CintSix Cartel")
-            PlayerPrefs.SetString(factionDepositDate, DateTime.Now.ToString());
     }
 
     public void LeaveFaction()

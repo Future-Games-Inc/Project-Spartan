@@ -44,22 +44,11 @@ public class HolographicRecording : MonoBehaviour
 
         isPlaying = true;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider collider in hitColliders)
+        if (!HasTerminalAccess())
         {
-            if (collider.CompareTag("Player"))
-            {
-                PlayerHealth health = collider.GetComponentInParent<PlayerHealth>();
-                if (health != null)
-                {
-                    playerHealth = health;
-                    if (!HasTerminalAccess())
-                    {
-                        SaveTerminalAccess(15);
-                    }
-                }
-            }
+            SaveTerminalAccess(15);
         }
+
     }
 
     public bool HasTerminalAccess()
