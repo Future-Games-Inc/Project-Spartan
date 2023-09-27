@@ -96,13 +96,13 @@ public class EnemyXPDrop : MonoBehaviour
                     {
                         if (collider.CompareTag("Security"))
                         {
-                            DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
+                            DroneHealth enemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                             enemyDamageCrit.TakeDamage(200);
                         }
                         if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
                         {
-                            FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-                            enemyDamageCrit.TakeDamage(75);
+                            FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
+                            enemyDamageCrit.TakeDamage(30);
                             enemyDamageCrit.EMPShock();
                         }
                     }

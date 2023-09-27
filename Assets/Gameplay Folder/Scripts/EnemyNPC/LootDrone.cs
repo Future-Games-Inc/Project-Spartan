@@ -20,6 +20,7 @@ public class LootDrone : MonoBehaviour
     private States previousState;
 
     private GameObject[] caches;
+    public GameObject previousHeld;
     public Transform targetTransform;
 
     private float TurnSpeed = 5f;
@@ -100,28 +101,34 @@ public class LootDrone : MonoBehaviour
             {
                 // Attach the cache to the drone
                 attachedCache = targetTransform.gameObject;
+                previousHeld = attachedCache;
                 attachedCache.transform.parent = attachTransform;
                 attachedCache.transform.localPosition = Vector3.zero;
                 agent.isStopped = true;
+                attachedCache.GetComponentInParent<WeaponCrate>().cacheActive = false;
 
 
                 // Move the drone to a new location within the randomNavSphere
                 Vector3 newPosition = RandomNavSphere(transform.position, wanderRadius, -1);
                 agent.SetDestination(newPosition);
                 StartCoroutine(PauseDelay());
-            }
-            else if (agent.remainingDistance <= agent.stoppingDistance + 10 && !agent.pathPending)
-            {
-                // Drop the attached cache back on the map
-                attachedCache.transform.parent = null;
-                targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(true);
-
-                // Reset variables for the next loot phase
-                attachedCache = null;
-                isLooting = false;
-                patrolling = true;
+                StartCoroutine(MoveLoot());
             }
         }
+    }
+
+    IEnumerator MoveLoot()
+    {
+        yield return new WaitForSeconds(10);
+        // Drop the attached cache back on the map
+        attachedCache.transform.parent = null;
+        previousHeld.GetComponentInParent<WeaponCrate>().Obstacle(true);
+        previousHeld.GetComponentInParent<WeaponCrate>().cacheActive = true;
+
+        // Reset variables for the next loot phase
+        attachedCache = null;
+        isLooting = false;
+        patrolling = true;
     }
 
     IEnumerator PauseDelay()
@@ -138,8 +145,8 @@ public class LootDrone : MonoBehaviour
             {
                 attachedCache.transform.parent = null;
                 targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(true);
-                isLooting = false;
                 patrolling = true;
+                isLooting = false;
             }
         }
     }
@@ -181,18 +188,6 @@ public class LootDrone : MonoBehaviour
             if (attachedCache == null)
                 LookatTarget(1, 3f);
             Loot();
-        }
-
-        // Check if the loot is completed
-        if (attachedCache != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-        {
-            // Drop the attached cache back on the map
-            attachedCache.transform.parent = null;
-
-            // Reset variables for the next loot phase
-            attachedCache = null;
-            isLooting = false;
-            patrolling = true;
         }
 
         if (isLookingAtPlayer)

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -49,7 +48,10 @@ public class SpawnManager1 : MonoBehaviour
     public NavMeshSurface navMeshSurface;
     public Transform[] spawnPositions;  // Dynamic list for valid positions
     public float bufferRadius = .15f;
-
+    public bool spawnReinforcements = false;
+    public int reinforcementCount;
+    public int reinforcementCountMax;
+    public GameObject reinforcementTroop;
 
     void Start()
     {
@@ -139,6 +141,28 @@ public class SpawnManager1 : MonoBehaviour
 
             yield return new WaitForSeconds(2);
             spawnEnemy = true;
+
+            yield return new WaitForSeconds(.25f);
+        }
+    }
+
+    public IEnumerator SpawnReinforcements()
+    {
+        while (spawnReinforcements && reinforcementCount < reinforcementCountMax)
+        {
+            while (!matchProps.startMatchBool)
+                yield return null;
+
+            spawnReinforcements = false;
+
+            Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
+
+            Instantiate(reinforcementTroop, spawnPosition[0].position, Quaternion.identity);
+
+            reinforcementCount++;
+
+            yield return new WaitForSeconds(2);
+            spawnReinforcements = true;
 
             yield return new WaitForSeconds(.25f);
         }
@@ -308,6 +332,11 @@ public class SpawnManager1 : MonoBehaviour
     public void UpdateEnemy()
     {
         enemyCount--;
+    }
+
+    public void UpdateReinforcements()
+    {
+        reinforcementCount--;
     }
 
     public void UpdateEnemyCount()

@@ -10,8 +10,6 @@ public class SkillTree : MonoBehaviour
 
     public int[] SkillLevels;
     public int[] SkillCaps;
-    //public string[] SkillNames;
-    //public string[] SkillDescriptions;
 
     public List<Skill> SkillList;
     public GameObject SkillHolder;
@@ -71,10 +69,4 @@ public class SkillTree : MonoBehaviour
             audioSource.PlayOneShot(audioClip[(int)Random.Range(0, audioClip.Length)]);
         initialLoad = false;
     }
-
-    //public void SetPowerUp()
-    //{
-    //    ExitGames.Client.Photon.Hashtable buttonAssign = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BUTTON_ASSIGN, powerupButtonAssign } };
-    //    PhotonNetwork.LocalPlayer.SetCustomProperties(buttonAssign);
-    //}
 }

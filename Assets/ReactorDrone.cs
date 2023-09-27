@@ -141,7 +141,7 @@ public class ReactorDrone : MonoBehaviour
 
         Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * 80 * GlobalSpeedManager.SpeedMultiplier);
+        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * 1000 * GlobalSpeedManager.SpeedMultiplier);
     }
 
     IEnumerator FireWeapon()

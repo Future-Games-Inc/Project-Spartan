@@ -49,10 +49,12 @@ public class GrappleGun : MonoBehaviour
             characterController.enabled = false;
             movement.enabled = false;
             sight.SetActive(false);
+            bulletPrefab.GetComponent<TrailRenderer>().enabled = false;
         }
 
         if (!grappled)
         {
+            bulletPrefab.GetComponent<TrailRenderer>().enabled = false;
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
             characterController.enabled = true;
@@ -62,12 +64,6 @@ public class GrappleGun : MonoBehaviour
         if (rightThumbstickPress.action.ReadValue<float>() >= .78f && !grappled && grappledAvailable)
         {
             FireRaycastIntoScene();
-        }
-
-        if (rightThumbstickPress.action.ReadValue<float>() < .77f && grappled)
-        {
-            grappled = false;
-            CancelGrapple();
         }
 
         RaycastHit hit;
@@ -100,10 +96,12 @@ public class GrappleGun : MonoBehaviour
                 grappledAvailable = false;
                 bulletTransform.position = barrelTransform.position;
                 bulletRb.velocity = barrelTransform.forward * bulletSpeed;
+                bulletPrefab.GetComponent<TrailRenderer>().enabled = true;
                 StartCoroutine(DestroyHook());
             }
             else
             {
+                bulletPrefab.GetComponent<TrailRenderer>().enabled = false;
                 CancelGrapple();
             }
         }

@@ -2,11 +2,9 @@ using BNG;
 using LootLocker.Requests;
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -21,8 +19,10 @@ public class PlayerHealth : MonoBehaviour
     public GameObject player;
 
     public SpawnManager spawnManager;
+    public SpawnManager1 enemySpawner;
     public PlayerMovement movement;
     public SceneFader sceneFader;
+    public MatchEffects matchEffects;
 
     public bool male;
     public bool alive;
@@ -52,6 +52,7 @@ public class PlayerHealth : MonoBehaviour
     public int Armor = 100;
     public int reactorExtraction;
     public TextMeshProUGUI reactorText;
+    public TextMeshProUGUI timerText;
 
     [Header("Player State Effects ------------------------------------")]
     public GameObject shockEffect;
@@ -198,6 +199,9 @@ public class PlayerHealth : MonoBehaviour
     const string EnemyKills = "EnemyKills";
     public string scene;
 
+    public TextMeshProUGUI sidearmText;
+    public SnapZone sidearmZone;
+
 
     // Start is called before the first frame update
     void OnEnable()
@@ -208,6 +212,8 @@ public class PlayerHealth : MonoBehaviour
             enemiesKilled = 0;
 
         scene = SceneManager.GetActiveScene().name;
+        matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
+        enemySpawner = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
 
         hackCanvas.SetActive(false);
         earlyCanvas.SetActive(false);
@@ -558,6 +564,12 @@ public class PlayerHealth : MonoBehaviour
         else if (!reactorHeld)
             reactorText.text = "";
 
+        if (reactorExtraction > 50 && faction.ToString() != matchEffects.owner)
+        {
+            enemySpawner.spawnReinforcements = true;
+            StartCoroutine(enemySpawner.SpawnReinforcements());
+        }
+
         if (Health <= 30)
             criticalHealth.SetActive(true);
         else
@@ -584,6 +596,29 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             inventoryText.text = "";
+        }
+
+        if (sidearmZone.HeldItem != null)
+        {
+            string fullName = sidearmZone.HeldItem.name.ToString();
+            int startIndex = fullName.IndexOf("Z_") + 2; // Find the index of "Z_" and add 2 to skip "Z_"
+            int endIndex = fullName.IndexOf("(Clone)"); // Find the index of "(clone)"
+
+            // Extract the substring between startIndex and endIndex
+            if (startIndex >= 0 && endIndex >= 0)
+            {
+                string extractedName = fullName.Substring(startIndex, endIndex - startIndex);
+                sidearmText.text = extractedName;
+            }
+            else
+            {
+                // Fallback to the full name if the substring could not be extracted
+                sidearmText.text = fullName;
+            }
+        }
+        else
+        {
+            sidearmText.text = "";
         }
 
         UpdatePowerups();
@@ -754,7 +789,7 @@ public class PlayerHealth : MonoBehaviour
             {
                 if (response.success)
                 {
-                    if(response.score > score)
+                    if (response.score > score)
                     {
                         LootLockerSDKManager.SubmitScore(scene, score, leaderboardID4, faction, (response) =>
                         {
@@ -762,7 +797,7 @@ public class PlayerHealth : MonoBehaviour
                     }
                 }
             });
-            ExtractionGame();
+            ExtractionGame(score);
         }
     }
 
@@ -1171,12 +1206,13 @@ public class PlayerHealth : MonoBehaviour
         });
     }
 
-    void ExtractionGame()
+    void ExtractionGame(int time)
     {
         StartCoroutine(GetXP(50));
         extractCanvas.SetActive(true);
+        timerText.text = "Time To Extract: " + time + " secs";
         StartCoroutine(DisplayMessage());
-        
+
     }
 
     IEnumerator DisplayMessage()

@@ -65,6 +65,7 @@ public class HolographicRecording : MonoBehaviour
     {
         // Save terminal access in player's custom properties
         PlayerPrefs.SetInt(terminalName, 1);
+        playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         playerHealth.GetXP(XP);
     }
 

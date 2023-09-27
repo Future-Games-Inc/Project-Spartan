@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using static DroneHealth;
+using Photon.Realtime;
 
 public class FollowAI : MonoBehaviour
 {
@@ -100,23 +101,42 @@ public class FollowAI : MonoBehaviour
 
     public void FindClosestEnemy()
     {
-        //players = FindObjectsOfType<XROrigin>().ToList<>;
-        //GameObject closest = null;
-        //float distance = Mathf.Infinity;
-        //Vector3 position = transform.position;
+        GameObject closest = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
 
-        //foreach (GameObject go in players)
-        //{
-        //    Vector3 diff = go.transform.position - position;
-        //    float curDistance = diff.sqrMagnitude;
-        //    if (curDistance < distance)
-        //    {
-        //        closest = go;
-        //        distance = curDistance;
-        //    }
-        //}
+        // Only one object of XROrigin in the scene, so we use FindObjectOfType
+        XROrigin xrOrigin = FindObjectOfType<XROrigin>();
 
-        targetTransform = FindObjectOfType<XROrigin>().transform;
+        // If player faction is not match owner, include XROrigin object in comparison
+        closest = xrOrigin.gameObject;
+        closestDistanceSqr = (xrOrigin.transform.position - currentPosition).sqrMagnitude;
+
+        // Find all GameObjects with the specific components
+        ReinforcementAI[] followAIs = FindObjectsOfType<ReinforcementAI>();
+
+        // Check all the GameObjects found to see which is closest
+        CheckClosest(followAIs, currentPosition, ref closest, ref closestDistanceSqr);
+
+        // Set the targetTransform to the transform of the closest object found.
+        if (closest != null)
+        {
+            targetTransform = closest.transform;
+        }
+    }
+
+    private void CheckClosest<T>(T[] gameObjects, Vector3 currentPosition, ref GameObject closest, ref float closestDistanceSqr) where T : Component
+    {
+        foreach (T obj in gameObjects)
+        {
+            GameObject go = obj.gameObject;
+            float distanceSqr = (go.transform.position - currentPosition).sqrMagnitude;
+            if (distanceSqr < closestDistanceSqr)
+            {
+                closest = go;
+                closestDistanceSqr = distanceSqr;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -127,6 +147,7 @@ public class FollowAI : MonoBehaviour
 
         if (agent.isOnNavMesh)
         {
+            transform.LookAt(agent.destination);
             if (Time.time >= nextUpdateTime)
             {
                 nextUpdateTime = Time.time + 1f; // Update every 1 second
@@ -150,6 +171,8 @@ public class FollowAI : MonoBehaviour
                 // set the speed for the agent for the blend tree
                 animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
             }
+            else
+                Agro = false;
 
             // If the enemy has detected the player but doesn't have a clear line of sight
             if (Agro && !IsLineOfSightClear(targetTransform))
@@ -159,7 +182,6 @@ public class FollowAI : MonoBehaviour
                 agent.destination = targetTransform.position; // Move towards the player
                                                               // set the speed for the agent for the blend tree
                 animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
-                return; // Don't proceed to other behaviors until we have a clear line of sight
             }
             // if it is not agro, then patrol like normal
             // else then see if the player is in the valid agro range (bigger than detect range) then give chase
@@ -184,11 +206,11 @@ public class FollowAI : MonoBehaviour
                     agent.SetDestination(gameObject.transform.position);
                     // set the speed for the agent for the blend tree
                     animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
-                    return;
                 }
                 // if in range of attacks
                 if (distanceToPlayer <= AttackRange)
                 {
+                    Agro = true;
                     currentState = States.Attack;
                     LookatTarget(1, 3f);
                     agent.isStopped = true;
@@ -199,6 +221,7 @@ public class FollowAI : MonoBehaviour
                 // give chase if not in range
                 else
                 {
+                    fireReady = false;
                     currentState = States.Follow;
                     agent.isStopped = false;
                     // set the speed for the agent for the blend tree
@@ -218,11 +241,6 @@ public class FollowAI : MonoBehaviour
                 direction.y = 0;
                 Quaternion desiredRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
-
-                if (IsLineOfSightClear(targetTransform))
-                {
-                    Attack();
-                }
             }
 
             // set the speed for the agent for the blend tree
@@ -266,6 +284,7 @@ public class FollowAI : MonoBehaviour
 
     private void Patrol()
     {
+        fireReady = false;
         attackWeapon.fireWeaponBool = false;
         if (!stuck)
             agent.speed = 1.5f * GlobalSpeedManager.SpeedMultiplier;
@@ -283,6 +302,7 @@ public class FollowAI : MonoBehaviour
 
     IEnumerator PatrolDelay()
     {
+        fireReady = false;
         attackWeapon.fireWeaponBool = false;
         yield return new WaitForSeconds(3);
         PatrolPauseDone = true;
@@ -294,6 +314,7 @@ public class FollowAI : MonoBehaviour
     private void Follow()
     {
         attackWeapon.fireWeaponBool = false;
+        fireReady = false;
         agent.destination = targetTransform.position;
         if (!stuck)
             agent.speed = 2.5f * GlobalSpeedManager.SpeedMultiplier;
@@ -303,6 +324,10 @@ public class FollowAI : MonoBehaviour
 
     private void Attack()
     {
+        if (agent.isStopped)
+            fireReady = true;
+        else if (!agent.isStopped)
+            fireReady = false;
         transform.LookAt(targetTransform);
         if (IsLineOfSightClear(targetTransform))
             attackWeapon.fireWeaponBool = true;
@@ -315,7 +340,8 @@ public class FollowAI : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
-            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor"))
+            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
+                || hit.collider.gameObject.CompareTag("Bullet"))
             {
                 return true;
             }
