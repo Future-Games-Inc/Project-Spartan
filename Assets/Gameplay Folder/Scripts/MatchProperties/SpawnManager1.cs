@@ -84,6 +84,7 @@ public class SpawnManager1 : MonoBehaviour
                 StartCoroutine(SpawnReactor());
                 StartCoroutine(SpawnHealth());
                 StartCoroutine(SpawnBoss());
+                StartCoroutine(SpawnReinforcements());
 
                 coroutinesStarted = true;
             }
@@ -148,22 +149,25 @@ public class SpawnManager1 : MonoBehaviour
 
     public IEnumerator SpawnReinforcements()
     {
-        while (spawnReinforcements && reinforcementCount < reinforcementCountMax)
+        while (true)
         {
             while (!matchProps.startMatchBool)
                 yield return null;
+            if (spawnReinforcements && reinforcementCount < reinforcementCountMax)
+            {
+                spawnReinforcements = false;
 
-            spawnReinforcements = false;
+                Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
-            Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
+                Instantiate(reinforcementTroop, spawnPosition[0].position, Quaternion.identity);
 
-            Instantiate(reinforcementTroop, spawnPosition[0].position, Quaternion.identity);
+                reinforcementCount++;
 
-            reinforcementCount++;
+                yield return new WaitForSeconds(2);
+                spawnReinforcements = true;
 
-            yield return new WaitForSeconds(2);
-            spawnReinforcements = true;
-
+                yield return new WaitForSeconds(.25f);
+            }
             yield return new WaitForSeconds(.25f);
         }
     }
@@ -324,7 +328,6 @@ public class SpawnManager1 : MonoBehaviour
                 enemiesKilled = 0;
                 yield return new WaitForSeconds(10);
             }
-
             yield return new WaitForSeconds(.25f);
         }
     }

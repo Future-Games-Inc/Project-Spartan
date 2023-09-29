@@ -9,12 +9,13 @@ public class MinimapCameraFollow : MonoBehaviour
     private void Awake()
     {
         settings = GetComponentInParent<MinimapSettings>();
-        cameraHeight = 15f;
+        if (cameraHeight == 0)
+            cameraHeight = 12f;
     }
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,7 +25,7 @@ public class MinimapCameraFollow : MonoBehaviour
 
         transform.position = new Vector3(targetPosition.x, targetPosition.y + cameraHeight, targetPosition.z);
 
-        if(settings.rotateWithTarget)
+        if (settings.rotateWithTarget)
         {
             Quaternion targetRotation = settings.targetToFollow.transform.rotation;
 

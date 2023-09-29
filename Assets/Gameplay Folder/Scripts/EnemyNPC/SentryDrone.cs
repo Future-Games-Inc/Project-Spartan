@@ -272,7 +272,7 @@ public class SentryDrone : MonoBehaviour
                     ammoLeft--;
                 }
             }
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(Random.Range(2.5f, 5f));
         }
     }
 
@@ -294,6 +294,8 @@ public class SentryDrone : MonoBehaviour
         if (Health <= 0 && alive == true)
         {
             alive = false;
+            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+            player.GuardianKilled();
             enemyCounter.UpdateSecurity();
 
             explosionEffect.SetActive(true);

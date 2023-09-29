@@ -243,6 +243,7 @@ namespace BNG {
             }
 
             HeldItem = grab;
+            lastHeldItem = grab;
             heldItemRigid = HeldItem.GetComponent<Rigidbody>();
 
             // Mark as kinematic so it doesn't fall down

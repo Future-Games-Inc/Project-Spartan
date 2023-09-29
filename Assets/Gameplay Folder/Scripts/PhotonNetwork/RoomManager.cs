@@ -61,6 +61,18 @@ public class RoomManager : MonoBehaviour
         SceneManager.LoadScene("Playground");
     }
 
+
+
+    public void OnEnterButtonClicked_Bear()
+    {
+        LootLockerSDKManager.GetPlayerInfo((response) =>
+        {
+            mapLevel = (int)response.level;
+        });
+
+        SceneManager.LoadScene("Bear");
+    }
+
     public void OnEnterButtonClicked_DropZone1()
     {
         LootLockerSDKManager.GetPlayerInfo((response) =>

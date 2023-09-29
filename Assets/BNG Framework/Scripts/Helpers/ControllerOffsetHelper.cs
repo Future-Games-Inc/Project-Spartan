@@ -30,9 +30,8 @@ namespace BNG {
             if(ControllerOffsets == null && !completed) {
                 completed = true;
                 ControllerOffsets = new List<ControllerOffset>();
+                StartCoroutine(checkForController());
             }
-
-            StartCoroutine(checkForController());
         }
 
         IEnumerator checkForController() {

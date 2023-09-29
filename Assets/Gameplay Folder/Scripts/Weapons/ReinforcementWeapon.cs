@@ -55,7 +55,7 @@ public class ReinforcementWeapon : MonoBehaviour
                     ammoLeft--;
                 }
             }
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(Random.Range(0.25f, 1f));
         }
     }
 

@@ -155,7 +155,7 @@ public class ReactorDrone : MonoBehaviour
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
                 spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
             }
-            yield return new WaitForSeconds(.25f);
+            yield return new WaitForSeconds(Random.Range(0.25f, 1f));
         }
     }
 }

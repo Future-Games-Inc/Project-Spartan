@@ -19,6 +19,7 @@ public class Jetpack : MonoBehaviour
     public GameObject fuelIcon;
     public GameObject playerGameObject;
     public Rigidbody playerRb;
+    public bool activated;
 
     private void OnEnable()
     {
@@ -27,14 +28,30 @@ public class Jetpack : MonoBehaviour
     void Update()
     {
         // If we're flying, increment the timer
-        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && fuel)
+        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && fuel && !activated)
         {
-            time += Time.deltaTime;
+            ActivateJetpack();
         }
 
         newJetpack();
         character.Move(moveDirection * Time.deltaTime);
         fuelIcon.SetActive(fuel);
+
+        if(activated)
+        {
+            time += Time.deltaTime;
+        }
+    }
+
+    void ActivateJetpack()
+    {
+        activated = true;
+        character.Move(Vector3.up * liftVelocity * Time.fixedDeltaTime);
+        slowFall = true;
+        if (!jetpackSource.isPlaying)
+        {
+            jetpackSource.PlayOneShot(jetpackclip);
+        }
     }
 
     public void newJetpack()
@@ -50,25 +67,14 @@ public class Jetpack : MonoBehaviour
         if (time > flyTime && fuel)
         {
             fuel = false;
+            activated = false;
             StartCoroutine(Refuel());
-        }
-
-        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && fuel)
-        {
-            character.Move(Vector3.up * liftVelocity * Time.fixedDeltaTime);
-            slowFall = true;
-            if (!jetpackSource.isPlaying)
-            {
-                jetpackSource.PlayOneShot(jetpackclip);
-            }
         }
 
         if (character.isGrounded)
         {
             slowFall = false;
             jetpackSource.Stop();
-            // Reset time when grounded
-            time = 0;
             if (playerRb)
             {
                 Destroy(playerRb);

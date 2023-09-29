@@ -46,7 +46,7 @@ public class EnemyXPDrop : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player"))
         {
             contact = true;
             PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();

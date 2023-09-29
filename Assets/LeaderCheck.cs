@@ -19,6 +19,10 @@ public class LeaderCheck : MonoBehaviour
                 extractionTime.text = "Extraction Time: " + response.score + " secs";
                 ActivateCorrespondingGameObject();
             }
+            else
+            {
+                extractionTime.text = "";
+            }
         });
     }
 

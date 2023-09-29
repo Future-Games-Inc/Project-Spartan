@@ -341,43 +341,43 @@ public class PlayerHealth : MonoBehaviour
         }
 
         else if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
+                PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 2)
         {
             secondaryPowerupText.text = "ACTIVE CAMO";
         }
 
         else if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
+                PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 2)
         {
             secondaryPowerupText.text = "STEALTH";
         }
 
         else if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
+                PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 2)
         {
             secondaryPowerupText.text = "AI COMPANION";
         }
 
         else if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
+                PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 2)
         {
             secondaryPowerupText.text = "DECOY DEPLOYMENT";
         }
 
         else if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") >= 2)
+                PlayerPrefs.HasKey("BERSERKER_FURY_SLOT") && PlayerPrefs.GetInt("BERSERKER_FURY_SLOT") >= 2)
         {
             secondaryPowerupText.text = "BERSERKER FURY";
         }
 
         else if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
+                PlayerPrefs.HasKey("SAVING_GRACE_SLOT") && PlayerPrefs.GetInt("SAVING_GRACE_SLOT") == 2)
         {
             secondaryPowerupText.text = "SAVING GRACE APPLIED";
         }
 
         else if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
+                PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") == 2)
         {
             secondaryPowerupText.text = "EXPLOSIVE DEATH APPLIED";
         }
@@ -398,43 +398,43 @@ public class PlayerHealth : MonoBehaviour
         }
 
         else if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 1)
         {
             primaryPowerupText.text = "ACTIVE CAMO";
         }
 
         else if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 1)
         {
             primaryPowerupText.text = "STEALTH";
         }
 
         else if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 1)
         {
             primaryPowerupText.text = "AI COMPANION";
         }
 
         else if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 1)
         {
             primaryPowerupText.text = "DECOY DEPLOYMENT";
         }
 
         else if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("BERSERKER_FURY_SLOT") && PlayerPrefs.GetInt("BERSERKER_FURY_SLOT") == 1)
         {
             primaryPowerupText.text = "BERSERKER FURY";
         }
 
         else if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("SAVING_GRACE_SLOT") && PlayerPrefs.GetInt("SAVING_GRACE_SLOT") == 1)
         {
             primaryPowerupText.text = "SAVING GRACE APPLIED";
         }
 
         else if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
-                PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
+                PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") == 1)
         {
             primaryPowerupText.text = "EXPLOSIVE DEATH APPLIED";
         }
@@ -462,7 +462,7 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("AvatarSelectionNumber"))
         {
             characterInt = PlayerPrefs.GetInt("AvatarSelectionNumber");
-            male = characterInt <= 2 ? true : false;
+            male = characterInt <= 1 ? true : false;
         }
     }
 
@@ -585,7 +585,7 @@ public class PlayerHealth : MonoBehaviour
             if (startIndex >= 0 && endIndex >= 0)
             {
                 string extractedName = fullName.Substring(startIndex, endIndex - startIndex);
-                inventoryText.text = extractedName;
+                inventoryText.text = "Back Holster: " + extractedName;
             }
             else
             {
@@ -608,7 +608,7 @@ public class PlayerHealth : MonoBehaviour
             if (startIndex >= 0 && endIndex >= 0)
             {
                 string extractedName = fullName.Substring(startIndex, endIndex - startIndex);
-                sidearmText.text = extractedName;
+                sidearmText.text = "Hip Holster: " + extractedName;
             }
             else
             {
@@ -757,9 +757,9 @@ public class PlayerHealth : MonoBehaviour
         {
             int buff;
             if (faction == "Cyber Sk Gang")
-                buff = 4;
+                buff = 8;
             else
-                buff = 2;
+                buff = 6;
             if (PlayerPrefs.HasKey("REACTOR_EXTRACTION") && PlayerPrefs.GetInt("REACTOR_EXTRACTION") >= 1)
                 reactorExtraction += (buff + PlayerPrefs.GetInt("REACTOR_EXTRACTION"));
             else
@@ -801,9 +801,9 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public void DroneKilled(string type, GameObject drone)
+    public void DroneKilled(GameObject drone)
     {
-        if (type == "Collector" && drone.GetComponent<LootDrone>().attachedCache != null)
+        if (drone.GetComponent<LootDrone>().attachedCache != null)
         {
             if (PlayerPrefs.HasKey("CollectorQuest") && PlayerPrefs.GetInt("CollectorQuest") == 1)
             {
@@ -833,7 +833,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("ArtifactQuestTarget", artifactsRecovered);
         }
         else
-            GetXP(10);
+            GetXP(20);
     }
 
     public void IntelFound()
@@ -845,7 +845,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("IntelQuestTarget", intelCollected);
         }
         else
-            GetXP(10);
+            GetXP(20);
     }
 
     public void BombNeutralized()
@@ -857,7 +857,7 @@ public class PlayerHealth : MonoBehaviour
             PlayerPrefs.SetInt("BombQuestTarget", bombsDestroyed);
         }
         else
-            GetXP(10);
+            GetXP(20);
     }
 
     void CheckAbility1()
@@ -1165,10 +1165,10 @@ public class PlayerHealth : MonoBehaviour
             }
             if (faction == "Muerte De Dios")
             {
-                StartCoroutine(GetXP(12));
+                StartCoroutine(GetXP(22));
             }
             else
-                StartCoroutine(GetXP(2));
+                StartCoroutine(GetXP(12));
         }
 
         else if (type == "Boss")
@@ -1195,10 +1195,10 @@ public class PlayerHealth : MonoBehaviour
             }
             if (faction == "Muerte De Dios")
             {
-                StartCoroutine(GetXP(15));
+                StartCoroutine(GetXP(25));
             }
             else
-                StartCoroutine(GetXP(5));
+                StartCoroutine(GetXP(15));
         }
 
         LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, enemiesKilled, leaderboardID3, (response) =>

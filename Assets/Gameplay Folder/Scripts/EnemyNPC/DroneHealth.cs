@@ -71,9 +71,9 @@ public class DroneHealth : MonoBehaviour
         explosionEffect.SetActive(true);
         if (agent != null)
             agent.enabled = false;
-        GetComponent<Rigidbody>().isKinematic = false;
         SpawnLoot();
-        enemyCounter.UpdateSecurity();
+        if (agent != null)
+            enemyCounter.UpdateSecurity();
         Destroy(gameObject);
     }
 
@@ -84,6 +84,8 @@ public class DroneHealth : MonoBehaviour
             GameObject drop = Random.Range(0, 100f) < xpDropRate ? xpDropExtra : xpDrop;
             GameObject loot = Instantiate(drop, t.position, Quaternion.identity);
             loot.GetComponent<Rigidbody>().isKinematic = false;
+            if(GetComponent<Drone>() != null)
+                loot.GetComponent<FactionCard>().faction = GetComponent<Drone>().chosenFaction;
         }
     }
 

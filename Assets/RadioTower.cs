@@ -25,6 +25,12 @@ public class RadioTower : MonoBehaviour
     public Material mid;
     public Material close;
 
+    public bool activated;
+
+    public AudioSource audioSource;
+    public AudioClip clip;
+
+
     private void Start()
     {
         // Generate a random correct frequency between the slider's min and max values
@@ -73,10 +79,12 @@ public class RadioTower : MonoBehaviour
             time += Time.deltaTime;
         }
 
-        if (isDialCorrect && time > activationTime)
+        if (isDialCorrect && time > activationTime && !activated)
         {
+            activated = true;
             Slider.SetActive(false);
             screen.SetActive(false);
+            audioSource.PlayOneShot(clip);
             screentext.text = "Connection Established";
             foreach (GameObject obj in grabbables)
             {

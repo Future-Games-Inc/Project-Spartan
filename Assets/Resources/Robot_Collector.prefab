@@ -336,7 +336,7 @@ AudioSource:
   Priority: 79
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 10
+  MaxDistance: 30
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -473,6 +473,7 @@ MonoBehaviour:
   wanderTimer: 50
   timer: 0
   currentState: 0
+  previousHeld: {fileID: 0}
   targetTransform: {fileID: 0}
   agent: {fileID: 5950993363525062681}
   patrolling: 1

@@ -3,7 +3,6 @@ using UnityEngine.AI;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using static DroneHealth;
-using Photon.Realtime;
 
 public class FollowAI : MonoBehaviour
 {
@@ -71,6 +70,7 @@ public class FollowAI : MonoBehaviour
     public bool stuck = false;
     public float stickySpeed = 0f;
     float nextUpdateTime;
+
 
     // Start is called before the first frame update
     public void OnEnable()

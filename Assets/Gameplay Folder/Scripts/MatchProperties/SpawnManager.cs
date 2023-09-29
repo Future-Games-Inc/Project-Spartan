@@ -16,17 +16,21 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        
-        Vector3 randomPosition = GenerateRandomPosition();
-
-        if (randomPosition != Vector3.zero)
+        if (navMeshSurface != null)
         {
-            spawnPosition = randomPosition;
-            respawnPosition = spawnPosition;
+            Vector3 randomPosition = GenerateRandomPosition();
 
-            // We then invoke an RPC function to instantiate the player across all clients
-            InstantiatePlayer(spawnPosition);
+            if (randomPosition != Vector3.zero)
+            {
+                spawnPosition = randomPosition;
+                respawnPosition = spawnPosition;
+
+                // We then invoke an RPC function to instantiate the player across all clients
+                InstantiatePlayer(spawnPosition);
+            }
         }
+        else
+            InstantiatePlayer(transform.position);
         gameOver = false;
         winnerPlayer = null;
     }

@@ -1,8 +1,6 @@
 using LootLocker.Requests;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class WalkieSupport : MonoBehaviour
 {
@@ -29,6 +27,16 @@ public class WalkieSupport : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
         }
 
+        if (matchEffects == null)
+        {
+            matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponentInParent<MatchEffects>();
+        }
+
+        if (spawnManager == null)
+        {
+            spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponentInParent<SpawnManager1>();
+        }
+
         if (player.faction.ToString() != matchEffects.owner.ToString())
         {
             button1.SetActive(false);
@@ -53,14 +61,13 @@ public class WalkieSupport : MonoBehaviour
                     if(Score >= 300)
                     {
                         spawnManager.spawnReinforcements = true;
-                        StartCoroutine(spawnManager.SpawnReinforcements());
                         LootLockerSDKManager.SubmitScore(player.faction.ToString(), Score-300, player.leaderboardID2.ToString(), (response) =>
                         {
                         });
+                        Destroy(gameObject);
                     }
                 }
             });
-            Destroy(gameObject);
         }
     }
 
@@ -94,10 +101,10 @@ public class WalkieSupport : MonoBehaviour
                                 });
                             }
                         });
+                        Destroy(gameObject);
                     }
                 }
             });
-            Destroy(gameObject);
         }
     }
 
