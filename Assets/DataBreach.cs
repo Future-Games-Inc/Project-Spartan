@@ -30,11 +30,6 @@ public class DataBreach : MonoBehaviour
             faction = snapZone.HeldItem.GetComponent<FactionCard>().faction;
             breachText.text = "Breach " + faction + "? 100 Cs will be transferred from " + faction + " to " + player.faction + ".";
         }
-        else if (snapZone.HeldItem != null && faction == player.faction)
-        {
-            faction = snapZone.HeldItem.GetComponent<FactionCard>().faction;
-            breachText.text = faction + " Recon Key recovered. Deposit for 150 Cs?";
-        }
 
         if (snapZone.HeldItem == null)
         {
@@ -63,7 +58,9 @@ public class DataBreach : MonoBehaviour
                                 int playerScore = response.score;
                                 LootLockerSDKManager.SubmitScore(player.faction.ToString(), playerScore + 100, player.leaderboardID2.ToString(), (response) =>
                                 {
+                                    PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
 
+                                    StartCoroutine(voice.VoiceOvers(player.faction, 2));
                                 });
                             }
                         });
@@ -73,7 +70,9 @@ public class DataBreach : MonoBehaviour
                 {
                     LootLockerSDKManager.SubmitScore(faction.ToString(), Score + 100, player.leaderboardID2.ToString(), (response) =>
                     {
+                        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
 
+                        StartCoroutine(voice.VoiceOvers(player.faction, 2));
                     });
                 }
             }

@@ -40,6 +40,7 @@ public class TopReactsLeaderboard : MonoBehaviour
     public BlackMarketManager blackMarketManager;
     public ProgressionBadges progressionBadges;
     public SaveData saveData;
+    public bool contractBool;
 
     // Start is called before the first frame update
     void Start()
@@ -248,7 +249,11 @@ public class TopReactsLeaderboard : MonoBehaviour
                 Score = response.score;
             }
         });
-        yield return blackMarketManager.DisplayAvailableContracts();
+        if (!contractBool)
+        {
+            contractBool = true;
+            yield return blackMarketManager.DisplayAvailableContracts();
+        }
         yield return saveData.PlayerLevelRoutine();
         yield return progressionBadges.UpdateBadges();
     }

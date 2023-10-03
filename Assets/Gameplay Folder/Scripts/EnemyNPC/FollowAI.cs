@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using static DroneHealth;
+using System.Collections.Generic;
 
 public class FollowAI : MonoBehaviour
 {
@@ -24,8 +25,6 @@ public class FollowAI : MonoBehaviour
 
     public LayerMask obstacleMask;
 
-    private float DistanceToPlayer;
-
     public bool fireReady = false;
 
     public NavMeshAgent agent;
@@ -40,15 +39,11 @@ public class FollowAI : MonoBehaviour
     private bool isLookingAtPlayer = false;
 
     [Header("AI Behavior --------------------------------------------------------------")]
-    private Vector3 directionToTarget;
-
     public bool inSight;
     public bool alive = true;
     private bool firstHit = false;
 
     private bool PatrolPauseDone = true;
-
-    private GameObject[] players;
 
     public States currentState;
     private States previousState;
@@ -71,6 +66,37 @@ public class FollowAI : MonoBehaviour
     public float stickySpeed = 0f;
     float nextUpdateTime;
 
+    public Rigidbody attackProjectile;
+
+    public bool thrown;
+
+    private struct ThrowData
+    {
+        public Vector3 ThrowVelocity;
+        public float Angle;
+        public float DeltaXZ;
+        public float DeltaY;
+    }
+
+    [Range(0, 1)]
+    [Tooltip("Using a values closer to 0 will make the agent throw with the lower force"
+    + "down to the least possible force (highest angle) to reach the target.\n"
+    + "Using a value of 1 the agent will always throw with the MaxThrowForce below.")]
+    public float ForceRatio = 0;
+    [SerializeField]
+    [Tooltip("If the required force to throw the attack is greater than this value, "
+        + "the agent will move closer until they come within range.")]
+    private float MaxThrowForce = 25;
+
+    public GameObject Grenade;
+    public Transform grenadeSpawn;
+    public GameObject gun;
+
+    public enum PredictionMode
+    {
+        CurrentVelocity,
+        AverageVelocity
+    }
 
     // Start is called before the first frame update
     public void OnEnable()
@@ -142,7 +168,6 @@ public class FollowAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (!alive) return;
 
         if (agent.isOnNavMesh)
@@ -292,6 +317,13 @@ public class FollowAI : MonoBehaviour
             agent.speed = stickySpeed * GlobalSpeedManager.SpeedMultiplier;
         Agro = false;
         // patrols from one place to the next
+
+        if (CheckForPlayer())
+        {
+            StopCoroutine(PatrolDelay());
+            return;
+        }
+
         if (agent.remainingDistance <= agent.stoppingDistance && PatrolPauseDone)
         {
             PatrolPauseDone = false;
@@ -330,7 +362,15 @@ public class FollowAI : MonoBehaviour
             fireReady = false;
         transform.LookAt(targetTransform);
         if (IsLineOfSightClear(targetTransform))
+        {
+            gun.SetActive(true);
             attackWeapon.fireWeaponBool = true;
+        }
+        else if (!IsLineOfSightClear(targetTransform))
+        {
+            if (!thrown)
+                StartCoroutine(ThrowProjectile(targetTransform.position));
+        }
     }
 
     private bool IsLineOfSightClear(Transform target)
@@ -341,13 +381,111 @@ public class FollowAI : MonoBehaviour
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                || hit.collider.gameObject.CompareTag("Bullet"))
+                || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet"))
             {
                 return true;
             }
         }
-
         return false;
+    }
+
+    IEnumerator ThrowProjectile(Vector3 targetPosition)
+    {
+        if (!IsLineOfSightClear(targetTransform))
+        {
+            gun.SetActive(false);
+            animator.SetTrigger("Throw");
+            animator.SetBool("ThrowDone", false);
+            thrown = true;
+            yield return new WaitForSeconds(1.5f);
+            attackProjectile = Instantiate(Grenade, grenadeSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
+            ThrowData throwData = CalculateThrowData(targetPosition, attackProjectile.position);
+
+            DoThrow(throwData);
+            LookatTarget(1, .8f);
+            if (IsLineOfSightClear(targetTransform))
+                CheckForPlayer();
+            else
+                yield return new WaitForSeconds(3);
+            thrown = false;
+            animator.SetBool("ThrowDone", true);
+        }
+    }
+
+    private void DoThrow(ThrowData ThrowData)
+    {
+        LookatTarget(1f, .5f);
+        attackProjectile.useGravity = true;
+        attackProjectile.isKinematic = false;
+        attackProjectile.velocity = ThrowData.ThrowVelocity;
+    }
+
+    private ThrowData CalculateThrowData(Vector3 TargetPosition, Vector3 StartPosition)
+    {
+        // v = initial velocity, assume max speed for now
+        // x = distance to travel on X/Z plane only
+        // y = difference in altitudes from thrown point to target hit point
+        // g = gravity
+
+        Vector3 displacement = new Vector3(
+            TargetPosition.x,
+            StartPosition.y,
+            TargetPosition.z
+        ) - StartPosition;
+        float deltaY = TargetPosition.y - StartPosition.y;
+        float deltaXZ = displacement.magnitude;
+
+        // find lowest initial launch velocity with other magic formula from https://en.wikipedia.org/wiki/Projectile_motion
+        // v^2 / g = y + sqrt(y^2 + x^2)
+        // meaning.... v = sqrt(g * (y+ sqrt(y^2 + x^2)))
+        float gravity = Mathf.Abs(Physics.gravity.y);
+        float throwStrength = Mathf.Clamp(
+            Mathf.Sqrt(
+                gravity
+                * (deltaY + Mathf.Sqrt(Mathf.Pow(deltaY, 2)
+                + Mathf.Pow(deltaXZ, 2)))),
+            0.01f,
+            MaxThrowForce
+        );
+        throwStrength = Mathf.Lerp(throwStrength, MaxThrowForce, ForceRatio);
+
+        float angle;
+        if (ForceRatio == 0)
+        {
+            // optimal angle is chosen with a relatively simple formula
+            angle = Mathf.PI / 2f - (0.5f * (Mathf.PI / 2 - (deltaY / deltaXZ)));
+        }
+        else
+        {
+            // when we know the initial velocity, we have to calculate it with this formula
+            // Angle to throw = arctan((v^2 +- sqrt(v^4 - g * (g * x^2 + 2 * y * v^2)) / g*x)
+            angle = Mathf.Atan(
+                (Mathf.Pow(throwStrength, 2) - Mathf.Sqrt(
+                    Mathf.Pow(throwStrength, 4) - gravity
+                    * (gravity * Mathf.Pow(deltaXZ, 2)
+                    + 2 * deltaY * Mathf.Pow(throwStrength, 2)))
+                ) / (gravity * deltaXZ)
+            );
+        }
+
+        if (float.IsNaN(angle))
+        {
+            // you will need to handle this case when there
+            // is no feasible angle to throw the object and reach the target.
+            return new ThrowData();
+        }
+
+        Vector3 initialVelocity =
+            Mathf.Cos(angle) * throwStrength * displacement.normalized
+            + Mathf.Sin(angle) * throwStrength * Vector3.up;
+
+        return new ThrowData
+        {
+            ThrowVelocity = initialVelocity,
+            Angle = angle,
+            DeltaXZ = deltaXZ,
+            DeltaY = deltaY
+        };
     }
 
     public void EMPShock()

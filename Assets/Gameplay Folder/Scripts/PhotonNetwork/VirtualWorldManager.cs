@@ -34,7 +34,7 @@ public class VirtualWorldManager : MonoBehaviour
 
     IEnumerator Leave()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         SceneManager.LoadScene("TD Main Menu");
 
     }

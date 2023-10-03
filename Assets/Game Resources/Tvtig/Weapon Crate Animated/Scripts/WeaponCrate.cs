@@ -9,7 +9,6 @@ public class WeaponCrate : MonoBehaviour
     [SerializeField]
     private VisualEffect _visualEffect;
 
-    public Transform spawn1;
     public Transform spawn2;
     public Transform spawn3;
 
@@ -91,7 +90,6 @@ public class WeaponCrate : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         GameObject[] shuffledWeapons = ShuffleArray(weapons);
         GameObject[] shuffledPowerups = ShuffleArray(powerups);
-        Instantiate(shuffledWeapons[0], spawn1.position, spawn1.rotation);
         Instantiate(shuffledWeapons[2], spawn3.position, spawn3.rotation);
         Instantiate(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);
@@ -101,7 +99,7 @@ public class WeaponCrate : MonoBehaviour
 
     IEnumerator CacheRespawn()
     {
-        yield return new WaitForSeconds(30);
+        yield return new WaitForSeconds(60);
         _animator.SetBool("Open", false);
         cacheActive = true;
     }

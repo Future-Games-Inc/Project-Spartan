@@ -81,7 +81,7 @@ public class EarlyExtraction : MonoBehaviour
 
     IEnumerator Leave()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 }

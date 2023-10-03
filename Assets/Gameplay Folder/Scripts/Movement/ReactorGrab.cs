@@ -1,3 +1,4 @@
+using Photon.Pun.Demo.Cockpit;
 using UnityEngine;
 
 public class ReactorGrab : MonoBehaviour
@@ -15,6 +16,9 @@ public class ReactorGrab : MonoBehaviour
     public AudioClip armorClip;
     public AudioClip healthClip;
     public AudioClip ammoClip;
+
+    public GameObject[] buttons;
+    public GameObject offLine;
 
     public bool held;
 
@@ -37,6 +41,24 @@ public class ReactorGrab : MonoBehaviour
             else
                 reactorCore.GetComponent<Renderer>().material = mediumMaterial;
         }
+
+        if(playerHealth.reactorExtraction >= 20)
+        {
+            foreach(GameObject button in buttons) 
+            {
+                button.SetActive(true);
+            }
+            offLine.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject button in buttons)
+            {
+                button.SetActive(false);
+            }
+            offLine.SetActive(false);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)

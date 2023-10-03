@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BNG {
@@ -17,6 +18,7 @@ namespace BNG {
         float lastMoveTime = -1f;
         bool movingForward = true;
         AudioSource audioSource;
+        public GameObject playerHolder;
 
         void Start() {
             // Start off by orienting the zipline holder
@@ -58,13 +60,31 @@ namespace BNG {
             }
         }
 
+        public override void OnGrip(float gripValue)
+        {
+
+            if (gripValue > 0.5f)
+            {
+                playerHolder.SetActive(true);
+            }
+
+            base.OnGrip(gripValue);
+        }
+
         public override void OnTrigger(float triggerValue) {
 
-            if (triggerValue > 0.5f) {
+            if (triggerValue > 0.5f)
+            {
                 moveTowards(ZiplineEnd.position, true);
             }
 
             base.OnTrigger(triggerValue);
+        }
+
+        public override void OnRelease()
+        {
+            playerHolder.SetActive(false);
+            base.OnRelease();
         }
 
         public override void OnButton1() {

@@ -152,6 +152,7 @@ public class PlayerHealth : MonoBehaviour
     public string leaderboardID3 = "react_kills";
     public string progressionKey = "cent_prog";
     public string leaderboardID4 = "Playground";
+    public string leaderboardID5 = "Bear";
     public string faction;
 
     [Header("Contract Tracking ------------------------------------")]
@@ -201,6 +202,8 @@ public class PlayerHealth : MonoBehaviour
 
     public TextMeshProUGUI sidearmText;
     public SnapZone sidearmZone;
+
+    public bool alerted = false;
 
 
     // Start is called before the first frame update
@@ -564,10 +567,16 @@ public class PlayerHealth : MonoBehaviour
         else if (!reactorHeld)
             reactorText.text = "";
 
-        if (reactorExtraction > 50 && faction.ToString() != matchEffects.owner)
+        if (reactorExtraction > 50 && faction.ToString() != matchEffects.owner && !alerted)
         {
+            alerted = true;
             enemySpawner.spawnReinforcements = true;
-            StartCoroutine(enemySpawner.SpawnReinforcements());
+            enemySpawner.enemyCountMax += 10;
+            enemySpawner.securityCountMax += 10;
+            enemySpawner.enemiesKilledForBossSpawn = 1;
+            enemySpawner.spawnDefenders = true;
+            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+            StartCoroutine(voice.VoiceOvers(faction, 4));
         }
 
         if (Health <= 30)
@@ -784,14 +793,14 @@ public class PlayerHealth : MonoBehaviour
             spawnManager.gameOver = true;
             spawnManager.winnerPlayer = this.gameObject;
             UpdateSkills(200);
-            int score = (int)(300 - (int)match.currentExtractionTimer);
-            LootLockerSDKManager.GetMemberRank(leaderboardID4, scene, (response) =>
+            int score = (int)(matchEffects.actualExtractionTime - match.currentExtractionTimer);
+            LootLockerSDKManager.GetMemberRank(scene, scene, (response) =>
             {
                 if (response.success)
                 {
                     if (response.score > score)
                     {
-                        LootLockerSDKManager.SubmitScore(scene, score, leaderboardID4, faction, (response) =>
+                        LootLockerSDKManager.SubmitScore(scene, score, scene, faction, (response) =>
                         {
                         });
                     }
@@ -1111,7 +1120,7 @@ public class PlayerHealth : MonoBehaviour
         UpdateSkills(-cintUpdate);
         deathCanvas.SetActive(true);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         // Leave the room
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
@@ -1133,6 +1142,11 @@ public class PlayerHealth : MonoBehaviour
         model.SetActive(false);
         player.transform.position = spawnManager.respawnPosition;
         playerLives -= 1;
+        if(playerLives == 1)
+        {
+            PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
+            StartCoroutine(voice.VoiceOvers(faction, 3));
+        }
         Armor = 125;
         Health = 125;
         CheckArmorStatus();
@@ -1217,7 +1231,7 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator DisplayMessage()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(4);
         VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 

@@ -23,8 +23,6 @@ public class ReinforcementAI : MonoBehaviour
 
     public LayerMask obstacleMask;
 
-    private float DistanceToPlayer;
-
     public bool fireReady = false;
 
     public NavMeshAgent agent;
@@ -39,15 +37,11 @@ public class ReinforcementAI : MonoBehaviour
     private bool isLookingAtPlayer = false;
 
     [Header("AI Behavior --------------------------------------------------------------")]
-    private Vector3 directionToTarget;
-
     public bool inSight;
     public bool alive = true;
     private bool firstHit = false;
 
     private bool PatrolPauseDone = true;
-
-    private GameObject[] players;
 
     public States currentState;
     private States previousState;
@@ -353,12 +347,12 @@ public class ReinforcementAI : MonoBehaviour
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Enemy")
-                || hit.collider.gameObject.CompareTag("Security") || hit.collider.gameObject.CompareTag("BossEnemy") || hit.collider.gameObject.CompareTag("EnemyBullet"))
+                || hit.collider.gameObject.CompareTag("Security") || hit.collider.gameObject.CompareTag("BossEnemy") || hit.collider.gameObject.CompareTag("EnemyBullet")
+                || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("Bullet"))
             {
                 return true;
             }
         }
-
         return false;
     }
 

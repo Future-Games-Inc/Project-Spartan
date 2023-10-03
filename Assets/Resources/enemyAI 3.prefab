@@ -2471,9 +2471,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DetectRange: 30
-  AttackRange: 15
-  AgroRange: 25
-  wanderRadius: 500
+  AttackRange: 10
+  AgroRange: 20
+  wanderRadius: 2000
   Health: 150
   obstacleMask:
     serializedVersion: 2
@@ -2508,6 +2508,13 @@ MonoBehaviour:
   ragdoll: {fileID: 5309151438218465623}
   stuck: 0
   stickySpeed: 0
+  attackProjectile: {fileID: 0}
+  thrown: 0
+  ForceRatio: 0.85
+  MaxThrowForce: 25
+  Grenade: {fileID: 1627370891586873586, guid: 42b0248a2d617234b91a077603592481, type: 3}
+  grenadeSpawn: {fileID: 4291148806983874}
+  gun: {fileID: 682816315270628985}
 --- !u!136 &8477443036030664059
 CapsuleCollider:
   m_ObjectHideFlags: 0

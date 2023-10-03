@@ -47,7 +47,8 @@ public class MatchEffects : MonoBehaviour
     public string scene;
 
     public GameObject[] gameObjects; // assuming you have 4 gameObjects corresponding to 4 owner strings
-    public GameObject[] codePanels; 
+    public GameObject[] codePanels;
+    public float actualExtractionTime;
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +74,7 @@ public class MatchEffects : MonoBehaviour
                 ActivateCorrespondingGameObject();
             }
         });
+        actualExtractionTime = currentExtractionTimer;
     }
 
     void ActivateCorrespondingGameObject()
@@ -176,6 +178,14 @@ public class MatchEffects : MonoBehaviour
         {
             currentExtractionTimer -= 1;
             timerCoroutine = StartCoroutine(TimerEvent());
+        }
+
+        if(currentExtractionTimer == 45)
+        {
+            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+            StartCoroutine(voice.VoiceOvers(player.faction, 0));
         }
 
         if (currentMatchTime <= 0 && currentExtractionTimer <= 0 && active)

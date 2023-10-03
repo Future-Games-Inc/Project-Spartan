@@ -1,4 +1,5 @@
 using LootLocker.Requests;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -12,17 +13,20 @@ public class WalkieSupport : MonoBehaviour
     public int Score;
     public GameObject button1;
     public GameObject button2;
+    public GameObject button3;
+
+    public bool check;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(player == null)
+        if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
         }
@@ -37,16 +41,59 @@ public class WalkieSupport : MonoBehaviour
             spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponentInParent<SpawnManager1>();
         }
 
-        if (player.faction.ToString() != matchEffects.owner.ToString())
+        if (player.faction.ToString() != matchEffects.owner.ToString() && !check)
         {
-            button1.SetActive(false);
-            button2.SetActive(true);
+            check = true;
+            StartCoroutine(CheckFaction());
         }
-        else
+        else if (player.faction.ToString() == matchEffects.owner.ToString() && !check)
         {
-            button1.SetActive(true);
-            button2.SetActive(false);
+            check = true;
+            StartCoroutine(CheckFaction2());
         }
+    }
+
+    IEnumerator CheckFaction()
+    {
+        LootLockerSDKManager.GetMemberRank(player.leaderboardID2.ToString(), player.faction.ToString(), (response) =>
+        {
+            if (response.success)
+            {
+                Score = response.score;
+                if (Score >= 100)
+                {
+                    button1.SetActive(false);
+                    button3.SetActive(false);
+                    button2.SetActive(true);
+                }
+            }
+            else
+                button3.SetActive(true);
+        });
+        yield return new WaitForSeconds(15);
+        check = false;
+    }
+
+
+    IEnumerator CheckFaction2()
+    {
+        LootLockerSDKManager.GetMemberRank(player.leaderboardID2.ToString(), player.faction.ToString(), (response) =>
+        {
+            if (response.success)
+            {
+                Score = response.score;
+                if (Score >= 300)
+                {
+                    button1.SetActive(true);
+                    button3.SetActive(false);
+                    button2.SetActive(false);
+                }
+            }
+            else
+                button3.SetActive(true);
+        });
+        yield return new WaitForSeconds(20);
+        check = false;
     }
 
     public void Reinforcements()
@@ -58,11 +105,17 @@ public class WalkieSupport : MonoBehaviour
                 if (response.success)
                 {
                     Score = response.score;
-                    if(Score >= 300)
+                    if (Score >= 300)
                     {
                         spawnManager.spawnReinforcements = true;
-                        LootLockerSDKManager.SubmitScore(player.faction.ToString(), Score-300, player.leaderboardID2.ToString(), (response) =>
+                        LootLockerSDKManager.SubmitScore(player.faction.ToString(), Score - 300, player.leaderboardID2.ToString(), (response) =>
                         {
+                            if (response.success)
+                            {
+                                PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+                                StartCoroutine(voice.VoiceOvers(player.faction, 1));
+                            }
                         });
                         Destroy(gameObject);
                     }

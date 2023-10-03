@@ -21,43 +21,15 @@ public class NetworkGrenade : MonoBehaviour
     }
     public TargetInfo[] Targets;
 
-    public GameObject player;
-    public PlayerHealth playerHealth;
     public GameObject explosionEffect;
     public Rigidbody rb;
     public AudioSource audioSource;
     public GameObject objectRenderer;
-    public bool contact;
 
 
 
     private void OnEnable()
     {
-        StartCoroutine(NoContact());
-    }
-
-    IEnumerator NoContact()
-    {
-        yield return new WaitForSeconds(10);
-        if (contact == false)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
-        {
-            player = other.transform.root.gameObject;
-            contact = true;
-        }
-    }
-
-    public void Throw()
-    {
-        this.gameObject.layer = 20;
-        audioSource.Play();
         StartCoroutine(ExplodeDelayed());
     }
 
@@ -78,7 +50,7 @@ public class NetworkGrenade : MonoBehaviour
             }
         }
 
-        float delay = (Type == GrenadeType.Prox) ? 0.2f : 15f;
+        float delay = (Type == GrenadeType.Prox) ? 1f : 15f;
         StartCoroutine(Destroy(delay));
     }
 
@@ -90,47 +62,28 @@ public class NetworkGrenade : MonoBehaviour
         // Handle damage based on the target's tag
         switch (target.Tag)
         {
-            case "Enemy":
-            case "BossEnemy":
+            case "Player":
                 HandleEnemyDamage(collider, damage, target.Tag);
-                break;
-            case "Security":
-                HandleSecurityDamage(collider, damage);
-                break;
+                return;
                 // Add more cases as needed
         }
     }
 
     void HandleEnemyDamage(Collider collider, int damage, string enemyType)
     {
-        // Simplified enemy damage handling logic here
-        FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-        if (enemyDamageCrit.alive)
+        PlayerHealth enemyDamageCrit2 = collider.GetComponent<PlayerHealth>();
+        if (enemyDamageCrit2 != null)
         {
-            enemyDamageCrit.TakeDamage(damage);
-            if (enemyDamageCrit.Health <= damage && playerHealth != null)
+            if (enemyDamageCrit2.alive)
             {
-                playerHealth.EnemyKilled(enemyType);
+                enemyDamageCrit2.TakeDamage(damage);
             }
-        }
-    }
-
-    void HandleSecurityDamage(Collider collider, int damage)
-    {
-        // Simplified security damage handling logic here
-        DroneHealth droneHealth = collider.GetComponent<DroneHealth>();
-        if (droneHealth != null)
-            droneHealth.TakeDamage(damage);
-        else
-        {
-            SentryDrone sentry = collider.GetComponent<SentryDrone>();
-            sentry.TakeDamage(damage);
         }
     }
 
     int CalculateDamage(float distance)
     {
-        return (int)((1f - distance / explosionRadius) * maxDamage);
+        return Mathf.Min((int)((1f - distance / explosionRadius) * (maxDamage/2)), 100);
     }
 
     IEnumerator Destroy(float delay)

@@ -56,7 +56,7 @@ public class Jetpack : MonoBehaviour
 
     public void newJetpack()
     {
-        if (playerGameObject.GetComponent<Rigidbody>() == null)
+        if (playerGameObject.GetComponent<Rigidbody>() == null && activated)
         {
             playerRb = playerGameObject.AddComponent<Rigidbody>();
             playerRb.constraints = RigidbodyConstraints.FreezeRotation;

@@ -13,21 +13,24 @@ public class SpawnManager1 : MonoBehaviour
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject[] artifacts;
     [SerializeField] private GameObject[] bombs;
+    [SerializeField] private GameObject[] defenderEnemies;
     public Transform reactorSpawnLocation;
     public GameObject reactorPlaceholder;
 
 
     [SerializeField] private MatchEffects matchProps;
 
-    [SerializeField] private int enemyCountMax = 5;
-    [SerializeField] private int securityCountMax = 2;
+    [SerializeField] public int enemyCountMax = 5;
+    [SerializeField] public int defenderCountMax = 5;
+    [SerializeField] public int securityCountMax = 2;
     [SerializeField] private int reactorCountMax = 1;
     [SerializeField] private int healthCountMax = 1;
-    [SerializeField] private int enemiesKilledForBossSpawn = 5;
+    [SerializeField] public int enemiesKilledForBossSpawn = 5;
     [SerializeField] private int bombsCountMax = 10;
     [SerializeField] private int artifactCountMax = 10;
 
     private int enemyCount;
+    public int defenderCount;
     private int securityCount;
     private int reactorCount;
     private int healthCount;
@@ -41,6 +44,7 @@ public class SpawnManager1 : MonoBehaviour
     private bool spawnBombs = true;
     private bool spawnArtifacts = true;
     private bool coroutinesStarted = false;
+    public bool spawnDefenders = false;
 
 
     public float spawnRadius;   // Maximum spawn radius
@@ -85,6 +89,7 @@ public class SpawnManager1 : MonoBehaviour
                 StartCoroutine(SpawnHealth());
                 StartCoroutine(SpawnBoss());
                 StartCoroutine(SpawnReinforcements());
+                StartCoroutine(SpawnDefenders());
 
                 coroutinesStarted = true;
             }
@@ -165,6 +170,34 @@ public class SpawnManager1 : MonoBehaviour
 
                 yield return new WaitForSeconds(2);
                 spawnReinforcements = true;
+
+                yield return new WaitForSeconds(.25f);
+            }
+            yield return new WaitForSeconds(.25f);
+        }
+    }
+
+    public IEnumerator SpawnDefenders()
+    {
+        while (true)
+        {
+            while (!matchProps.startMatchBool)
+                yield return null;
+            if (spawnDefenders && defenderCount < defenderCountMax)
+            {
+                Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
+
+                spawnDefenders = false;
+
+                GameObject[] enemies = ShuffleArray(defenderEnemies);
+
+                GameObject defenderDrone = enemies[0];
+                Instantiate(defenderDrone, spawnPosition[0].position, Quaternion.identity);
+
+                defenderCount++;
+
+                yield return new WaitForSeconds(2);
+                spawnDefenders = true;
 
                 yield return new WaitForSeconds(.25f);
             }

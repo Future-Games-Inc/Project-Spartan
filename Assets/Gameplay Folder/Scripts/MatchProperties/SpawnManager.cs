@@ -30,7 +30,11 @@ public class SpawnManager : MonoBehaviour
             }
         }
         else
+        {
+            respawnPosition = transform.position;
             InstantiatePlayer(transform.position);
+        }
+
         gameOver = false;
         winnerPlayer = null;
     }

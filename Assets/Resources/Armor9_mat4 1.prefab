@@ -3142,10 +3142,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992552741a7fd3547985e003a89c4698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectRange: 30
+  DetectRange: 40
   AttackRange: 15
-  AgroRange: 25
-  wanderRadius: 500
+  AgroRange: 30
+  wanderRadius: 2000
   Health: 200
   obstacleMask:
     serializedVersion: 2
@@ -3180,6 +3180,13 @@ MonoBehaviour:
   ragdoll: {fileID: 4847406465161416308}
   stuck: 0
   stickySpeed: 0
+  attackProjectile: {fileID: 0}
+  thrown: 0
+  ForceRatio: 0.86
+  MaxThrowForce: 25
+  Grenade: {fileID: 1627370891586873586, guid: 42b0248a2d617234b91a077603592481, type: 3}
+  grenadeSpawn: {fileID: 4291148806983874}
+  gun: {fileID: 7285257760279942639}
 --- !u!136 &3888885654817260172
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3244,10 +3251,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c1d5d48b0499b4bbf284e27f32c452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 5451881146956983319, guid: e4bd26536620caf429a3c0e1d6f4fb19, type: 3}
+  bullet: {fileID: 5451881146956983319, guid: b00670d674bedf442aa254fd06f7ad47, type: 3}
   bulletTransform: {fileID: 421824761609566074}
   shootForce: 65
-  ammoLeft: 15
+  ammoLeft: 20
   maxAmmo: 0
   audioSource: {fileID: 3239117333501985060}
   audioSource2: {fileID: 2642686913866406122}

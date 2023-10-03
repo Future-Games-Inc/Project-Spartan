@@ -126,6 +126,7 @@ public class EnemyXPDrop : MonoBehaviour
 
                 case "CUAHack":
                     matchEffects.currentExtractionTimer += 30;
+                    matchEffects.actualExtractionTime += 30;
                     Destroy(gameObject);
                     break;
 
