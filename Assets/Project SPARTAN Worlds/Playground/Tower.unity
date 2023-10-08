@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.025
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
+  m_AmbientSkyColor: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1.31
@@ -7146,7 +7146,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 10.591095, y: -15.60043}
+  m_AnchoredPosition: {x: 10.591103, y: -15.60043}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &134752720
@@ -20800,7 +20800,7 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
+  m_Mode: 1
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
   m_Resolution: 128
@@ -27572,7 +27572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 10.591003, y: -15.600237}
+  m_AnchoredPosition: {x: 10.591591, y: -15.600237}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &485396585
@@ -28207,7 +28207,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 452327475}
   m_HandleRect: {fileID: 452327474}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -29160,7 +29160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &523125583
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30445,7 +30445,7 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
+  m_Mode: 1
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
   m_Resolution: 128
@@ -33342,8 +33342,6 @@ MonoBehaviour:
   currentMatchTime: 0
   currentExtractionTimer: 500
   spawnManager: {fileID: 972798658}
-  uiCanvas: {fileID: 523125582}
-  countdownText: {fileID: 1546049600}
   audioSource: {fileID: 602118814}
   countdownClips:
   - {fileID: 8300000, guid: 97faac36c5956a94b95ad4c7304dc99e, type: 3}
@@ -33351,16 +33349,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d9e7d4e8aa7b27b4ba427ca2254dca96, type: 3}
   - {fileID: 8300000, guid: 073c025e6babcb84f9192ea478632b99, type: 3}
   - {fileID: 8300000, guid: 8b2d63efda391de4c8504015705b9d3d, type: 3}
-  matchBegan: {fileID: 8300000, guid: 035f3e011ef2b5a40be97ea5633810e9, type: 3}
-  supplyShip1: {fileID: 8300000, guid: 80e2da84e7836a54b90ce5c6c375c477, type: 3}
-  supplyShip2: {fileID: 8300000, guid: 73008e4528100214bafca919ce17e0a2, type: 3}
   spawnInterval: 60
   lastSpawnTime: 0
   startMatchBool: 0
   spawnReactor: 0
   codeFound: 0
   spawned: 0
-  DE_supplyDrop: 1
   numSequence: 
   spawnRadius: 300
   nexusCodePanel:
@@ -53398,7 +53392,7 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
+  m_Mode: 1
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
   m_Resolution: 128
@@ -56110,8 +56104,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 150824357}
   m_HandleRect: {fileID: 150824356}
   m_Direction: 2
-  m_Value: 0.16061379
-  m_Size: 0.40432373
+  m_Value: 0.16061388
+  m_Size: 0.4043237
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -62991,7 +62985,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -10.593216, y: -15.600565}
+  m_AnchoredPosition: {x: -10.5915985, y: -15.600565}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1221282704
@@ -90268,7 +90262,7 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
+  m_Mode: 1
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
   m_Resolution: 128
@@ -98720,7 +98714,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 10.590721, y: -15.601236}
+  m_AnchoredPosition: {x: 10.589615, y: -15.601236}
   m_SizeDelta: {x: 181.5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1927267496
@@ -103050,8 +103044,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 386531494}
   m_HandleRect: {fileID: 386531492}
   m_Direction: 2
-  m_Value: 0.16061579
-  m_Size: 0.404324
+  m_Value: 0.16061603
+  m_Size: 0.40432402
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -110939,7 +110933,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 0.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

@@ -81,7 +81,7 @@ public class BlackoutBullet : MonoBehaviour
             if (enemyDamageCrit2.alive && enemyDamageCrit2.Health > damage)
             {
                 enemyDamageCrit2.TakeDamage(damage);
-                enemyDamageCrit2.shocked = true;
+                enemyDamageCrit2.EMPShock();
             }
             else if (enemyDamageCrit2.alive && enemyDamageCrit2.Health <= damage)
             {
@@ -121,7 +121,8 @@ public class BlackoutBullet : MonoBehaviour
 
     int CalculateDamage(float distance)
     {
-        return Mathf.Min((int)((1f - distance / blastRadius) * (damage / 2)), 100);
+        int damageAct = (int)((1f - distance / blastRadius) * (damage/2));
+        return Mathf.Clamp(damageAct, 0, 80);
     }
 
 

@@ -13,17 +13,12 @@ public class MatchEffects : MonoBehaviour
     public int currentExtractionTimer = 300;
 
     public GameObject spawnManager;
-    public GameObject uiCanvas;
-
-    public TextMeshProUGUI countdownText;
 
     private Coroutine timerCoroutine;
 
     public AudioSource audioSource;
     public AudioClip[] countdownClips;
     public AudioClip matchBegan;
-    public AudioClip supplyShip1;
-    public AudioClip supplyShip2;
 
     public float spawnInterval; // 5 minutes in seconds
     public float lastSpawnTime;
@@ -32,7 +27,6 @@ public class MatchEffects : MonoBehaviour
     public bool spawnReactor = false;
     public bool codeFound = false;
     public bool spawned = false;
-    public bool DE_supplyDrop;
 
     public string numSequence;
 
@@ -49,6 +43,13 @@ public class MatchEffects : MonoBehaviour
     public GameObject[] gameObjects; // assuming you have 4 gameObjects corresponding to 4 owner strings
     public GameObject[] codePanels;
     public float actualExtractionTime;
+    public GameObject MissionStart;
+    public GameObject Rael;
+    public GameObject decryption;
+    public GameObject device;
+    public GameObject dropZone;
+
+    public int level;
 
     // Start is called before the first frame update
     void Start()
@@ -58,11 +59,11 @@ public class MatchEffects : MonoBehaviour
             int panel = Random.Range(0, codePanels.Length);
             codePanels[panel].SetActive(true);
             InitializeTimer(); // Only the Master Client will initialize the timer
-            StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
+            //StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
 
             // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
             numSequence = GenerateRandomSequence(4);
-            foreach(TextMeshProUGUI text in nexusCodePanel)
+            foreach (TextMeshProUGUI text in nexusCodePanel)
                 text.text = numSequence.ToString();
         }
 
@@ -75,6 +76,98 @@ public class MatchEffects : MonoBehaviour
             }
         });
         actualExtractionTime = currentExtractionTimer;
+        StartCoroutine(MapLevel());
+        StartCoroutine(MissionIntro());
+    }
+
+    IEnumerator MissionIntro()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        yield return new WaitForSeconds(matchCountdown + 60);
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 6));
+            MissionStart.SetActive(true);
+        }
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 10));
+            MissionStart.SetActive(true);
+        }
+    }
+
+    public void StartMission()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 7));
+            AddTime(180);
+            Rael.SetActive(true);
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 11));
+            AddTime(200);
+            device.SetActive(true);
+        }
+    }
+
+    public void MissionStep2()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 8));
+            decryption.SetActive(true);
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 12));
+            dropZone.SetActive(true);
+        }
+    }
+
+    public void MissionEnd()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 9));
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 13));
+        }
+    }
+
+    IEnumerator MapLevel()
+    {
+        while (true)
+        {
+            bool done = false;
+            LootLockerSDKManager.GetPlayerInfo((response) =>
+            {
+                if (response.success)
+                {
+                    level = (int)response.level;
+                    done = true;
+                }
+            });
+            yield return new WaitWhile(() => done == false);
+            StopCoroutine(MapLevel());
+        }
     }
 
     void ActivateCorrespondingGameObject()
@@ -92,23 +185,23 @@ public class MatchEffects : MonoBehaviour
         else if (owner == "CintSix Cartel") gameObjects[3].SetActive(true);
     }
 
-    IEnumerator SpawnCheckCoroutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(spawnInterval);
+    //IEnumerator SpawnCheckCoroutine()
+    //{
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(spawnInterval);
 
-            if (spawned == false && DE_supplyDrop == true)
-            {
-                lastSpawnTime = Time.time;
-                // Create an array to store the valid positions
-                StartCoroutine(SupplyShipAudio());
-                spawned = true;
-                StartCoroutine(spawner.SpawnSupplyDrop());
+    //        if (spawned == false && DE_supplyDrop == true)
+    //        {
+    //            lastSpawnTime = Time.time;
+    //            // Create an array to store the valid positions
+    //            StartCoroutine(SupplyShipAudio());
+    //            spawned = true;
+    //            StartCoroutine(spawner.SpawnSupplyDrop());
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
     private void Update()
     {
         if (SceneManager.GetActiveScene().name != "WeaponTest")
@@ -124,17 +217,16 @@ public class MatchEffects : MonoBehaviour
             currentExtractionTimer = 0;
     }
 
-    IEnumerator SupplyShipAudio()
-    {
-        yield return new WaitForSeconds(0);
-        audioSource.PlayOneShot(supplyShip1);
-        StartCoroutine(PlaySupplyDropAudioDelayed());
-    }
+    //IEnumerator SupplyShipAudio()
+    //{
+    //    yield return new WaitForSeconds(0);
+    //    audioSource.PlayOneShot(supplyShip1);
+    //    StartCoroutine(PlaySupplyDropAudioDelayed());
+    //}
 
     private void RefreshTimerUI()
     {
         string seconds = (currentMatchTime % 60).ToString("00");
-        countdownText.text = $"{seconds}";
     }
 
     void RefreshCountdownTimer()
@@ -166,9 +258,8 @@ public class MatchEffects : MonoBehaviour
             if (currentMatchTime <= 0)
             {
                 audioSource.PlayOneShot(matchBegan);
-                uiCanvas.SetActive(false);
                 startMatchBool = true;
-                StartCoroutine(SpawnCheckCoroutine());
+                //StartCoroutine(SpawnCheckCoroutine());
                 currentExtractionTimer -= 1;
                 //StartCoroutine(Artifacts());
             }
@@ -180,7 +271,7 @@ public class MatchEffects : MonoBehaviour
             timerCoroutine = StartCoroutine(TimerEvent());
         }
 
-        if(currentExtractionTimer == 45)
+        if (currentExtractionTimer == 45)
         {
             PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
             PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
@@ -197,11 +288,17 @@ public class MatchEffects : MonoBehaviour
 
     }
 
-    IEnumerator PlaySupplyDropAudioDelayed()
+    public void AddTime(int time)
     {
-        yield return new WaitForSeconds(supplyShip1.length);
-        audioSource.PlayOneShot(supplyShip2);
+        actualExtractionTime += time;
+        currentExtractionTimer += time;
     }
+
+    //IEnumerator PlaySupplyDropAudioDelayed()
+    //{
+    //    yield return new WaitForSeconds(supplyShip1.length);
+    //    audioSource.PlayOneShot(supplyShip2);
+    //}
 
     private string GenerateRandomSequence(int length)
     {

@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Player Characteristics ------------------------------------")]
     public States activeState = States.Normal;
-    public GameObject player;
 
     public SpawnManager spawnManager;
     public SpawnManager1 enemySpawner;
@@ -58,8 +58,6 @@ public class PlayerHealth : MonoBehaviour
     public GameObject shockEffect;
 
     [Header("Player UI ------------------------------------")]
-    public GameObject reactorIcon;
-    public GameObject shipIcon;
     public GameObject healthBarObject;
     public GameObject armorBarObject;
     public GameObject criticalHealth;
@@ -68,8 +66,6 @@ public class PlayerHealth : MonoBehaviour
     public GameObject primaryActive;
     public GameObject secondaryActive;
     public GameObject bombDeath;
-    public GameObject model;
-    public Transform meleeAttach;
 
     public GameObject extractCanvas;
     public GameObject earlyCanvas;
@@ -77,17 +73,14 @@ public class PlayerHealth : MonoBehaviour
     public GameObject deathCanvas;
 
     public Transform bombDropLocation;
-    public Transform tokenDropLocation;
 
     public ActivateWristUI activateWristUI;
 
-    public MultiplayerHealth multiplayerHealth;
     public RespawnUI respawnUI;
 
     [Header("Player Audio ------------------------------------")]
     public AudioSource audioSource;
     public AudioClip bulletHit;
-    public AudioClip xpClip;
     public AudioClip[] winClipsMale;
     public AudioClip[] winClipsFemale;
     public AudioClip roundWonClip;
@@ -121,19 +114,13 @@ public class PlayerHealth : MonoBehaviour
     public TextMeshProUGUI inventoryText;
     public SnapZone inventoryZone;
     public bool secondaryPowerupTimer;
-    public float activeCamoTimer;
     public float stealthTimer;
-    public float activeCamoDuration = 15;
     bool shouldCallAbilities1True;
     bool shouldCallAbilities1False;
     bool shouldCallAbilities3True;
     bool shouldCallAbilities3False;
     bool shouldCallAbilities4True;
     bool shouldCallAbilities4False;
-    bool shouldCallAbilities5True;
-    bool shouldCallAbilities5False;
-    bool shouldCallAbilities6True;
-    bool shouldCallAbilities6False;
     bool shouldCallAbilities8;
     bool shouldCallAbilities9;
     bool shouldCallAbilities10True;
@@ -190,6 +177,9 @@ public class PlayerHealth : MonoBehaviour
     public SkinnedMeshRenderer[] characterSkins;
     public GameObject aiCompanionDrone;
     public GameObject decoySpawner;
+
+    public UnityEngine.UI.Slider healthSlider;
+    public UnityEngine.UI.Slider armorSlider;
 
     public int factionScore;
     const string factionSelected = "SelectedFaction";
@@ -252,7 +242,6 @@ public class PlayerHealth : MonoBehaviour
         leechEffect = false;
         activeCamo = false;
         stealth = false;
-        shipIcon.SetActive(false);
 
         InitBulletModifier();
 
@@ -327,6 +316,9 @@ public class PlayerHealth : MonoBehaviour
 
         UpdatePrimaryText();
         UpdateSecondaryText();
+        PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
+        StartCoroutine(voice.VoiceOvers(faction, 5));
+
     }
 
     void UpdateSecondaryText()
@@ -334,55 +326,55 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("HEALTH_STIM") && PlayerPrefs.GetInt("HEALTH_STIM") >= 1 &&
                 PlayerPrefs.HasKey("HEALTH_STIM_SLOT") && PlayerPrefs.GetInt("HEALTH_STIM_SLOT") == 2)
         {
-            secondaryPowerupText.text = "HEALTH STIM";
+            secondaryPowerupText.text = "(Y): HEALTH STIM";
         }
 
         else if (PlayerPrefs.HasKey("LEECH") && PlayerPrefs.GetInt("LEECH") >= 1 &&
                 PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 2)
         {
-            secondaryPowerupText.text = "LEECH";
+            secondaryPowerupText.text = "(Y): LEECH";
         }
 
         else if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
                 PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 2)
         {
-            secondaryPowerupText.text = "ACTIVE CAMO";
+            secondaryPowerupText.text = "(Y): ARMOR STIM";
         }
 
         else if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
                 PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 2)
         {
-            secondaryPowerupText.text = "STEALTH";
+            secondaryPowerupText.text = "(Y): STEALTH";
         }
 
         else if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
                 PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 2)
         {
-            secondaryPowerupText.text = "AI COMPANION";
+            secondaryPowerupText.text = "(Y): AI COMPANION";
         }
 
         else if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
                 PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 2)
         {
-            secondaryPowerupText.text = "DECOY DEPLOYMENT";
+            secondaryPowerupText.text = "(Y): DECOY DEPLOYMENT";
         }
 
         else if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
                 PlayerPrefs.HasKey("BERSERKER_FURY_SLOT") && PlayerPrefs.GetInt("BERSERKER_FURY_SLOT") >= 2)
         {
-            secondaryPowerupText.text = "BERSERKER FURY";
+            secondaryPowerupText.text = "(Y): BERSERKER FURY";
         }
 
         else if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1 &&
                 PlayerPrefs.HasKey("SAVING_GRACE_SLOT") && PlayerPrefs.GetInt("SAVING_GRACE_SLOT") == 2)
         {
-            secondaryPowerupText.text = "SAVING GRACE APPLIED";
+            secondaryPowerupText.text = "(Y): SAVING GRACE ACTIVE";
         }
 
         else if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
                 PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") == 2)
         {
-            secondaryPowerupText.text = "EXPLOSIVE DEATH APPLIED";
+            secondaryPowerupText.text = "(Y): EXPLOSIVE DEATH ACTIVE";
         }
     }
 
@@ -391,55 +383,55 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("HEALTH_STIM") && PlayerPrefs.GetInt("HEALTH_STIM") >= 1 &&
                 PlayerPrefs.HasKey("HEALTH_STIM_SLOT") && PlayerPrefs.GetInt("HEALTH_STIM_SLOT") == 1)
         {
-            primaryPowerupText.text = "HEALTH STIM";
+            primaryPowerupText.text = "(X): HEALTH STIM";
         }
 
         else if (PlayerPrefs.HasKey("LEECH") && PlayerPrefs.GetInt("LEECH") >= 1 &&
                 PlayerPrefs.HasKey("LEECH_SLOT") && PlayerPrefs.GetInt("LEECH_SLOT") == 1)
         {
-            primaryPowerupText.text = "LEECH";
+            primaryPowerupText.text = "(X): LEECH";
         }
 
         else if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
                 PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 1)
         {
-            primaryPowerupText.text = "ACTIVE CAMO";
+            primaryPowerupText.text = "(X): ARMOR STIM";
         }
 
         else if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
                 PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 1)
         {
-            primaryPowerupText.text = "STEALTH";
+            primaryPowerupText.text = "(X): STEALTH";
         }
 
         else if (PlayerPrefs.HasKey("AI_COMPANION") && PlayerPrefs.GetInt("AI_COMPANION") >= 1 &&
                 PlayerPrefs.HasKey("AI_COMPANION_SLOT") && PlayerPrefs.GetInt("AI_COMPANION_SLOT") == 1)
         {
-            primaryPowerupText.text = "AI COMPANION";
+            primaryPowerupText.text = "(X): AI COMPANION";
         }
 
         else if (PlayerPrefs.HasKey("DECOY_DEPLOYMENT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT") >= 1 &&
                 PlayerPrefs.HasKey("DECOY_DEPLOYMENT_SLOT") && PlayerPrefs.GetInt("DECOY_DEPLOYMENT_SLOT") == 1)
         {
-            primaryPowerupText.text = "DECOY DEPLOYMENT";
+            primaryPowerupText.text = "(X): DECOY DEPLOYMENT";
         }
 
         else if (PlayerPrefs.HasKey("BERSERKER_FURY") && PlayerPrefs.GetInt("BERSERKER_FURY") >= 1 &&
                 PlayerPrefs.HasKey("BERSERKER_FURY_SLOT") && PlayerPrefs.GetInt("BERSERKER_FURY_SLOT") == 1)
         {
-            primaryPowerupText.text = "BERSERKER FURY";
+            primaryPowerupText.text = "(X): BERSERKER FURY";
         }
 
         else if (PlayerPrefs.HasKey("SAVING_GRACE") && PlayerPrefs.GetInt("SAVING_GRACE") >= 1 &&
                 PlayerPrefs.HasKey("SAVING_GRACE_SLOT") && PlayerPrefs.GetInt("SAVING_GRACE_SLOT") == 1)
         {
-            primaryPowerupText.text = "SAVING GRACE APPLIED";
+            primaryPowerupText.text = "(X): SAVING GRACE ACTIVE";
         }
 
         else if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
                 PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") == 1)
         {
-            primaryPowerupText.text = "EXPLOSIVE DEATH APPLIED";
+            primaryPowerupText.text = "(X): EXPLOSIVE DEATH ACTIVE";
         }
     }
 
@@ -448,7 +440,9 @@ public class PlayerHealth : MonoBehaviour
         Health = PlayerPrefs.HasKey("PLAYER_HEALTH") && PlayerPrefs.GetInt("PLAYER_HEALTH") >= 1
             ? 100 + (PlayerPrefs.GetInt("PLAYER_HEALTH") * 10) : 100;
 
-        multiplayerHealth.SetMaxHealth(Health);
+        healthSlider.maxValue = Health;
+        healthSlider.value = Health;
+        maxHealth = Health;
     }
 
     private void InitArmor()
@@ -456,7 +450,9 @@ public class PlayerHealth : MonoBehaviour
         Armor = PlayerPrefs.HasKey("PLAYER_ARMOR") && PlayerPrefs.GetInt("PLAYER_HEALTH") >= 1
             ? 100 + (PlayerPrefs.GetInt("PLAYER_ARMOR") * 10) : 100;
 
-        multiplayerHealth.SetMaxArmor(Armor);
+        armorSlider.maxValue = Armor;
+        armorSlider.value = Armor;
+        maxArmor = Armor;
     }
 
     private void InitAvatarSelection()
@@ -575,7 +571,7 @@ public class PlayerHealth : MonoBehaviour
             enemySpawner.securityCountMax += 10;
             enemySpawner.enemiesKilledForBossSpawn = 1;
             enemySpawner.spawnDefenders = true;
-            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+            PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
             StartCoroutine(voice.VoiceOvers(faction, 4));
         }
 
@@ -645,8 +641,6 @@ public class PlayerHealth : MonoBehaviour
             CheckAbility3();
 
         CheckAbility4();
-        CheckAbility5();
-        CheckAbility6();
         CheckAbility8();
         CheckAbility9();
         CheckAbility10();
@@ -923,54 +917,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    void CheckAbility5()
-    {
-        if (activeCamo == true && activeCamoTimer <= activeCamoDuration && !shouldCallAbilities5True)
-        {
-            shouldCallAbilities5True = true;
-            activeCamoTimer += Time.deltaTime;
-            foreach (SkinnedMeshRenderer skin in characterSkins)
-            {
-                skin.enabled = false;
-            }
-            shouldCallAbilities5True = false;
-        }
-        else if (activeCamoTimer > activeCamoDuration && !shouldCallAbilities5False || activeCamo == true && !shouldCallAbilities5False)
-        {
-            shouldCallAbilities5False = true;
-            activeCamo = false;
-            foreach (SkinnedMeshRenderer skin in characterSkins)
-            {
-                skin.enabled = true;
-            }
-            shouldCallAbilities5False = false;
-        }
-    }
-
-    void CheckAbility6()
-    {
-        if (stealth == true && stealthTimer <= stealthDuration && !shouldCallAbilities6True)
-        {
-            shouldCallAbilities6True = true;
-            stealthTimer += Time.deltaTime;
-            foreach (GameObject minimap in minimapSymbol)
-            {
-                minimap.SetActive(false);
-            }
-            shouldCallAbilities6True = false;
-        }
-        else if (stealthTimer > stealthDuration && !shouldCallAbilities6False || stealth == true && !shouldCallAbilities6False)
-        {
-            shouldCallAbilities6False = true;
-            stealth = false;
-            foreach (GameObject minimap in minimapSymbol)
-            {
-                minimap.SetActive(true);
-            }
-            shouldCallAbilities6False = false;
-        }
-    }
-
     void CheckAbility8()
     {
         if (!shouldCallAbilities8)
@@ -1023,15 +969,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("XP") || other.CompareTag("Health") || other.CompareTag("ExtraXP") || other.CompareTag("MinorHealth") || other.CompareTag("toxicDropNormal") || other.CompareTag("toxicDropExtra") || other.CompareTag("bulletModifierNormal")
-            || other.CompareTag("bulletModifierExtra") || other.CompareTag("MPShield") || other.CompareTag("deathToken"))
-        {
-            audioSource.PlayOneShot(xpClip);
-        }
-    }
-
     public void TakeDamage(int damage)
     {
         if (!spawnManager.gameOver)
@@ -1075,8 +1012,6 @@ public class PlayerHealth : MonoBehaviour
 
     public void AddHealth(int health)
     {
-        audioSource.PlayOneShot(bulletHit);
-
         if (PlayerPrefs.HasKey("HEALTH_POWERUP") && PlayerPrefs.GetInt("HEALTH_POWERUP") == 1)
             healthAdded = (health + PlayerPrefs.GetInt("HEALTH_POWERUP"));
         else
@@ -1087,13 +1022,11 @@ public class PlayerHealth : MonoBehaviour
 
     public void CheckHealthStatus()
     {
-        multiplayerHealth.SetCurrentHealth(Health);
+        healthSlider.value = Health;
     }
 
     public void AddArmor(int armor)
     {
-        audioSource.PlayOneShot(bulletHit);
-
         armorAdded = armor;
         Armor += armor;
         CheckArmorStatus();
@@ -1101,7 +1034,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void CheckArmorStatus()
     {
-        multiplayerHealth.SetCurrentArmor(Armor);
+        armorSlider.value = Armor;
     }
 
     IEnumerator Cracked()
@@ -1131,7 +1064,7 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("EXPLOSIVE_DEATH") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH") >= 1 &&
         PlayerPrefs.HasKey("EXPLOSIVE_DEATH_SLOT") && PlayerPrefs.GetInt("EXPLOSIVE_DEATH_SLOT") >= 1)
         {
-            GameObject bomb = Instantiate(bombDeath, tokenDropLocation.position, Quaternion.identity);
+            GameObject bomb = Instantiate(bombDeath, bombDropLocation.position, Quaternion.identity);
             bomb.GetComponent<Rigidbody>().isKinematic = false;
             bomb.GetComponent<Rigidbody>().useGravity = true;
             NetworkGrenade grenade = bomb.GetComponent<NetworkGrenade>();
@@ -1139,20 +1072,18 @@ public class PlayerHealth : MonoBehaviour
         }
 
         StartCoroutine(sceneFader.Respawn());
-        model.SetActive(false);
-        player.transform.position = spawnManager.respawnPosition;
+        transform.position = spawnManager.respawnPosition;
         playerLives -= 1;
         if(playerLives == 1)
         {
             PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
             StartCoroutine(voice.VoiceOvers(faction, 3));
         }
-        Armor = 125;
-        Health = 125;
+        Armor = maxArmor;
+        Health = maxHealth;
         CheckArmorStatus();
         CheckHealthStatus();
         alive = true;
-        model.SetActive(true);
 
         yield return new WaitForSeconds(0.15f);
 
@@ -1263,7 +1194,7 @@ public class PlayerHealth : MonoBehaviour
         playerCints += cintsEarned;
 
         PlayerPrefs.SetInt("CINTS", playerCints);
-        StartCoroutine(SubmitScore(cintsEarned * 2));
+        StartCoroutine(SubmitScore(cintsEarned));
     }
 
     public IEnumerator SubmitScore(int scoreToUpload)
@@ -1358,16 +1289,21 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
                     PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 1)
         {
-            activeCamo = true;
-            activeCamoTimer = 0;
+            AddArmor(50);
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
         if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
                     PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 1)
         {
-            stealth = true;
-            stealthTimer = 0;
+            // Find all game objects with FollowAI component
+            FollowAI[] allFollowAIs = GameObject.FindObjectsOfType<FollowAI>();
+
+            // Iterate through each one and call ActivateStealth method
+            foreach (FollowAI ai in allFollowAIs)
+            {
+                ai.ActivateStealth();
+            }
             StartCoroutine(PrimaryTimer(primaryPowerupEffectTimer));
         }
 
@@ -1416,16 +1352,21 @@ public class PlayerHealth : MonoBehaviour
         if (PlayerPrefs.HasKey("ACTIVE_CAMO") && PlayerPrefs.GetInt("ACTIVE_CAMO") >= 1 &&
                     PlayerPrefs.HasKey("ACTIVE_CAMO_SLOT") && PlayerPrefs.GetInt("ACTIVE_CAMO_SLOT") == 2)
         {
-            activeCamo = true;
-            activeCamoTimer = 0;
+            AddArmor(50);
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 
         if (PlayerPrefs.HasKey("STEALTH") && PlayerPrefs.GetInt("STEALTH") >= 1 &&
                     PlayerPrefs.HasKey("STEALTH_SLOT") && PlayerPrefs.GetInt("STEALTH_SLOT") == 2)
         {
-            stealth = true;
-            stealthTimer = 0;
+            // Find all game objects with FollowAI component
+            FollowAI[] allFollowAIs = GameObject.FindObjectsOfType<FollowAI>();
+
+            // Iterate through each one and call ActivateStealth method
+            foreach (FollowAI ai in allFollowAIs)
+            {
+                ai.ActivateStealth();
+            }
             StartCoroutine(SecondaryTimer(secondaryPowerupEffectTimer));
         }
 

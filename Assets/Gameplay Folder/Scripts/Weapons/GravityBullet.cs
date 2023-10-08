@@ -31,7 +31,7 @@ public class GravityBullet : MonoBehaviour
                 FollowAI agent = collider.GetComponent<FollowAI>();
                 if (agent != null)
                 {
-                    agent.shocked = true;
+                    agent.EMPShock();
                 }
             }
         }

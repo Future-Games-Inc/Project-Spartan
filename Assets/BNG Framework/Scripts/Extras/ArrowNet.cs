@@ -274,13 +274,19 @@ namespace BNG
                 DefaultDamageEnemy(other, arrowDamage);
             }
 
-            if ((other.CompareTag("BossEnemy")))
+            else if ((other.CompareTag("Reinforcements")))
+            {
+                // select custom functions for damage
+                DefaultDamageReinforcements(other, arrowDamage);
+            }
+
+            else if ((other.CompareTag("BossEnemy")))
             {
                 // select custom functions for damage
                 DefaultDamageBossEnemy(other, arrowDamage);
             }
 
-            if (other.CompareTag("Security"))
+            else if (other.CompareTag("Security"))
             {
                 // select custom functions for damage
                 DefaultDamageSecurity(other, arrowDamage);
@@ -294,6 +300,21 @@ namespace BNG
                 if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled("Normal");
+                    enemyDamageReg.TakeDamage((int)arrowDamage);
+                }
+                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+                {
+                    enemyDamageReg.TakeDamage((int)arrowDamage);
+                }
+                if (Type == "Default")
+                    Destroy(gameObject);
+            }
+
+            void DefaultDamageReinforcements(Collider target, float arrowDamage)
+            {
+                ReinforcementAI enemyDamageReg = target.GetComponent<ReinforcementAI>();
+                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
+                {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
                 else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
@@ -337,12 +358,12 @@ namespace BNG
 
         int CalculateDamage(float distance)
         {
-            return (int)((1f - distance / explosionRadius) * maxDamage);
+            return Mathf.Min((int)((1f - distance / explosionRadius) * maxDamage),80);
         }
 
         int CalculateEMPDamage(float distance)
         {
-            return (int)((1f - distance / explosionRadius) * maxEMPDamage);
+            return Mathf.Min((int)((1f - distance / explosionRadius) * maxEMPDamage),50);
         }
 
         public IEnumerator ExplodeDelayed()
@@ -429,6 +450,20 @@ namespace BNG
                         enemyDamageCrit.TakeDamage(damage);
                     }
                     break;
+
+                case "Reinforcements":
+                    // Handle enemy damage
+                    ReinforcementAI enemyDamageCrit3 = collider.GetComponentInParent<ReinforcementAI>();
+                    if (enemyDamageCrit3.Health <= damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                    }
+                    else if (enemyDamageCrit3.Health > damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                    }
+                    break;
+
                 case "BossEnemy":
                     // Handle boss enemy damage
                     FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
@@ -478,6 +513,21 @@ namespace BNG
                         enemyDamageCrit.EMPShock();
                     }
                     break;
+
+                case "Reinforcements":
+                    // Handle enemy damage
+                    ReinforcementAI enemyDamageCrit3 = collider.GetComponentInParent<ReinforcementAI>();
+                    if (enemyDamageCrit3.Health <= damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                    }
+                    else if (enemyDamageCrit3.Health > damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                        enemyDamageCrit3.EMPShock();
+                    }
+                    break;
+
                 case "BossEnemy":
                     // Handle boss enemy damage
                     FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();

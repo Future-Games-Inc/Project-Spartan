@@ -73,6 +73,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage.TakeDamage(bulletModifier);
                 }
             }
+            Destroy(gameObject);
         }
 
         else if (other.CompareTag("Enemy") && playerHealth == null)
@@ -92,6 +93,7 @@ public class Bullet : MonoBehaviour
                 FollowAI enemyDamage = other.GetComponentInParent<FollowAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
+            Destroy(gameObject);
         }
 
         else if (other.CompareTag("Reinforcements") && playerHealth == null)
@@ -111,6 +113,27 @@ public class Bullet : MonoBehaviour
                 ReinforcementAI enemyDamage = other.GetComponentInParent<ReinforcementAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
+            Destroy(gameObject);
+        }
+
+        else if (other.CompareTag("Reinforcements") && playerHealth != null)
+        {
+            float criticalChance = 10f;
+
+            //call it at random probability
+            if (Random.Range(0, 100f) < criticalChance)
+            {
+                //critical hit here
+                ReinforcementAI enemyDamageCrit = other.GetComponentInParent<ReinforcementAI>();
+                enemyDamageCrit.TakeDamage(10 * bulletModifier);
+            }
+
+            else
+            {
+                ReinforcementAI enemyDamage = other.GetComponentInParent<ReinforcementAI>();
+                enemyDamage.TakeDamage(bulletModifier);
+            }
+            Destroy(gameObject);
         }
 
         else if (other.CompareTag("BossEnemy") && playerHealth != null)
@@ -148,6 +171,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage.TakeDamage(bulletModifier);
                 }
             }
+            Destroy(gameObject);
         }
 
         else if (other.CompareTag("BossEnemy") && playerHealth == null)
@@ -167,6 +191,7 @@ public class Bullet : MonoBehaviour
                 FollowAI enemyDamage = other.GetComponentInParent<FollowAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
+            Destroy(gameObject);
         }
 
         else if (other.CompareTag("Security") && playerHealth != null)
@@ -193,6 +218,7 @@ public class Bullet : MonoBehaviour
                     SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
                     enemyDamageCrit2.TakeDamage(10 * bulletModifier);
                 }
+                Destroy(gameObject);
             }
 
             else
@@ -214,6 +240,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage2.TakeDamage(bulletModifier);
                 }
             }
+            Destroy(gameObject);
         }
 
         else if (other.CompareTag("Security") && playerHealth == null)
@@ -249,10 +276,12 @@ public class Bullet : MonoBehaviour
                     enemyDamage2.TakeDamage(bulletModifier);
                 }
             }
+            Destroy(gameObject);
         }
 
 
-        else if (other.CompareTag("Player"))
+        else if (other.CompareTag("Player") || other.CompareTag("ReactorInteractor")
+                || other.CompareTag("Bullet") || other.CompareTag("RightHand") || other.CompareTag("LeftHand") || other.CompareTag("RHand") || other.CompareTag("LHand"))
         {
             if (!playerBullet)
             {
@@ -269,6 +298,7 @@ public class Bullet : MonoBehaviour
                     PlayerHealth playerDamage = other.GetComponentInParent<PlayerHealth>();
                     playerDamage.TakeDamage(bulletModifier);
                 }
+                Destroy(gameObject);
             }
         }
 
@@ -280,8 +310,8 @@ public class Bullet : MonoBehaviour
                 ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
                 reactorcover.TakeDamage(5 * bulletModifier);
             }
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
     }
 
     IEnumerator DestroyBullet()

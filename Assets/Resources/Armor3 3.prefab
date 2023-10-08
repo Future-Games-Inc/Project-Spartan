@@ -2584,7 +2584,10 @@ MonoBehaviour:
   thrown: 0
   ForceRatio: 0.85
   MaxThrowForce: 25
-  Grenade: {fileID: 1627370891586873586, guid: 42b0248a2d617234b91a077603592481, type: 3}
+  Grenade:
+  - {fileID: 1627370891586873586, guid: 42b0248a2d617234b91a077603592481, type: 3}
+  - {fileID: 5065441241101702, guid: 2a3fc1edda08f074b96c48c47d77c4ed, type: 3}
+  - {fileID: 5065441241101702, guid: f7640ce0561fbdc4f88ffea9ce5b9a0a, type: 3}
   grenadeSpawn: {fileID: 276540961183940071}
   gun: {fileID: 3660998003323543611}
 --- !u!136 &5118660493777722909
@@ -2611,7 +2614,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.4
+  m_Radius: 0.2
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}

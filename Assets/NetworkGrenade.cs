@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkGrenade : MonoBehaviour
@@ -22,7 +23,6 @@ public class NetworkGrenade : MonoBehaviour
     public TargetInfo[] Targets;
 
     public GameObject explosionEffect;
-    public Rigidbody rb;
     public AudioSource audioSource;
     public GameObject objectRenderer;
 
@@ -31,6 +31,7 @@ public class NetworkGrenade : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(ExplodeDelayed());
+        audioSource.Play();
     }
 
     public IEnumerator ExplodeDelayed()
@@ -38,14 +39,25 @@ public class NetworkGrenade : MonoBehaviour
         yield return new WaitForSeconds(explosionDelay);
         explosionEffect.SetActive(true);
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-        foreach (var target in Targets)
+        if (Type == GrenadeType.Prox)
         {
-            foreach (Collider collider in colliders)
+            Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+
+            // Create a set of target tags for constant-time lookups
+            HashSet<string> targetTags = new HashSet<string>();
+            foreach (var target in Targets)
             {
-                if (collider.CompareTag(target.Tag))
+                targetTags.Add(target.Tag);
+            }
+
+            if (targetTags.Contains("Player"))
+            {
+                PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+                float distance = Vector3.Distance(transform.position, player.gameObject.transform.position);
+                int damage = CalculateDamage(distance);
+                if (player.alive)
                 {
-                    HandleDamage(collider, target);
+                    player.TakeDamage(damage);
                 }
             }
         }
@@ -54,36 +66,10 @@ public class NetworkGrenade : MonoBehaviour
         StartCoroutine(Destroy(delay));
     }
 
-    void HandleDamage(Collider collider, TargetInfo target)
-    {
-        float distance = Vector3.Distance(transform.position, collider.transform.position);
-        int damage = CalculateDamage(distance);
-
-        // Handle damage based on the target's tag
-        switch (target.Tag)
-        {
-            case "Player":
-                HandleEnemyDamage(collider, damage, target.Tag);
-                return;
-                // Add more cases as needed
-        }
-    }
-
-    void HandleEnemyDamage(Collider collider, int damage, string enemyType)
-    {
-        PlayerHealth enemyDamageCrit2 = collider.GetComponent<PlayerHealth>();
-        if (enemyDamageCrit2 != null)
-        {
-            if (enemyDamageCrit2.alive)
-            {
-                enemyDamageCrit2.TakeDamage(damage);
-            }
-        }
-    }
-
     int CalculateDamage(float distance)
     {
-        return Mathf.Min((int)((1f - distance / explosionRadius) * (maxDamage/2)), 100);
+        int damage = (int)((1f - distance / explosionRadius) * maxDamage);
+        return Mathf.Clamp(damage, 0, 100);
     }
 
     IEnumerator Destroy(float delay)

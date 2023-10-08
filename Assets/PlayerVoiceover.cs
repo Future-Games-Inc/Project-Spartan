@@ -31,7 +31,7 @@ public class PlayerVoiceover : MonoBehaviour
             leaderImages[0].SetActive(true);
 
             audioSource.PlayOneShot(CyberSK[Index]);
-            yield return new WaitForSeconds(CyberSK[Index].length + 2);
+            yield return new WaitForSeconds(CyberSK[Index].length + .75f);
             leaderImages[0].SetActive(false);
         }
 
@@ -40,7 +40,7 @@ public class PlayerVoiceover : MonoBehaviour
             leaderImages[1].SetActive(true);
 
             audioSource.PlayOneShot(Chaos[Index]);
-            yield return new WaitForSeconds(Chaos[Index].length + 2);
+            yield return new WaitForSeconds(Chaos[Index].length + .75f);
             leaderImages[1].SetActive(false);
         }
 
@@ -49,7 +49,7 @@ public class PlayerVoiceover : MonoBehaviour
             leaderImages[2].SetActive(true);
 
             audioSource.PlayOneShot(Muerte[Index]);
-            yield return new WaitForSeconds(Muerte[Index].length + 2);
+            yield return new WaitForSeconds(Muerte[Index].length + .75f);
             leaderImages[2].SetActive(false);
         }
 
@@ -58,7 +58,7 @@ public class PlayerVoiceover : MonoBehaviour
             leaderImages[3].SetActive(true);
 
             audioSource.PlayOneShot(CintSix[Index]);
-            yield return new WaitForSeconds(CintSix[Index].length + 2);
+            yield return new WaitForSeconds(CintSix[Index].length + .75f);
             leaderImages[3].SetActive(false);
         }
     }

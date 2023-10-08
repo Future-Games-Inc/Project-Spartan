@@ -14,7 +14,7 @@ public class ReactorDrone : MonoBehaviour
     [Header("AI Properties")]
 
     public Transform targetTransform;
-    public Transform droneBulletSpawn;
+    public Transform[] droneBulletSpawn;
 
     public GameObject droneBullet;
 
@@ -150,10 +150,13 @@ public class ReactorDrone : MonoBehaviour
         {
             if (fireWeaponBool && !matchEffects.codeFound && matchEffects.startMatchBool)
             {
-                GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
-                spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
-                spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
-                spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
+                foreach (Transform spawn in droneBulletSpawn)
+                {
+                    GameObject spawnedBullet = Instantiate(droneBullet, spawn.position, Quaternion.identity);
+                    spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
+                    spawnedBullet.GetComponent<Rigidbody>().velocity = spawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
+                }
             }
             yield return new WaitForSeconds(Random.Range(0.25f, 1f));
         }

@@ -12,13 +12,17 @@ public class FollowAI : MonoBehaviour
         Patrol,
         Follow,
         Attack,
-        Shocked
+        Shocked,
+        Throwing
     }
 
     [Header("AI Settings --------------------------------------------------------------")]
     public float DetectRange = 20;
     public float AttackRange = 15;
     public float AgroRange = 25;
+    public float DetectRangeStart;
+    public float AttackRangeStart;
+    public float AgroRangeStart;
     public float wanderRadius = 500;
 
     public int Health;
@@ -70,6 +74,8 @@ public class FollowAI : MonoBehaviour
 
     public bool thrown;
 
+    public bool isStealthActive;
+
     private struct ThrowData
     {
         public Vector3 ThrowVelocity;
@@ -88,7 +94,7 @@ public class FollowAI : MonoBehaviour
         + "the agent will move closer until they come within range.")]
     private float MaxThrowForce = 25;
 
-    public GameObject Grenade;
+    public GameObject[] Grenade;
     public Transform grenadeSpawn;
     public GameObject gun;
 
@@ -101,6 +107,9 @@ public class FollowAI : MonoBehaviour
     // Start is called before the first frame update
     public void OnEnable()
     {
+        DetectRangeStart = DetectRange;
+        AttackRangeStart = AttackRange;
+        AgroRangeStart = AgroRange;
         InvokeRepeating("RandomSFX", 15, 20);
         animator = GetComponent<Animator>();
         hitbox.ApplyTagRecursively(gameObject.transform);
@@ -123,6 +132,33 @@ public class FollowAI : MonoBehaviour
 
             Patrol();
         }
+    }
+
+    public void ActivateStealth()
+    {
+        if (!isStealthActive)
+        {
+            StartCoroutine(StealthRoutine());
+        }
+    }
+
+    private IEnumerator StealthRoutine()
+    {
+        isStealthActive = true;
+
+        // Halve the ranges
+        DetectRange /= 4;
+        AttackRange /= 4;
+        AgroRange /= 4;
+
+        yield return new WaitForSeconds(15f);
+
+        // Reset the ranges
+        DetectRange = DetectRangeStart;
+        AttackRange = AttackRangeStart;
+        AgroRange = AgroRangeStart;
+
+        isStealthActive = false;
     }
 
     public void FindClosestEnemy()
@@ -172,14 +208,13 @@ public class FollowAI : MonoBehaviour
 
         if (agent.isOnNavMesh)
         {
-            transform.LookAt(agent.destination);
             if (Time.time >= nextUpdateTime)
             {
                 nextUpdateTime = Time.time + 1f; // Update every 1 second
                 FindClosestEnemy();
             }
 
-            // calculates the distance from NPC to player
+            // Calculate the distance from NPC to player
             float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
             animator.SetBool("Agro", Agro);
 
@@ -188,34 +223,30 @@ public class FollowAI : MonoBehaviour
                 return;
             }
 
-            // If the player are seen by the NPC or if the distance is close enough
+            // If the player is seen by the NPC or if the distance is close enough
             if (distanceToPlayer <= DetectRange && CheckForPlayer())
             {
-                // When Agro changes
                 Agro = true;
-                // set the speed for the agent for the blend tree
                 animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
             }
             else
+            {
                 Agro = false;
+            }
 
             // If the enemy has detected the player but doesn't have a clear line of sight
             if (Agro && !IsLineOfSightClear(targetTransform))
             {
                 currentState = States.Follow;
                 agent.isStopped = false;
-                agent.destination = targetTransform.position; // Move towards the player
-                                                              // set the speed for the agent for the blend tree
+                agent.destination = targetTransform.position;
                 animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
             }
-            // if it is not agro, then patrol like normal
-            // else then see if the player is in the valid agro range (bigger than detect range) then give chase
-            //          if the player is outside of agro range, drop agro.
+
             if (!Agro)
             {
                 currentState = States.Patrol;
                 agent.isStopped = false;
-                // set the speed for the agent for the blend tree
                 animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                 Patrol();
             }
@@ -224,14 +255,12 @@ public class FollowAI : MonoBehaviour
                 // if the NPC is BEYOND the range that it could agro, drop the agro.
                 if (distanceToPlayer > AgroRange)
                 {
-                    // When Agro changes
                     Agro = false;
                     attackWeapon.fireWeaponBool = false;
-                    // stop where it is
                     agent.SetDestination(gameObject.transform.position);
-                    // set the speed for the agent for the blend tree
                     animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                 }
+
                 // if in range of attacks
                 if (distanceToPlayer <= AttackRange)
                 {
@@ -239,9 +268,13 @@ public class FollowAI : MonoBehaviour
                     currentState = States.Attack;
                     LookatTarget(1, 3f);
                     agent.isStopped = true;
-                    // set the speed for the agent for the blend tree
                     animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     Attack();
+                }
+                // if no clear line of sight, switch to throwing
+                else if (!IsLineOfSightClear(targetTransform))
+                {
+                    currentState = States.Throwing;
                 }
                 // give chase if not in range
                 else
@@ -249,9 +282,22 @@ public class FollowAI : MonoBehaviour
                     fireReady = false;
                     currentState = States.Follow;
                     agent.isStopped = false;
-                    // set the speed for the agent for the blend tree
                     animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     Follow();
+                }
+            }
+
+            if (currentState == States.Throwing)
+            {
+                if (!thrown)
+                {
+                    StartCoroutine(ThrowProjectile(targetTransform.position));
+                }
+
+                // Check if line of sight becomes clear after throwing
+                if (IsLineOfSightClear(targetTransform))
+                {
+                    currentState = States.Attack;
                 }
             }
 
@@ -268,7 +314,6 @@ public class FollowAI : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
             }
 
-            // set the speed for the agent for the blend tree
             animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
         }
     }
@@ -360,17 +405,14 @@ public class FollowAI : MonoBehaviour
             fireReady = true;
         else if (!agent.isStopped)
             fireReady = false;
+
         transform.LookAt(targetTransform);
         if (IsLineOfSightClear(targetTransform))
         {
             gun.SetActive(true);
             attackWeapon.fireWeaponBool = true;
         }
-        else if (!IsLineOfSightClear(targetTransform))
-        {
-            if (!thrown)
-                StartCoroutine(ThrowProjectile(targetTransform.position));
-        }
+        // else logic is handled by the Update method now.
     }
 
     private bool IsLineOfSightClear(Transform target)
@@ -381,12 +423,29 @@ public class FollowAI : MonoBehaviour
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet"))
+                || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") 
+                || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
+                || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius"))
             {
                 return true;
             }
         }
         return false;
+    }
+
+    GameObject[] ShuffleArray(GameObject[] array)
+    {
+        GameObject[] shuffledArray = (GameObject[])array.Clone();
+
+        for (int i = shuffledArray.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            GameObject temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[randomIndex];
+            shuffledArray[randomIndex] = temp;
+        }
+
+        return shuffledArray;
     }
 
     IEnumerator ThrowProjectile(Vector3 targetPosition)
@@ -395,10 +454,12 @@ public class FollowAI : MonoBehaviour
         {
             gun.SetActive(false);
             animator.SetTrigger("Throw");
-            animator.SetBool("ThrowDone", false);
+            animator.SetBool("Throw Done", false);
             thrown = true;
-            yield return new WaitForSeconds(1.5f);
-            attackProjectile = Instantiate(Grenade, grenadeSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
+            GameObject[] grenade = ShuffleArray(Grenade);
+            yield return new WaitForSeconds(2f);
+            GameObject thrownGrendae = grenade[0];
+            attackProjectile = Instantiate(thrownGrendae, grenadeSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
             ThrowData throwData = CalculateThrowData(targetPosition, attackProjectile.position);
 
             DoThrow(throwData);
@@ -408,7 +469,9 @@ public class FollowAI : MonoBehaviour
             else
                 yield return new WaitForSeconds(3);
             thrown = false;
-            animator.SetBool("ThrowDone", true);
+            animator.SetBool("Throw Done", true);
+            gun.SetActive(true);
+            currentState = States.Patrol; // Switch back to Patrol after throwing.
         }
     }
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,59 +17,38 @@ public class Jetpack : MonoBehaviour
     public AudioClip jetpackclip;
     public GameObject fuelIcon;
     public GameObject playerGameObject;
-    public Rigidbody playerRb;
-    public bool activated;
+    private Rigidbody playerRb;
+    public bool activated = false;
 
     private void OnEnable()
     {
         StartCoroutine(Recharge());
     }
+
     void Update()
     {
-        // If we're flying, increment the timer
-        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && fuel && !activated)
+        // Jetpack Activation
+        if (rightThumbstickPress.action.ReadValue<float>() >= 0.78f && fuel && !activated)
         {
             ActivateJetpack();
         }
 
-        newJetpack();
-        character.Move(moveDirection * Time.deltaTime);
-        fuelIcon.SetActive(fuel);
-
-        if(activated)
+        // Increment time while jetpack is activated
+        if (activated)
         {
             time += Time.deltaTime;
         }
-    }
 
-    void ActivateJetpack()
-    {
-        activated = true;
-        character.Move(Vector3.up * liftVelocity * Time.fixedDeltaTime);
-        slowFall = true;
-        if (!jetpackSource.isPlaying)
-        {
-            jetpackSource.PlayOneShot(jetpackclip);
-        }
-    }
-
-    public void newJetpack()
-    {
-        if (playerGameObject.GetComponent<Rigidbody>() == null && activated)
-        {
-            playerRb = playerGameObject.AddComponent<Rigidbody>();
-            playerRb.constraints = RigidbodyConstraints.FreezeRotation;
-            playerRb.useGravity = false; // Optional: This depends on if you want gravity to affect the player during the swing.
-        }
-        moveDirection = Vector3.zero;
-
+        // SlowFall Activation
         if (time > flyTime && fuel)
         {
             fuel = false;
             activated = false;
+            moveDirection.y += fallVelocity;
             StartCoroutine(Refuel());
         }
 
+        // Landing on Ground
         if (character.isGrounded)
         {
             slowFall = false;
@@ -79,11 +57,28 @@ public class Jetpack : MonoBehaviour
             {
                 Destroy(playerRb);
             }
+            StartCoroutine(Recharge());
         }
 
-        if (slowFall && !fuel)
+        character.Move(moveDirection * Time.deltaTime);
+        fuelIcon.SetActive(fuel);
+    }
+
+    void ActivateJetpack()
+    {
+        activated = true;
+        moveDirection = Vector3.up * liftVelocity;
+
+        if (playerGameObject.GetComponent<Rigidbody>() == null)
         {
-            moveDirection.y += fallVelocity;
+            playerRb = playerGameObject.AddComponent<Rigidbody>();
+            playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+            playerRb.useGravity = false;
+        }
+
+        if (!jetpackSource.isPlaying)
+        {
+            jetpackSource.PlayOneShot(jetpackclip);
         }
     }
 

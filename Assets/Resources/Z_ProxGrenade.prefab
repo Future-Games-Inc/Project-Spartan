@@ -30137,7 +30137,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 85032414a76e0b347bfff421ad0e27e8, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -30262,11 +30262,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   explosionRadius: 10
-  maxDamage: 100
+  maxDamage: 60
   explosionDelay: 3
   Targets:
   - Tag: Player
   explosionEffect: {fileID: 1357233521083427800}
-  rb: {fileID: 6886929121846228404}
   audioSource: {fileID: 2505928930888588758}
   objectRenderer: {fileID: 1356119046537709550}

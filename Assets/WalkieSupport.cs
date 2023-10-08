@@ -41,15 +41,18 @@ public class WalkieSupport : MonoBehaviour
             spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponentInParent<SpawnManager1>();
         }
 
-        if (player.faction.ToString() != matchEffects.owner.ToString() && !check)
+        if (player != null)
         {
-            check = true;
-            StartCoroutine(CheckFaction());
-        }
-        else if (player.faction.ToString() == matchEffects.owner.ToString() && !check)
-        {
-            check = true;
-            StartCoroutine(CheckFaction2());
+            if (player.faction.ToString() != matchEffects.owner.ToString() && !check)
+            {
+                check = true;
+                StartCoroutine(CheckFaction());
+            }
+            else if (player.faction.ToString() == matchEffects.owner.ToString() && !check)
+            {
+                check = true;
+                StartCoroutine(CheckFaction2());
+            }
         }
     }
 
@@ -68,7 +71,11 @@ public class WalkieSupport : MonoBehaviour
                 }
             }
             else
+            { 
                 button3.SetActive(true);
+                button1.SetActive(false);
+                button2.SetActive(false);
+            }
         });
         yield return new WaitForSeconds(15);
         check = false;
@@ -90,7 +97,11 @@ public class WalkieSupport : MonoBehaviour
                 }
             }
             else
+            {
                 button3.SetActive(true);
+                button1.SetActive(false);
+                button2.SetActive(false);
+            }
         });
         yield return new WaitForSeconds(20);
         check = false;

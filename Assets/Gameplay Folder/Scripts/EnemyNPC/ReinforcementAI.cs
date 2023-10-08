@@ -152,7 +152,6 @@ public class ReinforcementAI : MonoBehaviour
 
         if (agent.isOnNavMesh)
         {
-            transform.LookAt(agent.destination);
             if (Time.time >= nextUpdateTime)
             {
                 nextUpdateTime = Time.time + 1f; // Update every 1 second

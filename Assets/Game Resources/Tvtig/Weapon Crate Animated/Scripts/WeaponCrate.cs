@@ -9,6 +9,7 @@ public class WeaponCrate : MonoBehaviour
     [SerializeField]
     private VisualEffect _visualEffect;
 
+    public Transform spawn1;
     public Transform spawn2;
     public Transform spawn3;
 
@@ -36,7 +37,7 @@ public class WeaponCrate : MonoBehaviour
 
     private void Start()
     {
-        
+
         _collider = GetComponent<BoxCollider>();
         cacheActive = true;
     }
@@ -74,7 +75,7 @@ public class WeaponCrate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && 
+        if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") &&
             cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
             _animator.SetBool("Open", true);
@@ -90,6 +91,7 @@ public class WeaponCrate : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         GameObject[] shuffledWeapons = ShuffleArray(weapons);
         GameObject[] shuffledPowerups = ShuffleArray(powerups);
+        Instantiate(shuffledWeapons[1], spawn1.position, spawn3.rotation);
         Instantiate(shuffledWeapons[2], spawn3.position, spawn3.rotation);
         Instantiate(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);

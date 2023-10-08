@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using System;
 using LootLocker.Requests;
 using TMPro;
 using UnityEngine.UI;
@@ -12,7 +11,6 @@ public class TopReactsLeaderboard : MonoBehaviour
     public string leaderboardID3 = "react_kills";
     public string progressionKey = "cent_prog";
 
-    public bool updater = true;
     public bool rewardGiven = false;
 
     public TextMeshProUGUI playerNames;
@@ -29,10 +27,6 @@ public class TopReactsLeaderboard : MonoBehaviour
     public RoomManager roomManager;
     public TimeTracker timeTracker;
     public RawImage rewardIcon;
-
-    public String isLocalPlayer;
-    public String firstPlayerID;
-    string playerID;
 
     public int currentLevelInt;
     public int Score;
@@ -129,45 +123,41 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator FetchTopHighScores()
     {
-        while (updater)
+        bool done = false;
+        LootLockerSDKManager.GetScoreList(leaderboardID3, 5, 0, (response) =>
         {
-            bool done = false;
-            LootLockerSDKManager.GetScoreList(leaderboardID3, 5, 0, (response) =>
+            if (response.success)
             {
-                if (response.success)
+                string tempPlayerNames = "Reacts\n";
+                string TempPlayerScores = "CUA Eliminated\n";
+
+                LootLockerLeaderboardMember[] members = response.items;
+
+                for (int i = 0; i < members.Length; i++)
                 {
-                    string tempPlayerNames = "Reacts\n";
-                    string TempPlayerScores = "CUA Eliminated\n";
-
-                    LootLockerLeaderboardMember[] members = response.items;
-
-                    for (int i = 0; i < members.Length; i++)
+                    tempPlayerNames += members[i].rank + ". ";
+                    if (members[i].player.name != "")
                     {
-                        tempPlayerNames += members[i].rank + ". ";
-                        if (members[i].player.name != "")
-                        {
-                            tempPlayerNames += members[i].player.name;
-                        }
-                        else
-                        {
-                            tempPlayerNames += members[i].player.id;
-                        }
-                        TempPlayerScores += members[i].score + "\n";
-                        tempPlayerNames += "\n";
+                        tempPlayerNames += members[i].player.name;
                     }
-                    done = true;
-                    playerNames.text = tempPlayerNames;
-                    playerScores.text = TempPlayerScores;
+                    else
+                    {
+                        tempPlayerNames += members[i].player.id;
+                    }
+                    TempPlayerScores += members[i].score + "\n";
+                    tempPlayerNames += "\n";
                 }
-                else
-                {
-                    done = true;
-                }
-            });
-            yield return new WaitWhile(() => done == false);
-            StartCoroutine(FetchFactionLeaderboard());
-            yield return new WaitForSeconds(20);
-        }
+                done = true;
+                playerNames.text = tempPlayerNames;
+                playerScores.text = TempPlayerScores;
+            }
+            else
+            {
+                done = true;
+            }
+        });
+        yield return new WaitWhile(() => done == false);
+        StartCoroutine(FetchFactionLeaderboard());
     }
 
     public IEnumerator FetchFactionLeaderboard()
@@ -229,7 +219,6 @@ public class TopReactsLeaderboard : MonoBehaviour
                 levelSlider.maxValue = (float)(response.next_threshold);
                 levelSlider.value = (float)response.points;
             }
-            roomManager.mapLevel = (int)response.step;
         });
         StartCoroutine(SetScore());
     }

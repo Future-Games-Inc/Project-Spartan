@@ -332,7 +332,10 @@ public class SpawnManager1 : MonoBehaviour
 
             Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
-            Instantiate(health, spawnPosition[0].position, Quaternion.identity);
+            // Modify y value of the spawn position
+            Vector3 newPosition = spawnPosition[0].position + new Vector3(0, 10, 0);
+
+            Instantiate(health, newPosition, Quaternion.identity);
 
             healthCount++;
 

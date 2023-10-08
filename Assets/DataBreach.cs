@@ -10,11 +10,12 @@ public class DataBreach : MonoBehaviour
     public PlayerHealth player;
     public int Score;
     public TextMeshProUGUI breachText;
+    public MatchEffects matchEffects;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        matchEffects = FindObjectOfType<MatchEffects>();
     }
 
     // Update is called once per frame
@@ -25,10 +26,13 @@ public class DataBreach : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
         }
 
-        if (snapZone.HeldItem != null && faction != player.faction)
+        if (snapZone.HeldItem != null)
         {
             faction = snapZone.HeldItem.GetComponent<FactionCard>().faction;
-            breachText.text = "Breach " + faction + "? 100 Cs will be transferred from " + faction + " to " + player.faction + ".";
+            if(faction == "Decryption")
+                breachText.text = "Decrypt Rael's Datacard and upload to faction servers?";
+            else if (faction != player.faction && faction != "Decryption")
+                breachText.text = "Breach " + faction + "? 100 Cs will be transferred from " + faction + " to " + player.faction + ".";
         }
 
         if (snapZone.HeldItem == null)
@@ -41,42 +45,53 @@ public class DataBreach : MonoBehaviour
 
     public void Breach()
     {
-        faction = snapZone.HeldItem.GetComponent<FactionCard>().faction;
-        LootLockerSDKManager.GetMemberRank(player.leaderboardID2.ToString(), faction.ToString(), (response) =>
+        if (faction != "Decryption")
         {
-            if (response.success)
+            LootLockerSDKManager.GetMemberRank(player.leaderboardID2.ToString(), faction.ToString(), (response) =>
             {
-                Score = response.score;
-                if (faction != player.faction)
+                if (response.success)
                 {
-                    LootLockerSDKManager.SubmitScore(faction.ToString(), Score - 100, player.leaderboardID2.ToString(), (response) =>
+                    Score = response.score;
+                    if (faction != player.faction)
                     {
-                        LootLockerSDKManager.GetMemberRank(player.leaderboardID2.ToString(), player.faction.ToString(), (response) =>
+                        LootLockerSDKManager.SubmitScore(faction.ToString(), Score - 100, player.leaderboardID2.ToString(), (response) =>
                         {
-                            if (response.success)
+                            LootLockerSDKManager.GetMemberRank(player.leaderboardID2.ToString(), player.faction.ToString(), (response) =>
                             {
-                                int playerScore = response.score;
-                                LootLockerSDKManager.SubmitScore(player.faction.ToString(), playerScore + 100, player.leaderboardID2.ToString(), (response) =>
+                                if (response.success)
                                 {
-                                    PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+                                    int playerScore = response.score;
+                                    LootLockerSDKManager.SubmitScore(player.faction.ToString(), playerScore + 100, player.leaderboardID2.ToString(), (response) =>
+                                    {
+                                        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
 
-                                    StartCoroutine(voice.VoiceOvers(player.faction, 2));
-                                });
-                            }
+                                        StartCoroutine(voice.VoiceOvers(player.faction, 2));
+                                    });
+                                }
+                            });
                         });
-                    });
-                }
-                else
-                {
-                    LootLockerSDKManager.SubmitScore(faction.ToString(), Score + 100, player.leaderboardID2.ToString(), (response) =>
+                    }
+                    else
                     {
-                        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+                        LootLockerSDKManager.SubmitScore(faction.ToString(), Score + 100, player.leaderboardID2.ToString(), (response) =>
+                        {
+                            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
 
-                        StartCoroutine(voice.VoiceOvers(player.faction, 2));
-                    });
+                            StartCoroutine(voice.VoiceOvers(player.faction, 2));
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+        else if (faction == "Decryption")
+        {
+            matchEffects.MissionEnd();
+            matchEffects.AddTime(60);
+            player.UpdateSkills(250);
+            player.GetXP(100);
+            matchEffects.Rael.SetActive(false);
+            matchEffects.MissionStart.SetActive(false);
+        }
         Destroy(snapZone.lastHeldItem.gameObject);
     }
 }

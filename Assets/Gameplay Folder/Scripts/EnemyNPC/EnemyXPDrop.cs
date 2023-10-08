@@ -125,8 +125,7 @@ public class EnemyXPDrop : MonoBehaviour
                     break;
 
                 case "CUAHack":
-                    matchEffects.currentExtractionTimer += 30;
-                    matchEffects.actualExtractionTime += 30;
+                    matchEffects.AddTime(30);
                     Destroy(gameObject);
                     break;
 
