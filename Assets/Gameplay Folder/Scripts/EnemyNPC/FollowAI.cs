@@ -427,7 +427,8 @@ public class FollowAI : MonoBehaviour
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
                 || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") 
                 || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius"))
+                || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
+                || hit.collider.gameObject.CompareTag("Untagged"))
             {
                 return true;
             }
@@ -458,7 +459,7 @@ public class FollowAI : MonoBehaviour
             yield return new WaitForSeconds(2);
             gun.SetActive(false);
             animator.SetTrigger("Throw");
-            animator.SetBool("Throw Done", false);
+            animator.SetBool("ThrowDone", false);
             GameObject[] grenade = ShuffleArray(Grenade);
             yield return new WaitForSeconds(2f);
             GameObject thrownGrendae = grenade[0];
@@ -472,7 +473,7 @@ public class FollowAI : MonoBehaviour
             else
                 yield return new WaitForSeconds(3);
             thrown = false;
-            animator.SetBool("Throw Done", true);
+            animator.SetBool("ThrowDone", true);
             gun.SetActive(true);
             currentState = States.Patrol; // Switch back to Patrol after throwing.
         }

@@ -35,7 +35,6 @@ public class ReactorDrone : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(FireWeapon());
         matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
     }
 
@@ -43,6 +42,7 @@ public class ReactorDrone : MonoBehaviour
     {
         if (!matchEffects.codeFound)
         {
+            CheckForPlayer();
             FindClosestEnemy();
             directionToTarget = targetTransform.position - transform.position;
 
@@ -88,6 +88,7 @@ public class ReactorDrone : MonoBehaviour
     private void Follow()
     {
         fireWeaponBool = false;
+        StopCoroutine(FireWeapon());
 
         if (directionToTarget.magnitude <= shootDistance && CheckForPlayer())
         {
@@ -99,14 +100,20 @@ public class ReactorDrone : MonoBehaviour
     {
         Transform playerPOS = targetTransform;
         if (playerPOS == null)
+        {
             return false;
+        }
 
         if (Vector3.Distance(transform.position, playerPOS.position) > shootDistance)
+        {
             return false;
+        }
 
-        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
+        Vector3 directionToTarget = ((playerPOS.position + new Vector3(0, 3, 0)) - transform.position).normalized;
         if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
+        {
             return false;
+        }
 
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToTarget, out hit, shootDistance, obstacleMask))
@@ -115,13 +122,18 @@ public class ReactorDrone : MonoBehaviour
             if (hit.collider != null)
             {
                 // More debugging
-                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor"))
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
+                    || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
+                    || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
+                    || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
+                    || hit.collider.gameObject.CompareTag("Untagged"))
                 {
                     return true;
                 }
+                else
+                    return false;
             }
         }
-
         return false;
     }
 
@@ -131,7 +143,7 @@ public class ReactorDrone : MonoBehaviour
         {
             currentState = States.Follow;
         }
-        fireWeaponBool = true;
+        StartCoroutine(FireWeapon());
     }
 
     private void LookAtTarget()
@@ -146,19 +158,18 @@ public class ReactorDrone : MonoBehaviour
 
     IEnumerator FireWeapon()
     {
-        while (true)
+        if (!fireWeaponBool && !matchEffects.codeFound && matchEffects.startMatchBool)
         {
-            if (fireWeaponBool && !matchEffects.codeFound && matchEffects.startMatchBool)
+            fireWeaponBool = true;
+            foreach (Transform spawn in droneBulletSpawn)
             {
-                foreach (Transform spawn in droneBulletSpawn)
-                {
-                    GameObject spawnedBullet = Instantiate(droneBullet, spawn.position, Quaternion.identity);
-                    spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
-                    spawnedBullet.GetComponent<Rigidbody>().velocity = spawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
-                }
+                GameObject spawnedBullet = Instantiate(droneBullet, spawn.position, Quaternion.identity);
+                spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
+                spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
+                spawnedBullet.GetComponent<Rigidbody>().velocity = spawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
             }
-            yield return new WaitForSeconds(Random.Range(0.25f, 1f));
         }
+        yield return new WaitForSeconds(0.25f);
+        fireWeaponBool = false;
     }
 }

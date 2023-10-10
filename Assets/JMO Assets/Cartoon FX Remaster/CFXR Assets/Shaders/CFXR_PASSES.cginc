@@ -20,7 +20,7 @@
 		#include "AutoLight.cginc"
 
 		#if defined(CFXR_URP)
-			#include "CFXR_URP.cginc"
+			#include "Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Shaders/CFXR_URP.cginc"
 		#else
 			#include "UnityLightingCommon.cginc"
 		#endif
@@ -38,7 +38,7 @@
 			#define LIGHTING_BACK
 		#endif
 
-		#include "CFXR_SETTINGS.cginc"
+		#include "Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Shaders/CFXR_SETTINGS.cginc"
 
 		// --------------------------------
 

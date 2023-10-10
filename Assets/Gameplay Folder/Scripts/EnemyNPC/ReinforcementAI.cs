@@ -347,7 +347,8 @@ public class ReinforcementAI : MonoBehaviour
         {
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Enemy")
                 || hit.collider.gameObject.CompareTag("Security") || hit.collider.gameObject.CompareTag("BossEnemy") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("Bullet"))
+                || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") || 
+                hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("Untagged"))
             {
                 return true;
             }

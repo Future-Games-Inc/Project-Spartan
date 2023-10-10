@@ -2473,11 +2473,14 @@ MonoBehaviour:
   DetectRange: 30
   AttackRange: 10
   AgroRange: 20
+  DetectRangeStart: 0
+  AttackRangeStart: 0
+  AgroRangeStart: 0
   wanderRadius: 2000
   Health: 150
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 33559049
+    m_Bits: 33559305
   fireReady: 0
   agent: {fileID: 1132709368}
   targetTransform: {fileID: 0}
@@ -2510,6 +2513,7 @@ MonoBehaviour:
   stickySpeed: 0
   attackProjectile: {fileID: 0}
   thrown: 0
+  isStealthActive: 0
   ForceRatio: 0.85
   MaxThrowForce: 25
   Grenade:
@@ -2633,7 +2637,10 @@ MonoBehaviour:
   fireWeaponBool: 0
   canShoot: 1
   bulletModifier: 0
+  adjustedBulletModifer: 0
   aiScript: {fileID: 0}
+  enemyLevel: 0
+  matchEffects: {fileID: 0}
 --- !u!82 &2494510491955849962
 AudioSource:
   m_ObjectHideFlags: 0
