@@ -28,7 +28,7 @@ public class Skill : MonoBehaviour
 
     void Update()
     {
-        BodyText.text = $"{cost} Cs";
+        BodyText.text = $"{cost} Cints";
         image.color = skillTree.saveData.SkillPoints >= cost ? Color.white : Color.grey;
     }
     public void UpdateUI()
@@ -41,7 +41,6 @@ public class Skill : MonoBehaviour
         }
     }
 
-    [System.Obsolete]
     public void Buy()
     {
         if (skillTree.saveData.SkillPoints < cost || skillTree.SkillLevels[id] >= skillTree.SkillCaps[id])
