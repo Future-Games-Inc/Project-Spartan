@@ -8,16 +8,16 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: cfxr electric arcs fade x4 hdr ab
-  m_Shader: {fileID: 4800000, guid: e198026df304af84a85675be636192ea, type: 3}
+  m_Shader: {fileID: 4800000, guid: 3dda44a7d9cec71439b5b8e20fcbccfb, type: 3}
   m_ValidKeywords:
   - _ALPHABLEND_ON
-  - _CFXR_EDGE_FADING
   - _CFXR_HDR_BOOST
   - _CFXR_SINGLE_CHANNEL
   - _FADING_ON
   m_InvalidKeywords:
   - _
   - _CFXR_DITHERED_SHADOWS_OFF
+  - _CFXR_EDGE_FADING
   - _CFXR_OVERLAYBLEND_RGBA
   - _CFXR_OVERLAYTEX_OFF
   - _OVERLAYTEX_OFF
@@ -125,6 +125,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ReceivedShadowsStrength: 0.5
+    - _RingTopOffset: 0.05
     - _SecondColorSmooth: 0.2
     - _ShadowStrength: 1
     - _SingleChannel: 1
@@ -148,10 +149,12 @@ Material:
     - _UseLighting: 0
     - _UseLightingWorldPosOffset: 0
     - _UseNormalMap: 0
+    - _UseRadialUV: 0
     - _UseSP: 1
     - _UseSecondColor: 0
     - _UseUV2Distortion: 0
     - _UseUVDistortion: 0
+    - _WorldSpaceRing: 0
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

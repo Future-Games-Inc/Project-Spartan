@@ -1,4 +1,3 @@
-using Photon.Pun.Demo.Cockpit;
 using UnityEngine;
 
 public class ReactorGrab : MonoBehaviour

@@ -274,6 +274,8 @@ public class FollowAI : MonoBehaviour
                 // if no clear line of sight, switch to throwing
                 else if (!IsLineOfSightClear(targetTransform))
                 {
+                    fireReady = false;
+                    agent.isStopped = true;
                     currentState = States.Throwing;
                 }
                 // give chase if not in range
@@ -452,10 +454,11 @@ public class FollowAI : MonoBehaviour
     {
         if (!IsLineOfSightClear(targetTransform))
         {
+            thrown = true;
+            yield return new WaitForSeconds(2);
             gun.SetActive(false);
             animator.SetTrigger("Throw");
             animator.SetBool("Throw Done", false);
-            thrown = true;
             GameObject[] grenade = ShuffleArray(Grenade);
             yield return new WaitForSeconds(2f);
             GameObject thrownGrendae = grenade[0];
