@@ -14,7 +14,7 @@ public class CyberFist : MonoBehaviour
     public Material normalColor; // The default color of the fist.
     public Material hitColor; // The color of the fist when it hits an enemy.
     private MeshRenderer fistRenderer; // The renderer for the fist to change its color.
-    public HandCollision inputSource;
+    public HandController inputSource;
     public Grabber grabber;
     public bool activated;
 
@@ -42,7 +42,7 @@ public class CyberFist : MonoBehaviour
         if (!activated)
             fistRenderer.material = transparent;
 
-        if (grabber.HeldGrabbable == null && inputSource.MakingFist)
+        if (grabber.HeldGrabbable == null && inputSource.GripAmount >0.9f)
         {
             activated = true;
             fistRenderer.material = normalColor;

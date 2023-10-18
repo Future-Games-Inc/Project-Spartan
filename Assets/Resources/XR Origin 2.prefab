@@ -8782,7 +8782,7 @@ MonoBehaviour:
   transparent: {fileID: 2100000, guid: b1aed82d671da3e498a4dfa8323d9d53, type: 2}
   normalColor: {fileID: 2100000, guid: ff92522fb206af644bdbf268633fe623, type: 2}
   hitColor: {fileID: 2100000, guid: 25df6bb6e9cc1ae468904bc86464cc21, type: 2}
-  inputSource: {fileID: 4743834795140530044}
+  inputSource: {fileID: 1679328976225498369}
   grabber: {fileID: 4284935602965074224}
   activated: 0
 --- !u!54 &2363808784136223833
@@ -9513,7 +9513,7 @@ MonoBehaviour:
   transparent: {fileID: 2100000, guid: b1aed82d671da3e498a4dfa8323d9d53, type: 2}
   normalColor: {fileID: 2100000, guid: ff92522fb206af644bdbf268633fe623, type: 2}
   hitColor: {fileID: 2100000, guid: 25df6bb6e9cc1ae468904bc86464cc21, type: 2}
-  inputSource: {fileID: 8453090958302772992}
+  inputSource: {fileID: 6968802849660864005}
   grabber: {fileID: 8282088516256560703}
   activated: 0
 --- !u!54 &6378463013695810728
@@ -11453,14 +11453,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4281763201015250737}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 250, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -2722, y: 25323, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5936842123730711100}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!20 &3293970385063008748
 Camera:
   m_ObjectHideFlags: 0
@@ -11484,15 +11484,15 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 10
-  far clip plane: 100
+  near clip plane: 3
+  far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 35
+  orthographic size: -15
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1032
+    m_Bits: 1033
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 5ce1ddf3820efe049a354c365bf225c3, type: 2}
   m_TargetDisplay: 0
@@ -25532,7 +25532,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 994492413733467577, guid: 79777ae0bfe4829409a6a8db9a83b871, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 79777ae0bfe4829409a6a8db9a83b871, type: 3}
 --- !u!4 &1412361816062194664 stripped
 Transform:
@@ -25540,34 +25541,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1997684848647849832}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1788605501597428050 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 246384007524380218, guid: 79777ae0bfe4829409a6a8db9a83b871,
-    type: 3}
-  m_PrefabInstance: {fileID: 1997684848647849832}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4743834795140530044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1788605501597428050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb9682286b0d3e40b5e5404cd745300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HandControl: {fileID: 1679328976225498369}
-  HandGrabber: {fileID: 4284935602965074224}
-  EnableHandCollision: 1
-  EnableCollisionOnPoint: 1
-  EnableCollisionOnFist: 1
-  EnableCollisionOnAllPoses: 0
-  EnableCollisionDuringGrab: 0
-  PointAmount: 0
-  GripAmount: 0
-  MakingFist: 0
 --- !u!1001 &2207522105181867187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26711,7 +26684,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Green Gloves Right
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3180014916432780422, guid: c2ba382097f06114c8ca184c7f00afaf, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c2ba382097f06114c8ca184c7f00afaf, type: 3}
 --- !u!1 &3697035580429105231 stripped
 GameObject:
@@ -26847,28 +26821,6 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: -4694053822623446287, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
---- !u!114 &8453090958302772992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3697035580429105231}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb9682286b0d3e40b5e5404cd745300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HandControl: {fileID: 6968802849660864005}
-  HandGrabber: {fileID: 8282088516256560703}
-  EnableHandCollision: 1
-  EnableCollisionOnPoint: 1
-  EnableCollisionOnFist: 1
-  EnableCollisionOnAllPoses: 0
-  EnableCollisionDuringGrab: 0
-  PointAmount: 0
-  GripAmount: 0
-  MakingFist: 0
 --- !u!4 &4036723803160879861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7186476182438380605, guid: c2ba382097f06114c8ca184c7f00afaf,
