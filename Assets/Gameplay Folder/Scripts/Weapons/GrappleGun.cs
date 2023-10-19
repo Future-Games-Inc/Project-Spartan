@@ -80,7 +80,7 @@ public class GrappleGun : MonoBehaviour
                 sight.SetActive(false);
         }
 
-        if(!grappledAvailable)
+        if (!grappledAvailable)
             sight.SetActive(false);
 
         grappleIcon.SetActive(grappledAvailable);
@@ -109,6 +109,7 @@ public class GrappleGun : MonoBehaviour
 
     IEnumerator DestroyHook()
     {
+        audioSource.Stop();
         yield return new WaitForSeconds(2);
         CancelGrapple();
         yield return new WaitForSeconds(10);
@@ -141,7 +142,8 @@ public class GrappleGun : MonoBehaviour
         }
 
         sight.SetActive(false);
-        audioSource.PlayOneShot(grappleClip);
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(grappleClip);
         characterController.enabled = false;
         movement.enabled = false;
         if (playerGameObject.GetComponent<SpringJoint>() == null)

@@ -22,7 +22,7 @@ public class AbilityDash : Abilities
         boostAsPercent = PlayerPrefs.HasKey("PLAYER_DASH") && PlayerPrefs.GetInt("PLAYER_DASH") >= 1
             ? ((100 + boostPercentage) / 100) + ((int)(PlayerPrefs.GetInt("PLAYER_DASH") * .75)) : (100 + boostPercentage) / 100;
 
-        boostAsPercent = PlayerPrefs.HasKey("DASH_COOLDOWN") && PlayerPrefs.GetInt("DASH_COOLDOWN") >= 1
+        coolDown = PlayerPrefs.HasKey("DASH_COOLDOWN") && PlayerPrefs.GetInt("DASH_COOLDOWN") >= 1
             ? 5 - (int)PlayerPrefs.GetInt("DASH_COOLDOWN") : 5;
     }
 

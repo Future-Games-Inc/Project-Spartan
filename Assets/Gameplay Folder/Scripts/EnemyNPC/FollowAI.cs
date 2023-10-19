@@ -455,28 +455,36 @@ public class FollowAI : MonoBehaviour
     {
         if (!IsLineOfSightClear(targetTransform))
         {
-            thrown = true;
-            yield return new WaitForSeconds(2);
-            gun.SetActive(false);
-            animator.SetTrigger("Throw");
-            animator.SetBool("ThrowDone", false);
-            GameObject[] grenade = ShuffleArray(Grenade);
-            yield return new WaitForSeconds(2f);
-            GameObject thrownGrendae = grenade[0];
-            attackProjectile = Instantiate(thrownGrendae, grenadeSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
-            ThrowData throwData = CalculateThrowData(targetPosition, attackProjectile.position);
+            yield return new WaitForSeconds(3);
+            if (!IsLineOfSightClear(targetTransform))
+            {
+                thrown = true;
+                yield return new WaitForSeconds(2);
+                gun.SetActive(false);
+                animator.SetTrigger("Throw");
+                animator.SetBool("ThrowDone", false);
+                GameObject[] grenade = ShuffleArray(Grenade);
+                yield return new WaitForSeconds(2f);
+                GameObject thrownGrendae = grenade[0];
+                attackProjectile = Instantiate(thrownGrendae, grenadeSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
+                ThrowData throwData = CalculateThrowData(targetPosition, attackProjectile.position);
 
-            DoThrow(throwData);
-            LookatTarget(1, .8f);
-            if (IsLineOfSightClear(targetTransform))
-                CheckForPlayer();
+                DoThrow(throwData);
+                LookatTarget(1, .8f);
+                if (IsLineOfSightClear(targetTransform))
+                    CheckForPlayer();
+                else
+                    yield return new WaitForSeconds(3);
+                thrown = false;
+                animator.SetBool("ThrowDone", true);
+                gun.SetActive(true);
+                currentState = States.Patrol; // Switch back to Patrol after throwing.
+            }
             else
-                yield return new WaitForSeconds(3);
-            thrown = false;
-            animator.SetBool("ThrowDone", true);
-            gun.SetActive(true);
-            currentState = States.Patrol; // Switch back to Patrol after throwing.
+                CheckForPlayer();
         }
+        else
+            CheckForPlayer();
     }
 
     private void DoThrow(ThrowData ThrowData)
