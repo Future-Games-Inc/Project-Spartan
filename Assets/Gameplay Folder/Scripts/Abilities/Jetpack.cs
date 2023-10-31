@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class Jetpack : MonoBehaviour
 {
-    public bool fuel = true;
+    public bool fuel = false;
     private float time = 0;
     public float flyTime = 3f;
     public float fallVelocity = -5f;
@@ -19,10 +19,11 @@ public class Jetpack : MonoBehaviour
     public GameObject playerGameObject;
     private Rigidbody playerRb;
     public bool activated = false;
+    private Coroutine rechargeCoroutine = null;
 
     private void OnEnable()
     {
-        StartCoroutine(Recharge());
+        StartCoroutine(Refuel());
     }
 
     void Update()
@@ -52,12 +53,16 @@ public class Jetpack : MonoBehaviour
         if (character.isGrounded)
         {
             slowFall = false;
+            moveDirection = Vector3.zero; // Reset the moveDirection.
             jetpackSource.Stop();
             if (playerRb)
             {
                 Destroy(playerRb);
             }
-            StartCoroutine(Recharge());
+            if (rechargeCoroutine == null) // Only start the coroutine if it's not already running.
+            {
+                rechargeCoroutine = StartCoroutine(Recharge());
+            }
         }
 
         character.Move(moveDirection * Time.deltaTime);
@@ -69,7 +74,7 @@ public class Jetpack : MonoBehaviour
         activated = true;
         moveDirection = Vector3.up * liftVelocity;
 
-        if (playerGameObject.GetComponent<Rigidbody>() == null)
+        if (!playerRb) // Only create the Rigidbody if it doesn't exist.
         {
             playerRb = playerGameObject.AddComponent<Rigidbody>();
             playerRb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -94,5 +99,6 @@ public class Jetpack : MonoBehaviour
         yield return new WaitForSeconds(20);
         time = 0.0f;
         fuel = true;
+        rechargeCoroutine = null; // Reset the coroutine tracker.
     }
 }

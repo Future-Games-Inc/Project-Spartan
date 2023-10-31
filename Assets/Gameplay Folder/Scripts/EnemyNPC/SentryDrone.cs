@@ -223,11 +223,11 @@ public class SentryDrone : MonoBehaviour
                     || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
                     || hit.collider.gameObject.CompareTag("Untagged"))
                 {
-                    return true;
+                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
+                        return true;
                 }
             }
         }
-
         return false;
     }
 

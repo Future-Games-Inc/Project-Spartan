@@ -28,9 +28,6 @@ public class BulletBehaviorNet : MonoBehaviour
     // Start is called before the first frame update
     private void OnEnable()
     {
-
-
-
         StartCoroutine(Destroy(Duration));
     }
     IEnumerator Destroy(float duration)
@@ -52,9 +49,6 @@ public class BulletBehaviorNet : MonoBehaviour
             playerHealth = null;
         }
 
-        // if break on impact
-        if (!other.gameObject.CompareTag("Bullet") && BreakOnImpact)
-            Destroy(gameObject);
         if (other.CompareTag("Enemy") && playerBullet)
         {
             // select custom functions for damage
@@ -69,7 +63,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("BossEnemy") && playerBullet)
+        else if (other.CompareTag("BossEnemy") && playerBullet)
         {
             // select custom functions for damage
             switch (Type)
@@ -83,7 +77,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Player") && !playerBullet)
+        else if (other.CompareTag("Player") && !playerBullet)
         {
             // select custom functions for damage
             switch (Type)
@@ -97,7 +91,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Security") && playerBullet)
+        else if (other.CompareTag("Security") && playerBullet)
         {
             // select custom functions for damage
             switch (Type)
@@ -111,7 +105,7 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Tower") && playerBullet)
+        else if (other.CompareTag("Tower") && playerBullet)
         {
             // select custom functions for damage
             switch (Type)
@@ -231,6 +225,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
                 reactorcover.TakeDamage(damage * 5);
             }
+            Destroy(gameObject);
         }
     }
 

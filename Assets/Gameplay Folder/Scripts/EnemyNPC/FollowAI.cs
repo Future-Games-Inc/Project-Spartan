@@ -12,8 +12,7 @@ public class FollowAI : MonoBehaviour
         Patrol,
         Follow,
         Attack,
-        Shocked,
-        Throwing
+        Shocked
     }
 
     [Header("AI Settings --------------------------------------------------------------")]
@@ -72,37 +71,9 @@ public class FollowAI : MonoBehaviour
 
     public Rigidbody attackProjectile;
 
-    public bool thrown;
-
     public bool isStealthActive;
 
-    private struct ThrowData
-    {
-        public Vector3 ThrowVelocity;
-        public float Angle;
-        public float DeltaXZ;
-        public float DeltaY;
-    }
-
-    [Range(0, 1)]
-    [Tooltip("Using a values closer to 0 will make the agent throw with the lower force"
-    + "down to the least possible force (highest angle) to reach the target.\n"
-    + "Using a value of 1 the agent will always throw with the MaxThrowForce below.")]
-    public float ForceRatio = 0;
-    [SerializeField]
-    [Tooltip("If the required force to throw the attack is greater than this value, "
-        + "the agent will move closer until they come within range.")]
-    private float MaxThrowForce = 25;
-
-    public GameObject[] Grenade;
-    public Transform grenadeSpawn;
     public GameObject gun;
-
-    public enum PredictionMode
-    {
-        CurrentVelocity,
-        AverageVelocity
-    }
 
     // Start is called before the first frame update
     public void OnEnable()
@@ -276,7 +247,6 @@ public class FollowAI : MonoBehaviour
                 {
                     fireReady = false;
                     agent.isStopped = true;
-                    currentState = States.Throwing;
                 }
                 // give chase if not in range
                 else
@@ -286,20 +256,6 @@ public class FollowAI : MonoBehaviour
                     agent.isStopped = false;
                     animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     Follow();
-                }
-            }
-
-            if (currentState == States.Throwing)
-            {
-                if (!thrown)
-                {
-                    StartCoroutine(ThrowProjectile(targetTransform.position));
-                }
-
-                // Check if line of sight becomes clear after throwing
-                if (IsLineOfSightClear(targetTransform))
-                {
-                    currentState = States.Attack;
                 }
             }
 
@@ -425,12 +381,13 @@ public class FollowAI : MonoBehaviour
         if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
         {
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") 
+                || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
                 || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
                 || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
                 || hit.collider.gameObject.CompareTag("Untagged"))
             {
-                return true;
+                if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
+                    return true;
             }
         }
         return false;
@@ -449,118 +406,6 @@ public class FollowAI : MonoBehaviour
         }
 
         return shuffledArray;
-    }
-
-    IEnumerator ThrowProjectile(Vector3 targetPosition)
-    {
-        if (!IsLineOfSightClear(targetTransform))
-        {
-            yield return new WaitForSeconds(3);
-            if (!IsLineOfSightClear(targetTransform))
-            {
-                thrown = true;
-                yield return new WaitForSeconds(2);
-                gun.SetActive(false);
-                animator.SetTrigger("Throw");
-                animator.SetBool("ThrowDone", false);
-                GameObject[] grenade = ShuffleArray(Grenade);
-                yield return new WaitForSeconds(2f);
-                GameObject thrownGrendae = grenade[0];
-                attackProjectile = Instantiate(thrownGrendae, grenadeSpawn.position, Quaternion.identity).GetComponent<Rigidbody>();
-                ThrowData throwData = CalculateThrowData(targetPosition, attackProjectile.position);
-
-                DoThrow(throwData);
-                LookatTarget(1, .8f);
-                if (IsLineOfSightClear(targetTransform))
-                    CheckForPlayer();
-                else
-                    yield return new WaitForSeconds(3);
-                thrown = false;
-                animator.SetBool("ThrowDone", true);
-                gun.SetActive(true);
-                currentState = States.Patrol; // Switch back to Patrol after throwing.
-            }
-            else
-                CheckForPlayer();
-        }
-        else
-            CheckForPlayer();
-    }
-
-    private void DoThrow(ThrowData ThrowData)
-    {
-        LookatTarget(1f, .5f);
-        attackProjectile.useGravity = true;
-        attackProjectile.isKinematic = false;
-        attackProjectile.velocity = ThrowData.ThrowVelocity;
-    }
-
-    private ThrowData CalculateThrowData(Vector3 TargetPosition, Vector3 StartPosition)
-    {
-        // v = initial velocity, assume max speed for now
-        // x = distance to travel on X/Z plane only
-        // y = difference in altitudes from thrown point to target hit point
-        // g = gravity
-
-        Vector3 displacement = new Vector3(
-            TargetPosition.x,
-            StartPosition.y,
-            TargetPosition.z
-        ) - StartPosition;
-        float deltaY = TargetPosition.y - StartPosition.y;
-        float deltaXZ = displacement.magnitude;
-
-        // find lowest initial launch velocity with other magic formula from https://en.wikipedia.org/wiki/Projectile_motion
-        // v^2 / g = y + sqrt(y^2 + x^2)
-        // meaning.... v = sqrt(g * (y+ sqrt(y^2 + x^2)))
-        float gravity = Mathf.Abs(Physics.gravity.y);
-        float throwStrength = Mathf.Clamp(
-            Mathf.Sqrt(
-                gravity
-                * (deltaY + Mathf.Sqrt(Mathf.Pow(deltaY, 2)
-                + Mathf.Pow(deltaXZ, 2)))),
-            0.01f,
-            MaxThrowForce
-        );
-        throwStrength = Mathf.Lerp(throwStrength, MaxThrowForce, ForceRatio);
-
-        float angle;
-        if (ForceRatio == 0)
-        {
-            // optimal angle is chosen with a relatively simple formula
-            angle = Mathf.PI / 2f - (0.5f * (Mathf.PI / 2 - (deltaY / deltaXZ)));
-        }
-        else
-        {
-            // when we know the initial velocity, we have to calculate it with this formula
-            // Angle to throw = arctan((v^2 +- sqrt(v^4 - g * (g * x^2 + 2 * y * v^2)) / g*x)
-            angle = Mathf.Atan(
-                (Mathf.Pow(throwStrength, 2) - Mathf.Sqrt(
-                    Mathf.Pow(throwStrength, 4) - gravity
-                    * (gravity * Mathf.Pow(deltaXZ, 2)
-                    + 2 * deltaY * Mathf.Pow(throwStrength, 2)))
-                ) / (gravity * deltaXZ)
-            );
-        }
-
-        if (float.IsNaN(angle))
-        {
-            // you will need to handle this case when there
-            // is no feasible angle to throw the object and reach the target.
-            return new ThrowData();
-        }
-
-        Vector3 initialVelocity =
-            Mathf.Cos(angle) * throwStrength * displacement.normalized
-            + Mathf.Sin(angle) * throwStrength * Vector3.up;
-
-        return new ThrowData
-        {
-            ThrowVelocity = initialVelocity,
-            Angle = angle,
-            DeltaXZ = deltaXZ,
-            DeltaY = deltaY
-        };
     }
 
     public void EMPShock()

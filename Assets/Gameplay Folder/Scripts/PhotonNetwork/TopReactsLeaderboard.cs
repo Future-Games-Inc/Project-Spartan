@@ -208,6 +208,7 @@ public class TopReactsLeaderboard : MonoBehaviour
             currentLevelInt = (int)response.step;
             nextLevel.text = (response.step + 1).ToString();
             currentXPText.text = response.points + " / " + (response.step * 100);
+            levelSlider.maxValue = (float)(response.next_threshold);
 
             if (levelSlider.value == levelSlider.maxValue)
             {

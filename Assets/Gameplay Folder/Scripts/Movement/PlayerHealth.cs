@@ -318,7 +318,6 @@ public class PlayerHealth : MonoBehaviour
         UpdateSecondaryText();
         PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
         StartCoroutine(voice.VoiceOvers(faction, 5));
-
     }
 
     void UpdateSecondaryText()

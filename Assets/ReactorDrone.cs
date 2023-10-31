@@ -128,7 +128,8 @@ public class ReactorDrone : MonoBehaviour
                     || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
                     || hit.collider.gameObject.CompareTag("Untagged"))
                 {
-                    return true;
+                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
+                        return true;
                 }
                 else
                     return false;
@@ -169,7 +170,7 @@ public class ReactorDrone : MonoBehaviour
                 spawnedBullet.GetComponent<Rigidbody>().velocity = spawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
             }
         }
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(Random.Range(0.25f, 0.75f));
         fireWeaponBool = false;
     }
 }

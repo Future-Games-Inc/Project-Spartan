@@ -6,12 +6,10 @@ public class WhiteLabelManager : MonoBehaviour
 {
     public TopReactsLeaderboard topReactsLeaderboard;
     public static string playerID;
-    public GameObject inputField;
 
     public TMP_InputField _inputField;
 
     public GameObject inputFieldText;
-    public GameObject[] keyboards;
 
     // Store the PlayerPref Key to avoid typos
     const string playerNamePrefKey = "PlayerName";
@@ -60,8 +58,6 @@ public class WhiteLabelManager : MonoBehaviour
                                             defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
                                         }
                                         PlayerPrefs.SetString(playerNamePrefKey, defaultName);
-                                        foreach (GameObject keys in keyboards)
-                                            keys.SetActive(false);
                                         playerID = response.player_id.ToString();
                                         StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
                                         inputFieldText.SetActive(true);
