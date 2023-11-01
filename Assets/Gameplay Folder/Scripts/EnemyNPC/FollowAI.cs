@@ -74,6 +74,7 @@ public class FollowAI : MonoBehaviour
     public bool isStealthActive;
 
     public GameObject gun;
+    public float sphereRadius = 0.5f;
 
     // Start is called before the first frame update
     public void OnEnable()
@@ -242,12 +243,6 @@ public class FollowAI : MonoBehaviour
                     animator.SetFloat("Speed", agent.velocity.magnitude * GlobalSpeedManager.SpeedMultiplier);
                     Attack();
                 }
-                // if no clear line of sight, switch to throwing
-                else if (!IsLineOfSightClear(targetTransform))
-                {
-                    fireReady = false;
-                    agent.isStopped = true;
-                }
                 // give chase if not in range
                 else
                 {
@@ -378,34 +373,24 @@ public class FollowAI : MonoBehaviour
         Vector3 directionToTarget = target.position - transform.position;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
+        if (Physics.SphereCast(transform.position, sphereRadius, directionToTarget, out hit, AttackRange, obstacleMask))
         {
-            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
-                || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
-                || hit.collider.gameObject.CompareTag("Untagged"))
+            // Debugging line
+            if (hit.collider != null)
             {
-                if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
-                    return true;
+                // More debugging
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
+                    || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
+                    || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
+                    || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
+                    || hit.collider.gameObject.CompareTag("Untagged"))
+                {
+                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
+                        return true;
+                }
             }
         }
         return false;
-    }
-
-    GameObject[] ShuffleArray(GameObject[] array)
-    {
-        GameObject[] shuffledArray = (GameObject[])array.Clone();
-
-        for (int i = shuffledArray.Length - 1; i > 0; i--)
-        {
-            int randomIndex = UnityEngine.Random.Range(0, i + 1);
-            GameObject temp = shuffledArray[i];
-            shuffledArray[i] = shuffledArray[randomIndex];
-            shuffledArray[randomIndex] = temp;
-        }
-
-        return shuffledArray;
     }
 
     public void EMPShock()

@@ -67,7 +67,7 @@ namespace LootLocker
                 //Build the URL that we will hit based on the specified endpoint, query params, etc
                 string url = BuildURL(request.endpoint, request.queryParams);
 #if UNITY_EDITOR
-                LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Verbose)("ServerRequest " + request.httpMethod + " URL: " + url);
+                //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Verbose)("ServerRequest " + request.httpMethod + " URL: " + url);
 #endif
 
                 using (UnityWebRequest webRequest = CreateWebRequest(url, request))
@@ -94,20 +94,20 @@ namespace LootLocker
 
                     if (!webRequest.isDone && timedOut)
                     {
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)("Exceeded maxTimeOut waiting for a response from " + request.httpMethod + " " + url);
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)("Exceeded maxTimeOut waiting for a response from " + request.httpMethod + " " + url);
                         OnServerResponse?.Invoke(new LootLockerResponse() { hasError = true, statusCode = 408, Error = "{\"error\": \"" + request.endpoint + " Timed out.\"}" });
                         yield break;
                     }
 
                     try
                     {
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Verbose)("Server Response: " + webRequest.responseCode + " " + request.endpoint + " completed in " + (Time.time - startTime).ToString("n4") + " secs.\nResponse: " + ObfuscateJsonStringForLogging(webRequest.downloadHandler.text));
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Verbose)("Server Response: " + webRequest.responseCode + " " + request.endpoint + " completed in " + (Time.time - startTime).ToString("n4") + " secs.\nResponse: " + ObfuscateJsonStringForLogging(webRequest.downloadHandler.text));
                     }
                     catch
                     {
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)(request.httpMethod.ToString());
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)(request.endpoint);
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)(ObfuscateJsonStringForLogging(webRequest.downloadHandler.text));
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)(request.httpMethod.ToString());
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)(request.endpoint);
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)(ObfuscateJsonStringForLogging(webRequest.downloadHandler.text));
                     }
 
                     LootLockerResponse response = new LootLockerResponse();
@@ -162,7 +162,7 @@ namespace LootLocker
                         if ((webRequest.responseCode == 401 || webRequest.responseCode == 403) && LootLockerConfig.current.allowTokenRefresh && CurrentPlatform.Get() != Platforms.Steam && tries < maxRetry) 
                         {
                             tries++;
-                            LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Warning)("Refreshing Token, since we could not find one. If you do not want this please turn off in the LootLocker config settings");
+                            //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Warning)("Refreshing Token, since we could not find one. If you do not want this please turn off in the LootLocker config settings");
                             RefreshTokenAndCompleteCall(request,(value)=> { tries = 0; OnServerResponse?.Invoke(value); });
                         }
                         else
@@ -173,7 +173,7 @@ namespace LootLocker
                             response.success = false;
                             response.hasError = true;
                             response.text = webRequest.downloadHandler.text;
-                            LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)(ObfuscateJsonStringForLogging(response.Error));
+                            //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)(ObfuscateJsonStringForLogging(response.Error));
                             OnServerResponse?.Invoke(response);
                         }
 
@@ -237,7 +237,7 @@ namespace LootLocker
 
                 if (texture == null)
                 {
-                    LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)("Texture download failed for: " + url);
+                    //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)("Texture download failed for: " + url);
                 }
 
                 OnComplete?.Invoke(texture);
@@ -279,7 +279,7 @@ namespace LootLocker
                         webRequest = new UnityWebRequest();
                         webRequest.SetRequestHeader("Content-Type", "multipart/form-data; boundary=--");
                         webRequest.uri = new Uri(url);
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Verbose)(url);//the url is wrong in some cases
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Verbose)(url);//the url is wrong in some cases
                         webRequest.uploadHandler = new UploadHandlerRaw(formSections);
                         webRequest.uploadHandler.contentType = contentType;
                         webRequest.useHttpContinue = false;
@@ -291,7 +291,7 @@ namespace LootLocker
                     {
                         string json = (request.payload != null && request.payload.Count > 0) ? JsonConvert.SerializeObject(request.payload) : request.jsonPayload;
 #if UNITY_EDITOR
-                        LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Verbose)("REQUEST BODY = " + ObfuscateJsonStringForLogging(json));
+                        //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Verbose)("REQUEST BODY = " + ObfuscateJsonStringForLogging(json));
 #endif
                         byte[] bytes = System.Text.Encoding.UTF8.GetBytes(string.IsNullOrEmpty(json) ? "{}" : json);
                         webRequest = UnityWebRequest.Put(url, bytes);

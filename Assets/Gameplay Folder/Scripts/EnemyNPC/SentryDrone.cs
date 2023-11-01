@@ -61,6 +61,8 @@ public class SentryDrone : MonoBehaviour
 
     public bool hit;
 
+    public float sphereRadius = 0.5f;
+
 
     public enum States
     {
@@ -211,7 +213,7 @@ public class SentryDrone : MonoBehaviour
             return false;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, AttackRange, obstacleMask))
+        if (Physics.SphereCast(transform.position,sphereRadius, directionToTarget, out hit, AttackRange, obstacleMask))
         {
             // Debugging line
             if (hit.collider != null)

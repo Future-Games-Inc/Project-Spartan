@@ -32,6 +32,8 @@ public class ReactorDrone : MonoBehaviour
 
     public MatchEffects matchEffects;
 
+    public float sphereRadius = 0.5f;
+
 
     private void Start()
     {
@@ -116,7 +118,7 @@ public class ReactorDrone : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, shootDistance, obstacleMask))
+        if (Physics.SphereCast(transform.position, sphereRadius, directionToTarget, out hit, shootDistance, obstacleMask))
         {
             // Debugging line
             if (hit.collider != null)
@@ -131,8 +133,6 @@ public class ReactorDrone : MonoBehaviour
                     if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
                         return true;
                 }
-                else
-                    return false;
             }
         }
         return false;

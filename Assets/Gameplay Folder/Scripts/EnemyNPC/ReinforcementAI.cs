@@ -66,6 +66,8 @@ public class ReinforcementAI : MonoBehaviour
     public PlayerHealth player;
     public MatchEffects match;
 
+    public float sphereRadius = 0.5f;
+
     // Start is called before the first frame update
     public void OnEnable()
     {
@@ -343,14 +345,17 @@ public class ReinforcementAI : MonoBehaviour
         Vector3 directionToTarget = target.position - transform.position;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, Mathf.Infinity, obstacleMask))
+        if (Physics.SphereCast(transform.position, sphereRadius, directionToTarget, out hit, AttackRange, obstacleMask))
         {
-            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Enemy")
-                || hit.collider.gameObject.CompareTag("Security") || hit.collider.gameObject.CompareTag("BossEnemy") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") || 
-                hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("Untagged"))
+            if (hit.collider != null)
             {
-                return true;
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Enemy")
+                    || hit.collider.gameObject.CompareTag("Security") || hit.collider.gameObject.CompareTag("BossEnemy") || hit.collider.gameObject.CompareTag("EnemyBullet")
+                    || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand") || hit.collider.gameObject.CompareTag("RHand") ||
+                    hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("Untagged"))
+                {
+                    return true;
+                }
             }
         }
         return false;

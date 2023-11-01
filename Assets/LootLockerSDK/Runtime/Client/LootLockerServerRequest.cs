@@ -186,7 +186,7 @@ namespace LootLocker
         public static void CallAPI(string endPoint, LootLockerHTTPMethod httpMethod, string body = null, Action<LootLockerResponse> onComplete = null, bool useAuthToken = true, LootLocker.LootLockerEnums.LootLockerCallerRole callerRole = LootLocker.LootLockerEnums.LootLockerCallerRole.User)
         {
 #if UNITY_EDITOR
-            LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Verbose)("Caller Type: " + callerRole);
+            //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Verbose)("Caller Type: " + callerRole);
 #endif
 
             Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -217,7 +217,7 @@ namespace LootLocker
             if (LootLockerConfig.current.domainKey.ToString().Length == 0)
             {
 #if UNITY_EDITOR
-                LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Error)("LootLocker domain key must be set in settings");
+                //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Error)("LootLocker domain key must be set in settings");
 #endif
                 onComplete?.Invoke(LootLockerResponseFactory.Error<LootLockerResponse>("LootLocker domain key must be set in settings"));
 
@@ -290,7 +290,7 @@ namespace LootLocker
 
             if (this.payload != null && isNonPayloadMethod)
             {
-                LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Warning)("Payloads should not be sent in GET, HEAD, OPTIONS, requests. Attempted to send a payload to: " + this.httpMethod.ToString() + " " + this.endpoint);
+                //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Warning)("Payloads should not be sent in GET, HEAD, OPTIONS, requests. Attempted to send a payload to: " + this.httpMethod.ToString() + " " + this.endpoint);
             }
         }
 
@@ -312,7 +312,7 @@ namespace LootLocker
             this.form = null;
             if (this.payload != null && isNonPayloadMethod)
             {
-                LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Warning)("Payloads should not be sent in GET, HEAD, OPTIONS, requests. Attempted to send a payload to: " + this.httpMethod.ToString() + " " + this.endpoint);
+                //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Warning)("Payloads should not be sent in GET, HEAD, OPTIONS, requests. Attempted to send a payload to: " + this.httpMethod.ToString() + " " + this.endpoint);
             }
         }
 
@@ -334,7 +334,7 @@ namespace LootLocker
             this.form = null;
             if (!string.IsNullOrEmpty(jsonPayload) && isNonPayloadMethod)
             {
-                LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Warning)("Payloads should not be sent in GET, HEAD, OPTIONS, requests. Attempted to send a payload to: " + this.httpMethod.ToString() + " " + this.endpoint);
+                //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Warning)("Payloads should not be sent in GET, HEAD, OPTIONS, requests. Attempted to send a payload to: " + this.httpMethod.ToString() + " " + this.endpoint);
             }
         }
 

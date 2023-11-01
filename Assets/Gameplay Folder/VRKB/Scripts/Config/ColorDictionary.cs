@@ -48,8 +48,8 @@ namespace VRKB
                     Color color;
                     if (ColorUtility.TryParseHtmlString(colorString, out color))
                         _dict[colorName] = color;
-                    else
-                        Debug.LogFormat("failed to parse color string: '{0}'", colorString);
+                    //else
+                    //    Debug.LogFormat("failed to parse color string: '{0}'", colorString);
                 }
             }
         }
