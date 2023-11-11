@@ -28,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
     public bool alive;
     public bool reactorHeld;
     public bool extractionWinner;
+    public bool isShielded;
 
     public string characterFaction;
 
@@ -972,40 +973,43 @@ public class PlayerHealth : MonoBehaviour
     {
         if (!spawnManager.gameOver)
         {
-            audioSource.PlayOneShot(bulletHit);
-            StartCoroutine(Cracked());
+            if (!isShielded)
+            {
+                audioSource.PlayOneShot(bulletHit);
+                StartCoroutine(Cracked());
 
-            if (PlayerPrefs.HasKey("DAMAGAE_TAKEN") && PlayerPrefs.GetInt("DAMAGAE_TAKEN") == 1)
-                damageTaken = (damage - (PlayerPrefs.GetInt("DAMAGAE_TAKEN") / 4));
-            else
-                damageTaken = damage;
-            if (Armor >= damage)
-            {
-                Armor -= damage;
-            }
-            else if (Armor < damage && Armor > 0)
-            {
-                Health -= (damage - Armor);
-                Armor = 0;
-            }
-            else if (Armor <= 0)
-            {
-                Health -= damage;
-            }
+                if (PlayerPrefs.HasKey("DAMAGAE_TAKEN") && PlayerPrefs.GetInt("DAMAGAE_TAKEN") == 1)
+                    damageTaken = (damage - (PlayerPrefs.GetInt("DAMAGAE_TAKEN") / 4));
+                else
+                    damageTaken = damage;
+                if (Armor >= damage)
+                {
+                    Armor -= damage;
+                }
+                else if (Armor < damage && Armor > 0)
+                {
+                    Health -= (damage - Armor);
+                    Armor = 0;
+                }
+                else if (Armor <= 0)
+                {
+                    Health -= damage;
+                }
 
-            if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
-            {
-                alive = false;
-                StartCoroutine(PlayerRespawn());
-            }
+                if (Armor <= 0 && Health <= 0 && playerLives > 1 && alive == true)
+                {
+                    alive = false;
+                    StartCoroutine(PlayerRespawn());
+                }
 
-            else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
-            {
-                alive = false;
-                StartCoroutine(PlayerDeath());
+                else if (Armor <= 0 && Health <= 0 && playerLives == 1 && alive == true)
+                {
+                    alive = false;
+                    StartCoroutine(PlayerDeath());
+                }
+                CheckArmorStatus();
+                CheckHealthStatus();
             }
-            CheckArmorStatus();
-            CheckHealthStatus();
         }
     }
 

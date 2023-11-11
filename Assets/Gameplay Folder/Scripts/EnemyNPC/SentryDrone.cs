@@ -300,7 +300,7 @@ public class SentryDrone : MonoBehaviour
         if (Health <= 0 && alive == true)
         {
             alive = false;
-            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
             player.GuardianKilled();
             enemyCounter.UpdateSecurity();
 

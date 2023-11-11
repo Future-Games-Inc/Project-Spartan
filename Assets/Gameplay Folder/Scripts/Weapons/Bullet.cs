@@ -213,7 +213,7 @@ public class Bullet : MonoBehaviour
                     else
                         enemyDamageCrit.TakeDamage(10 * bulletModifier);
                 }
-                else
+                else if (enemyDamageCrit == null)
                 {
                     SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
                     enemyDamageCrit2.TakeDamage(10 * bulletModifier);
@@ -234,7 +234,7 @@ public class Bullet : MonoBehaviour
                     else
                         enemyDamage.TakeDamage(bulletModifier);
                 }
-                else
+                else if (enemyDamage == null)
                 {
                     SentryDrone enemyDamage2 = other.GetComponentInParent<SentryDrone>();
                     enemyDamage2.TakeDamage(bulletModifier);
@@ -256,7 +256,7 @@ public class Bullet : MonoBehaviour
                 {
                     enemyDamageCrit.TakeDamage(10 * bulletModifier);
                 }
-                else
+                else if (enemyDamageCrit == null)
                 {
                     SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
                     enemyDamageCrit2.TakeDamage(10 * bulletModifier);
@@ -270,7 +270,7 @@ public class Bullet : MonoBehaviour
                 {
                     enemyDamage.TakeDamage(bulletModifier);
                 }
-                else
+                else if (enemyDamage == null)
                 {
                     SentryDrone enemyDamage2 = other.GetComponentInParent<SentryDrone>();
                     enemyDamage2.TakeDamage(bulletModifier);

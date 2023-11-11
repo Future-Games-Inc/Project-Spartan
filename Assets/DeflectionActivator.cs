@@ -7,6 +7,7 @@ public class DeflectionActivator : MonoBehaviour
 {
     public GameObject shield;
     public bool activated;
+    public bool canBeActivated;
     public float time;
     public float shieldTimer;
     public GameObject rechargeIcon;
@@ -15,6 +16,8 @@ public class DeflectionActivator : MonoBehaviour
     public AudioClip audioClip;
 
     public InputActionProperty rightThumbstickPress;
+
+    public PlayerHealth player;
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -27,12 +30,14 @@ public class DeflectionActivator : MonoBehaviour
         rechargeIcon.SetActive(activated);
 
         // Activate the shield if thumbstick is pressed and shield is not already activated.
-        if (rightThumbstickPress.action.ReadValue<float>() >= 0.78f && !activated && time == 0.0f)
+        if (rightThumbstickPress.action.ReadValue<float>() >= 0.78f && !activated && canBeActivated && time == 0.0f)
         {
             audioSource.PlayOneShot(audioClip);
             activated = true;
+            canBeActivated = false;
             shield.SetActive(true);
             rechargeIcon.SetActive(false);
+            player.isShielded = true;
         }
 
         // Increment time only if the shield is active
@@ -48,6 +53,7 @@ public class DeflectionActivator : MonoBehaviour
             activated = false;
             shield.SetActive(false);
             StartCoroutine(Recharge());
+            player.isShielded = false;
         }
     }
 
@@ -55,7 +61,7 @@ public class DeflectionActivator : MonoBehaviour
     {
         yield return new WaitForSeconds(10);
         time = 0.0f;
-        activated = true;
+        canBeActivated = true;
 
     }
 
@@ -63,6 +69,6 @@ public class DeflectionActivator : MonoBehaviour
     {
         yield return new WaitForSeconds(20);
         time = 0.0f;
-        activated = true;
+        canBeActivated = true;
     }
 }
