@@ -1,10 +1,9 @@
-using Photon.Pun;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EarlyExtraction : MonoBehaviourPunCallbacks
+public class EarlyExtraction : MonoBehaviour
 {
     public InputActionProperty leftSelectButton;
     public GameObject extractionIcon;
@@ -17,8 +16,6 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
     private bool isHolding = false;
     private bool hasLeftRoom = false;
     private bool activatedExtraction;
-
-    public static readonly byte ExtractEarly = 40;
 
     // Cache frequently accessed components
     private void Start()
@@ -57,14 +54,16 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
             //    bool artifact = (bool)player.GetType().GetProperty("Artifact" + i).GetValue(player, null);
             //    if (artifact)
             //    {
-            //        StartCoroutine(player.GetXP(100));
+            //        StartCoroutine(player.
+            //
+            //        (100));
             //        player.GetType().GetProperty("Artifact" + i).SetValue(player, false, null);
             //    }
             //}
 
             // Use the null-conditional operator for simplicity
-            if (photonView.IsMine)
-                VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
+            player.earlyCanvas.SetActive(true);
+            StartCoroutine(Leave());
         }
     }
 
@@ -78,5 +77,11 @@ public class EarlyExtraction : MonoBehaviourPunCallbacks
             }
             yield return new WaitForSecondsRealtime(1);
         }
+    }
+
+    IEnumerator Leave()
+    {
+        yield return new WaitForSeconds(4);
+        VirtualWorldManager.Instance.LeaveRoomAndLoadHomeScene();
     }
 }

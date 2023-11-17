@@ -1,5 +1,4 @@
 using System.Collections;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class SaveData : MonoBehaviour
@@ -27,7 +26,7 @@ public class SaveData : MonoBehaviour
 
     string[] settings = { "BULLET_MODIFIER", "REACTOR_EXTRACTION", "TOXICITY_DAMAGE", "DAMAGAE_TAKEN", "PLAYER_SPEED", "PLAYER_HEALTH", "PLAYER_ARMOR", "PLAYER_DASH", "HEALTH_POWERUP", "DASH_COOLDOWN", "AMMO_OVERLOAD", "HEALTH_REGEN", "HEALTH_STIM", "LEECH",
     "ACTIVE_CAMO", "STEALTH","EXPLOSIVE_DEATH", "BERSERKER_FURY","AI_COMPANION", "DECOY_DEPLOYMENT","SAVING_GRACE", "HEALTH_STIM_SLOT","LEECH_SLOT", "ACTIVE_CAMO_SLOT","STEALTH_SLOT", "EXPLOSIVE_DEATH_SLOT","BERSERKER_FURY_SLOT", "AI_COMPANION_SLOT","DECOY_DEPLOYMENT_SLOT", "SAVING_GRACE_SLOT", "AVATAR_SELECTION_NUMBER"
-    , "REACTOR_EXTRACTION", "EnemyKills", "PlayersKilled", "BUTTON_ASSIGN"};
+    , "REACTOR_EXTRACTION", "BUTTON_ASSIGN"};
 
     // Start is called before the first frame update
     void Start()
@@ -109,8 +108,7 @@ public class SaveData : MonoBehaviour
     public void UpdateSkills(int skills)
     {
         SkillPoints += skills;
-        PlayerPrefs.SetInt("Cints", SkillPoints);
-        leaderboard.SubmitScore(SkillPoints);
+        PlayerPrefs.SetInt("CINTS", SkillPoints);
         Save();
     }
 
@@ -159,7 +157,6 @@ public class SaveData : MonoBehaviour
     public void Save()
     {
         ES3.Save("SkillPoints", SkillPoints);
-        StartCoroutine(leaderboard.SubmitScoreRoutine(SkillPoints));
     }
 
     public void BossSave()
@@ -205,14 +202,12 @@ public class SaveData : MonoBehaviour
     public IEnumerator PlayerLevelRoutine()
     {
         yield return new WaitForSeconds(.75f);
-        if (PlayerPrefs.HasKey("Cints"))
+        if (PlayerPrefs.HasKey("CINTS"))
         {
             SkillPoints = PlayerPrefs.GetInt("CINTS");
-            if (SkillPoints != leaderboard.Score)
-                leaderboard.SubmitScore(SkillPoints);
         }
         else
-            SkillPoints = leaderboard.Score;
+            SkillPoints = 0;
 
         PlayerPrefs.SetInt("CINTS", SkillPoints);
 
@@ -225,10 +220,12 @@ public class SaveData : MonoBehaviour
         {
             playerLevelCurrent = PlayerPrefs.GetInt("PlayerLevel");
             if (playerLevelCurrent != currentLevelInt)
-                leaderboard.AddProgression(playerLevelCurrent - leaderboard.currentLevelInt);
+            {
+                playerLevelCurrent = currentLevelInt;
+            }
         }
         else
-            playerLevelCurrent = leaderboard.currentLevelInt;
+            playerLevelCurrent = currentLevelInt;
 
         PlayerPrefs.SetInt("PlayerLevel", playerLevelCurrent);
 
@@ -239,7 +236,16 @@ public class SaveData : MonoBehaviour
             {
                 awarded = true;
             }
-        }
+            else
+                awarded = false;
+
+            if (playerPrestigeCurrent > currentPrestigeLevel)
+            {
+                playerPrestigeCurrent = currentPrestigeLevel;
+
+                PlayerPrefs.SetInt("PlayerPrestige", playerPrestigeCurrent);
+            }
+            }
         else
             playerPrestigeCurrent = playerPrestigeCurrent / prestigeIncrement + 1;
 

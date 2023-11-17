@@ -12,7 +12,7 @@ namespace BNG {
     [RequireComponent(typeof(Canvas))]
     public class VRCanvas : MonoBehaviour {
 
-        void Start() {
+        void OnEnable() {
             VRUISystem.Instance.AddCanvas(GetComponent<Canvas>());
         }
     }

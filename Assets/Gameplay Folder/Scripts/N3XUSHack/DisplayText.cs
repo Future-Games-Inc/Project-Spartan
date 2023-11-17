@@ -1,3 +1,4 @@
+using BNG;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -13,6 +14,12 @@ public class DisplayText : MonoBehaviour
     public GameObject denied;
 
     public bool codeFound;
+
+    public GameObject screen;
+    public GameObject[] cards;
+
+    public AudioClip clip;
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
    void Start()
@@ -51,10 +58,13 @@ public class DisplayText : MonoBehaviour
             displayText.text = "Access Granted";
             matchEffects.spawnReactor = true;
             matchEffects.codeFound = true;
+            audioSource.PlayOneShot(clip);
             foreach(GameObject keys in keyButtons)
                 keys.SetActive(false);
             granted.SetActive(true);
-            StartCoroutine(Deactivate());
+            screen.SetActive(false) ;
+            foreach(GameObject obj in cards)
+                obj.GetComponentInParent<Grabbable>().enabled = true;
         }
         else
         {

@@ -32,33 +32,5 @@ public class TurnSpeed : MonoBehaviour
                 turnProvider.enabled = true;
             }
         }
-        if (PlayerPrefs.HasKey("ToggleTurn"))
-        {
-            if (PlayerPrefs.GetInt("ToggleTurn") >= 1)
-            {
-                foreach (XRDirectInteractor interactor in directInteractors)
-                {
-                    interactor.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.Toggle;
-                }
-                foreach (XRRayInteractor interactor in rayInteractors)
-                {
-                    interactor.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.Toggle;
-                }
-            }
-        }
-        if (PlayerPrefs.HasKey("StateTurn"))
-        {
-            if (PlayerPrefs.GetInt("StateTurn") >= 1)
-            {
-                foreach (XRDirectInteractor interactor in directInteractors)
-                {
-                    interactor.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.State;
-                }
-                foreach (XRRayInteractor interactor in rayInteractors)
-                {
-                    interactor.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.State;
-                }
-            }
-        }
     }
 }

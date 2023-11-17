@@ -1,8 +1,7 @@
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
 
-public class LoginManager5 : MonoBehaviourPunCallbacks
+public class LoginManager5 : MonoBehaviour
 {
     public TMP_InputField playerNameInput;
     public RoomManager roomManager;
@@ -14,11 +13,6 @@ public class LoginManager5 : MonoBehaviourPunCallbacks
     void Update()
     {
 
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        PhotonNetwork.JoinLobby();
     }
 
     public void EnterRoom1()

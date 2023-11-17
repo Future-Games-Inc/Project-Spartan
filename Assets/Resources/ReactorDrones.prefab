@@ -86,16 +86,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   droneBulletSpawn: {fileID: 740376546533930985}
-  droneBullet: {fileID: 5451881146956983319, guid: d8e64eb845a36b54bbf116c26a10e549,
+  droneBullet: {fileID: 5451881146956983319, guid: e4bd26536620caf429a3c0e1d6f4fb19,
     type: 3}
   inSight: 0
-  shootDistance: 10
+  shootDistance: 20
   shootForce: 75
   fireWeaponBool: 0
   currentState: 0
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 33559049
+  matchEffects: {fileID: 0}
 --- !u!135 &740376546636165056
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -137,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e894b010118f42a0450d83892e8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 300
+  Health: 600
   xpDrop: {fileID: 4139062090783772692, guid: f304695439ded2a46ba9fd8e610d7541, type: 3}
   xpDropExtra: {fileID: 4139062090783772692, guid: f304695439ded2a46ba9fd8e610d7541,
     type: 3}
@@ -164,6 +165,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
   explosionEffect: {fileID: 3382756392265993003}
   agent: {fileID: 0}
+  hit: 0
   type: Reactor
 --- !u!82 &3337222511186548489
 AudioSource:

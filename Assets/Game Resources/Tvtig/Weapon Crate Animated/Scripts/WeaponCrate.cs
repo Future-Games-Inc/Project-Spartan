@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.AI;
-using Umbrace.Unity.PurePool;
 
 public class WeaponCrate : MonoBehaviour
 {
@@ -38,7 +37,7 @@ public class WeaponCrate : MonoBehaviour
 
     private void Start()
     {
-        
+
         _collider = GetComponent<BoxCollider>();
         cacheActive = true;
     }
@@ -76,7 +75,8 @@ public class WeaponCrate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
+        if (other.CompareTag("LeftHand") && cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("RightHand") &&
+            cacheActive == true && matchProps.startMatchBool == true || other.CompareTag("Player") && cacheActive == true && matchProps.startMatchBool == true)
         {
             _animator.SetBool("Open", true);
             _visualEffect.SendEvent("OnPlay");
@@ -88,10 +88,10 @@ public class WeaponCrate : MonoBehaviour
 
     IEnumerator WeaponCache()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1.5f);
         GameObject[] shuffledWeapons = ShuffleArray(weapons);
         GameObject[] shuffledPowerups = ShuffleArray(powerups);
-        Instantiate(shuffledWeapons[0], spawn1.position, spawn1.rotation);
+        Instantiate(shuffledWeapons[1], spawn1.position, spawn3.rotation);
         Instantiate(shuffledWeapons[2], spawn3.position, spawn3.rotation);
         Instantiate(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);
@@ -101,7 +101,7 @@ public class WeaponCrate : MonoBehaviour
 
     IEnumerator CacheRespawn()
     {
-        yield return new WaitForSeconds(30);
+        yield return new WaitForSeconds(60);
         _animator.SetBool("Open", false);
         cacheActive = true;
     }

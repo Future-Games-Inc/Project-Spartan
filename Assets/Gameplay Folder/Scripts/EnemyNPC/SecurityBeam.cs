@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static DroneHealth;
 
 public class SecurityBeam : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class SecurityBeam : MonoBehaviour
         detectedPlayer = null;
         securityDrone.GetComponent<WanderingAI>().enabled = true;
         securityDrone.GetComponent<SecuityCamera>().enabled = true;
-        securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f;
+        securityDrone.GetComponent<NavMeshAgent>().speed = 0.5f * GlobalSpeedManager.SpeedMultiplier;
 
         // Reset the properties for enemies in the detectedEnemies list
         foreach (GameObject enemy in detectedEnemies)
@@ -49,9 +50,9 @@ public class SecurityBeam : MonoBehaviour
                 followAi.AgroRange = 25f;
                 followAi.DetectRange = 30f;
                 if (enemy.tag == "Enemy")
-                    followAi.agent.speed = 1.5f;
+                    followAi.agent.speed = 1.5f * GlobalSpeedManager.SpeedMultiplier;
                 else
-                    followAi.agent.speed = 0.8f;
+                    followAi.agent.speed = 0.8f * GlobalSpeedManager.SpeedMultiplier;
             }
         }
     }
@@ -65,7 +66,7 @@ public class SecurityBeam : MonoBehaviour
         securityBeam.GetComponent<MeshRenderer>().material = beamMaterialDetected;
         securityDrone.GetComponent<WanderingAI>().enabled = false;
         securityDrone.GetComponent<SecuityCamera>().enabled = false;
-        securityDrone.GetComponent<NavMeshAgent>().speed = 2;
+        securityDrone.GetComponent<NavMeshAgent>().speed = 2 * GlobalSpeedManager.SpeedMultiplier;
 
         // Find and store enemies within a certain range
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRange);

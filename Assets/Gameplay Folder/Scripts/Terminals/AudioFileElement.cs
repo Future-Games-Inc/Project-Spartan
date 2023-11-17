@@ -1,4 +1,3 @@
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,11 +23,10 @@ public class AudioFileElement : MonoBehaviour
 
     private bool PlayerHasUnlockedAudioFile()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(audioFileKey, out object audioState))
+        if (PlayerPrefs.HasKey(audioFileKey))
         {
             // Check the custom property value for the audio file key
-            bool unlocked = (bool)audioState;
-            return unlocked;
+            return true;
         }
 
         return false;
@@ -40,7 +38,10 @@ public class AudioFileElement : MonoBehaviour
         {
             textView.SetActive(false);
             // Play the audio file
-            audioSource.PlayOneShot(audioClip);
+            if (!audioSource.isPlaying)
+                audioSource.PlayOneShot(audioClip);
+            else
+                audioSource.Stop();
         }
     }
 

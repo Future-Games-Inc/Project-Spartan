@@ -16,6 +16,8 @@ public class BombScript : MonoBehaviour
     public Slider activationSlider;
 
     public GameObject smokePrefab;
+    public GameObject explosionObject;
+    public bool hit;
 
     //How far the explosion will reach
     public float explosionRadius = 10f;
@@ -66,6 +68,7 @@ public class BombScript : MonoBehaviour
                         if (collider.CompareTag("Player"))
                         {
                             collider.GetComponent<PlayerHealth>().BombNeutralized();
+                            enemyCounter.UpdateBombs();
                             Destroy(gameObject);
                         }
                     }
@@ -127,15 +130,6 @@ public class BombScript : MonoBehaviour
                 }
             }
 
-            if (hit.gameObject.CompareTag("Player"))
-            {
-                PlayerHealth playerhealth = hit.gameObject.GetComponentInChildren<PlayerHealth>();
-                {
-                    if (playerhealth != null)
-                        playerhealth.TakeDamage(15);
-                }
-            }
-
             //If the explosion hit the tag "GasTank"
             if (hit.GetComponent<Collider>().tag == "GasTank")
             {
@@ -144,7 +138,7 @@ public class BombScript : MonoBehaviour
                 hit.gameObject.GetComponent<GasTankScript>().explosionTimer = 0.05f;
             }
 
-            //enemyCounter.UpdateBombs();
+            enemyCounter.UpdateBombs();
             //Destroy the current barrel object
             Destroy(gameObject);
         }
@@ -156,14 +150,15 @@ public class BombScript : MonoBehaviour
         {
             Destroy(other.gameObject);
             Health -= 25;
-
+            if (!hit)
+                StartCoroutine(Hit());
             if (Health <= 0)
             {
                 explode = true;
             }
         }
 
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             playerWithinRadius = true;
             if (!activated && playerWithinRadius)
@@ -195,6 +190,15 @@ public class BombScript : MonoBehaviour
         }
     }
 
+    IEnumerator Hit()
+    {
+        hit = true;
+        explosionObject.SetActive(true);
+        yield return new WaitForSeconds(1);
+        hit = false;
+        explosionObject.SetActive(false);
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -214,6 +218,7 @@ public class BombScript : MonoBehaviour
                         if (collider.CompareTag("Player"))
                         {
                             collider.GetComponent<PlayerHealth>().BombNeutralized();
+                            enemyCounter.UpdateBombs();
                             Destroy(gameObject);
                         }
                     }

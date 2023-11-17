@@ -1,4 +1,3 @@
-using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +28,7 @@ public class Skill : MonoBehaviour
 
     void Update()
     {
-        BodyText.text = $"{cost} Cs";
+        BodyText.text = $"{cost} Cints";
         image.color = skillTree.saveData.SkillPoints >= cost ? Color.white : Color.grey;
     }
     public void UpdateUI()
@@ -42,7 +41,6 @@ public class Skill : MonoBehaviour
         }
     }
 
-    [System.Obsolete]
     public void Buy()
     {
         if (skillTree.saveData.SkillPoints < cost || skillTree.SkillLevels[id] >= skillTree.SkillCaps[id])
@@ -56,63 +54,59 @@ public class Skill : MonoBehaviour
 
     public void UpdateLoadout()
     {
-        ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
-
         switch (tag)
         {
             case "bulletMod":
-                properties[MultiplayerVRConstants.BULLET_MODIFIER] = skillLevel;
+                PlayerPrefs.SetInt("BULLET_MODIFIER",  skillLevel);
                 break;
 
             case "armorLevel":
-                properties[MultiplayerVRConstants.PLAYER_ARMOR] = skillLevel;
+                PlayerPrefs.SetInt("PLAYER_ARMOR", skillLevel);
                 break;
 
             case "toxDam":
-                properties[MultiplayerVRConstants.TOXICITY_DAMAGE] = skillLevel;
+                PlayerPrefs.SetInt("TOXICITY_DAMAGE", skillLevel);
                 break;
 
             case "damTake":
-                properties[MultiplayerVRConstants.DAMAGAE_TAKEN] = skillLevel;
+                PlayerPrefs.SetInt("DAMAGAE_TAKEN", skillLevel);
                 break;
 
             case "reactExtra":
-                properties[MultiplayerVRConstants.REACTOR_EXTRACTION] = skillLevel;
+                PlayerPrefs.SetInt("REACTOR_EXTRACTION", skillLevel);
                 break;
 
             case "ammoOver":
-                properties[MultiplayerVRConstants.AMMO_OVERLOAD] = skillLevel;
+                PlayerPrefs.SetInt("AMMO_OVERLOAD", skillLevel);
                 break;
 
             case "playSpeed":
-                properties[MultiplayerVRConstants.PLAYER_SPEED] = skillLevel;
+                PlayerPrefs.SetInt("PLAYER_SPEED", skillLevel);
                 break;
 
             case "playHealth":
-                properties[MultiplayerVRConstants.PLAYER_HEALTH] = skillLevel;
+                PlayerPrefs.SetInt("PLAYER_HEALTH", skillLevel);
                 break;
 
             case "playDash":
-                properties[MultiplayerVRConstants.PLAYER_DASH] = skillLevel;
+                PlayerPrefs.SetInt("PLAYER_DASH", skillLevel);
                 break;
 
             case "healthPow":
-                properties[MultiplayerVRConstants.HEALTH_POWERUP] = skillLevel;
+                PlayerPrefs.SetInt("HEALTH_POWERUP", skillLevel);
                 break;
 
             case "dashCool":
-                properties[MultiplayerVRConstants.DASH_COOLDOWN] = skillLevel;
+                PlayerPrefs.SetInt("DASH_COOLDOWN", skillLevel);
                 break;
 
             case "healthRegen":
-                properties[MultiplayerVRConstants.HEALTH_REGEN] = skillLevel;
+                PlayerPrefs.SetInt("HEALTH_REGEN", skillLevel);
                 break;
 
             default:
                 break;
         }
-
-        PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
     }
 }
 

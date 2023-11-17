@@ -1,8 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.AI;
-using Umbrace.Unity.PurePool;
+using UnityEngine.SceneManagement;
+using LootLocker.Requests;
 
 public class MatchEffects : MonoBehaviour
 {
@@ -13,21 +13,13 @@ public class MatchEffects : MonoBehaviour
     public int currentExtractionTimer = 300;
 
     public GameObject spawnManager;
-    public GameObject uiCanvas;
-    //public GameObject[] artifacts;
-    //public Transform[] artifactLocations;
-
-    public TextMeshProUGUI countdownText;
 
     private Coroutine timerCoroutine;
 
     public AudioSource audioSource;
     public AudioClip[] countdownClips;
     public AudioClip matchBegan;
-    public AudioClip supplyShip1;
-    public AudioClip supplyShip2;
 
-    public GameObject supplyDropShipPrefab;
     public float spawnInterval; // 5 minutes in seconds
     public float lastSpawnTime;
 
@@ -35,94 +27,206 @@ public class MatchEffects : MonoBehaviour
     public bool spawnReactor = false;
     public bool codeFound = false;
     public bool spawned = false;
-    public bool DE_supplyDrop;
 
     public string numSequence;
 
     public float spawnRadius = 300.0f;
 
-    public TextMeshProUGUI nexusCodePanel;
+    public TextMeshProUGUI[] nexusCodePanel;
+    public VirtualWorldManager worldManager;
+    public SpawnManager1 spawner;
 
+    public bool active = true;
+    public string owner;
+    public string scene;
 
+    public GameObject[] gameObjects; // assuming you have 4 gameObjects corresponding to 4 owner strings
+    public GameObject[] codePanels;
+    public float actualExtractionTime;
+    public GameObject MissionStart;
+    public GameObject Rael;
+    public GameObject decryption;
+    public GameObject device;
+    public GameObject dropZone;
+
+    public int level;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
+        {
+            int panel = Random.Range(0, codePanels.Length);
+            codePanels[panel].SetActive(true);
+            InitializeTimer(); // Only the Master Client will initialize the timer
+            //StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
 
-        InitializeTimer(); // Only the Master Client will initialize the timer
-        StartCoroutine(SpawnCheckCoroutine()); // Only the Master Client will handle supply drops
+            // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
+            numSequence = GenerateRandomSequence(4);
+            foreach (TextMeshProUGUI text in nexusCodePanel)
+                text.text = numSequence.ToString();
+        }
 
-        // Only the Master Client will initialize the sequence        numSequence = GenerateRandomSequence(4);
-        numSequence = GenerateRandomSequence(4);
-        nexusCodePanel.text = numSequence.ToString();
+        LootLockerSDKManager.GetMemberRank(scene.ToString(), scene.ToString(), (response) =>
+        {
+            if (response.success)
+            {
+                owner = response.metadata;
+                ActivateCorrespondingGameObject();
+            }
+        });
+        actualExtractionTime = currentExtractionTimer;
+        StartCoroutine(MapLevel());
+        StartCoroutine(MissionIntro());
     }
 
-    IEnumerator SpawnCheckCoroutine()
+    IEnumerator MissionIntro()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        yield return new WaitForSeconds(matchCountdown + 60);
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 6));
+            MissionStart.SetActive(true);
+        }
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 10));
+            MissionStart.SetActive(true);
+        }
+    }
+
+    public void StartMission()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 7));
+            AddTime(180);
+            Rael.SetActive(true);
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 11));
+            AddTime(200);
+            device.SetActive(true);
+        }
+    }
+
+    public void MissionStep2()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 8));
+            decryption.SetActive(true);
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 12));
+            dropZone.SetActive(true);
+        }
+    }
+
+    public void MissionEnd()
+    {
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+        if (SceneManager.GetActiveScene().name == "Playground")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 9));
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Bear")
+        {
+            StartCoroutine(voice.VoiceOvers(player.faction, 13));
+        }
+    }
+
+    IEnumerator MapLevel()
     {
         while (true)
         {
-            yield return new WaitForSeconds(spawnInterval);
-
-            if (spawned == false && DE_supplyDrop == true)
+            bool done = false;
+            LootLockerSDKManager.GetPlayerInfo((response) =>
             {
-                lastSpawnTime = Time.time;
-                // Create an array to store the valid positions
-                Vector3[] spawnPositions = new Vector3[10];
-                int validPositionsCount = 0;
-
-
-                // Generate multiple random positions within the spawn radius
-                for (int i = 0; i < spawnPositions.Length; i++)
+                if (response.success)
                 {
-                    Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-                    randomPosition += transform.position;
-
-                    // Find the nearest point on the NavMesh to the random position
-                    NavMeshHit hit;
-                    if (NavMesh.SamplePosition(randomPosition, out hit, spawnRadius, NavMesh.AllAreas))
-                    {
-                        // Add the valid position to the array
-                        spawnPositions[validPositionsCount] = hit.position;
-                        validPositionsCount++;
-                    }
+                    level = (int)response.level;
+                    done = true;
                 }
-
-                // If there are valid positions, choose one randomly for spawning the enemy
-                if (validPositionsCount > 0)
-                {
-                    Vector3 spawnPosition = spawnPositions[Random.Range(0, validPositionsCount)];
-
-                    // Adjust the y value to be 100 units above the original spawn position
-                    spawnPosition.y += 100;
-
-                    Instantiate(supplyDropShipPrefab, spawnPosition, Quaternion.identity);
-                    StartCoroutine(SupplyShipAudio());
-                    spawned = true;
-                }
-            }
+            });
+            yield return new WaitWhile(() => done == false);
+            StopCoroutine(MapLevel());
         }
     }
+
+    void ActivateCorrespondingGameObject()
+    {
+        // Deactivate all GameObjects first
+        foreach (var obj in gameObjects)
+        {
+            obj.SetActive(false);
+        }
+
+        // Activate the corresponding GameObject based on the value of owner
+        if (owner == "Cyber SK Gang") gameObjects[0].SetActive(true);
+        else if (owner == "Muerte De Dios") gameObjects[1].SetActive(true);
+        else if (owner == "Chaos Cartel") gameObjects[2].SetActive(true);
+        else if (owner == "CintSix Cartel") gameObjects[3].SetActive(true);
+    }
+
+    //IEnumerator SpawnCheckCoroutine()
+    //{
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(spawnInterval);
+
+    //        if (spawned == false && DE_supplyDrop == true)
+    //        {
+    //            lastSpawnTime = Time.time;
+    //            // Create an array to store the valid positions
+    //            StartCoroutine(SupplyShipAudio());
+    //            spawned = true;
+    //            StartCoroutine(spawner.SpawnSupplyDrop());
+
+    //        }
+    //    }
+    //}
     private void Update()
     {
-        RefreshTimerUI();
-        if (startMatchBool)
+        if (SceneManager.GetActiveScene().name != "WeaponTest")
         {
-            RefreshCountdownTimer();
+            RefreshTimerUI();
+            if (startMatchBool)
+            {
+                RefreshCountdownTimer();
+            }
         }
+
+        if (currentExtractionTimer <= 0)
+            currentExtractionTimer = 0;
     }
 
-    IEnumerator SupplyShipAudio()
-    {
-        yield return new WaitForSeconds(0);
-        audioSource.PlayOneShot(supplyShip1);
-        StartCoroutine(PlaySupplyDropAudioDelayed());
-    }
+    //IEnumerator SupplyShipAudio()
+    //{
+    //    yield return new WaitForSeconds(0);
+    //    audioSource.PlayOneShot(supplyShip1);
+    //    StartCoroutine(PlaySupplyDropAudioDelayed());
+    //}
 
     private void RefreshTimerUI()
     {
         string seconds = (currentMatchTime % 60).ToString("00");
-        countdownText.text = $"{seconds}";
     }
 
     void RefreshCountdownTimer()
@@ -154,9 +258,8 @@ public class MatchEffects : MonoBehaviour
             if (currentMatchTime <= 0)
             {
                 audioSource.PlayOneShot(matchBegan);
-                uiCanvas.SetActive(false);
                 startMatchBool = true;
-                StartCoroutine(SpawnCheckCoroutine());
+                //StartCoroutine(SpawnCheckCoroutine());
                 currentExtractionTimer -= 1;
                 //StartCoroutine(Artifacts());
             }
@@ -168,30 +271,34 @@ public class MatchEffects : MonoBehaviour
             timerCoroutine = StartCoroutine(TimerEvent());
         }
 
-        if(currentMatchTime <= 0 && currentExtractionTimer <= 0)
+        if (currentExtractionTimer == 45)
         {
+            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+
+            StartCoroutine(voice.VoiceOvers(player.faction, 0));
+        }
+
+        if (currentMatchTime <= 0 && currentExtractionTimer <= 0 && active)
+        {
+            worldManager.TimesUP();
             timerCoroutine = null;
+            active = false;
         }
 
     }
 
-    //IEnumerator Artifacts()
-    //{
-    //    yield return new WaitForSeconds(1f);
-    //    if (PhotonNetwork.IsMasterClient)
-    //    {
-    //        for (int i = 0; i < artifacts.Length; i++)
-    //        {
-    //            PhotonNetwork.Instantiate(artifacts[i].name, artifactLocations[i].position, Quaternion.identity);
-    //        }
-    //    }
-    //}
-
-    IEnumerator PlaySupplyDropAudioDelayed()
+    public void AddTime(int time)
     {
-        yield return new WaitForSeconds(supplyShip1.length);
-        audioSource.PlayOneShot(supplyShip2);
+        actualExtractionTime += time;
+        currentExtractionTimer += time;
     }
+
+    //IEnumerator PlaySupplyDropAudioDelayed()
+    //{
+    //    yield return new WaitForSeconds(supplyShip1.length);
+    //    audioSource.PlayOneShot(supplyShip2);
+    //}
 
     private string GenerateRandomSequence(int length)
     {

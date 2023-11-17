@@ -9723,7 +9723,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f0f4d264bc72b4d0a8832cff5dd5a1de, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.9
   m_Pitch: 1
   Loop: 0
@@ -15331,7 +15331,6 @@ MonoBehaviour:
   weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   reloadingWeapon: 0
   isFiring: 0
-  PoolManager: {fileID: 0}
   contact: 0
 --- !u!82 &8063971507820094066
 AudioSource:
@@ -15345,7 +15344,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -15448,6 +15447,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &-2258252832276975593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15477,7 +15479,7 @@ MonoBehaviour:
   ParentHandModel: 0
   SnapHandModel: 1
   CanBeDropped: 1
-  CanBeSnappedToSnapZone: 0
+  CanBeSnappedToSnapZone: 1
   ForceDisableKinematicOnDrop: 1
   InstantMovement: 1
   MakeChildCollidersGrabbable: 1

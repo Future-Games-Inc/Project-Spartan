@@ -1,135 +1,104 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class Jetpack : MonoBehaviour
 {
-
-    //Check to see whether we can continue flying up
-    public bool fuel = true;
-
-    //Float to track how much time has passed since we took off
+    public bool fuel = false;
     private float time = 0;
-
-    //How much time we have to fly before we "run out of fuel"
     public float flyTime = 3f;
-
-    //Modifier to change how fast we descend after running out of fuel
     public float fallVelocity = -5f;
-
-
-    //Reference our Character Controller on the Oculus prefab
     public CharacterController character;
-
-    //Declare our new upwards velocity for the Jetpack
     public float liftVelocity = 100f;
-
-    //Create a new Vector3 to set our new Jetpack velocity
     private Vector3 moveDirection = Vector3.zero;
-
-    //Flag to determine if we should descend slowly or if we should be affected by gravity
     public bool slowFall = false;
-
-    private Handness m_hand = Handness.Right;
-    private Handness m_hand2 = Handness.Left;
-
-    private string jetpackLeftButton;
-    private string jetpackRightButton;
-
-    //Declare two floats to reference the float value of the Oculus hand triggers
-    private float JetpackRight;
-    private float JetpackLeft;
-
+    public InputActionProperty rightThumbstickPress;
     public AudioSource jetpackSource;
     public AudioClip jetpackclip;
+    public GameObject fuelIcon;
+    public GameObject playerGameObject;
+    private Rigidbody playerRb;
+    public bool activated = false;
+    private Coroutine rechargeCoroutine = null;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-
-        jetpackLeftButton = "XRI_" + m_hand + "_GripButton";
-        jetpackRightButton = "XRI_" + m_hand2 + "_GripButton";
-
-
-        //Set character to our Character Controller component
-        character = character.GetComponent<CharacterController>();
-
+        StartCoroutine(Refuel());
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //    flyTime = 5f;
-        ////Continually re-declare our float values for JetpackLeft and JetpackRight
-        //JetpackRight = Input.GetAxis("XRI_" + m_hand + "_GripButton");
-        //JetpackLeft = Input.GetAxis("XRI_" + m_hand2 + "_GripButton");
-
-        //Call Jetpack function
-        newJetpack();
-
-        //Calculate our new Character Controller move velocity
-        character.Move(moveDirection * Time.deltaTime);
-
-    }
-
-    public void newJetpack()
-    {
-        //Set moveDirection back to 0
-        moveDirection = Vector3.zero;
-
-        if (time > flyTime)
+        // Jetpack Activation
+        if (rightThumbstickPress.action.ReadValue<float>() >= 0.78f && fuel && !activated)
         {
-            //Run out of fuel after our designated fly time
+            ActivateJetpack();
+        }
+
+        // Increment time while jetpack is activated
+        if (activated)
+        {
+            time += Time.deltaTime;
+        }
+
+        // SlowFall Activation
+        if (time > flyTime && fuel)
+        {
             fuel = false;
-        }
-
-        //Check to see if both hand triggers are grabbed
-        if (Input.GetButtonDown(jetpackLeftButton) && Input.GetButtonDown(jetpackRightButton) && fuel)
-        {
-            //Negate FallSpeed calculated in OVRPlayerController script
-
-            //Increment y velocity on our Vector3 to create upward velocity
-            character.Move(Vector3.up * liftVelocity * Time.fixedDeltaTime);
-
-            //Set slowFall to true 
-            slowFall = true;
-            if(!jetpackSource.isPlaying)
-            {
-                jetpackSource.PlayOneShot(jetpackclip);
-            }
-
-        }
-
-        if(Input.GetButtonDown(jetpackLeftButton) && Input.GetButtonDown(jetpackRightButton) && fuel && slowFall)
-        {
+            activated = false;
             moveDirection.y += fallVelocity;
+            StartCoroutine(Refuel());
         }
 
-
-        //If character is back on the ground, set slowFall back to false.  
+        // Landing on Ground
         if (character.isGrounded)
         {
             slowFall = false;
-            //Debug.Log("slowFall value set to: " + slowFall);
-
-            time = 0.0f;
-            fuel = true;
+            moveDirection = Vector3.zero; // Reset the moveDirection.
             jetpackSource.Stop();
-        }
-
-        //If slowFall is still true (meaning we're still in the air) then negate the gravity equation from OVRPlayerController
-        if (slowFall)
-        {
-
-            //Add this if you want to fall faster once you run out of fuel
-            if (!fuel)
+            if (playerRb)
             {
-                moveDirection.y += fallVelocity; //Fall velocity has to be a negative number
+                Destroy(playerRb);
             }
-
+            if (rechargeCoroutine == null) // Only start the coroutine if it's not already running.
+            {
+                rechargeCoroutine = StartCoroutine(Recharge());
+            }
         }
 
+        character.Move(moveDirection * Time.deltaTime);
+        fuelIcon.SetActive(fuel);
     }
 
+    void ActivateJetpack()
+    {
+        activated = true;
+        moveDirection = Vector3.up * liftVelocity;
+
+        if (!playerRb) // Only create the Rigidbody if it doesn't exist.
+        {
+            playerRb = playerGameObject.AddComponent<Rigidbody>();
+            playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+            playerRb.useGravity = false;
+        }
+
+        if (!jetpackSource.isPlaying)
+        {
+            jetpackSource.PlayOneShot(jetpackclip);
+        }
+    }
+
+    IEnumerator Refuel()
+    {
+        yield return new WaitForSeconds(10);
+        time = 0.0f;
+        fuel = true;
+    }
+
+    IEnumerator Recharge()
+    {
+        yield return new WaitForSeconds(20);
+        time = 0.0f;
+        fuel = true;
+        rechargeCoroutine = null; // Reset the coroutine tracker.
+    }
 }

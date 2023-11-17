@@ -28,6 +28,13 @@ public class GrappleBullet : MonoBehaviour
             collisionObject = collision.gameObject;
             if (gameObject.GetComponent<FixedJoint>() == null)
                 fixedJoint = gameObject.AddComponent<FixedJoint>();
+            if(collisionObject.GetComponent<Rigidbody>() == null)
+            {
+                var rb = collisionObject.AddComponent<Rigidbody>();
+                rb.useGravity = false;
+                rb.isKinematic = true;
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            }
             fixedJoint.connectedBody = collisionObject.GetComponent<Rigidbody>();
 
             grappleGun.Swing();

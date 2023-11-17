@@ -12,6 +12,7 @@ public class HolographicRecording : MonoBehaviour
     public PlayerHealth playerHealth;
 
     public string terminalName;
+    public GameObject activatedIcon;
 
     private void Update()
     {
@@ -24,6 +25,8 @@ public class HolographicRecording : MonoBehaviour
                 StopPlayingRecording();
             }
         }
+
+        activatedIcon.SetActive(HasTerminalAccess());
     }
 
     public void ActivateRecording()
@@ -41,22 +44,11 @@ public class HolographicRecording : MonoBehaviour
 
         isPlaying = true;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider collider in hitColliders)
+        if (!HasTerminalAccess())
         {
-            if (collider.CompareTag("Player"))
-            {
-                PlayerHealth health = collider.GetComponent<PlayerHealth>();
-                if (health != null)
-                {
-                    playerHealth = health;
-                    if (!HasTerminalAccess())
-                    {
-                        SaveTerminalAccess(75);
-                    }
-                }
-            }
+            SaveTerminalAccess(15);
         }
+
     }
 
     public bool HasTerminalAccess()
@@ -73,6 +65,7 @@ public class HolographicRecording : MonoBehaviour
     {
         // Save terminal access in player's custom properties
         PlayerPrefs.SetInt(terminalName, 1);
+        playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         playerHealth.GetXP(XP);
     }
 

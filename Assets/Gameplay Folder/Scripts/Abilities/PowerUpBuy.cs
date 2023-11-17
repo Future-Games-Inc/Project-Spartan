@@ -19,7 +19,7 @@ public class PowerUpBuy : MonoBehaviour
 
     void Update()
     {
-        BodyText.text = $"{cost} Cs";
+        BodyText.text = $"{cost} Cints";
         GetComponent<Image>().color = skillTree.saveData.SkillPoints >= cost ? Color.white : Color.grey;
         GetComponent<Image>().color = powerUpBought == false ? Color.white : Color.grey;
     }

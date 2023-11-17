@@ -1129,7 +1129,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1264,7 +1264,6 @@ MonoBehaviour:
   isFiring: 0
   fireSpeed: 20
   bullet: {fileID: 2228136128379212152, guid: da63ec868c1f55a45b4f12730f5a351a, type: 3}
-  PoolManager: {fileID: 0}
   contact: 0
 --- !u!114 &1017881006
 MonoBehaviour:
@@ -1450,6 +1449,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &-7726403268232484135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30546,7 +30548,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a965510870aca1d4ca438b3ca729988a, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
   Loop: 0

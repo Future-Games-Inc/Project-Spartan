@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Umbrace.Unity.PurePool;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Oni;
 
 namespace BNG {
 
@@ -91,10 +90,14 @@ namespace BNG {
         public Rotator rotator;
 
         public bool contact;
+        public int maxArrows = 20;
+        public int currentArrows;
+        public GameObject explosionObject;
+        public Text arrowLeft;
 
-        void OnEnable() {
-
-            
+        void OnEnable() 
+        {
+            currentArrows = maxArrows;
             initialKnockPosition = ArrowKnock.localPosition;
             bowGrabbable = GetComponent<Grabbable>();
             audioSource = GetComponent<AudioSource>();
@@ -142,7 +145,7 @@ namespace BNG {
             holdingArrow = GrabbedArrow != null;
 
             // Grab an arrow by holding trigger in grab area
-            if (canGrabArrowFromKnock()) {
+            if (canGrabArrowFromKnock() && currentArrows >0) {
                 GameObject arrow = Instantiate(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity);
                 arrow.transform.LookAt(getArrowRest());
 
@@ -184,14 +187,27 @@ namespace BNG {
             }
 
             alignBow();
+            if (currentArrows <= 0)
+                StartCoroutine(DestroyBow());
+            arrowLeft.text = currentArrows.ToString();
         }
 
+
+        IEnumerator DestroyBow()
+        {
+            yield return new WaitForSeconds(.5f);
+            explosionObject.SetActive(true);
+            yield return new WaitForSeconds(.5f);
+            Destroy(gameObject);
+        }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
             {
                 player = other.transform.root.gameObject;
+                var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxArrows;
+                maxArrows = newMaxAmmo;
                 rotator.enabled = false;
                 contact = true;
             }
@@ -429,6 +445,7 @@ namespace BNG {
             arrowGrabber.ResetHandGraphics();
 
             resetArrowValues();
+            currentArrows--;
         }
 
         public override void OnRelease() {

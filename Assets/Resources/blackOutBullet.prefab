@@ -248,12 +248,16 @@ MonoBehaviour:
   bulletOwner: {fileID: 0}
   playerHealth: {fileID: 0}
   playerBullet: 0
-  damage: 10
+  damage: 80
   blastRadius: 5
-  maxBlindDuration: 6
-  minBlindDuration: 2
   audioSource: {fileID: 1679230301340941474}
   clip: {fileID: 8300000, guid: 7583fb465505702409ed49f70926ff86, type: 3}
+  objectRenderer: {fileID: 1737790322097334423}
+  delay: 10
+  Targets:
+  - Tag: Enemy
+  - Tag: BossEnemy
+  - Tag: Security
 --- !u!82 &1679230301340941474
 AudioSource:
   m_ObjectHideFlags: 0

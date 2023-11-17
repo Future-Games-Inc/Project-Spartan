@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,14 +11,12 @@ public class GrappleGun : MonoBehaviour
     public Rigidbody bulletRb;
     public float bulletSpeed;
     public GrappleBullet bulletScript;
-    private Material originalMaterial;
 
     [Header("Gun Info")]
     public Transform barrelTransform;
     public InputActionProperty rightThumbstickPress;
     public bool grappled;
     public bool targetHit;
-    private GameObject lastHit;
     public GameObject sight;
     public AudioSource audioSource;
     public AudioClip grappleClip;
@@ -27,15 +26,19 @@ public class GrappleGun : MonoBehaviour
     public GameObject playerGameObject;
     Transform playerTransform;
     public CharacterController characterController;
-    public Material hitMaterial;
     public PlayerMovement movement;
+    public bool grappledAvailable;
+
+    public GameObject grappleIcon;
+    public Rigidbody playerRb;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         bulletTransform = bulletPrefab.transform;
         playerTransform = playerGameObject.transform;
         sight.SetActive(false);
+        StartCoroutine(Recharge());
     }
 
     // Update is called once per frame
@@ -46,25 +49,21 @@ public class GrappleGun : MonoBehaviour
             characterController.enabled = false;
             movement.enabled = false;
             sight.SetActive(false);
+            bulletPrefab.GetComponent<TrailRenderer>().enabled = false;
         }
 
         if (!grappled)
         {
+            bulletPrefab.GetComponent<TrailRenderer>().enabled = false;
             bulletTransform.position = barrelTransform.position;
             bulletTransform.forward = barrelTransform.forward;
             characterController.enabled = true;
             movement.enabled = true;
         }
 
-        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && !grappled)
+        if (rightThumbstickPress.action.ReadValue<float>() >= .78f && !grappled && grappledAvailable)
         {
             FireRaycastIntoScene();
-        }
-
-        if (rightThumbstickPress.action.ReadValue<float>() < .77f && grappled)
-        {
-            grappled = false;
-            CancelGrapple();
         }
 
         RaycastHit hit;
@@ -72,50 +71,49 @@ public class GrappleGun : MonoBehaviour
 
         if (Physics.Raycast(barrelTransform.position, barrelTransform.forward, out hit, Mathf.Infinity, targetLayer))
         {
-            if (hit.collider.gameObject.CompareTag("GrapplePoint"))
+            if (hit.collider.gameObject.CompareTag("GrapplePoint") && grappledAvailable)
             {
                 targetHit = true;
                 sight.SetActive(true);
-                if (lastHit != hit.collider.gameObject)
-                {
-                    if (lastHit != null)
-                    {
-                        MeshRenderer rendererOld = lastHit.GetComponent<MeshRenderer>();
-                        rendererOld.material = originalMaterial;
-                    }
-
-                    MeshRenderer renderer = hit.collider.gameObject.GetComponent<MeshRenderer>();
-                    if (renderer != null)
-                    {
-                        originalMaterial = renderer.material;
-                        renderer.material = hitMaterial;
-                        lastHit = hit.collider.gameObject;
-                    }
-                }
             }
+            else
+                sight.SetActive(false);
         }
 
-        if (lastHit != null && !targetHit)
-        {
-            MeshRenderer rendererOld = lastHit.GetComponent<MeshRenderer>();
-            rendererOld.material = originalMaterial;
-            lastHit = null;
+        if (!grappledAvailable)
             sight.SetActive(false);
-        }
+
+        grappleIcon.SetActive(grappledAvailable);
     }
 
     void FireRaycastIntoScene()
     {
-        if (targetHit)
+        if (grappledAvailable)
         {
-            grappled = true;
-            bulletTransform.position = barrelTransform.position;
-            bulletRb.velocity = barrelTransform.forward * bulletSpeed;
+            if (targetHit)
+            {
+                grappled = true;
+                grappledAvailable = false;
+                bulletTransform.position = barrelTransform.position;
+                bulletRb.velocity = barrelTransform.forward * bulletSpeed;
+                bulletPrefab.GetComponent<TrailRenderer>().enabled = true;
+                StartCoroutine(DestroyHook());
+            }
+            else
+            {
+                bulletPrefab.GetComponent<TrailRenderer>().enabled = false;
+                CancelGrapple();
+            }
         }
-        else
-        {
-            CancelGrapple();
-        }
+    }
+
+    IEnumerator DestroyHook()
+    {
+        audioSource.Stop();
+        yield return new WaitForSeconds(2);
+        CancelGrapple();
+        yield return new WaitForSeconds(10);
+        grappledAvailable = true;
     }
 
     public void CancelGrapple()
@@ -128,12 +126,24 @@ public class GrappleGun : MonoBehaviour
             Destroy(springJoint);
         }
         bulletScript.DestroyJoint();
+        if (playerRb)
+        {
+            Destroy(playerRb);
+        }
     }
 
     public void Swing()
     {
+        if (playerGameObject.GetComponent<Rigidbody>() == null)
+        {
+            playerRb = playerGameObject.AddComponent<Rigidbody>();
+            playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+            playerRb.useGravity = false; // Optional: This depends on if you want gravity to affect the player during the swing.
+        }
+
         sight.SetActive(false);
-        audioSource.PlayOneShot(grappleClip);
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(grappleClip);
         characterController.enabled = false;
         movement.enabled = false;
         if (playerGameObject.GetComponent<SpringJoint>() == null)
@@ -148,8 +158,14 @@ public class GrappleGun : MonoBehaviour
         springJoint.maxDistance = disJointToPlayer * .1f;
         springJoint.minDistance = disJointToPlayer * .05f;
 
-        springJoint.damper = 500f;
-        springJoint.spring = 500f;
+        springJoint.damper = 30;
+        springJoint.spring = 50;
+    }
+
+    IEnumerator Recharge()
+    {
+        yield return new WaitForSeconds(20);
+        grappledAvailable = true;
     }
 
 }

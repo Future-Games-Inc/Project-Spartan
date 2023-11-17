@@ -32,7 +32,7 @@ public class ArtifactScript : MonoBehaviour
     IEnumerator Destroy()
     {
         yield return new WaitForSeconds(.75f);
-        //enemyCounter.photonView.RPC("RPC_UpdateArtifact", RpcTarget.AllBuffered);
+        enemyCounter.UpdateArtifact();
         Destroy(gameObject);
     }
 }

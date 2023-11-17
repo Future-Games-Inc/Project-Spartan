@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +17,7 @@ public class DroneHealth : MonoBehaviour
     public AudioClip[] audioClip;
     public GameObject explosionEffect;
     public NavMeshAgent agent;
+    public bool hit;
 
     public string type;
 
@@ -27,11 +29,17 @@ public class DroneHealth : MonoBehaviour
         alive = true;
     }
 
+    public static class GlobalSpeedManager
+    {
+        public static float SpeedMultiplier = 1f;
+    }
+
     void Update()
     {
         if (agent != null && !agent.isOnNavMesh)
         {
-            TakeDamage(300);
+            enemyCounter.UpdateSecurity();
+            Destroy(gameObject);
         }
     }
 
@@ -39,6 +47,8 @@ public class DroneHealth : MonoBehaviour
     {
         audioSource.PlayOneShot(bulletHit);
         Health -= damage;
+        if (!hit)
+            StartCoroutine(Hit());
 
         if (Health <= 0 && alive)
         {
@@ -47,14 +57,23 @@ public class DroneHealth : MonoBehaviour
         }
     }
 
+    IEnumerator Hit()
+    {
+        hit = true;
+        explosionEffect.SetActive(true);
+        yield return new WaitForSeconds(1);
+        explosionEffect.SetActive(false);
+        hit = false;
+    }
+
     private void TriggerDeathEffects()
     {
         explosionEffect.SetActive(true);
         if (agent != null)
             agent.enabled = false;
-        GetComponent<Rigidbody>().isKinematic = false;
         SpawnLoot();
-        enemyCounter.UpdateSecurity();
+        if (agent != null)
+            enemyCounter.UpdateSecurity();
         Destroy(gameObject);
     }
 
@@ -65,6 +84,8 @@ public class DroneHealth : MonoBehaviour
             GameObject drop = Random.Range(0, 100f) < xpDropRate ? xpDropExtra : xpDrop;
             GameObject loot = Instantiate(drop, t.position, Quaternion.identity);
             loot.GetComponent<Rigidbody>().isKinematic = false;
+            if(GetComponent<Drone>() != null)
+                loot.GetComponent<FactionCard>().faction = GetComponent<Drone>().chosenFaction;
         }
     }
 

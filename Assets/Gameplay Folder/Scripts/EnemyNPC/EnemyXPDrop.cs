@@ -1,6 +1,5 @@
 using UnityEngine;
 using BNG;
-using Umbrace.Unity.PurePool;
 using System.Collections;
 
 public class EnemyXPDrop : MonoBehaviour
@@ -10,15 +9,21 @@ public class EnemyXPDrop : MonoBehaviour
     public LayerMask groundLayer;
     private Rigidbody rb;
     public Grabbable grabbable;
+    public GameObject buffText;
+    public AudioSource audioSource;
+    public AudioClip pickupClip;
 
     public bool contact;
+    public MatchEffects matchEffects;
+    public bool active = true;
 
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        
+
         spawnManager = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
         switch (pickupData.pickupType)
         {
             case "XP":
@@ -41,27 +46,43 @@ public class EnemyXPDrop : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
+        if (other.CompareTag("LeftHand") || other.CompareTag("RightHand") || other.CompareTag("Player"))
+        {
             contact = true;
+            PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
+            switch (pickupData.pickupType)
+            {
+                case "XP":
+                    if (active)
+                    {
+                        active = false;
+                        audioSource.PlayOneShot(pickupClip);
+                        float xpDrop = 10f;
+                        if (Random.Range(0, 100f) < xpDrop)
+                        {
+                            if (playerHealth.faction == "CintSix Cartel")
+                                playerHealth.UpdateSkills(pickupData.xpAmount + 5);
+                            else
+                                playerHealth.UpdateSkills(pickupData.xpAmount);
+                        }
+                        else
+                        {
+                            if (playerHealth.faction == "CintSix Cartel")
+                                playerHealth.UpdateSkills(pickupData.xpAmount/2 + 5);
+                            else
+                                playerHealth.UpdateSkills(pickupData.xpAmount/2);
+                        }
+                        StartCoroutine(DelayDestroy());
+                    }
+                    break;
+            }
+        }
 
         if (other.CompareTag("PickupSlot"))
         {
             PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
-
             switch (pickupData.pickupType)
             {
-                case "XP":
-                    float xpDrop = 10f;
-                    if (Random.Range(0, 100f) < xpDrop)
-                    {
-                        playerHealth.UpdateSkills(pickupData.xpAmount);
-                    }
-                    else
-                    {
-                        playerHealth.UpdateSkills(pickupData.xpAmount / 2);
-                    }
-                    Destroy(gameObject);
-                    break;
 
                 case "Health":
                     spawnManager.UpdateHealthCount();
@@ -70,18 +91,18 @@ public class EnemyXPDrop : MonoBehaviour
                     break;
 
                 case "EMP":
-                    Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
+                    Collider[] colliders = Physics.OverlapSphere(transform.position, 20f);
                     foreach (Collider collider in colliders)
                     {
                         if (collider.CompareTag("Security"))
                         {
-                            DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
+                            DroneHealth enemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                             enemyDamageCrit.TakeDamage(200);
                         }
                         if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
                         {
-                            FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
-                            enemyDamageCrit.TakeDamage(75);
+                            FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
+                            enemyDamageCrit.TakeDamage(30);
                             enemyDamageCrit.EMPShock();
                         }
                     }
@@ -100,6 +121,11 @@ public class EnemyXPDrop : MonoBehaviour
 
                 case "Shield":
                     playerHealth.AddArmor(pickupData.armorAmount);
+                    Destroy(gameObject);
+                    break;
+
+                case "CUAHack":
+                    matchEffects.AddTime(30);
                     Destroy(gameObject);
                     break;
 
@@ -144,8 +170,24 @@ public class EnemyXPDrop : MonoBehaviour
         }
     }
 
+    public void EnableText()
+    {
+        buffText.SetActive(true);
+    }
+
+    public void EDisableText()
+    {
+        buffText.SetActive(false);
+    }
+
     public void rescale()
     {
         this.gameObject.transform.localScale = Vector3.one;
+    }
+
+    IEnumerator DelayDestroy()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
     }
 }

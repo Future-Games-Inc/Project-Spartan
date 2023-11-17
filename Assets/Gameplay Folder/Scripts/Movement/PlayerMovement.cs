@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
 using Unity.XR.CoreUtils;
-using Photon.Pun;
 // using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
@@ -48,14 +47,8 @@ public class PlayerMovement : MonoBehaviour
     void OnEnable()
     {
         character = GetComponent<CharacterController>();
-
-        object storedPlayerSpeed;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_SPEED, out storedPlayerSpeed) && (int)storedPlayerSpeed >= 1)
-        {
-            currentSpeed = (minSpeed + ((int)storedPlayerSpeed / 10));
-        }
-        else
-            currentSpeed = minSpeed;
+        currentSpeed = PlayerPrefs.HasKey("PLAYER_SPEED") && PlayerPrefs.GetInt("PLAYER_SPEED") >= 1
+            ? minSpeed + ((int)(PlayerPrefs.GetInt("PLAYER_SPEED") /10)) : minSpeed;
 
         playerCamera = rig.Camera.GetComponent<Camera>();
     }

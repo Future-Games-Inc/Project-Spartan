@@ -46,7 +46,7 @@ namespace LootLocker
                 LootLockerResponse response = new LootLockerResponse();
                 if (string.IsNullOrEmpty(serverResponse.Error))
                 {
-                    LootLockerLogger.GetForLogLevel(LootLockerLogger.LogLevel.Verbose)(serverResponse.text);
+                    //LootLockerLogger.GetForLogLevel(//LootLockerLogger.LogLevel.Verbose)(serverResponse.text);
                     response = JsonConvert.DeserializeObject<LootLockerResponse>(serverResponse.text);
                     onComplete?.Invoke(response);
                 }

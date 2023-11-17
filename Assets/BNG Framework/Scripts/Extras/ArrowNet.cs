@@ -17,8 +17,8 @@ namespace BNG
         public TargetInfo[] Targets;
 
         public float explosionRadius = 5f;
-        public int maxDamage = 80;
-        public int maxEMPDamage = 40;
+        public int maxDamage = 30;
+        public int maxEMPDamage = 20;
         public float explosionDelay = 2f;
         public float EMPDelay = 3f;
 
@@ -57,11 +57,10 @@ namespace BNG
         {
             
 
-            Targets = new TargetInfo[4];  // Initializing the array with 3 elements
+            Targets = new TargetInfo[3];  // Initializing the array with 3 elements
             Targets[0] = new TargetInfo { Tag = "Enemy" };  // Populating individual elements
             Targets[1] = new TargetInfo { Tag = "BossEnemy" };
             Targets[2] = new TargetInfo { Tag = "Security" };
-            Targets[3] = new TargetInfo { Tag = "Player" };
 
             rb = GetComponent<Rigidbody>();
             impactSound = GetComponent<AudioSource>();
@@ -71,7 +70,7 @@ namespace BNG
             if (ProjectileObject == null)
             {
                 ProjectileObject = gameObject.AddComponent<Projectile>();
-                ProjectileObject.Damage = 50;
+                ProjectileObject.Damage = 15;
                 ProjectileObject.StickToObject = true;
                 ProjectileObject.enabled = false;
             }
@@ -275,19 +274,19 @@ namespace BNG
                 DefaultDamageEnemy(other, arrowDamage);
             }
 
-            if ((other.CompareTag("BossEnemy")))
+            else if ((other.CompareTag("Reinforcements")))
+            {
+                // select custom functions for damage
+                DefaultDamageReinforcements(other, arrowDamage);
+            }
+
+            else if ((other.CompareTag("BossEnemy")))
             {
                 // select custom functions for damage
                 DefaultDamageBossEnemy(other, arrowDamage);
             }
 
-            if (other.CompareTag("Player") && other != arrowOwner)
-            {
-                // select custom functions for damage
-                DefaultDamagePlayer(other, arrowDamage);
-            }
-
-            if (other.CompareTag("Security"))
+            else if (other.CompareTag("Security"))
             {
                 // select custom functions for damage
                 DefaultDamageSecurity(other, arrowDamage);
@@ -301,6 +300,21 @@ namespace BNG
                 if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
                 {
                     playerHealth.EnemyKilled("Normal");
+                    enemyDamageReg.TakeDamage((int)arrowDamage);
+                }
+                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
+                {
+                    enemyDamageReg.TakeDamage((int)arrowDamage);
+                }
+                if (Type == "Default")
+                    Destroy(gameObject);
+            }
+
+            void DefaultDamageReinforcements(Collider target, float arrowDamage)
+            {
+                ReinforcementAI enemyDamageReg = target.GetComponent<ReinforcementAI>();
+                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
+                {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
                 }
                 else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
@@ -327,18 +341,6 @@ namespace BNG
                     Destroy(gameObject);
             }
 
-            void DefaultDamagePlayer(Collider target, float damage)
-            {
-                PlayerHealth enemyDamageReg = target.GetComponent<PlayerHealth>();
-                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.PlayersKilled();
-                }
-                enemyDamageReg.TakeDamage((int)arrowDamage);
-                if (Type == "Default")
-                    Destroy(gameObject);
-            }
-
             void DefaultDamageSecurity(Collider target, float damage)
             {
                 DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
@@ -356,12 +358,12 @@ namespace BNG
 
         int CalculateDamage(float distance)
         {
-            return (int)((1f - distance / explosionRadius) * maxDamage);
+            return Mathf.Min((int)((1f - distance / explosionRadius) * maxDamage),80);
         }
 
         int CalculateEMPDamage(float distance)
         {
-            return (int)((1f - distance / explosionRadius) * maxEMPDamage);
+            return Mathf.Min((int)((1f - distance / explosionRadius) * maxEMPDamage),50);
         }
 
         public IEnumerator ExplodeDelayed()
@@ -448,6 +450,20 @@ namespace BNG
                         enemyDamageCrit.TakeDamage(damage);
                     }
                     break;
+
+                case "Reinforcements":
+                    // Handle enemy damage
+                    ReinforcementAI enemyDamageCrit3 = collider.GetComponentInParent<ReinforcementAI>();
+                    if (enemyDamageCrit3.Health <= damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                    }
+                    else if (enemyDamageCrit3.Health > damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                    }
+                    break;
+
                 case "BossEnemy":
                     // Handle boss enemy damage
                     FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
@@ -472,20 +488,6 @@ namespace BNG
                         SentryenemyDamageCrit2.TakeDamage(damage);
                     }
                     break;
-                case "Player":
-                    // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
-                    if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
-                    {
-                        playerHealth.PlayersKilled();
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (PlayerenemyDamageCrit.Health > damage && PlayerenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                    }
-                    break;
-                    // Add more cases as needed
             }
         }
 
@@ -511,6 +513,21 @@ namespace BNG
                         enemyDamageCrit.EMPShock();
                     }
                     break;
+
+                case "Reinforcements":
+                    // Handle enemy damage
+                    ReinforcementAI enemyDamageCrit3 = collider.GetComponentInParent<ReinforcementAI>();
+                    if (enemyDamageCrit3.Health <= damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                    }
+                    else if (enemyDamageCrit3.Health > damage && enemyDamageCrit3.alive == true && playerHealth != null)
+                    {
+                        enemyDamageCrit3.TakeDamage(damage);
+                        enemyDamageCrit3.EMPShock();
+                    }
+                    break;
+
                 case "BossEnemy":
                     // Handle boss enemy damage
                     FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
@@ -536,21 +553,6 @@ namespace BNG
                         SentryenemyDamageCrit2.TakeDamage(damage * 2);
                     }
                     break;
-                case "Player":
-                    // Handle player damage
-                    PlayerHealth PlayerenemyDamageCrit = collider.GetComponentInParent<PlayerHealth>();
-                    if (PlayerenemyDamageCrit.Health <= damage && PlayerenemyDamageCrit.alive == true && playerHealth != null && collider.transform.root.gameObject != player)
-                    {
-                        playerHealth.PlayersKilled();
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (PlayerenemyDamageCrit.Health > damage && PlayerenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        PlayerenemyDamageCrit.TakeDamage(damage);
-                        PlayerenemyDamageCrit.EMPShock();
-                    }
-                    break;
-                    // Add more cases as needed
             }
         }
     }

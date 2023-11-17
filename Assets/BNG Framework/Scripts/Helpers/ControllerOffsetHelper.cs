@@ -24,13 +24,14 @@ namespace BNG {
 
 
         public List<ControllerOffset> ControllerOffsets;
+        public bool completed;
 
-        void Start() {
-            if(ControllerOffsets == null) {
+        void OnEnable() {
+            if(ControllerOffsets == null && !completed) {
+                completed = true;
                 ControllerOffsets = new List<ControllerOffset>();
+                StartCoroutine(checkForController());
             }
-
-            StartCoroutine(checkForController());
         }
 
         IEnumerator checkForController() {

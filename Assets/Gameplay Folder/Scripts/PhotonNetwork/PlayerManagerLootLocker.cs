@@ -22,7 +22,7 @@ public class PlayerManagerLootLocker : MonoBehaviour
             if (response.success)
             {
                 PlayerPrefs.SetString("PlayerID", response.player_id.ToString());
-                whiteLabelManager.playerID = response.player_id.ToString();
+                WhiteLabelManager.playerID = response.player_id.ToString();
                 done = true;
             }
             else

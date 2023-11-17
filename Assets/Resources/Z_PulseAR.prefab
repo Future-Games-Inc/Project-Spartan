@@ -9518,7 +9518,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f0f4d264bc72b4d0a8832cff5dd5a1de, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.9
   m_Pitch: 1
   Loop: 0
@@ -34520,7 +34520,7 @@ MonoBehaviour:
   - {fileID: 2641269188286459548}
   audioSource: {fileID: 2086227989806024941}
   reloadSFX: {fileID: 8300000, guid: dc230b45de31c2849a6f2cc47d25286a, type: 3}
-  weaponBreak: {fileID: 8300000, guid: 3432185da42c61f4aa9e8c9da931dd8e, type: 3}
+  weaponBreak: {fileID: 8300000, guid: 4374ce1685eed5341b32ea04741ff056, type: 3}
   maxAmmo: 30
   ammoLeft: 0
   durability: 5
@@ -34541,7 +34541,6 @@ MonoBehaviour:
   isDual: 0
   isTriggerSingle: 0
   SecondaryTrigger: 0
-  PoolManager: {fileID: 0}
   contact: 0
 --- !u!54 &2511659228002151072
 Rigidbody:
@@ -34571,7 +34570,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -34873,6 +34872,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &357014444022449936
 MonoBehaviour:
   m_ObjectHideFlags: 0

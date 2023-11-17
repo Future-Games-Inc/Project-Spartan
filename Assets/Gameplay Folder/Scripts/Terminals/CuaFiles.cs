@@ -1,4 +1,3 @@
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,7 @@ public class CuaFiles : MonoBehaviour
     public AudioSource audioSource;
 
     public string textFileKey;
+    public RectTransform rectTransform;
 
     public void Start()
     {
@@ -24,11 +24,10 @@ public class CuaFiles : MonoBehaviour
 
     private bool PlayerHasUnlockedTextFile()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(textFileKey, out object textState))
+        if (PlayerPrefs.HasKey(textFileKey))
         {
             // Check the custom property value for the audio file key
-            bool unlocked = (bool)textState;
-            return unlocked;
+            return true;
         }
 
         return false;
@@ -48,6 +47,7 @@ public class CuaFiles : MonoBehaviour
                 child.gameObject.SetActive(false);
             }
             textfile.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
         }
     }
 }

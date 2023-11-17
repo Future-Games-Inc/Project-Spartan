@@ -1,10 +1,9 @@
-using Photon.Pun;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
+using static DroneHealth;
 
-public class LootDrone : MonoBehaviourPunCallbacks
+public class LootDrone : MonoBehaviour
 {
     public float DetectRange = 20;
     public float LootRange = 3;
@@ -21,6 +20,7 @@ public class LootDrone : MonoBehaviourPunCallbacks
     private States previousState;
 
     private GameObject[] caches;
+    public GameObject previousHeld;
     public Transform targetTransform;
 
     private float TurnSpeed = 5f;
@@ -80,49 +80,55 @@ public class LootDrone : MonoBehaviourPunCallbacks
         positionSet = true;
         patrolling = true;
         isLooting = false;
-        agent.speed = 1f;
+        agent.speed = 1f * GlobalSpeedManager.SpeedMultiplier;
         if (timer >= wanderTimer)
         {
             patrolling = false;
             isLooting = true;
             positionSet = false;
             agent.SetDestination(targetTransform.position);
-            targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, false);
+            targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(false);
             timer = 0;
         }
     }
 
     public void Loot()
     {
-        agent.speed = 2f;
+        agent.speed = 2f * GlobalSpeedManager.SpeedMultiplier;
         if (agent.remainingDistance <= LootRange)
         {
             if (attachedCache == null)
             {
                 // Attach the cache to the drone
                 attachedCache = targetTransform.gameObject;
+                previousHeld = attachedCache;
                 attachedCache.transform.parent = attachTransform;
                 attachedCache.transform.localPosition = Vector3.zero;
                 agent.isStopped = true;
+                attachedCache.GetComponentInParent<WeaponCrate>().cacheActive = false;
 
 
                 // Move the drone to a new location within the randomNavSphere
                 Vector3 newPosition = RandomNavSphere(transform.position, wanderRadius, -1);
                 agent.SetDestination(newPosition);
                 StartCoroutine(PauseDelay());
-            }
-            else if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-            {
-                // Drop the attached cache back on the map
-                attachedCache.transform.parent = null;
-                targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
-
-                // Reset variables for the next loot phase
-                attachedCache = null;
-                isLooting = false;
-                patrolling = true;
+                StartCoroutine(MoveLoot());
             }
         }
+    }
+
+    IEnumerator MoveLoot()
+    {
+        yield return new WaitForSeconds(10);
+        // Drop the attached cache back on the map
+        attachedCache.transform.parent = null;
+        previousHeld.GetComponentInParent<WeaponCrate>().Obstacle(true);
+        previousHeld.GetComponentInParent<WeaponCrate>().cacheActive = true;
+
+        // Reset variables for the next loot phase
+        attachedCache = null;
+        isLooting = false;
+        patrolling = true;
     }
 
     IEnumerator PauseDelay()
@@ -138,9 +144,9 @@ public class LootDrone : MonoBehaviourPunCallbacks
             if (attachedCache != null)
             {
                 attachedCache.transform.parent = null;
-                targetTransform.GetComponentInParent<PhotonView>().RPC("RPC_Obstacle", RpcTarget.All, true);
-                isLooting = false;
+                targetTransform.GetComponentInParent<WeaponCrate>().Obstacle(true);
                 patrolling = true;
+                isLooting = false;
             }
         }
     }
@@ -161,56 +167,41 @@ public class LootDrone : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (Time.time >= nextUpdateTime)
         {
-            if (Time.time >= nextUpdateTime)
-            {
-                nextUpdateTime = Time.time + 1f; // Update every 1 second
-                FindClosestEnemy();
-            }
+            nextUpdateTime = Time.time + 1f; // Update every 1 second
+            FindClosestEnemy();
+        }
 
-            float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, targetTransform.position);
 
-            if (patrolling)
-            {
-                SwitchStates(States.Patrol);
-                timer += Time.deltaTime;
-                Patrol();
-            }
+        if (patrolling)
+        {
+            SwitchStates(States.Patrol);
+            timer += Time.deltaTime;
+            Patrol();
+        }
 
-            if (isLooting)
-            {
-                SwitchStates(States.Loot);
-                if (attachedCache == null)
-                    LookatTarget(1, 3f);
-                Loot();
-            }
+        if (isLooting)
+        {
+            SwitchStates(States.Loot);
+            if (attachedCache == null)
+                LookatTarget(1, 3f);
+            Loot();
+        }
 
-            // Check if the loot is completed
-            if (attachedCache != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-            {
-                // Drop the attached cache back on the map
-                attachedCache.transform.parent = null;
-
-                // Reset variables for the next loot phase
-                attachedCache = null;
-                isLooting = false;
-                patrolling = true;
-            }
-
-            if (isLookingAtPlayer)
-            {
-                Vector3 direction = targetTransform.position - transform.position;
-                direction.y = 0;
-                Quaternion desiredRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
-            }
+        if (isLookingAtPlayer)
+        {
+            Vector3 direction = targetTransform.position - transform.position;
+            direction.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * TurnSpeed);
         }
     }
 
     public void LookatTarget(float duration, float RotationSpeed = 0.5f)
     {
-        TurnSpeed = RotationSpeed;
+        TurnSpeed = RotationSpeed * GlobalSpeedManager.SpeedMultiplier;
         IEnumerator start()
         {
             isLookingAtPlayer = true;

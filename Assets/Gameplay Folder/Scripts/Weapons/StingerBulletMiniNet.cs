@@ -105,20 +105,6 @@ public class StingerBulletMiniNet : MonoBehaviour
             return;
         }
 
-        else if (other.CompareTag("Player") && other.transform.root.gameObject != bulletOwner)
-        {
-            //critical hit here
-            PlayerHealth playerDamageCrit = other.GetComponent<PlayerHealth>();
-            if (playerDamageCrit.Health <= (5) && playerDamageCrit.alive == true && playerHealth != null)
-            {
-                playerHealth.PlayersKilled();
-            }
-
-            playerDamageCrit.TakeDamage(5);
-            Explode();
-            return;
-        }
-
         if (target == null)
         {
             Explode();

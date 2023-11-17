@@ -1,6 +1,4 @@
-using PathologicalGames;
 using TMPro;
-using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class EnergyBladeNet : MonoBehaviour
@@ -62,15 +60,6 @@ public class EnergyBladeNet : MonoBehaviour
             ApplyEffects(Damage, other.transform.position);
         }
 
-        else if(other.CompareTag("Player"))
-        {
-            PlayerHealth playerDamage = other.GetComponent<PlayerHealth>();
-            if (playerDamage != null)
-                HandlePlayerDamage(Damage, playerDamage);
-
-            ApplyEffects(Damage, other.transform.position);
-        }
-
         else if (other.CompareTag("Security"))
         {
             DroneHealth droneHealth = other.GetComponent<DroneHealth>();
@@ -95,20 +84,10 @@ public class EnergyBladeNet : MonoBehaviour
             string type = other.CompareTag("BossEnemy") ? "Boss" : "Normal";
             playerHealth.EnemyKilled(type);
         }
-        else if (enemyDamageReg.Health > 10 && enemyDamageReg.alive)
+        else if (enemyDamageReg.Health > Damage && enemyDamageReg.alive)
         {
             enemyDamageReg.TakeDamage(Damage);
         }
-    }
-
-    private void HandlePlayerDamage(int Damage, PlayerHealth enemyDamageReg)
-    {
-        if (playerHealth == null || playerHealth.gameObject == enemyDamageReg.gameObject) return;
-
-        if (enemyDamageReg.Health <= Damage && enemyDamageReg.alive)
-            playerHealth.PlayersKilled();
-
-        enemyDamageReg.TakeDamage(Damage);
     }
 
     private void ApplyEffects(int Damage, Vector3 position)
@@ -155,16 +134,16 @@ public class EnergyBladeNet : MonoBehaviour
         if (bleedStacks > 3)
         {
             bleedIcon.SetActive(true);
-            RPC_BladeMaterial(bleed);
+            BladeMaterial(bleed);
         }
         else
         {
             bleedIcon.SetActive(false);
-            RPC_BladeMaterial(normal);
+            BladeMaterial(normal);
         }
     }
 
-    void RPC_BladeMaterial(Material material)
+    void BladeMaterial(Material material)
     {
         Blade.GetComponent<Renderer>().material = material;
     }

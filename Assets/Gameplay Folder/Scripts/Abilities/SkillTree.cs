@@ -10,8 +10,6 @@ public class SkillTree : MonoBehaviour
 
     public int[] SkillLevels;
     public int[] SkillCaps;
-    //public string[] SkillNames;
-    //public string[] SkillDescriptions;
 
     public List<Skill> SkillList;
     public GameObject SkillHolder;
@@ -40,7 +38,7 @@ public class SkillTree : MonoBehaviour
         powerUpCount = 0f;
 
         SkillLevels = new int[6];
-        SkillCaps = new[] { 7, 5, 5, 3, 3, 1, };
+        SkillCaps = new[] { 5, 4, 4, 3, 3, 1, };
 
         foreach (var skill in SkillHolder.GetComponentsInChildren<Skill>())
             SkillList.Add(skill);
@@ -48,10 +46,10 @@ public class SkillTree : MonoBehaviour
         for (var i = 0; i < SkillList.Count; i++)
             SkillList[i].id = i;
 
-        SkillList[0].ConnectedSkills = new[] { 1, 2 };
-        SkillList[1].ConnectedSkills = new[] { 3 };
-        SkillList[2].ConnectedSkills = new[] { 4 };
-        SkillList[3].ConnectedSkills = new[] { 5 };
+        //SkillList[0].ConnectedSkills = new[] { 1, 2 };
+        //SkillList[1].ConnectedSkills = new[] { 3 };
+        //SkillList[2].ConnectedSkills = new[] { 4 };
+        //SkillList[3].ConnectedSkills = new[] { 5 };
 
         UpdateAllSkillsUI();
         if (saveData == null)
@@ -67,14 +65,8 @@ public class SkillTree : MonoBehaviour
             skill.UpdateUI();
 
         int playAudio = (int)Random.Range(0, 100);
-        if (!audioSource.isPlaying && playAudio <= 70 && initialLoad == false)
+        if (!audioSource.isPlaying && playAudio <= 30 && initialLoad == false)
             audioSource.PlayOneShot(audioClip[(int)Random.Range(0, audioClip.Length)]);
         initialLoad = false;
     }
-
-    //public void SetPowerUp()
-    //{
-    //    ExitGames.Client.Photon.Hashtable buttonAssign = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BUTTON_ASSIGN, powerupButtonAssign } };
-    //    PhotonNetwork.LocalPlayer.SetCustomProperties(buttonAssign);
-    //}
 }

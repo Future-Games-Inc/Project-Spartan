@@ -1,4 +1,3 @@
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -20,17 +19,11 @@ public class AbilityDash : Abilities
     {
         movement = GetComponent<PlayerMovement>();
 
-        object storedPlayerDash;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.PLAYER_DASH, out storedPlayerDash) && (int)storedPlayerDash >= 1)
-            boostAsPercent = ((100 + boostPercentage) / 100) +((int)storedPlayerDash * (int)0.75);
-        else
-            boostAsPercent = (100 + boostPercentage) / 100;
+        boostAsPercent = PlayerPrefs.HasKey("PLAYER_DASH") && PlayerPrefs.GetInt("PLAYER_DASH") >= 1
+            ? ((100 + boostPercentage) / 100) + ((int)(PlayerPrefs.GetInt("PLAYER_DASH") * .75)) : (100 + boostPercentage) / 100;
 
-        object storedDashCooldown;
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.DASH_COOLDOWN, out storedDashCooldown) && (int)storedDashCooldown >= 1)
-            coolDown = 5 - (int)storedDashCooldown;
-        else
-            coolDown = 5;
+        coolDown = PlayerPrefs.HasKey("DASH_COOLDOWN") && PlayerPrefs.GetInt("DASH_COOLDOWN") >= 1
+            ? 5 - (int)PlayerPrefs.GetInt("DASH_COOLDOWN") : 5;
     }
 
     // Update is called once per frame
@@ -56,6 +49,6 @@ public class AbilityDash : Abilities
 
     private void ResetAbility()
     {
-        movement.ResetBoost(boostAsPercent);   
+        movement.ResetBoost(boostAsPercent);
     }
 }

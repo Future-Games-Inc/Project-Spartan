@@ -1,26 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class EnemyKillUI : MonoBehaviour
 {
-    public TextMeshProUGUI enemyKillUI;
+    public TextMeshProUGUI killText;
     public PlayerHealth playerHealth;
-    // Start is called before the first frame update
-    void Start()
-    {
+    public int enemyKills;
 
+    private void Start()
+    {
+        killText.text = "Enemy Kills: " + playerHealth.enemiesKilled.ToString();
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
-    }
-
-    public void CheckEnemiesKilled()
-    {
-        enemyKillUI.text = "Enemies Killed: " + playerHealth.enemiesKilled.ToString();
+        if (enemyKills != playerHealth.bulletModifier)
+        {
+            killText.text = "Enemy Kills: " + playerHealth.enemiesKilled.ToString();
+            enemyKills = playerHealth.enemiesKilled;
+        }
     }
 }
+
+

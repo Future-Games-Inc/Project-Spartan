@@ -12,6 +12,13 @@ public class ReactorGrab : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip extractionClip;
 
+    public AudioClip armorClip;
+    public AudioClip healthClip;
+    public AudioClip ammoClip;
+
+    public GameObject[] buttons;
+    public GameObject offLine;
+
     public bool held;
 
     // Start is called before the first frame update
@@ -33,6 +40,24 @@ public class ReactorGrab : MonoBehaviour
             else
                 reactorCore.GetComponent<Renderer>().material = mediumMaterial;
         }
+
+        if(playerHealth.reactorExtraction >= 20)
+        {
+            foreach(GameObject button in buttons) 
+            {
+                button.SetActive(true);
+            }
+            offLine.SetActive(true);
+        }
+        else
+        {
+            foreach (GameObject button in buttons)
+            {
+                button.SetActive(false);
+            }
+            offLine.SetActive(false);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -74,5 +99,38 @@ public class ReactorGrab : MonoBehaviour
     {
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+    }
+
+    public void ArmorRecharge()
+    {
+        if (playerHealth.reactorExtraction >= 20)
+        {
+            playerHealth.maxArmor += 100;
+            playerHealth.AddArmor(200);
+            playerHealth.reactorExtraction -= 20;
+            audioSource.PlayOneShot(armorClip);
+        }
+    }
+
+    public void HealthRecharge()
+    {
+        if (playerHealth.reactorExtraction >= 20)
+        {
+            playerHealth.maxHealth += 100;
+            playerHealth.AddHealth(200);
+            playerHealth.reactorExtraction -= 20;
+            audioSource.PlayOneShot(healthClip);
+        }
+    }
+
+    public void AmmoRecharge()
+    {
+        if (playerHealth.reactorExtraction >= 20)
+        {
+            playerHealth.maxAmmo += 50;
+            playerHealth.bulletModifier += 5;
+            playerHealth.reactorExtraction -= 20;
+            audioSource.PlayOneShot(ammoClip);
+        }
     }
 }

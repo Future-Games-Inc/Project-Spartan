@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2365317562690898635}
   - component: {fileID: 4003736090048398846}
   - component: {fileID: 7424334172381560800}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5442,7 +5442,7 @@ GameObject:
   - component: {fileID: 2375808763894488869}
   - component: {fileID: 4817742771065536287}
   - component: {fileID: 4325160158179829613}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: Particle System 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10748,7 +10748,7 @@ GameObject:
   - component: {fileID: 8627380578543148344}
   - component: {fileID: 4718470343757100742}
   - component: {fileID: 1235632837761815621}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: SubEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15446,7 +15446,7 @@ GameObject:
   - component: {fileID: 3788630650914970253}
   - component: {fileID: 7492128523564888957}
   - component: {fileID: 5858075128971250972}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: Explosion_Air
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15601,7 +15601,7 @@ GameObject:
   - component: {fileID: 4495293557733503551}
   - component: {fileID: 993134255676918321}
   - component: {fileID: 6253116125481572433}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: Particle System 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21547,7 +21547,7 @@ GameObject:
   - component: {fileID: -1305751350302733463}
   - component: {fileID: 3874187457919108115}
   - component: {fileID: 1912429725365246579}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Z_ArrowBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21618,7 +21618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HitFXPrefab: {fileID: 0}
-  Damage: 50
+  Damage: 15
   AddRigidForce: 5
   ValidLayers:
     serializedVersion: 2
@@ -21772,6 +21772,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!96 &3874187457919108115
 TrailRenderer:
   serializedVersion: 2
@@ -23908,7 +23911,7 @@ GameObject:
   - component: {fileID: 2509927603789356600}
   - component: {fileID: 5646681380343242431}
   - component: {fileID: 4727295082222948801}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: Particle System 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28772,7 +28775,7 @@ GameObject:
   - component: {fileID: 3683335203952024184}
   - component: {fileID: 9120192871266399235}
   - component: {fileID: 3102008177089675395}
-  m_Layer: 22
+  m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33600,6 +33603,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4864611388242600557}
     m_Modifications:
+    - target: {fileID: 1206498299248906752, guid: af6c1e3f046eecd4d81330aeb285600f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1206498299248906754, guid: af6c1e3f046eecd4d81330aeb285600f,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -33685,9 +33693,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: CFXR4 Sun
       objectReference: {fileID: 0}
+    - target: {fileID: 1206498299807332555, guid: af6c1e3f046eecd4d81330aeb285600f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3405899300174267242, guid: af6c1e3f046eecd4d81330aeb285600f,
         type: 3}
       propertyPath: m_Intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7747002053765534775, guid: af6c1e3f046eecd4d81330aeb285600f,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using System;
 using LootLocker.Requests;
 using TMPro;
 using UnityEngine.UI;
@@ -9,9 +8,9 @@ public class TopReactsLeaderboard : MonoBehaviour
 {
     public string leaderboardID = "react_leaderboard";
     public string leaderboardID2 = "faction_leaders";
+    public string leaderboardID3 = "react_kills";
     public string progressionKey = "cent_prog";
 
-    public bool updater = true;
     public bool rewardGiven = false;
 
     public TextMeshProUGUI playerNames;
@@ -29,17 +28,13 @@ public class TopReactsLeaderboard : MonoBehaviour
     public TimeTracker timeTracker;
     public RawImage rewardIcon;
 
-    public String isLocalPlayer;
-    public String firstPlayerID;
-    string playerID;
-
     public int currentLevelInt;
     public int Score;
 
     public BlackMarketManager blackMarketManager;
     public ProgressionBadges progressionBadges;
     public SaveData saveData;
-    public WhiteLabelManager whiteLabelManager;
+    public bool contractBool;
 
     // Start is called before the first frame update
     void Start()
@@ -112,8 +107,7 @@ public class TopReactsLeaderboard : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         bool done = false;
-        playerID = whiteLabelManager.playerID;
-        LootLockerSDKManager.SubmitScore(playerID, scoreToUpload, leaderboardID, (response) =>
+        LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, scoreToUpload, leaderboardID3, (response) =>
         {
             if (response.success)
             {
@@ -129,45 +123,41 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator FetchTopHighScores()
     {
-        while (updater)
+        bool done = false;
+        LootLockerSDKManager.GetScoreList(leaderboardID3, 5, 0, (response) =>
         {
-            bool done = false;
-            LootLockerSDKManager.GetScoreList(leaderboardID, 5, 0, (response) =>
+            if (response.success)
             {
-                if (response.success)
+                string tempPlayerNames = "Reacts\n";
+                string TempPlayerScores = "CUA Eliminated\n";
+
+                LootLockerLeaderboardMember[] members = response.items;
+
+                for (int i = 0; i < members.Length; i++)
                 {
-                    string tempPlayerNames = "Names\n";
-                    string TempPlayerScores = "Scores\n";
-
-                    LootLockerLeaderboardMember[] members = response.items;
-
-                    for (int i = 0; i < members.Length; i++)
+                    tempPlayerNames += members[i].rank + ". ";
+                    if (members[i].player.name != "")
                     {
-                        tempPlayerNames += members[i].rank + ". ";
-                        if (members[i].player.name != "")
-                        {
-                            tempPlayerNames += members[i].player.name;
-                        }
-                        else
-                        {
-                            tempPlayerNames += members[i].player.id;
-                        }
-                        TempPlayerScores += members[i].score + "\n";
-                        tempPlayerNames += "\n";
+                        tempPlayerNames += members[i].player.name;
                     }
-                    done = true;
-                    playerNames.text = tempPlayerNames;
-                    playerScores.text = TempPlayerScores;
+                    else
+                    {
+                        tempPlayerNames += members[i].player.id;
+                    }
+                    TempPlayerScores += members[i].score + "\n";
+                    tempPlayerNames += "\n";
                 }
-                else
-                {
-                    done = true;
-                }
-            });
-            yield return new WaitWhile(() => done == false);
-            StartCoroutine(FetchFactionLeaderboard());
-            yield return new WaitForSeconds(20);
-        }
+                done = true;
+                playerNames.text = tempPlayerNames;
+                playerScores.text = TempPlayerScores;
+            }
+            else
+            {
+                done = true;
+            }
+        });
+        yield return new WaitWhile(() => done == false);
+        StartCoroutine(FetchFactionLeaderboard());
     }
 
     public IEnumerator FetchFactionLeaderboard()
@@ -218,6 +208,7 @@ public class TopReactsLeaderboard : MonoBehaviour
             currentLevelInt = (int)response.step;
             nextLevel.text = (response.step + 1).ToString();
             currentXPText.text = response.points + " / " + (response.step * 100);
+            levelSlider.maxValue = (float)(response.next_threshold);
 
             if (levelSlider.value == levelSlider.maxValue)
             {
@@ -229,26 +220,30 @@ public class TopReactsLeaderboard : MonoBehaviour
                 levelSlider.maxValue = (float)(response.next_threshold);
                 levelSlider.value = (float)response.points;
             }
-            roomManager.mapLevel = (int)response.step;
         });
         StartCoroutine(SetScore());
     }
 
     public IEnumerator SetScore()
     {
-        playerID = whiteLabelManager.playerID;
-        LootLockerSDKManager.GetMemberRank(leaderboardID, playerID, (response) =>
+        if (PlayerPrefs.HasKey("EnemyKills"))
+        {
+            LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, PlayerPrefs.GetInt("EnemyKills"), leaderboardID3, (response) =>
+            {
+            });
+        }
+        LootLockerSDKManager.GetMemberRank(leaderboardID3, WhiteLabelManager.playerID, (response) =>
         {
             if (response.success)
             {
                 Score = response.score;
             }
-            else
-            {
-
-            }
         });
-        yield return blackMarketManager.DisplayAvailableContracts();
+        if (!contractBool)
+        {
+            contractBool = true;
+            yield return blackMarketManager.DisplayAvailableContracts();
+        }
         yield return saveData.PlayerLevelRoutine();
         yield return progressionBadges.UpdateBadges();
     }

@@ -19,6 +19,6 @@ public class PlayerKillUI : MonoBehaviour
 
     public void CheckEnemiesKilled()
     {
-        playerKillUI.text = "Players Killed: " + playerHealth.playersKilled.ToString();
+
     }
 }

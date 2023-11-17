@@ -160,7 +160,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b33d0888efba99e4babcfcc2720b8299, type: 2}
+  - {fileID: 2100000, guid: 8e6900db3f8c8fd4680d56fc2010dbb1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -200,7 +200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9017398015425729473
 RectTransform:
   m_ObjectHideFlags: 0
@@ -393,8 +393,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9017398016144288439}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.00405}
+  m_LocalRotation: {x: 0.7071068, y: -0.7071068, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0036}
   m_LocalScale: {x: 0.0007164189, y: 0.0007164189, z: 0.0007164189}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -402,10 +402,10 @@ RectTransform:
   - {fileID: 9017398015425729473}
   m_Father: {fileID: 9017398016391809628}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 180, y: 180, z: 90}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.0025, y: 0.00015}
+  m_AnchoredPosition: {x: -0.0029, y: 0.0458}
   m_SizeDelta: {x: 1466.3334, y: 224.66675}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &9017398016144288435
@@ -642,8 +642,8 @@ MonoBehaviour:
   playerHealth: {fileID: 0}
   normal: {fileID: 2100000, guid: 8e6900db3f8c8fd4680d56fc2010dbb1, type: 2}
   bleed: {fileID: 2100000, guid: b33d0888efba99e4babcfcc2720b8299, type: 2}
-  baseDamage: 5
-  bleedDamage: 2
+  baseDamage: 30
+  bleedDamage: 5
   bleedIncrease: 2
   bleedDuration: 5
 --- !u!65 &4358438308007332923
@@ -693,6 +693,9 @@ MonoBehaviour:
   VibrateFrequency: 0.3
   VibrateAmplitude: 0.1
   VibrateDuration: 0.1
+  ShootFrequency: 0.6
+  ShootAmplitude: 0.3
+  ShootDuration: 0.3
 --- !u!114 &1618314550781903182
 MonoBehaviour:
   m_ObjectHideFlags: 0

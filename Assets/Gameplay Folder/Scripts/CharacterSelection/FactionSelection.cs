@@ -1,3 +1,4 @@
+using LootLocker.Requests;
 using System;
 using UnityEngine;
 
@@ -15,10 +16,21 @@ public class FactionSelection : MonoBehaviour
     public GameObject muerteBanner;
     public GameObject chaosBanner;
 
-    public Canvas factionDecision;
+    public GameObject factionDecision;
     public GameObject LevelSelector;
+    public GameObject leaveButton;
+
+    public float factionTimer;
+    public float depositTimer;
 
     const string factionSelected = "SelectedFaction";
+    const string factionSelectionDate = "FactionSelectionDate";
+    const string factionDepositDate = "FactionDepositDate";
+    public string progressionKey = "cent_prog";
+
+
+    public SaveData saveData;
+
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -27,37 +39,61 @@ public class FactionSelection : MonoBehaviour
             cyberGang = true;
             picked = true;
         }
-        if (PlayerPrefs.HasKey(factionSelected) && PlayerPrefs.GetString(factionSelected) == "Muerte De Dios")
+        else if (PlayerPrefs.HasKey(factionSelected) && PlayerPrefs.GetString(factionSelected) == "Muerte De Dios")
         {
             muerteGang = true;
             picked = true;
         }
-        if (PlayerPrefs.HasKey(factionSelected) && PlayerPrefs.GetString(factionSelected) == "Chaos Cartel")
+        else if (PlayerPrefs.HasKey(factionSelected) && PlayerPrefs.GetString(factionSelected) == "Chaos Cartel")
         {
             chaosGang = true;
             picked = true;
         }
-        if (PlayerPrefs.HasKey(factionSelected) && PlayerPrefs.GetString(factionSelected) == "CintSix Cartel")
+
+        else if (PlayerPrefs.HasKey(factionSelected) && PlayerPrefs.GetString(factionSelected) == "CintSix Cartel")
         {
             cintGang = true;
             picked = true;
         }
+        else
+        {
+            picked = false;
+            factionDecision.SetActive(true);
+        }
+        if (PlayerPrefs.HasKey(factionSelectionDate))
+        {
+            DateTime savedDate = DateTime.Parse(PlayerPrefs.GetString(factionSelectionDate));
+            DateTime currentDate = DateTime.Now;
+            TimeSpan difference = currentDate - savedDate;
+
+            if (difference.TotalDays < 7)
+            {
+                leaveButton.SetActive(false);
+            }
+            else if (difference.TotalDays >= 7)
+            {
+                leaveButton.SetActive(true);
+            }
+        }
+        else if(!PlayerPrefs.HasKey(factionSelectionDate))
+            leaveButton.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         if (cyberGang == true || muerteGang == true || chaosGang == true || cintGang == true)
-            factionDecision.enabled = false;
+            factionDecision.SetActive(false);
+        else
+            factionDecision.SetActive(true);
 
-        if (cyberGang)
-            cyberBanner.SetActive(true);
-        if (muerteGang)
-            muerteBanner.SetActive(true);
-        if (chaosGang)
-            chaosBanner.SetActive(true);
-        if (cintGang)
-            cintBanner.SetActive(true);
+        if (PlayerPrefs.HasKey(factionSelected))
+        {
+            cyberBanner.SetActive(cyberGang);
+            muerteBanner.SetActive(muerteGang);
+            chaosBanner.SetActive(chaosGang);
+            cintBanner.SetActive(cintGang);
+        }
 
         LevelSelector.SetActive(picked);
     }
@@ -71,7 +107,8 @@ public class FactionSelection : MonoBehaviour
         chaosGang = false;
         cintGang = false;
 
-        factionDecision.enabled = false;
+        factionDecision.SetActive(false);
+        SaveCurrentDate();
     }
 
     public void MuerteSelect()
@@ -83,7 +120,8 @@ public class FactionSelection : MonoBehaviour
         chaosGang = false;
         cintGang = false;
 
-        factionDecision.enabled = false;
+        factionDecision.SetActive(false);
+        SaveCurrentDate();
     }
 
     public void ChaosSelect()
@@ -95,18 +133,44 @@ public class FactionSelection : MonoBehaviour
         chaosGang = true;
         cintGang = false;
 
-        factionDecision.enabled = false;
+        factionDecision.SetActive(false);
+        SaveCurrentDate();
     }
 
-    public void CintSelect()
+    void SaveCurrentDate()
     {
-        PlayerPrefs.SetString(factionSelected, "CintSix Cartel");
+        PlayerPrefs.SetString(factionSelectionDate, DateTime.Now.ToString());
+        if (PlayerPrefs.HasKey(factionSelectionDate))
+        {
+            DateTime savedDate = DateTime.Parse(PlayerPrefs.GetString(factionSelectionDate));
+            DateTime currentDate = DateTime.Now;
+            TimeSpan difference = currentDate - savedDate;
 
-        cyberGang = false;
-        muerteGang = false;
-        chaosGang = false;
-        cintGang = true;
+            if (difference.TotalDays < 7)
+            {
+                leaveButton.SetActive(false);
+            }
+        }
+    }
 
-        factionDecision.enabled = false;
+    public void LeaveFaction()
+    {
+        if (PlayerPrefs.HasKey(factionSelected))
+        {
+            PlayerPrefs.DeleteKey(factionSelected);
+            PlayerPrefs.DeleteKey(factionSelectionDate); // Clear the saved date as well
+            picked = false;
+            cyberGang = false;
+            cintGang = false;
+            muerteGang = false;
+            chaosGang = false;
+            cyberBanner.SetActive(false);
+            muerteBanner.SetActive(false);
+            chaosBanner.SetActive(false);
+            cintBanner.SetActive(false);
+            LootLockerSDKManager.ResetPlayerProgression(progressionKey, response =>
+            {
+            });
+        }
     }
 }

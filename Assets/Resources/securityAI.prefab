@@ -126,8 +126,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642468321077311002}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.42, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: 0, y: 5.6, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3941197441095112604}
@@ -1880,7 +1880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71673d5c845a5134a8c082f503ae2ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wanderRadius: 300
+  wanderRadius: 2000
   wanderTimer: 50
   agent: {fileID: 3941197441095112580}
   timer: 0
@@ -1949,6 +1949,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e90beac83b254ae4fbe7b91a4a318bae, type: 3}
   explosionEffect: {fileID: 1959557837182592902}
   agent: {fileID: 3941197441095112580}
+  hit: 0
   type: Security
 --- !u!54 &2584860748200865684
 Rigidbody:
@@ -2012,7 +2013,7 @@ AudioSource:
   Priority: 79
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 10
+  MaxDistance: 30
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -7347,7 +7348,7 @@ AudioSource:
   Priority: 15
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 15
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0

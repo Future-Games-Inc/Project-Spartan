@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using static DroneHealth;
 
 public class ReactorDrone : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ReactorDrone : MonoBehaviour
     [Header("AI Properties")]
 
     public Transform targetTransform;
-    public Transform droneBulletSpawn;
+    public Transform[] droneBulletSpawn;
 
     public GameObject droneBullet;
 
@@ -31,10 +32,11 @@ public class ReactorDrone : MonoBehaviour
 
     public MatchEffects matchEffects;
 
+    public float sphereRadius = 0.5f;
+
 
     private void Start()
     {
-        StartCoroutine(FireWeapon());
         matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
     }
 
@@ -42,7 +44,10 @@ public class ReactorDrone : MonoBehaviour
     {
         if (!matchEffects.codeFound)
         {
+            CheckForPlayer();
             FindClosestEnemy();
+            directionToTarget = targetTransform.position - transform.position;
+
             UpdateStates();
         }
     }
@@ -85,7 +90,7 @@ public class ReactorDrone : MonoBehaviour
     private void Follow()
     {
         fireWeaponBool = false;
-        directionToTarget = targetTransform.position - transform.position;
+        StopCoroutine(FireWeapon());
 
         if (directionToTarget.magnitude <= shootDistance && CheckForPlayer())
         {
@@ -97,24 +102,39 @@ public class ReactorDrone : MonoBehaviour
     {
         Transform playerPOS = targetTransform;
         if (playerPOS == null)
-            return false;
-
-        if (Vector3.Distance(transform.position, playerPOS.position) > shootDistance)
-            return false;
-
-        Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
-        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
-            return false;
-
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToTarget, shootDistance, obstacleMask);
-        foreach (RaycastHit hit in hits)
         {
-            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
-            {
-                return true;
-            }
+            return false;
         }
 
+        if (Vector3.Distance(transform.position, playerPOS.position) > shootDistance)
+        {
+            return false;
+        }
+
+        Vector3 directionToTarget = ((playerPOS.position + new Vector3(0, 3, 0)) - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
+        {
+            return false;
+        }
+
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position, sphereRadius, directionToTarget, out hit, shootDistance, obstacleMask))
+        {
+            // Debugging line
+            if (hit.collider != null)
+            {
+                // More debugging
+                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
+                    || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
+                    || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
+                    || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
+                    || hit.collider.gameObject.CompareTag("Untagged"))
+                {
+                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
+                        return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -124,7 +144,7 @@ public class ReactorDrone : MonoBehaviour
         {
             currentState = States.Follow;
         }
-        fireWeaponBool = true;
+        StartCoroutine(FireWeapon());
     }
 
     private void LookAtTarget()
@@ -134,21 +154,23 @@ public class ReactorDrone : MonoBehaviour
 
         Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * 80);
+        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * 1000 * GlobalSpeedManager.SpeedMultiplier);
     }
 
     IEnumerator FireWeapon()
     {
-        while (true)
+        if (!fireWeaponBool && !matchEffects.codeFound && matchEffects.startMatchBool)
         {
-            if (fireWeaponBool && !matchEffects.codeFound)
+            fireWeaponBool = true;
+            foreach (Transform spawn in droneBulletSpawn)
             {
-                GameObject spawnedBullet = Instantiate(droneBullet, droneBulletSpawn.position, Quaternion.identity);
+                GameObject spawnedBullet = Instantiate(droneBullet, spawn.position, Quaternion.identity);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
-                spawnedBullet.GetComponent<Rigidbody>().velocity = droneBulletSpawn.right * shootForce;
+                spawnedBullet.GetComponent<Rigidbody>().velocity = spawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;
             }
-            yield return new WaitForSeconds(.25f);
         }
+        yield return new WaitForSeconds(Random.Range(0.25f, 0.75f));
+        fireWeaponBool = false;
     }
 }

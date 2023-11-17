@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using System.Collections;
 using UnityEngine.EventSystems;
-using Photon.Pun;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class BlackMarketManager : MonoBehaviour
 {
@@ -68,105 +66,69 @@ public class BlackMarketManager : MonoBehaviour
         {
             if (contractType == "BossEnemy")
             {
-                ExitGames.Client.Photon.Hashtable bossContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuest, true } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContract);
-
-                ExitGames.Client.Photon.Hashtable bossContractTarget = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuestTarget, (int)acceptedContract.goal.requriedAmount} };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContractTarget);
-
-                ExitGames.Client.Photon.Hashtable bossContractCint = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuestCintTarget, (int)acceptedContract.cintRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContractCint);
-
-                ExitGames.Client.Photon.Hashtable bossContractExp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuestExpTarget, (int)acceptedContract.expRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContractExp);
-
-                ExitGames.Client.Photon.Hashtable bossContractComp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BossQuestCompleted, false } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bossContractComp);
+                if (!PlayerPrefs.HasKey("BossQuest"))
+                {
+                    PlayerPrefs.SetInt("BossQuest", 1);
+                    PlayerPrefs.SetInt("BossQuestTarget", (int)acceptedContract.goal.requriedAmount);
+                    PlayerPrefs.SetInt("BossQuestCintTarget", (int)acceptedContract.cintRewards);
+                    PlayerPrefs.SetInt("BossQuestExpTarget", (int)acceptedContract.expRewards);
+                    PlayerPrefs.SetInt("BossQuestCompleted", 0);
+                }
             }
             else if (contractType == "Artifact")
             {
-                ExitGames.Client.Photon.Hashtable artifactContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuest, true } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(artifactContract);
-
-                ExitGames.Client.Photon.Hashtable artifactContractTarget = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuestTarget, (int)acceptedContract.goal.requriedAmount} };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(artifactContractTarget);
-
-                ExitGames.Client.Photon.Hashtable ContractCint = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuestCintTarget, (int)acceptedContract.cintRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractCint);
-
-                ExitGames.Client.Photon.Hashtable ContractExp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuestExpTarget, (int)acceptedContract.expRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractExp);
-
-                ExitGames.Client.Photon.Hashtable ContractComp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.ArtifactQuestCompleted, false } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractComp);
+                if (!PlayerPrefs.HasKey("ArtifactQuest"))
+                {
+                    PlayerPrefs.SetInt("ArtifactQuest", 1);
+                    PlayerPrefs.SetInt("ArtifactQuestTarget", (int)acceptedContract.goal.requriedAmount);
+                    PlayerPrefs.SetInt("ArtifactQuestCintTarget", (int)acceptedContract.cintRewards);
+                    PlayerPrefs.SetInt("ArtifactQuestExpTarget", (int)acceptedContract.expRewards);
+                    PlayerPrefs.SetInt("ArtifactQuestCompleted", 0);
+                }
             }
             else if (contractType == "Bombs")
             {
-                ExitGames.Client.Photon.Hashtable bombsContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuest, true } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bombsContract);
-
-                ExitGames.Client.Photon.Hashtable bombsContractTarget = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuestTarget, (int)acceptedContract.goal.requriedAmount} };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(bombsContractTarget);
-
-                ExitGames.Client.Photon.Hashtable ContractCint = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuestCintTarget, (int)acceptedContract.cintRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractCint);
-
-                ExitGames.Client.Photon.Hashtable ContractExp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuestExpTarget, (int)acceptedContract.expRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractExp);
-
-                ExitGames.Client.Photon.Hashtable ContractComp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.BombQuestCompleted, false } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractComp);
+                if (!PlayerPrefs.HasKey("BombQuest"))
+                {
+                    PlayerPrefs.SetInt("BombQuest", 1);
+                    PlayerPrefs.SetInt("BombQuestTarget", (int)acceptedContract.goal.requriedAmount);
+                    PlayerPrefs.SetInt("BombQuestCintTarget", (int)acceptedContract.cintRewards);
+                    PlayerPrefs.SetInt("BombQuestExpTarget", (int)acceptedContract.expRewards);
+                    PlayerPrefs.SetInt("BombQuestCompleted", 0);
+                }
             }
             else if (contractType == "Guardian")
             {
-                ExitGames.Client.Photon.Hashtable guardianContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuest, true } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(guardianContract);
-
-                ExitGames.Client.Photon.Hashtable guardianContractTarget = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuestTarget, (int)acceptedContract.goal.requriedAmount } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(guardianContractTarget);
-
-                ExitGames.Client.Photon.Hashtable ContractCint = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuestCintTarget, (int)acceptedContract.cintRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractCint);
-
-                ExitGames.Client.Photon.Hashtable ContractExp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuestExpTarget, (int)acceptedContract.expRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractExp);
-
-                ExitGames.Client.Photon.Hashtable ContractComp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.GuardianQuestCompleted, false } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractComp);
+                if (!PlayerPrefs.HasKey("GuardianQuest"))
+                {
+                    PlayerPrefs.SetInt("GuardianQuest", 1);
+                    PlayerPrefs.SetInt("GuardianQuestTarget", (int)acceptedContract.goal.requriedAmount);
+                    PlayerPrefs.SetInt("GuardianQuestCintTarget", (int)acceptedContract.cintRewards);
+                    PlayerPrefs.SetInt("GuardianQuestExpTarget", (int)acceptedContract.expRewards);
+                    PlayerPrefs.SetInt("GuardianQuestCompleted", 0);
+                }
             }
             else if (contractType == "Intel")
             {
-                ExitGames.Client.Photon.Hashtable intelContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuest, true } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(intelContract);
-
-                ExitGames.Client.Photon.Hashtable intelContractTarget = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuestTarget, (int)acceptedContract.goal.requriedAmount } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(intelContractTarget);
-
-                ExitGames.Client.Photon.Hashtable ContractCint = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuestCintTarget, (int)acceptedContract.cintRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractCint);
-
-                ExitGames.Client.Photon.Hashtable ContractExp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuestExpTarget, (int)acceptedContract.expRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractExp);
-
-                ExitGames.Client.Photon.Hashtable ContractComp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.IntelQuestCompleted, false } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractComp);
+                if (!PlayerPrefs.HasKey("IntelQuest"))
+                {
+                    PlayerPrefs.SetInt("IntelQuest", 1);
+                    PlayerPrefs.SetInt("IntelQuestTarget", (int)acceptedContract.goal.requriedAmount);
+                    PlayerPrefs.SetInt("IntelQuestCintTarget", (int)acceptedContract.cintRewards);
+                    PlayerPrefs.SetInt("IntelQuestExpTarget", (int)acceptedContract.expRewards);
+                    PlayerPrefs.SetInt("IntelQuestCompleted", 0);
+                }
             }
             else if (contractType == "Collector")
             {
-                ExitGames.Client.Photon.Hashtable collectorContract = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuest, true } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(collectorContract);
-
-                ExitGames.Client.Photon.Hashtable collectorContractTarget = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuestTarget, (int)acceptedContract.goal.requriedAmount } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(collectorContractTarget);
-
-                ExitGames.Client.Photon.Hashtable ContractCint = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuestCintTarget, (int)acceptedContract.cintRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractCint);
-
-                ExitGames.Client.Photon.Hashtable ContractExp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuestExpTarget, (int)acceptedContract.expRewards } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractExp);
-
-                ExitGames.Client.Photon.Hashtable ContractComp = new ExitGames.Client.Photon.Hashtable() { { MultiplayerVRConstants.CollectorQuestCompleted, false } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(ContractComp);
+                if (!PlayerPrefs.HasKey("CollectorQuest"))
+                {
+                    PlayerPrefs.SetInt("CollectorQuest", 1);
+                    PlayerPrefs.SetInt("CollectorQuestTarget", (int)acceptedContract.goal.requriedAmount);
+                    PlayerPrefs.SetInt("CollectorQuestCintTarget", (int)acceptedContract.cintRewards);
+                    PlayerPrefs.SetInt("CollectorQuestExpTarget", (int)acceptedContract.expRewards);
+                    PlayerPrefs.SetInt("CollectorQuestCompleted", 0);
+                }
             }
         }
 
@@ -243,7 +205,7 @@ public class BlackMarketManager : MonoBehaviour
 
                 if (contract.goal.ContractType.ToString() == "BossEnemy")
                 {
-                    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuest, out object contractState) && (bool)contractState == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BossQuestCompleted, out object contractComplete) && (bool)contractComplete == false)
+                    if (PlayerPrefs.HasKey("BossQuest") && PlayerPrefs.GetInt("BossQuestCompleted") == 0)
                     {
                         contract.isActive = true;
                         acceptedContracts.Add(contract);
@@ -258,7 +220,7 @@ public class BlackMarketManager : MonoBehaviour
 
                 else if (contract.goal.ContractType.ToString() == "Artifact")
                 {
-                    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuest, out object contractState) && (bool)contractState == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.ArtifactQuestCompleted, out object contractComplete) && (bool)contractComplete == false)
+                    if (PlayerPrefs.HasKey("ArtifactQuest") && PlayerPrefs.GetInt("ArtifactQuestCompleted") == 0)
                     {
                         contract.isActive = true;
                         acceptedContracts.Add(contract);
@@ -273,7 +235,7 @@ public class BlackMarketManager : MonoBehaviour
 
                 else if (contract.goal.ContractType.ToString() == "Bombs")
                 {
-                    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuest, out object contractState) && (bool)contractState == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.BombQuestCompleted, out object contractComplete) && (bool)contractComplete == false)
+                    if (PlayerPrefs.HasKey("BombQuest") && PlayerPrefs.GetInt("BombQuestCompleted") == 0)
                     {
                         contract.isActive = true;
                         acceptedContracts.Add(contract);
@@ -288,7 +250,7 @@ public class BlackMarketManager : MonoBehaviour
 
                 else if (contract.goal.ContractType.ToString() == "Guardian")
                 {
-                    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuest, out object contractState) && (bool)contractState == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.GuardianQuestCompleted, out object contractComplete) && (bool)contractComplete == false)
+                    if (PlayerPrefs.HasKey("GuardianQuest") && PlayerPrefs.GetInt("GuardianQuestCompleted") == 0)
                     {
                         contract.isActive = true;
                         acceptedContracts.Add(contract);
@@ -303,7 +265,7 @@ public class BlackMarketManager : MonoBehaviour
 
                 else if (contract.goal.ContractType.ToString() == "Intel")
                 {
-                    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuest, out object contractState) && (bool)contractState == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.IntelQuestCompleted, out object contractComplete) && (bool)contractComplete == false)
+                    if (PlayerPrefs.HasKey("IntelQuest") && PlayerPrefs.GetInt("IntelQuestCompleted") == 0)
                     {
                         contract.isActive = true;
                         acceptedContracts.Add(contract);
@@ -318,7 +280,7 @@ public class BlackMarketManager : MonoBehaviour
 
                 else if (contract.goal.ContractType.ToString() == "Collector")
                 {
-                    if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuest, out object contractState) && (bool)contractState == true && PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(MultiplayerVRConstants.CollectorQuestCompleted, out object contractComplete) && (bool)contractComplete == false)
+                    if (PlayerPrefs.HasKey("CollectorQuest") && PlayerPrefs.GetInt("CollectorQuestCompleted") == 0)
                     {
                         contract.isActive = true;
                         acceptedContracts.Add(contract);

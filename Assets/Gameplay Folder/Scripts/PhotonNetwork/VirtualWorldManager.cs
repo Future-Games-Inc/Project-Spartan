@@ -1,10 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class VirtualWorldManager : MonoBehaviour
 {
     public static VirtualWorldManager Instance;
-    public float extractionTime = 300;
+        
     public PlayerHealth player; 
 
     private void Awake()
@@ -26,8 +27,16 @@ public class VirtualWorldManager : MonoBehaviour
     public void TimesUP()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
+        player.hackCanvas.SetActive(true);
         player.UpdateSkills(-50);
+        StartCoroutine(Leave());
+    }
+
+    IEnumerator Leave()
+    {
+        yield return new WaitForSeconds(4);
         SceneManager.LoadScene("TD Main Menu");
+
     }
 
 }

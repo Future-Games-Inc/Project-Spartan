@@ -40,7 +40,7 @@ namespace BNG {
         protected BoxCollider boxCollider;
         protected float colliderInitialCenterZ = 0;
 
-        void Awake() {
+        void OnEnable() {
             uiButton = GetComponentInParent<UnityEngine.UI.Button>();
             boxCollider = GetComponent<BoxCollider>();
             if (boxCollider) {
