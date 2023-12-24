@@ -6,7 +6,7 @@ public class AutoLogin : MonoBehaviour
 {
     public WhiteLabelManager WhiteLabelManager;
     // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
         WhiteLabelManager.AutoLogin();
     }

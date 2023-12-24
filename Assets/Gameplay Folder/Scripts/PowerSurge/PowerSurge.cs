@@ -125,20 +125,20 @@ public class PowerSurge : MonoBehaviour
         {
             if (collider.CompareTag("Security"))
             {
-                DroneHealth enemyDamageCrit = collider.GetComponent<DroneHealth>();
+                DroneHealth enemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
                 if (enemyDamageCrit != null)
                     enemyDamageCrit.TakeDamage(200);
                 else
                 {
-                    SentryDrone enemyDamageCrit2 = collider.GetComponent<SentryDrone>();
+                    SentryDrone enemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
                     if (enemyDamageCrit2 != null)
-                        enemyDamageCrit.TakeDamage(200);
+                        enemyDamageCrit2.TakeDamage(200);
                 }
             }
 
             if (collider.CompareTag("Enemy") || collider.CompareTag("BossEnemy"))
             {
-                FollowAI enemyDamageCrit = collider.GetComponent<FollowAI>();
+                FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
                 if (enemyDamageCrit != null)
                 {
                     enemyDamageCrit.TakeDamage(50);
@@ -146,7 +146,7 @@ public class PowerSurge : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5);
         canBeActivated = true;
         foreach (Light light in lightToFlicker)
         {

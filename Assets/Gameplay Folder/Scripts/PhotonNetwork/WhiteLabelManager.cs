@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using LootLocker.Requests;
+using System.Collections;
+using LootLocker;
 
 public class WhiteLabelManager : MonoBehaviour
 {
@@ -14,9 +16,13 @@ public class WhiteLabelManager : MonoBehaviour
     // Store the PlayerPref Key to avoid typos
     const string playerNamePrefKey = "PlayerName";
 
-    private void OnEnable()
+    private void Awake()
     {
-
+#if UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#else
+        Debug.unityLogger.logEnabled = false;
+#endif
     }
 
     // Start is called before the first frame update
@@ -27,51 +33,58 @@ public class WhiteLabelManager : MonoBehaviour
 
     public void AutoLogin()
     {
-        LootLockerSDKManager.CheckWhiteLabelSession(response =>
+        StartCoroutine(AutoLoginCoroutine());
+    }
+
+    private IEnumerator AutoLoginCoroutine()
+    {
+        bool loginSuccessful = false;
+
+        while (!loginSuccessful)
         {
-            if (response == false)
+            LootLockerSDKManager.StartGuestSession((response) =>
             {
-            }
-            else
+                if (response.success)
+                {
+                    // Login successful
+                    loginSuccessful = true;
+                    playerID = response.player_id.ToString();
+                    string defaultName = HandlePlayerName(response);
+                    PlayerPrefs.SetString(playerNamePrefKey, defaultName);
+                    playerID = response.player_id.ToString();
+                    StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
+                    inputFieldText.SetActive(true);
+                    Debug.Log("Login successful");
+                }
+                else
+                {
+                    Debug.LogWarning("Login failed, retrying...");
+                }
+            });
+
+            // Wait for a short delay before retrying to avoid spamming requests
+            yield return new WaitForSeconds(2);
+        }
+    }
+
+    private string HandlePlayerName(LootLockerResponse response)
+    {
+        string defaultName = string.Empty;
+        if (_inputField != null)
+        {
+            LootLockerSDKManager.GetPlayerName((response) =>
             {
-                // Session is valid, start game session
-                LootLockerSDKManager.StartWhiteLabelSession((response) =>
-                                {
-                                    if (response.success)
-                                    {
-                                        // It was succeful, log in
-                                        playerID = response.player_id.ToString();
-                                        string defaultName = string.Empty;
-                                        if (_inputField != null)
-                                        {
-                                            LootLockerSDKManager.GetPlayerName((response) =>
-                                            {
-                                                if (response.success)
-                                                {
-                                                    defaultName = response.name.ToString();
-                                                    _inputField.text = defaultName.ToString();
-                                                }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
-                                        }
-                                        PlayerPrefs.SetString(playerNamePrefKey, defaultName);
-                                        playerID = response.player_id.ToString();
-                                        StartCoroutine(topReactsLeaderboard.FetchTopHighScores());
-                                        inputFieldText.SetActive(true);
-                                    }
-                                    else
-                                    {
-
-                                        return;
-                                    }
-
-                                });
-
-            }
-
-        });
+                if (response.success)
+                {
+                    defaultName = response.name;
+                    _inputField.text = defaultName;
+                }
+            });
+        }
+        else
+        {
+            defaultName = "Unknown REACT: " + (int)UnityEngine.Random.Range(100, 350);
+        }
+        return defaultName;
     }
 }

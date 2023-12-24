@@ -11,7 +11,7 @@ public class PlayerManagerLootLocker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoginRoutine());
+        //StartCoroutine(LoginRoutine());
     }
 
     public IEnumerator LoginRoutine()

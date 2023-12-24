@@ -29,14 +29,17 @@ public class AbilityDash : Abilities
     // Update is called once per frame
     void Update()
     {
-        InputDevice dashButton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
-        dashButton.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
-
-        if (Time.time >= abilityTimer && secondaryButtonPressed)
+        if (movement.canMove)
         {
-            AbilityEffect();
-            abilityTimer = Time.time + coolDown;
+            InputDevice dashButton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
+            dashButton.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonPressed);
 
+            if (Time.time >= abilityTimer && secondaryButtonPressed)
+            {
+                AbilityEffect();
+                abilityTimer = Time.time + coolDown;
+
+            }
         }
     }
 

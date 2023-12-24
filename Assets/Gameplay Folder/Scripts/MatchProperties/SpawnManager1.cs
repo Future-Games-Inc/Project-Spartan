@@ -1,4 +1,6 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -56,6 +58,16 @@ public class SpawnManager1 : MonoBehaviour
     public int reinforcementCount;
     public int reinforcementCountMax;
     public GameObject reinforcementTroop;
+    public GameObjectPoolManager PoolManager;
+
+    private void Awake()
+    {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+    }
 
     void Start()
     {
@@ -141,7 +153,7 @@ public class SpawnManager1 : MonoBehaviour
             Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
             GameObject enemyCharacter = enemies[0];
-            Instantiate(enemyCharacter, spawnPosition[0].position, Quaternion.identity);
+            this.PoolManager.Acquire(enemyCharacter, spawnPosition[0].position, Quaternion.identity);
 
             enemyCount++;
 
@@ -164,7 +176,7 @@ public class SpawnManager1 : MonoBehaviour
 
                 Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
-                Instantiate(reinforcementTroop, spawnPosition[0].position, Quaternion.identity);
+                this.PoolManager.Acquire(reinforcementTroop, spawnPosition[0].position, Quaternion.identity);
 
                 reinforcementCount++;
 
@@ -192,7 +204,7 @@ public class SpawnManager1 : MonoBehaviour
                 GameObject[] enemies = ShuffleArray(defenderEnemies);
 
                 GameObject defenderDrone = enemies[0];
-                Instantiate(defenderDrone, spawnPosition[0].position, Quaternion.identity);
+                this.PoolManager.Acquire(defenderDrone, spawnPosition[0].position, Quaternion.identity);
 
                 defenderCount++;
 
@@ -222,7 +234,7 @@ public class SpawnManager1 : MonoBehaviour
             Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
             GameObject securityDrone = enemies[0];
-            Instantiate(securityDrone, spawnPosition[0].position, Quaternion.identity);
+            this.PoolManager.Acquire(securityDrone, spawnPosition[0].position, Quaternion.identity);
 
             securityCount++;
 
@@ -242,7 +254,7 @@ public class SpawnManager1 : MonoBehaviour
 
         Vector3 newPosition = new Vector3(spawnPosition[0].position.x, spawnPosition[0].position.y + 20, spawnPosition[0].position.z);
 
-        Instantiate(supplyDrop, newPosition, Quaternion.identity);
+        this.PoolManager.Acquire(supplyDrop, newPosition, Quaternion.identity);
     }
 
     IEnumerator SpawnReactor()
@@ -257,7 +269,7 @@ public class SpawnManager1 : MonoBehaviour
                 reactorSpawnLocation = reactorPlaceholder.transform;
                 Destroy(reactorPlaceholder);
 
-                Instantiate(reactor, reactorSpawnLocation.position, Quaternion.identity);
+                this.PoolManager.Acquire(reactor, reactorSpawnLocation.position, Quaternion.identity);
 
                 reactorCount++;
 
@@ -283,7 +295,7 @@ public class SpawnManager1 : MonoBehaviour
             Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
             GameObject securityDrone = bomb[0];
-            Instantiate(securityDrone, spawnPosition[0].position, Quaternion.identity);
+            this.PoolManager.Acquire(securityDrone, spawnPosition[0].position, Quaternion.identity);
 
             bombsCount++;
 
@@ -310,7 +322,7 @@ public class SpawnManager1 : MonoBehaviour
             Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
             GameObject securityDrone = artifact[0];
-            Instantiate(securityDrone, spawnPosition[0].position, Quaternion.identity);
+            this.PoolManager.Acquire(securityDrone, spawnPosition[0].position, Quaternion.identity);
 
             artifactCount++;
 
@@ -335,7 +347,7 @@ public class SpawnManager1 : MonoBehaviour
             // Modify y value of the spawn position
             Vector3 newPosition = spawnPosition[0].position + new Vector3(0, 10, 0);
 
-            Instantiate(health, newPosition, Quaternion.identity);
+            this.PoolManager.Acquire(health, newPosition, Quaternion.identity);
 
             healthCount++;
 
@@ -359,7 +371,7 @@ public class SpawnManager1 : MonoBehaviour
                 Transform[] spawnPosition = ShuffleSpawns(spawnPositions);
 
                 GameObject enemyCharacterBoss = bosses[0];
-                Instantiate(enemyCharacterBoss, spawnPosition[0].position, Quaternion.identity);
+                this.PoolManager.Acquire(enemyCharacterBoss, spawnPosition[0].position, Quaternion.identity);
 
                 enemiesKilled = 0;
                 yield return new WaitForSeconds(10);

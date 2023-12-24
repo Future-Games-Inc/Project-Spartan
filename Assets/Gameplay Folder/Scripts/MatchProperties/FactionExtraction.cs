@@ -1,10 +1,9 @@
-using Photon.Pun;
-using Photon.Realtime;
+
 using System;
 using System.Collections;
 using UnityEngine;
 
-public class FactionExtraction : MonoBehaviourPunCallbacks
+public class FactionExtraction : MonoBehaviour
 {
     //public PlayerHealth playerHealth;
     //public string factionExtraction;

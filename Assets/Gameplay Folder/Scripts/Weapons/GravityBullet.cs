@@ -1,3 +1,4 @@
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class GravityBullet : MonoBehaviour
@@ -15,10 +16,15 @@ public class GravityBullet : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip clip;
+    public GameObjectPoolManager PoolManager;
 
-    private void Update()
+    private void OnEnable()
     {
-
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
     }
 
     private void AffectNearbyObjects()
@@ -46,7 +52,7 @@ public class GravityBullet : MonoBehaviour
             AffectNearbyObjects();
 
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -59,7 +65,7 @@ public class GravityBullet : MonoBehaviour
             AffectNearbyObjects();
 
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 }

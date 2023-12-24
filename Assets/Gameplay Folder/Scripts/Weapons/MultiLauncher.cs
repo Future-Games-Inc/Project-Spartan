@@ -1,9 +1,7 @@
-using PathologicalGames;
 using System.Collections;
 using TMPro;
 using Umbrace.Unity.PurePool;
 using UnityEngine;
-using static Oni;
 
 public class MultiLauncher : MonoBehaviour
 {
@@ -64,12 +62,18 @@ public class MultiLauncher : MonoBehaviour
 
 
     public bool contact;
+    public GameObjectPoolManager PoolManager;
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
 
-        
+
 
         rotatorScript = GetComponent<Rotator>();
         reloadingScreen.SetActive(false);
@@ -85,7 +89,7 @@ public class MultiLauncher : MonoBehaviour
         yield return new WaitForSeconds(10);
         if (contact == false)
         {
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -173,6 +177,7 @@ public class MultiLauncher : MonoBehaviour
 
     IEnumerator Reload()
     {
+        StopFireBullet();
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(reloadSFX);
         durability--;
@@ -199,7 +204,7 @@ public class MultiLauncher : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     IEnumerator Sticky()
@@ -210,7 +215,7 @@ public class MultiLauncher : MonoBehaviour
             {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = Instantiate(stickyBullet, t.position, Quaternion.identity);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(stickyBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<StickyBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StickyBullet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     }
@@ -228,7 +233,7 @@ public class MultiLauncher : MonoBehaviour
             {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = Instantiate(gravityBullet, t.position, Quaternion.identity);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(gravityBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<GravityBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<GravityBullet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                         spawnedBullet.gameObject.GetComponent<GravityBullet>().bulletOwner = player.gameObject;
@@ -248,7 +253,7 @@ public class MultiLauncher : MonoBehaviour
             {
                     foreach (Transform t in spawnPoint)
                     {
-                        GameObject spawnedBullet = Instantiate(blackoutBullet, t.position, Quaternion.identity);
+                        GameObject spawnedBullet = this.PoolManager.Acquire(blackoutBullet, t.position, Quaternion.identity);
                         spawnedBullet.GetComponent<BlackoutBullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BlackoutBullet>().clip);
                         spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                         spawnedBullet.gameObject.GetComponent<BlackoutBullet>().bulletOwner = player.gameObject;

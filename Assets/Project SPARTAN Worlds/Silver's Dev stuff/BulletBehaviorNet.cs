@@ -1,5 +1,7 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
+using VRKeys;
 
 public class BulletBehaviorNet : MonoBehaviour
 {
@@ -22,18 +24,24 @@ public class BulletBehaviorNet : MonoBehaviour
     [Header("Audio Properties  -------------")]
     public AudioClip clip;
     public AudioSource audioSource;
-
+    public GameObjectPoolManager PoolManager;
 
 
     // Start is called before the first frame update
     private void OnEnable()
     {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
         StartCoroutine(Destroy(Duration));
     }
     IEnumerator Destroy(float duration)
     {
         yield return new WaitForSeconds(duration);
-        Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
         // attach clip and play
         // audioSource.PlayOneShot(clip);
     }
@@ -42,7 +50,7 @@ public class BulletBehaviorNet : MonoBehaviour
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
         }
         else
         {
@@ -77,20 +85,6 @@ public class BulletBehaviorNet : MonoBehaviour
             }
         }
 
-        else if (other.CompareTag("Player") && !playerBullet)
-        {
-            // select custom functions for damage
-            switch (Type)
-            {
-                case "EMP Bullet":
-                    EMPBulletDamagePlayer(other, Damage);
-                    break;
-                case "Default":
-                    DefaultDamagePlayer(other, Damage);
-                    break;
-            }
-        }
-
         else if (other.CompareTag("Security") && playerBullet)
         {
             // select custom functions for damage
@@ -115,6 +109,20 @@ public class BulletBehaviorNet : MonoBehaviour
                     break;
             }
         }
+
+        else if (!playerBullet)
+        {
+            // select custom functions for damage
+            switch (Type)
+            {
+                case "EMP Bullet":
+                    EMPBulletDamagePlayer(other, Damage);
+                    break;
+                case "Default":
+                    DefaultDamagePlayer(other, Damage);
+                    break;
+            }
+        }
         /// <summary> -------------------------------------------------------------------
         ///                           CUSTOME BULLET FUNCTIONS
         /// </summary> -------------------------------------------------------------------
@@ -130,7 +138,7 @@ public class BulletBehaviorNet : MonoBehaviour
             {
                 enemyDamageReg.TakeDamage(Damage * 10);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamageEnemy(Collider target, float damage)
         {
@@ -145,7 +153,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 enemyDamageReg.TakeDamage(Damage * 10);
             }
             enemyDamageReg.EMPShock();
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         void DefaultDamageBossEnemy(Collider target, float damage)
@@ -160,7 +168,7 @@ public class BulletBehaviorNet : MonoBehaviour
             {
                 enemyDamageReg.TakeDamage(Damage * 10);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamageBossEnemy(Collider target, float damage)
         {
@@ -175,21 +183,29 @@ public class BulletBehaviorNet : MonoBehaviour
                 enemyDamageReg.TakeDamage(Damage * 10);
             }
             enemyDamageReg.EMPShock();
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         void DefaultDamagePlayer(Collider target, float damage)
         {
             PlayerHealth enemyDamageReg = target.GetComponentInParent<PlayerHealth>();
             enemyDamageReg.TakeDamage(Damage);
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamagePlayer(Collider target, float damage)
         {
-            PlayerHealth enemyDamageReg = target.GetComponentInParent<PlayerHealth>();
-            enemyDamageReg.TakeDamage(Damage);
-            enemyDamageReg.EMPShock();
-            Destroy(gameObject);
+            GameObject obj = target.gameObject;
+            while (obj != null)
+            {
+                if (obj.GetComponent<PlayerHealth>() != null)
+                {
+                    PlayerHealth enemyDamageReg = target.GetComponentInParent<PlayerHealth>();
+                    enemyDamageReg.TakeDamage(Damage);
+                    enemyDamageReg.EMPShock();
+                    this.PoolManager.Release(gameObject);
+                }
+                obj = obj.transform.parent?.gameObject;
+            }
         }
 
         void DefaultDamageSecurity(Collider target, float damage)
@@ -202,7 +218,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 SentryDrone enemyDamageReg2 = other.GetComponentInParent<SentryDrone>();
                 enemyDamageReg2.TakeDamage(Damage * 10);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
         void EMPBulletDamageSecurity(Collider target, float damage)
         {
@@ -214,7 +230,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 SentryDrone enemyDamageReg2 = other.GetComponentInParent<SentryDrone>();
                 enemyDamageReg2.TakeDamage(Damage * 20);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         void ReactorCover(Collider target, int damage)
@@ -225,7 +241,7 @@ public class BulletBehaviorNet : MonoBehaviour
                 ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
                 reactorcover.TakeDamage(damage * 5);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -233,7 +249,7 @@ public class BulletBehaviorNet : MonoBehaviour
     {
         // still need to modify to allow bullets pass through enemies if we want to do that later on
         if (!collision.gameObject.CompareTag("Bullet") && BreakOnImpact == true)
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
     }
 
 }

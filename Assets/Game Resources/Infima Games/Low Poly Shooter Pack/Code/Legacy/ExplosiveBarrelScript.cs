@@ -124,7 +124,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("EnemyBullet"))
+            if (other.CompareTag("EnemyBullet") || other.CompareTag("Bullet"))
             {
                 Destroy(other.gameObject);
                 Health -= 25;
@@ -134,6 +134,11 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
                     explode = true;
                 }
             }
+        }
+
+        public void TakeDamage(int damage)
+        {
+            Health -= damage;
         }
     }
 }

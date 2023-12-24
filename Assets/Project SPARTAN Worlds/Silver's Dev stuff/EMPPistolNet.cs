@@ -1,9 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using PathologicalGames;
 using Umbrace.Unity.PurePool;
-using static Oni;
 
 public class EMPPistolNet : MonoBehaviour
 {
@@ -35,11 +33,17 @@ public class EMPPistolNet : MonoBehaviour
     public bool reloadingWeapon = false;
 
     public bool contact;
+    public GameObjectPoolManager PoolManager;
 
     void OnEnable()
     {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
 
-        
+
 
         durability = 5;
         rotatorScript = GetComponent<Rotator>();
@@ -54,7 +58,7 @@ public class EMPPistolNet : MonoBehaviour
         yield return new WaitForSeconds(10);
         if (contact == false)
         {
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -101,7 +105,7 @@ public class EMPPistolNet : MonoBehaviour
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = Instantiate(Bullet, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(Bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<BulletBehaviorNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<BulletBehaviorNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint[0].forward * spawnedBullet.GetComponent<BulletBehaviorNet>().TravelSpeed;
                     spawnedBullet.gameObject.GetComponent<BulletBehaviorNet>().bulletOwner = player.gameObject;
@@ -136,7 +140,7 @@ public class EMPPistolNet : MonoBehaviour
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            var newMaxAmmo = player.GetComponent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
             contact = true;
@@ -148,7 +152,7 @@ public class EMPPistolNet : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     public void Rescale()

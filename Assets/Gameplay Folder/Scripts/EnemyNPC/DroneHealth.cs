@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,12 +22,19 @@ public class DroneHealth : MonoBehaviour
 
     public string type;
 
+    public GameObjectPoolManager PoolManager;
+
     void OnEnable()
     {
         enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
         InvokeRepeating("RandomSFX", 15, 20f);
         explosionEffect.SetActive(false);
         alive = true;
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
     }
 
     public static class GlobalSpeedManager
@@ -74,7 +82,7 @@ public class DroneHealth : MonoBehaviour
         SpawnLoot();
         if (agent != null)
             enemyCounter.UpdateSecurity();
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     private void SpawnLoot()
@@ -82,7 +90,7 @@ public class DroneHealth : MonoBehaviour
         foreach (Transform t in lootSpawn)
         {
             GameObject drop = Random.Range(0, 100f) < xpDropRate ? xpDropExtra : xpDrop;
-            GameObject loot = Instantiate(drop, t.position, Quaternion.identity);
+            GameObject loot = this.PoolManager.Acquire(drop, t.position, Quaternion.identity);
             loot.GetComponent<Rigidbody>().isKinematic = false;
             if(GetComponent<Drone>() != null)
                 loot.GetComponent<FactionCard>().faction = GetComponent<Drone>().chosenFaction;

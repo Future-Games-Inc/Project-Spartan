@@ -1,3 +1,4 @@
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class StickyBullet : MonoBehaviour
@@ -13,6 +14,17 @@ public class StickyBullet : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip clip;
+    public GameObjectPoolManager PoolManager;
+
+    private void OnEnable()
+    {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -23,11 +35,11 @@ public class StickyBullet : MonoBehaviour
             // Create sticky surface on wall
             if (!other.CompareTag("Enemy") || !other.CompareTag("Security") || !other.CompareTag("Player") || !other.CompareTag("BossEnemy"))
             {
-                GameObject stickySurface = Instantiate(stickySurfacePrefab, other.ClosestPoint(transform.position), Quaternion.identity);
+                GameObject stickySurface = this.PoolManager.Acquire(stickySurfacePrefab, other.ClosestPoint(transform.position), Quaternion.identity);
             }
 
             // Destroy bullet
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 }

@@ -43,12 +43,15 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip jumpClip;
 
+    public PlayerHealth player;
+    public bool canMove;
+
     // Start is called before the first frame update
     void OnEnable()
     {
         character = GetComponent<CharacterController>();
         currentSpeed = PlayerPrefs.HasKey("PLAYER_SPEED") && PlayerPrefs.GetInt("PLAYER_SPEED") >= 1
-            ? minSpeed + ((int)(PlayerPrefs.GetInt("PLAYER_SPEED") /10)) : minSpeed;
+            ? minSpeed + ((int)(PlayerPrefs.GetInt("PLAYER_SPEED") / 10)) : minSpeed;
 
         playerCamera = rig.Camera.GetComponent<Camera>();
     }
@@ -56,35 +59,46 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
-        device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
+        if (player == null)
+            canMove = true;
+        else
+            canMove = (player.activeState != PlayerHealth.States.Shocked);
 
-        InputDevice jumpButton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
-        jumpButton.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
+        if (canMove)
+        {
+            InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
+            device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
+
+            InputDevice jumpButton = InputDevices.GetDeviceAtXRNode(right_HandButtonSource);
+            jumpButton.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonPressed);
+        }
     }
 
     private void FixedUpdate()
     {
-        CapsuleFollowHeadset();
-
-        Quaternion headYaw = Quaternion.Euler(0, y: rig.Camera.transform.eulerAngles.y, 0);
-
-        Vector3 direction = headYaw * new Vector3(inputAxis.x, 0, inputAxis.y);
-        character.Move(direction * Time.fixedDeltaTime * currentSpeed);
-
-        isGrounded = CheckIfGrounded();
-        if (isGrounded)
+        if (canMove)
         {
-            fallingSpeed = 0;
-            isJumping = false;
+            CapsuleFollowHeadset();
+
+            Quaternion headYaw = Quaternion.Euler(0, y: rig.Camera.transform.eulerAngles.y, 0);
+
+            Vector3 direction = headYaw * new Vector3(inputAxis.x, 0, inputAxis.y);
+            character.Move(direction * Time.fixedDeltaTime * currentSpeed);
+
+            isGrounded = CheckIfGrounded();
+            if (isGrounded)
+            {
+                fallingSpeed = 0;
+                isJumping = false;
+            }
+            else
+            {
+                //Gravity
+                fallingSpeed += gravity * Time.fixedDeltaTime;
+                character.Move(Vector3.up * fallingSpeed * Time.fixedDeltaTime);
+            }
+            handleJumping();
         }
-        else
-        {
-            //Gravity
-            fallingSpeed += gravity * Time.fixedDeltaTime;
-            character.Move(Vector3.up * fallingSpeed * Time.fixedDeltaTime);
-        }
-        handleJumping();
     }
 
     void CapsuleFollowHeadset()
@@ -129,8 +143,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Boost(float buff)
     {
-        currentSpeed *= buff;
-        accelerationTime = 0.25f;
+        if (canMove)
+        {
+            currentSpeed *= buff;
+            accelerationTime = 0.25f;
+        }
     }
 
     public void ResetBoost(float buff)

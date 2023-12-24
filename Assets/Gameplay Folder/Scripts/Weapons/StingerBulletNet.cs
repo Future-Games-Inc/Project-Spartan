@@ -25,12 +25,16 @@ public class StingerBulletNet : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip clip;
 
+    public GameObjectPoolManager PoolManager;
 
     private void OnEnable()
     {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
         StartCoroutine(ExplodeBullets());
-        
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -49,7 +53,7 @@ public class StingerBulletNet : MonoBehaviour
     {
         if (playerBullet == true)
         {
-            playerHealth = bulletOwner.GetComponentInParent<PlayerHealth>();
+            playerHealth = bulletOwner.GetComponent<PlayerHealth>();
             bulletModifier = playerHealth.bulletModifier;
         }
         else
@@ -64,25 +68,29 @@ public class StingerBulletNet : MonoBehaviour
             //cal it at random probability
             if (Random.Range(0, 100f) < criticalChance)
             {
-                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-                if (enemyDamageCrit.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
+                if (enemyDamageCrit != null)
                 {
-                    playerHealth.EnemyKilled("Normal");
+                    if (enemyDamageCrit.Health <= (15 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                    {
+                        playerHealth.EnemyKilled("Normal");
+                    }
+                    enemyDamageCrit.TakeDamage((15 * bulletModifier));
                 }
-                enemyDamageCrit.TakeDamage((30 * bulletModifier));
-                Explode();
             }
             else
             {
-                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-                if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
+                if (enemyDamageCrit != null)
                 {
-                    playerHealth.EnemyKilled("Normal");
+                    if (enemyDamageCrit.Health <= (10 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                    {
+                        playerHealth.EnemyKilled("Normal");
+                    }
+                    enemyDamageCrit.TakeDamage((10 * bulletModifier));
                 }
-                enemyDamageCrit.TakeDamage((20 * bulletModifier));
-                Explode();
             }
-
+            Explode();
         }
 
         if (other.CompareTag("BossEnemy"))
@@ -92,25 +100,29 @@ public class StingerBulletNet : MonoBehaviour
             //cal it at random probability
             if (Random.Range(0, 100f) < criticalChance)
             {
-                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-                if (enemyDamageCrit.Health <= (30 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
+                if (enemyDamageCrit != null)
                 {
-                    playerHealth.EnemyKilled("Boss");
+                    if (enemyDamageCrit.Health <= (10 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                    {
+                        playerHealth.EnemyKilled("Boss");
+                    }
+                    enemyDamageCrit.TakeDamage((10 * bulletModifier));
                 }
-                enemyDamageCrit.TakeDamage((30 * bulletModifier));
-                Explode();
             }
             else
             {
-                FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-                if (enemyDamageCrit.Health <= (20 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
+                if (enemyDamageCrit != null)
                 {
-                    playerHealth.EnemyKilled("Boss");
+                    if (enemyDamageCrit.Health <= (5 * bulletModifier) && enemyDamageCrit.alive == true && playerHealth != null)
+                    {
+                        playerHealth.EnemyKilled("Boss");
+                    }
+                    enemyDamageCrit.TakeDamage((5 * bulletModifier));
                 }
-                enemyDamageCrit.TakeDamage((20 * bulletModifier));
-                Explode();
             }
-
+            Explode();
         }
 
         else if (other.CompareTag("Security"))
@@ -121,29 +133,32 @@ public class StingerBulletNet : MonoBehaviour
             if (Random.Range(0, 100f) < criticalChance)
             {
                 //critical hit here
-                DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
+                DroneHealth enemyDamageCrit = other.GetComponentInParent<DroneHealth>();
                 if (enemyDamageCrit != null)
-                    enemyDamageCrit.TakeDamage((40 * bulletModifier));
+                    enemyDamageCrit.TakeDamage((15 * bulletModifier));
                 else
                 {
                     SentryDrone enemyDamageCrit2 = other.GetComponent<SentryDrone>();
-                    enemyDamageCrit2.TakeDamage(40 * bulletModifier);
+                    if (enemyDamageCrit2 != null)
+                        enemyDamageCrit2.TakeDamage(15 * bulletModifier);
                 }
                 Explode();
             }
 
             else
             {
-                DroneHealth enemyDamage = other.GetComponent<DroneHealth>();
+                DroneHealth enemyDamage = other.GetComponentInParent<DroneHealth>();
                 if (enemyDamage != null)
-                    enemyDamage.TakeDamage((30 * bulletModifier));
+                    enemyDamage.TakeDamage((10 * bulletModifier));
                 else
                 {
-                    SentryDrone enemyDamage2 = other.GetComponent<SentryDrone>();
-                    enemyDamage2.TakeDamage(30 * bulletModifier);
+                    SentryDrone enemyDamage2 = other.GetComponentInParent<SentryDrone>();
+                    if (enemyDamage2 != null)
+                        enemyDamage2.TakeDamage(10 * bulletModifier);
                 }
                 Explode();
             }
+            Explode();
         }
 
         else if (other.CompareTag("Tower"))
@@ -152,7 +167,8 @@ public class StingerBulletNet : MonoBehaviour
             {
                 //critical hit here
                 ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
-                reactorcover.TakeDamage(5 * bulletModifier);
+                if (reactorcover != null)
+                    reactorcover.TakeDamage(10 * bulletModifier);
             }
             Explode();
         }
@@ -173,14 +189,14 @@ public class StingerBulletNet : MonoBehaviour
         // Create smaller bullets and target nearby enemies
         for (int i = 0; i < numSmallBullets; i++)
         {
-            GameObject smallBullet = Instantiate(smallBulletPrefab, transform.position, Quaternion.identity);
-            smallBullet.GetComponent<StingerBulletMiniNet>().audioSource.PlayOneShot(smallBullet.GetComponent<StingerBulletMiniNet>().clip);
-            smallBullet.transform.forward = Random.insideUnitSphere;
-            smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
-            smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().playerBullet = true;
             Collider[] targets = Physics.OverlapSphere(transform.position, smallBulletTargetRadius);
             if (targets.Length > 0)
             {
+                GameObject smallBullet = this.PoolManager.Acquire(smallBulletPrefab, transform.position, Quaternion.identity);
+                smallBullet.GetComponent<StingerBulletMiniNet>().audioSource.PlayOneShot(smallBullet.GetComponent<StingerBulletMiniNet>().clip);
+                smallBullet.transform.forward = Random.insideUnitSphere;
+                smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().bulletOwner = bulletOwner.gameObject;
+                smallBullet.gameObject.GetComponent<StingerBulletMiniNet>().playerBullet = true;
                 Transform target = targets[Random.Range(0, targets.Length)].transform;
                 smallBullet.GetComponent<StingerBulletMiniNet>().SetTarget(target, smallBulletLifetime);
             }
@@ -188,6 +204,6 @@ public class StingerBulletNet : MonoBehaviour
 
         // Create explosion effect and destroy bullet
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

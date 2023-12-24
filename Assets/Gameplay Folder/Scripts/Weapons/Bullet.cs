@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -9,11 +10,15 @@ public class Bullet : MonoBehaviour
     public int bulletModifier;
     public AudioSource audioSource;
     public AudioClip clip;
-
+    public GameObjectPoolManager PoolManager;
 
     // Start is called before the first frame update
     void OnEnable()
     {
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
 
 
         StartCoroutine(DestroyBullet());
@@ -73,7 +78,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage.TakeDamage(bulletModifier);
                 }
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("Enemy") && playerHealth == null)
@@ -93,7 +98,7 @@ public class Bullet : MonoBehaviour
                 FollowAI enemyDamage = other.GetComponentInParent<FollowAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("Reinforcements") && playerHealth == null)
@@ -113,7 +118,7 @@ public class Bullet : MonoBehaviour
                 ReinforcementAI enemyDamage = other.GetComponentInParent<ReinforcementAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("Reinforcements") && playerHealth != null)
@@ -133,7 +138,7 @@ public class Bullet : MonoBehaviour
                 ReinforcementAI enemyDamage = other.GetComponentInParent<ReinforcementAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("BossEnemy") && playerHealth != null)
@@ -171,7 +176,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage.TakeDamage(bulletModifier);
                 }
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("BossEnemy") && playerHealth == null)
@@ -191,7 +196,7 @@ public class Bullet : MonoBehaviour
                 FollowAI enemyDamage = other.GetComponentInParent<FollowAI>();
                 enemyDamage.TakeDamage(bulletModifier);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("Security") && playerHealth != null)
@@ -218,7 +223,7 @@ public class Bullet : MonoBehaviour
                     SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
                     enemyDamageCrit2.TakeDamage(10 * bulletModifier);
                 }
-                Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
 
             else
@@ -240,7 +245,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage2.TakeDamage(bulletModifier);
                 }
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         else if (other.CompareTag("Security") && playerHealth == null)
@@ -276,7 +281,7 @@ public class Bullet : MonoBehaviour
                     enemyDamage2.TakeDamage(bulletModifier);
                 }
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
 
@@ -298,7 +303,7 @@ public class Bullet : MonoBehaviour
                     PlayerHealth playerDamage = other.GetComponentInParent<PlayerHealth>();
                     playerDamage.TakeDamage(bulletModifier);
                 }
-                Destroy(gameObject);
+                this.PoolManager.Release(gameObject);
             }
         }
 
@@ -310,18 +315,18 @@ public class Bullet : MonoBehaviour
                 ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
                 reactorcover.TakeDamage(5 * bulletModifier);
             }
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
     IEnumerator DestroyBullet()
     {
         yield return new WaitForSeconds(5);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
     IEnumerator DestroyBulletCollision()
     {
         yield return new WaitForSeconds(0.05f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Photon.Pun;
 
 public class PlayerNameInput : MonoBehaviour
 {
@@ -40,7 +39,6 @@ public class PlayerNameInput : MonoBehaviour
     public void SavePlayerName()
     {
         string playerName = m_InputField.text;
-        PhotonNetwork.NickName = playerName;
         PlayerPrefs.SetString(PlayerPrefsNameKey, playerName);
     }
 }

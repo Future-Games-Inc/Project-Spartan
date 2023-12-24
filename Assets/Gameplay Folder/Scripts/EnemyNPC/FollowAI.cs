@@ -82,7 +82,7 @@ public class FollowAI : MonoBehaviour
         DetectRangeStart = DetectRange;
         AttackRangeStart = AttackRange;
         AgroRangeStart = AgroRange;
-        InvokeRepeating("RandomSFX", 15, 20);
+        InvokeRepeating("RandomSFX", 60, 300);
         animator = GetComponent<Animator>();
         hitbox.ApplyTagRecursively(gameObject.transform);
         ragdoll.SetUp();
@@ -360,35 +360,30 @@ public class FollowAI : MonoBehaviour
             fireReady = false;
 
         transform.LookAt(targetTransform);
-        if (IsLineOfSightClear(targetTransform))
-        {
-            gun.SetActive(true);
-            attackWeapon.fireWeaponBool = true;
-        }
+        gun.SetActive(true);
+        attackWeapon.fireWeaponBool = true;
         // else logic is handled by the Update method now.
     }
 
     private bool IsLineOfSightClear(Transform target)
     {
         Vector3 directionToTarget = target.position - transform.position;
-
         RaycastHit hit;
         if (Physics.SphereCast(transform.position, sphereRadius, directionToTarget, out hit, AttackRange, obstacleMask))
         {
-            // Debugging line
-            if (hit.collider != null)
-            {
-                // More debugging
-                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                    || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
-                    || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                    || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
-                    || hit.collider.gameObject.CompareTag("Untagged"))
-                {
-                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
-                        return true;
-                }
-            }
+            // Check for PlayerHealth in the hit object and its parents
+            return CheckForPlayerHealthInHierarchy(hit.collider.gameObject);
+        }
+        return false;
+    }
+
+    private bool CheckForPlayerHealthInHierarchy(GameObject obj)
+    {
+        while (obj != null)
+        {
+            if (obj.GetComponent<PlayerHealth>() != null)
+                return true;
+            obj = obj.transform.parent?.gameObject;
         }
         return false;
     }

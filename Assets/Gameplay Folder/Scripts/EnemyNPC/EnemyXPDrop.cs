@@ -1,6 +1,7 @@
 using UnityEngine;
 using BNG;
 using System.Collections;
+using Umbrace.Unity.PurePool;
 
 public class EnemyXPDrop : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class EnemyXPDrop : MonoBehaviour
     public MatchEffects matchEffects;
     public bool active = true;
 
+    public GameObjectPoolManager PoolManager;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -33,6 +35,11 @@ public class EnemyXPDrop : MonoBehaviour
                 break;
         }
         StartCoroutine(NoContact());
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
     }
 
     IEnumerator NoContact()
@@ -40,7 +47,7 @@ public class EnemyXPDrop : MonoBehaviour
         yield return new WaitForSeconds(10);
         if (contact == false)
         {
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -87,7 +94,7 @@ public class EnemyXPDrop : MonoBehaviour
                 case "Health":
                     spawnManager.UpdateHealthCount();
                     playerHealth.AddHealth(pickupData.healthAmount);
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "EMP":
@@ -106,31 +113,31 @@ public class EnemyXPDrop : MonoBehaviour
                             enemyDamageCrit.EMPShock();
                         }
                     }
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "toxicDrop":
                     playerHealth.Toxicity(pickupData.toxicAmount);
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "bulletModifier":
                     playerHealth.BulletImprove(pickupData.bulletModifierDamage, pickupData.bulletModifierCount);
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "Shield":
                     playerHealth.AddArmor(pickupData.armorAmount);
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 case "CUAHack":
                     matchEffects.AddTime(30);
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
 
                 default:
-                    Destroy(gameObject);
+                    this.PoolManager.Release(gameObject);
                     break;
             }
         }
@@ -188,6 +195,6 @@ public class EnemyXPDrop : MonoBehaviour
     IEnumerator DelayDestroy()
     {
         yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

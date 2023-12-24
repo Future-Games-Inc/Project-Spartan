@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 using TMPro;
-using System;
 
-public class PlayerNameTag : MonoBehaviourPun
+
+public class PlayerNameTag : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI playerTag;
 
@@ -13,17 +10,12 @@ public class PlayerNameTag : MonoBehaviourPun
     // Start is called before the first frame update
     private void Start()
     {
-        if (photonView.IsMine)
-        {
-            return;
-        }
-
         SetName();
     }
 
     // Update is called once per frame
     private void SetName()
     {
-        playerTag.text = photonView.Owner.NickName;
+        playerTag.text = PlayerPrefs.GetString("Nickname");
     }
 }

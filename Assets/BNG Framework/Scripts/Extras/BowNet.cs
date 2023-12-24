@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace BNG {
 
@@ -95,8 +97,15 @@ namespace BNG {
         public GameObject explosionObject;
         public Text arrowLeft;
 
+        public GameObjectPoolManager PoolManager;
+
         void OnEnable() 
         {
+            if (this.PoolManager == null)
+            {
+                this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+            }
+
             currentArrows = maxArrows;
             initialKnockPosition = ArrowKnock.localPosition;
             bowGrabbable = GetComponent<Grabbable>();
@@ -146,7 +155,7 @@ namespace BNG {
 
             // Grab an arrow by holding trigger in grab area
             if (canGrabArrowFromKnock() && currentArrows >0) {
-                GameObject arrow = Instantiate(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity);
+                GameObject arrow = this.PoolManager.Acquire(ArrowPrefabName, ArrowKnock.transform.position, Quaternion.identity);
                 arrow.transform.LookAt(getArrowRest());
 
                 // Use trigger when grabbing from knock
@@ -198,7 +207,7 @@ namespace BNG {
             yield return new WaitForSeconds(.5f);
             explosionObject.SetActive(true);
             yield return new WaitForSeconds(.5f);
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
 
         private void OnTriggerEnter(Collider other)

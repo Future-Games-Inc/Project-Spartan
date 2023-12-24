@@ -196,6 +196,11 @@ public class PlayerHealth : MonoBehaviour
 
     public bool alerted = false;
 
+    void Start()
+    {
+        PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
+        StartCoroutine(voice.VoiceOvers(faction, 5));
+    }
 
     // Start is called before the first frame update
     void OnEnable()
@@ -317,8 +322,6 @@ public class PlayerHealth : MonoBehaviour
 
         UpdatePrimaryText();
         UpdateSecondaryText();
-        PlayerVoiceover voice = GetComponent<PlayerVoiceover>();
-        StartCoroutine(voice.VoiceOvers(faction, 5));
     }
 
     void UpdateSecondaryText()

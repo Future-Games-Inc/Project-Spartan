@@ -3,11 +3,12 @@ using UnityEngine;
 using LootLocker.Requests;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class TopReactsLeaderboard : MonoBehaviour
 {
     public string leaderboardID = "react_leaderboard";
-    public string leaderboardID2 = "faction_leaders";
+    public string leaderboardID2 = "faction_leader";
     public string leaderboardID3 = "react_kills";
     public string progressionKey = "cent_prog";
 
@@ -123,6 +124,7 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator FetchTopHighScores()
     {
+        yield return new WaitForSeconds(1f);
         bool done = false;
         LootLockerSDKManager.GetScoreList(leaderboardID3, 5, 0, (response) =>
         {
@@ -162,6 +164,7 @@ public class TopReactsLeaderboard : MonoBehaviour
 
     public IEnumerator FetchFactionLeaderboard()
     {
+        yield return new WaitForSeconds(1f);
         bool done = false;
         LootLockerSDKManager.GetScoreList(leaderboardID2, 4, 0, (response) =>
         {
@@ -208,7 +211,10 @@ public class TopReactsLeaderboard : MonoBehaviour
             currentLevelInt = (int)response.step;
             nextLevel.text = (response.step + 1).ToString();
             currentXPText.text = response.points + " / " + (response.step * 100);
-            levelSlider.maxValue = (float)(response.next_threshold);
+            if (response.success)
+                levelSlider.maxValue = (float)(response.next_threshold);
+            else
+                levelSlider.maxValue = 100;
 
             if (levelSlider.value == levelSlider.maxValue)
             {
@@ -217,15 +223,28 @@ public class TopReactsLeaderboard : MonoBehaviour
             }
             else
             {
-                levelSlider.maxValue = (float)(response.next_threshold);
+                if (response.success)
+                    levelSlider.maxValue = (float)(response.next_threshold);
+                else
+                    levelSlider.maxValue = 100;
                 levelSlider.value = (float)response.points;
             }
         });
+        if (currentLevelInt < 5)
+        {
+            PlayerPrefs.SetInt("BossQuest", 0);
+            PlayerPrefs.SetInt("BombQuest", 0);
+            PlayerPrefs.SetInt("ArtifactQuest", 0);
+            PlayerPrefs.SetInt("IntelQuest", 0);
+            PlayerPrefs.SetInt("GuardianQuest", 0);
+            PlayerPrefs.SetInt("CollectorQuest", 0);
+        }
         StartCoroutine(SetScore());
     }
 
     public IEnumerator SetScore()
     {
+        yield return new WaitForSeconds(1f);
         if (PlayerPrefs.HasKey("EnemyKills"))
         {
             LootLockerSDKManager.SubmitScore(WhiteLabelManager.playerID, PlayerPrefs.GetInt("EnemyKills"), leaderboardID3, (response) =>

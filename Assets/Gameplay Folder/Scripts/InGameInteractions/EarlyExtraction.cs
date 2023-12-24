@@ -29,6 +29,9 @@ public class EarlyExtraction : MonoBehaviour
         // Use Time.unscaledDeltaTime for consistent behavior
         float deltaTime = Time.unscaledDeltaTime;
 
+        if (waitTime <= 0)
+            waitTime = 0;
+
         if (isHolding)
         {
             holdTime += deltaTime;

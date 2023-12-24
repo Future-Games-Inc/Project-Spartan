@@ -1,5 +1,4 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.VFX;
 
 public class SpawnShieldRipples : MonoBehaviour
@@ -27,6 +26,6 @@ public class SpawnShieldRipples : MonoBehaviour
 
         Destroy(ripples, 2);
         if (co.gameObject.CompareTag("EnemyBullet"))
-            PhotonNetwork.Destroy(co.gameObject);
+            Destroy(co.gameObject);
     }
 }

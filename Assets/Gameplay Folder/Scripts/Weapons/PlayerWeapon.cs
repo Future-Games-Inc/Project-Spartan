@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using Umbrace.Unity.PurePool;
-using static Oni;
 
 public class PlayerWeapon : MonoBehaviour
 {
@@ -29,12 +28,16 @@ public class PlayerWeapon : MonoBehaviour
     public bool isFiring = false;
     public bool contact;
 
+    public GameObjectPoolManager PoolManager;
+
     // Start is called before the first frame update
     public void OnEnable()
     {
-        
-
-        durability = 5;
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+            durability = 5;
         rotatorScript = GetComponent<Rotator>();
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
@@ -47,7 +50,7 @@ public class PlayerWeapon : MonoBehaviour
         yield return new WaitForSeconds(10);
         if (contact == false)
         {
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -83,10 +86,10 @@ public class PlayerWeapon : MonoBehaviour
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = Instantiate(bullet, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
-                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponentInParent<PlayerHealth>().bulletModifier;
+                    spawnedBullet.GetComponent<Bullet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
                     spawnedBullet.gameObject.GetComponent<Bullet>().bulletOwner = player.gameObject;
                     spawnedBullet.gameObject.GetComponent<Bullet>().playerBullet = true;
                 }
@@ -100,13 +103,12 @@ public class PlayerWeapon : MonoBehaviour
     IEnumerator ReloadWeapon()
     {
         StopFireBullet();
+        durability--;
         ammoText.gameObject.SetActive(false);
         reloadingScreen.SetActive(true);
         audioSource.PlayOneShot(weaponReload);
 
         yield return new WaitForSeconds(2f);
-
-        durability--;
 
         ammoLeft = maxAmmo;
         UpdateText();
@@ -121,7 +123,7 @@ public class PlayerWeapon : MonoBehaviour
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            var newMaxAmmo = player.GetComponent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
             contact = true;
@@ -133,7 +135,7 @@ public class PlayerWeapon : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(.5f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     void UpdateText()

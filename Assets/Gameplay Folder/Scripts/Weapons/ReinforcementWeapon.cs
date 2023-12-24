@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class ReinforcementWeapon : MonoBehaviour
@@ -19,6 +20,8 @@ public class ReinforcementWeapon : MonoBehaviour
     public int bulletModifier;
 
     public ReinforcementAI aiScript;
+    public GameObjectPoolManager PoolManager;
+
     public enum EnemyType
     {
         Enemy,
@@ -33,6 +36,11 @@ public class ReinforcementWeapon : MonoBehaviour
 
         aiScript = GetComponent<ReinforcementAI>();
         StartCoroutine(Fire());
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
     }
 
     IEnumerator Fire()
@@ -49,7 +57,7 @@ public class ReinforcementWeapon : MonoBehaviour
                 else if (canShoot)
                 {
                     yield return new WaitForSeconds(0.25f);
-                    GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = bulletModifier;
                     spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce;
                     ammoLeft--;

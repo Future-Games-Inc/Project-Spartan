@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using LootLocker.Requests;
+using Umbrace.Unity.PurePool;
 
 public class MatchEffects : MonoBehaviour
 {
@@ -51,6 +52,17 @@ public class MatchEffects : MonoBehaviour
 
     public int level;
 
+    public GameObjectPoolManager PoolManager;
+
+    private void Awake()
+    {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -82,8 +94,10 @@ public class MatchEffects : MonoBehaviour
 
     IEnumerator MissionIntro()
     {
-        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
-        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+        yield return new WaitForSeconds(1f);
+
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerVoiceover>();
 
         yield return new WaitForSeconds(matchCountdown + 60);
         if (SceneManager.GetActiveScene().name == "Playground")
@@ -100,8 +114,8 @@ public class MatchEffects : MonoBehaviour
 
     public void StartMission()
     {
-        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
-        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerVoiceover>();
 
         if (SceneManager.GetActiveScene().name == "Playground")
         {
@@ -120,8 +134,8 @@ public class MatchEffects : MonoBehaviour
 
     public void MissionStep2()
     {
-        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
-        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerVoiceover>();
 
         if (SceneManager.GetActiveScene().name == "Playground")
         {
@@ -138,8 +152,8 @@ public class MatchEffects : MonoBehaviour
 
     public void MissionEnd()
     {
-        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
-        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+        PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerVoiceover>();
 
         if (SceneManager.GetActiveScene().name == "Playground")
         {
@@ -273,8 +287,8 @@ public class MatchEffects : MonoBehaviour
 
         if (currentExtractionTimer == 45)
         {
-            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerHealth>();
-            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerVoiceover>();
+            PlayerHealth player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+            PlayerVoiceover voice = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerVoiceover>();
 
             StartCoroutine(voice.VoiceOvers(player.faction, 0));
         }

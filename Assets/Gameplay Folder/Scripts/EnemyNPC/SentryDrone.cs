@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
@@ -61,7 +62,7 @@ public class SentryDrone : MonoBehaviour
 
     public bool hit;
 
-    public float sphereRadius = 0.5f;
+    public GameObjectPoolManager PoolManager;
 
 
     public enum States
@@ -92,6 +93,11 @@ public class SentryDrone : MonoBehaviour
         alive = true;
         timer = wanderTimer;
         StartCoroutine(Fire());
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
     }
 
     public void FindClosestEnemy()
@@ -209,26 +215,26 @@ public class SentryDrone : MonoBehaviour
             return false;
 
         Vector3 directionToTarget = (playerPOS.position - transform.position).normalized;
-        if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
-            return false;
+        //if (Vector3.Angle(transform.forward, directionToTarget) > 110 / 2f)
+        //    return false;
+
 
         RaycastHit hit;
-        if (Physics.SphereCast(transform.position,sphereRadius, directionToTarget, out hit, AttackRange, obstacleMask))
+        if (Physics.Raycast(transform.position, directionToTarget, out hit, AttackRange, obstacleMask))
         {
-            // Debugging line
-            if (hit.collider != null)
-            {
-                // More debugging
-                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                    || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
-                    || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                    || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
-                    || hit.collider.gameObject.CompareTag("Untagged"))
-                {
-                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
-                        return true;
-                }
-            }
+            // Check for PlayerHealth in the hit object and its parents
+            return CheckForPlayerHealthInHierarchy(hit.collider.gameObject);
+        }
+        return false;
+    }
+
+    private bool CheckForPlayerHealthInHierarchy(GameObject obj)
+    {
+        while (obj != null)
+        {
+            if (obj.GetComponent<PlayerHealth>() != null)
+                return true;
+            obj = obj.transform.parent?.gameObject;
         }
         return false;
     }
@@ -261,7 +267,7 @@ public class SentryDrone : MonoBehaviour
 
     IEnumerator Fire()
     {
-        while (gameObject.activeSelf)
+        while (alive)
         {
             if (isFiring)
             {
@@ -273,12 +279,12 @@ public class SentryDrone : MonoBehaviour
                 else if (CheckForPlayer())
                 {
                     yield return new WaitForSeconds(0.25f);
-                    GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce * GlobalSpeedManager.SpeedMultiplier;
                     ammoLeft--;
                 }
             }
-            yield return new WaitForSeconds(Random.Range(2.5f, 5f));
+            yield return new WaitForSeconds(Random.Range(1f, 3f));
         }
     }
 
@@ -330,18 +336,18 @@ public class SentryDrone : MonoBehaviour
             xpDropRate = 10f;
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                GameObject DropExtra = Instantiate(xpDropExtra, t.position, Quaternion.identity);
+                GameObject DropExtra = this.PoolManager.Acquire(xpDropExtra, t.position, Quaternion.identity);
                 DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
             {
-                GameObject DropNormal = Instantiate(xpDrop, t.position, Quaternion.identity);
+                GameObject DropNormal = this.PoolManager.Acquire(xpDrop, t.position, Quaternion.identity);
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
 
         //yield return new WaitForSeconds(.75f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     public void RandomSFX()

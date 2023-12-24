@@ -1,9 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using PathologicalGames;
 using Umbrace.Unity.PurePool;
-using static Oni;
 
 public class StingerShotgun : MonoBehaviour
 {
@@ -36,11 +34,17 @@ public class StingerShotgun : MonoBehaviour
     public GameObject bullet;
 
     public bool contact;
+    public GameObjectPoolManager PoolManager;
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
         durability = 5;
         reloadingScreen.SetActive(false);
         ammoLeft = maxAmmo;
@@ -53,7 +57,7 @@ public class StingerShotgun : MonoBehaviour
         yield return new WaitForSeconds(10);
         if (contact == false)
         {
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
         }
     }
 
@@ -100,7 +104,7 @@ public class StingerShotgun : MonoBehaviour
             {
                 foreach (Transform t in spawnPoint)
                 {
-                    GameObject spawnedBullet = Instantiate(bullet, t.position, Quaternion.identity);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, t.position, Quaternion.identity);
                     spawnedBullet.GetComponent<StingerBulletNet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<StingerBulletNet>().clip);
                     spawnedBullet.GetComponent<Rigidbody>().velocity = t.forward * fireSpeed;
                     spawnedBullet.GetComponent<StingerBulletNet>().bulletModifier = player.GetComponent<PlayerHealth>().bulletModifier;
@@ -136,7 +140,7 @@ public class StingerShotgun : MonoBehaviour
         if (other.CompareTag("LeftHand") || other.CompareTag("RightHand"))
         {
             player = other.transform.root.gameObject;
-            var newMaxAmmo = player.GetComponentInParent<PlayerHealth>().maxAmmo + maxAmmo;
+            var newMaxAmmo = player.GetComponent<PlayerHealth>().maxAmmo + maxAmmo;
             maxAmmo = newMaxAmmo;
             rotatorScript.enabled = false;
             contact = true;
@@ -148,7 +152,7 @@ public class StingerShotgun : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         explosionObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
     public void Rescale()

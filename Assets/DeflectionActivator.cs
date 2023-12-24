@@ -27,7 +27,7 @@ public class DeflectionActivator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rechargeIcon.SetActive(activated);
+        rechargeIcon.SetActive(!activated && canBeActivated);
 
         // Activate the shield if thumbstick is pressed and shield is not already activated.
         if (rightThumbstickPress.action.ReadValue<float>() >= 0.78f && !activated && canBeActivated && time == 0.0f)

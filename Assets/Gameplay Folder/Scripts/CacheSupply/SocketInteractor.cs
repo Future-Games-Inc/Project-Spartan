@@ -1,7 +1,6 @@
-using Photon.Pun;
 using UnityEngine;
 
-public class SocketInteractor : MonoBehaviourPunCallbacks
+public class SocketInteractor : MonoBehaviour
 {
     private Vector3 originalScale;
     private bool isObjectInSocket = false;
@@ -17,7 +16,7 @@ public class SocketInteractor : MonoBehaviourPunCallbacks
         {
             // Object is placed in the socket interactor
             isObjectInSocket = true;
-            photonView.RPC("RPC_Scale", RpcTarget.All, originalScale * 0.5f);
+            transform.localScale = originalScale * 0.5f;
         }
     }
 
@@ -27,13 +26,7 @@ public class SocketInteractor : MonoBehaviourPunCallbacks
         {
             // Object is removed from the socket interactor
             isObjectInSocket = false;
-            photonView.RPC("RPC_Scale", RpcTarget.All, originalScale);
+            transform.localScale = originalScale;
         }
-    }
-
-    [PunRPC]
-    void RPC_Scale(Vector3 scale)
-    {
-        transform.localScale = scale;
     }
 }

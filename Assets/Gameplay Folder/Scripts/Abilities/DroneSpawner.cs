@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class DroneSpawner : MonoBehaviourPunCallbacks
+public class DroneSpawner : MonoBehaviour
 {
     public GameObject droneModel;
     public PlayerHealth player;

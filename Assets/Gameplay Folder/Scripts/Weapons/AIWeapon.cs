@@ -28,6 +28,7 @@ public class AIWeapon : MonoBehaviour
 
     public int enemyLevel;
     public MatchEffects matchEffects;
+    public GameObjectPoolManager PoolManager;
 
     public enum EnemyType
     {
@@ -48,6 +49,11 @@ public class AIWeapon : MonoBehaviour
 
         aiScript = GetComponent<FollowAI>();
         StartCoroutine(Fire());
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+
+        }
     }
 
     IEnumerator Fire()
@@ -64,7 +70,7 @@ public class AIWeapon : MonoBehaviour
                 else if (canShoot)
                 {
                     yield return new WaitForSeconds(0.25f);
-                    GameObject spawnedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+                    GameObject spawnedBullet = this.PoolManager.Acquire(bullet, bulletTransform.position, Quaternion.identity);
                     spawnedBullet.GetComponent<Bullet>().bulletModifier = adjustedBulletModifer;
                     spawnedBullet.GetComponent<Rigidbody>().velocity = bulletTransform.forward * shootForce * GlobalSpeedManager.SpeedMultiplier;
                     ammoLeft--;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using InfimaGames.LowPolyShooterPack.Legacy;
+using System.Collections;
 using Umbrace.Unity.PurePool;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace BNG
         AudioSource impactSound;
 
         float flightTime = 0f;
-        float destroyTime = 5f; // Time in seconds to destroy arrow
+        float destroyTime = 10f; // Time in seconds to destroy arrow
         Coroutine queueDestroy;
 
         public Projectile ProjectileObject;
@@ -46,6 +47,7 @@ namespace BNG
 
         public string Type = "Default";
 
+        public GameObjectPoolManager PoolManager;
 
         public struct TargetInfo
         {
@@ -55,12 +57,17 @@ namespace BNG
         // Start is called before the first frame update
         void OnEnable()
         {
-            
+            if (this.PoolManager == null)
+            {
+                this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+            }
 
-            Targets = new TargetInfo[3];  // Initializing the array with 3 elements
+
+            Targets = new TargetInfo[4];  // Initializing the array with 3 elements
             Targets[0] = new TargetInfo { Tag = "Enemy" };  // Populating individual elements
             Targets[1] = new TargetInfo { Tag = "BossEnemy" };
             Targets[2] = new TargetInfo { Tag = "Security" };
+            Targets[2] = new TargetInfo { Tag = "ExplosiveBarrel" };
 
             rb = GetComponent<Rigidbody>();
             impactSound = GetComponent<AudioSource>();
@@ -127,7 +134,7 @@ namespace BNG
 
             if (grab != null && !grab.BeingHeld && transform.parent == null)
             {
-                Destroy(this.gameObject);
+                this.PoolManager.Release(this.gameObject);
             }
         }
 
@@ -177,7 +184,7 @@ namespace BNG
         IEnumerator Destroy(float duration)
         {
             yield return new WaitForSeconds(duration);
-            Destroy(gameObject);
+            this.PoolManager.Release(gameObject);
             // attach clip and play
             // audioSource.PlayOneShot(clip);
         }
@@ -267,103 +274,87 @@ namespace BNG
             {
                 playerHealth = arrowOwner.GetComponentInParent<PlayerHealth>();
             }
+            // select custom functions for damage
+            DefaultDamageEnemy(other, arrowDamage);
 
-            if ((other.CompareTag("Enemy")))
-            {
-                // select custom functions for damage
-                DefaultDamageEnemy(other, arrowDamage);
-            }
-
-            else if ((other.CompareTag("Reinforcements")))
-            {
-                // select custom functions for damage
-                DefaultDamageReinforcements(other, arrowDamage);
-            }
-
-            else if ((other.CompareTag("BossEnemy")))
-            {
-                // select custom functions for damage
-                DefaultDamageBossEnemy(other, arrowDamage);
-            }
-
-            else if (other.CompareTag("Security"))
-            {
-                // select custom functions for damage
-                DefaultDamageSecurity(other, arrowDamage);
-            }
             /// <summary> -------------------------------------------------------------------
             ///                           CUSTOME BULLET FUNCTIONS
             /// </summary> -------------------------------------------------------------------
             void DefaultDamageEnemy(Collider target, float arrowDamage)
             {
-                FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
-                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.EnemyKilled("Normal");
-                    enemyDamageReg.TakeDamage((int)arrowDamage);
-                }
-                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    enemyDamageReg.TakeDamage((int)arrowDamage);
-                }
-                if (Type == "Default")
-                    Destroy(gameObject);
-            }
-
-            void DefaultDamageReinforcements(Collider target, float arrowDamage)
-            {
-                ReinforcementAI enemyDamageReg = target.GetComponent<ReinforcementAI>();
-                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    enemyDamageReg.TakeDamage((int)arrowDamage);
-                }
-                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    enemyDamageReg.TakeDamage((int)arrowDamage);
-                }
-                if (Type == "Default")
-                    Destroy(gameObject);
-            }
-
-            void DefaultDamageBossEnemy(Collider target, float damage)
-            {
-                FollowAI enemyDamageReg = target.GetComponent<FollowAI>();
-                if (enemyDamageReg.Health <= (arrowDamage) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    playerHealth.EnemyKilled("Boss");
-                    enemyDamageReg.TakeDamage((int)arrowDamage);
-                }
-                else if (enemyDamageReg.Health > (10) && enemyDamageReg.alive == true && playerHealth != null)
-                {
-                    enemyDamageReg.TakeDamage((int)arrowDamage);
-                }
-                if (Type == "Default")
-                    Destroy(gameObject);
-            }
-
-            void DefaultDamageSecurity(Collider target, float damage)
-            {
-                DroneHealth enemyDamageReg = target.GetComponent<DroneHealth>();
+                FollowAI enemyDamageReg = target.GetComponentInParent<FollowAI>();
                 if (enemyDamageReg != null)
+                {
+                    int damageAmount = Mathf.Min(enemyDamageReg.Health, (int)arrowDamage);
+                    enemyDamageReg.TakeDamage(damageAmount);
+
+                    if (enemyDamageReg.Health <= 0 && playerHealth != null)
+                    {
+                        playerHealth.EnemyKilled("Normal");
+                    }
+                    if (Type == "Default")
+                        this.PoolManager.Release(gameObject);
+                }
+
+                ReinforcementAI enemyDamageReg2 = target.GetComponentInParent<ReinforcementAI>();
+                if (enemyDamageReg != null)
+                {
                     enemyDamageReg.TakeDamage((int)arrowDamage);
+                    if (Type == "Default")
+                        this.PoolManager.Release(gameObject);
+                }
+
+                FollowAI enemyDamageReg3 = target.GetComponentInParent<FollowAI>();
+                if (enemyDamageReg != null)
+                {
+                    int damageAmount = Mathf.Min(enemyDamageReg.Health, (int)arrowDamage);
+                    enemyDamageReg.TakeDamage(damageAmount);
+
+                    if (enemyDamageReg.Health <= 0 && playerHealth != null)
+                    {
+                        playerHealth.EnemyKilled("Boss");
+                    }
+                    if (Type == "Default")
+                        this.PoolManager.Release(gameObject);
+                }
+
+                DroneHealth droneHealth = target.GetComponentInParent<DroneHealth>();
+                if (droneHealth != null)
+                {
+                    droneHealth.TakeDamage((int)arrowDamage);
+                    if (Type == "Default")
+                        this.PoolManager.Release(gameObject);
+                }
                 else
                 {
-                    SentryDrone enemyDamageReg2 = other.GetComponent<SentryDrone>();
-                    enemyDamageReg2.TakeDamage((int)arrowDamage);
+                    SentryDrone sentryDrone = target.GetComponentInParent<SentryDrone>();
+                    if (sentryDrone != null)
+                    {
+                        sentryDrone.TakeDamage((int)arrowDamage);
+                        if (Type == "Default")
+                            this.PoolManager.Release(gameObject);
+                    }
                 }
-                if (Type == "Default")
-                    Destroy(gameObject);
+
+
+                ExplosiveBarrelScript explosiveBarrel = target.GetComponentInParent<ExplosiveBarrelScript>();
+                if (explosiveBarrel != null)
+                {
+                    explosiveBarrel.TakeDamage((int)arrowDamage);
+                    if (Type == "Default")
+                        Destroy(gameObject);
+                }
             }
         }
 
         int CalculateDamage(float distance)
         {
-            return Mathf.Min((int)((1f - distance / explosionRadius) * maxDamage),80);
+            return Mathf.Min((int)((1f - distance / explosionRadius) * maxDamage), 50);
         }
 
         int CalculateEMPDamage(float distance)
         {
-            return Mathf.Min((int)((1f - distance / explosionRadius) * maxEMPDamage),50);
+            return Mathf.Min((int)((1f - distance / explosionRadius) * maxEMPDamage), 40);
         }
 
         public IEnumerator ExplodeDelayed()
@@ -434,60 +425,42 @@ namespace BNG
             float distance = Vector3.Distance(transform.position, collider.transform.position);
             int damage = CalculateDamage(distance);
 
-            // Based on the tag, handle damage appropriately. This is a simplified version, extend as needed.
-            switch (target.Tag)
+            // Check and apply damage to FollowAI if it exists
+            FollowAI followAI = collider.GetComponentInParent<FollowAI>();
+            if (followAI != null)
             {
-                case "Enemy":
-                    // Handle enemy damage
-                    FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
-                    if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        playerHealth.EnemyKilled("Normal");
-                        enemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (enemyDamageCrit.Health > damage && enemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        enemyDamageCrit.TakeDamage(damage);
-                    }
-                    break;
+                followAI.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
 
-                case "Reinforcements":
-                    // Handle enemy damage
-                    ReinforcementAI enemyDamageCrit3 = collider.GetComponentInParent<ReinforcementAI>();
-                    if (enemyDamageCrit3.Health <= damage && enemyDamageCrit3.alive == true && playerHealth != null)
-                    {
-                        enemyDamageCrit3.TakeDamage(damage);
-                    }
-                    else if (enemyDamageCrit3.Health > damage && enemyDamageCrit3.alive == true && playerHealth != null)
-                    {
-                        enemyDamageCrit3.TakeDamage(damage);
-                    }
-                    break;
+            // Check and apply damage to ReinforcementAI if it exists
+            ReinforcementAI reinforcementAI = collider.GetComponentInParent<ReinforcementAI>();
+            if (reinforcementAI != null)
+            {
+                reinforcementAI.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
 
-                case "BossEnemy":
-                    // Handle boss enemy damage
-                    FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
-                    if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        playerHealth.EnemyKilled("BossEnemy");
-                        BossenemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (BossenemyDamageCrit.Health > damage && BossenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        BossenemyDamageCrit.TakeDamage(damage);
-                    }
-                    break;
-                case "Security":
-                    // Handle security damage
-                    DroneHealth DroneenemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
-                    if (DroneenemyDamageCrit != null)
-                        DroneenemyDamageCrit.TakeDamage(damage);
-                    else
-                    {
-                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
-                        SentryenemyDamageCrit2.TakeDamage(damage);
-                    }
-                    break;
+            // Check and apply damage to DroneHealth or SentryDrone if it exists
+            DroneHealth droneHealth = collider.GetComponentInParent<DroneHealth>();
+            if (droneHealth != null)
+            {
+                droneHealth.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
+
+            SentryDrone sentryDrone = collider.GetComponentInParent<SentryDrone>();
+            if (sentryDrone != null)
+            {
+                sentryDrone.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
+
+            ExplosiveBarrelScript explosiveBarrel = collider.GetComponentInParent<ExplosiveBarrelScript>();
+            if (explosiveBarrel != null)
+            {
+                explosiveBarrel.TakeDamage(damage);
+                return; // Return if damage is applied
             }
         }
 
@@ -497,62 +470,42 @@ namespace BNG
             int damage = CalculateEMPDamage(distance);
 
             // Based on the tag, handle damage appropriately. This is a simplified version, extend as needed.
-            switch (target.Tag)
+            // Check and apply damage to FollowAI if it exists
+            FollowAI followAI = collider.GetComponentInParent<FollowAI>();
+            if (followAI != null)
             {
-                case "Enemy":
-                    // Handle enemy damage
-                    FollowAI enemyDamageCrit = collider.GetComponentInParent<FollowAI>();
-                    if (enemyDamageCrit.Health <= damage && enemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        playerHealth.EnemyKilled("Normal");
-                        enemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (enemyDamageCrit.Health > damage && enemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        enemyDamageCrit.TakeDamage(damage);
-                        enemyDamageCrit.EMPShock();
-                    }
-                    break;
+                followAI.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
 
-                case "Reinforcements":
-                    // Handle enemy damage
-                    ReinforcementAI enemyDamageCrit3 = collider.GetComponentInParent<ReinforcementAI>();
-                    if (enemyDamageCrit3.Health <= damage && enemyDamageCrit3.alive == true && playerHealth != null)
-                    {
-                        enemyDamageCrit3.TakeDamage(damage);
-                    }
-                    else if (enemyDamageCrit3.Health > damage && enemyDamageCrit3.alive == true && playerHealth != null)
-                    {
-                        enemyDamageCrit3.TakeDamage(damage);
-                        enemyDamageCrit3.EMPShock();
-                    }
-                    break;
+            // Check and apply damage to ReinforcementAI if it exists
+            ReinforcementAI reinforcementAI = collider.GetComponentInParent<ReinforcementAI>();
+            if (reinforcementAI != null)
+            {
+                reinforcementAI.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
 
-                case "BossEnemy":
-                    // Handle boss enemy damage
-                    FollowAI BossenemyDamageCrit = collider.GetComponentInParent<FollowAI>();
-                    if (BossenemyDamageCrit.Health <= damage && BossenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        playerHealth.EnemyKilled("BossEnemy");
-                        BossenemyDamageCrit.TakeDamage(damage);
-                    }
-                    else if (BossenemyDamageCrit.Health > damage && BossenemyDamageCrit.alive == true && playerHealth != null)
-                    {
-                        BossenemyDamageCrit.TakeDamage(damage);
-                        BossenemyDamageCrit.EMPShock();
-                    }
-                    break;
-                case "Security":
-                    // Handle security damage
-                    DroneHealth DroneenemyDamageCrit = collider.GetComponentInParent<DroneHealth>();
-                    if (DroneenemyDamageCrit != null)
-                        DroneenemyDamageCrit.TakeDamage(damage * 2);
-                    else
-                    {
-                        SentryDrone SentryenemyDamageCrit2 = collider.GetComponentInParent<SentryDrone>();
-                        SentryenemyDamageCrit2.TakeDamage(damage * 2);
-                    }
-                    break;
+            // Check and apply damage to DroneHealth or SentryDrone if it exists
+            DroneHealth droneHealth = collider.GetComponentInParent<DroneHealth>();
+            if (droneHealth != null)
+            {
+                droneHealth.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
+
+            SentryDrone sentryDrone = collider.GetComponentInParent<SentryDrone>();
+            if (sentryDrone != null)
+            {
+                sentryDrone.TakeDamage(damage);
+                return; // Return if damage is applied
+            }
+
+            ExplosiveBarrelScript explosiveBarrel = collider.GetComponentInParent<ExplosiveBarrelScript>();
+            if (explosiveBarrel != null)
+            {
+                explosiveBarrel.TakeDamage(damage);
+                return; // Return if damage is applied
             }
         }
     }

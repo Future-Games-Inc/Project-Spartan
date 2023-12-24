@@ -18,11 +18,15 @@ public class StingerBulletMiniNet : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip clip;
 
+    public GameObjectPoolManager PoolManager;
 
     private void OnEnable()
     {
-        
-
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
     }
     public void SetTarget(Transform target, float lifetime)
     {
@@ -58,16 +62,19 @@ public class StingerBulletMiniNet : MonoBehaviour
 
         if (other.gameObject.CompareTag("Enemy"))
         {
-            FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-            if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
+            FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
+            if (enemyDamageCrit != null)
             {
-                playerHealth.EnemyKilled("Normal");
-                enemyDamageCrit.TakeDamage(10);
-            }
+                if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled("Normal");
+                    enemyDamageCrit.TakeDamage(10);
+                }
 
-            else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
-            {
-                enemyDamageCrit.TakeDamage(10);
+                else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    enemyDamageCrit.TakeDamage(10);
+                }
             }
             Explode();
             return;
@@ -75,16 +82,19 @@ public class StingerBulletMiniNet : MonoBehaviour
 
         else if (other.gameObject.CompareTag("BossEnemy"))
         {
-            FollowAI enemyDamageCrit = other.GetComponent<FollowAI>();
-            if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
+            FollowAI enemyDamageCrit = other.GetComponentInParent<FollowAI>();
+            if (enemyDamageCrit != null)
             {
-                playerHealth.EnemyKilled("Boss");
-                enemyDamageCrit.TakeDamage(10);
-            }
+                if (enemyDamageCrit.Health <= (10) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    playerHealth.EnemyKilled("Boss");
+                    enemyDamageCrit.TakeDamage(10);
+                }
 
-            else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
-            {
-                enemyDamageCrit.TakeDamage(10);
+                else if (enemyDamageCrit.Health > (10) && enemyDamageCrit.alive == true && playerHealth != null)
+                {
+                    enemyDamageCrit.TakeDamage(10);
+                }
             }
             Explode();
             return;
@@ -93,13 +103,14 @@ public class StingerBulletMiniNet : MonoBehaviour
         else if (other.CompareTag("Security"))
         {
             //critical hit here
-            DroneHealth enemyDamageCrit = other.GetComponent<DroneHealth>();
+            DroneHealth enemyDamageCrit = other.GetComponentInParent<DroneHealth>();
             if (enemyDamageCrit != null)
                 enemyDamageCrit.TakeDamage(15);
             else
             {
-                SentryDrone enemyDamageCrit2 = other.GetComponent<SentryDrone>();
-                enemyDamageCrit2.TakeDamage(15);
+                SentryDrone enemyDamageCrit2 = other.GetComponentInParent<SentryDrone>();
+                if (enemyDamageCrit != null)
+                    enemyDamageCrit2.TakeDamage(15);
             }
             Explode();
             return;
@@ -117,7 +128,8 @@ public class StingerBulletMiniNet : MonoBehaviour
             {
                 //critical hit here
                 ReactorCover reactorcover = other.GetComponentInParent<ReactorCover>();
-                reactorcover.TakeDamage(10);
+                if (reactorcover != null)
+                    reactorcover.TakeDamage(10);
             }
         }
     }
@@ -125,6 +137,6 @@ public class StingerBulletMiniNet : MonoBehaviour
     private void Explode()
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

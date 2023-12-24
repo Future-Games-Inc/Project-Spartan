@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.AI;
+using Umbrace.Unity.PurePool;
 
 public class WeaponCrate : MonoBehaviour
 {
@@ -33,6 +34,16 @@ public class WeaponCrate : MonoBehaviour
 
     public MatchEffects matchProps;
 
+    public GameObjectPoolManager PoolManager;
+
+    private void Awake()
+    {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+    }
 
 
     private void Start()
@@ -91,9 +102,9 @@ public class WeaponCrate : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         GameObject[] shuffledWeapons = ShuffleArray(weapons);
         GameObject[] shuffledPowerups = ShuffleArray(powerups);
-        Instantiate(shuffledWeapons[1], spawn1.position, spawn3.rotation);
-        Instantiate(shuffledWeapons[2], spawn3.position, spawn3.rotation);
-        Instantiate(shuffledPowerups[0], spawn2.position, spawn2.rotation);
+        this.PoolManager.Acquire(shuffledWeapons[1], spawn1.position, spawn3.rotation);
+        this.PoolManager.Acquire(shuffledWeapons[2], spawn3.position, spawn3.rotation);
+        this.PoolManager.Acquire(shuffledPowerups[0], spawn2.position, spawn2.rotation);
         yield return new WaitForSeconds(1);
         _animator.SetBool("Open", false);
         StartCoroutine(CacheRespawn());

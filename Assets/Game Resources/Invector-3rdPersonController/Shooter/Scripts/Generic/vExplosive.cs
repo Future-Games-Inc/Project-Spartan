@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 
 namespace Invector
 {
@@ -86,7 +85,7 @@ namespace Invector
         protected virtual IEnumerator DestroyBomb()
         {
             yield return new WaitForSeconds(0.1f);
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
 
         protected virtual void OnCollisionEnter(Collision collision)

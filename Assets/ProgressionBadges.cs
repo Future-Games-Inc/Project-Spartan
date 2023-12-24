@@ -10,7 +10,7 @@ public class ProgressionBadges : MonoBehaviour
     public GameObject[] badges;
     public SaveData saveData;
 
-    public GameObject awardButton;
+    //public GameObject awardButton;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +21,7 @@ public class ProgressionBadges : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        awardButton.SetActive(saveData.awarded);
+        //awardButton.SetActive(saveData.awarded);
     }
 
     public IEnumerator UpdateBadges()

@@ -43,7 +43,6 @@ public class ActivateWristUI : MonoBehaviour
         CollectorIcon.SetActive(activated);
         ArtifactIcon.SetActive(activated);
         matchEffects = GameObject.FindGameObjectWithTag("Props").GetComponent<MatchEffects>();
-        codeScreen = GameObject.FindGameObjectWithTag("Code");
         StartCoroutine(Identifier());
     }
 
@@ -102,6 +101,7 @@ public class ActivateWristUI : MonoBehaviour
 
             if (matchEffects.startMatchBool && !matchEffects.spawnReactor)
             {
+                codeScreen = GameObject.FindGameObjectWithTag("Code");
                 Vector3 pointA = this.gameObject.transform.position;
                 Vector3 pointB = codeScreen.gameObject.transform.position;
                 float distance = Vector3.Distance(pointA, pointB);

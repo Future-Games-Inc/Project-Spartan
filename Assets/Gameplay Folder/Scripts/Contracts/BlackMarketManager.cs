@@ -166,135 +166,137 @@ public class BlackMarketManager : MonoBehaviour
             }
         contractButtons.Clear();
         filteredContractIndices.Clear(); // Clear the filtered contract indices list
-
-        // Instantiate contract UI buttons for each available contract
-        for (int i = 1; i < contractData.contracts.Length; i++)
+        if (leaderboard.currentLevelInt >= 5)
         {
-            Contract contract = contractData.contracts[i];
-
-            if (leaderboard.currentLevelInt >= contract.requiredLevel && !contract.isCompleted)
+            // Instantiate contract UI buttons for each available contract
+            for (int i = 1; i < contractData.contracts.Length; i++)
             {
-                // Instantiate the contract button from the prefab and set its parent
-                Button contractButton = Instantiate(contractButtonPrefab, contractButtonParent).GetComponent<Button>();
-                contractButton.GetComponent<ContractButton>().ID = contract.ID;
+                Contract contract = contractData.contracts[i];
 
-                // Add EventTrigger component to handle pointer enter event
-                EventTrigger trigger = contractButton.gameObject.AddComponent<EventTrigger>();
-
-                // Create the entry for the pointer enter event
-                EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry();
-                pointerEnterEntry.eventID = EventTriggerType.PointerEnter;
-                pointerEnterEntry.callback.AddListener((data) => OnPointerEnterContractButton((PointerEventData)data));
-
-                // Add the pointer enter event to the EventTrigger
-                trigger.triggers.Add(pointerEnterEntry);
-
-                // Update UI elements for each contract
-                contractButton.interactable = !acceptedContracts.Contains(contract); // Enable button if not already accepted
-
-                // Set button click event to accept the contract
-                int contractIndex = contractButtons.Count; // Capture the current value of 'i'
-                contractButton.onClick.AddListener(() => AcceptContract(contractIndex));
-
-                // Update UI text for contract description
-                TextMeshProUGUI contractDescriptionText = contractButton.GetComponentInChildren<TextMeshProUGUI>();
-                contractDescriptionText.text = contract.description;
-
-                // Add the contract button to the list
-                contractButtons.Add(contractButton);
-
-                if (contract.goal.ContractType.ToString() == "BossEnemy")
+                if (leaderboard.currentLevelInt >= contract.requiredLevel && !contract.isCompleted)
                 {
-                    if (PlayerPrefs.HasKey("BossQuest") && PlayerPrefs.GetInt("BossQuestCompleted") == 0)
+                    // Instantiate the contract button from the prefab and set its parent
+                    Button contractButton = Instantiate(contractButtonPrefab, contractButtonParent).GetComponent<Button>();
+                    contractButton.GetComponent<ContractButton>().ID = contract.ID;
+
+                    // Add EventTrigger component to handle pointer enter event
+                    EventTrigger trigger = contractButton.gameObject.AddComponent<EventTrigger>();
+
+                    // Create the entry for the pointer enter event
+                    EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry();
+                    pointerEnterEntry.eventID = EventTriggerType.PointerEnter;
+                    pointerEnterEntry.callback.AddListener((data) => OnPointerEnterContractButton((PointerEventData)data));
+
+                    // Add the pointer enter event to the EventTrigger
+                    trigger.triggers.Add(pointerEnterEntry);
+
+                    // Update UI elements for each contract
+                    contractButton.interactable = !acceptedContracts.Contains(contract); // Enable button if not already accepted
+
+                    // Set button click event to accept the contract
+                    int contractIndex = contractButtons.Count; // Capture the current value of 'i'
+                    contractButton.onClick.AddListener(() => AcceptContract(contractIndex));
+
+                    // Update UI text for contract description
+                    TextMeshProUGUI contractDescriptionText = contractButton.GetComponentInChildren<TextMeshProUGUI>();
+                    contractDescriptionText.text = contract.description;
+
+                    // Add the contract button to the list
+                    contractButtons.Add(contractButton);
+
+                    if (contract.goal.ContractType.ToString() == "BossEnemy")
                     {
-                        contract.isActive = true;
-                        acceptedContracts.Add(contract);
+                        if (PlayerPrefs.HasKey("BossQuest") && PlayerPrefs.GetInt("BossQuestCompleted") == 0)
+                        {
+                            contract.isActive = true;
+                            acceptedContracts.Add(contract);
 
-                        Button contractButtonMain = contractButtons[contractIndex];
-                        contractButtonMain.interactable = false;
+                            Button contractButtonMain = contractButtons[contractIndex];
+                            contractButtonMain.interactable = false;
 
-                        // Update UI or provide visual feedback for the accepted contract
-                        contractButton.image.color = Color.green; // Highlight the accepted contract button
+                            // Update UI or provide visual feedback for the accepted contract
+                            contractButton.image.color = Color.green; // Highlight the accepted contract button
+                        }
                     }
-                }
 
-                else if (contract.goal.ContractType.ToString() == "Artifact")
-                {
-                    if (PlayerPrefs.HasKey("ArtifactQuest") && PlayerPrefs.GetInt("ArtifactQuestCompleted") == 0)
+                    else if (contract.goal.ContractType.ToString() == "Artifact")
                     {
-                        contract.isActive = true;
-                        acceptedContracts.Add(contract);
+                        if (PlayerPrefs.HasKey("ArtifactQuest") && PlayerPrefs.GetInt("ArtifactQuestCompleted") == 0)
+                        {
+                            contract.isActive = true;
+                            acceptedContracts.Add(contract);
 
-                        Button contractButtonMain = contractButtons[contractIndex];
-                        contractButtonMain.interactable = false;
+                            Button contractButtonMain = contractButtons[contractIndex];
+                            contractButtonMain.interactable = false;
 
-                        // Update UI or provide visual feedback for the accepted contract
-                        contractButton.image.color = Color.green; // Highlight the accepted contract button
+                            // Update UI or provide visual feedback for the accepted contract
+                            contractButton.image.color = Color.green; // Highlight the accepted contract button
+                        }
                     }
-                }
 
-                else if (contract.goal.ContractType.ToString() == "Bombs")
-                {
-                    if (PlayerPrefs.HasKey("BombQuest") && PlayerPrefs.GetInt("BombQuestCompleted") == 0)
+                    else if (contract.goal.ContractType.ToString() == "Bombs")
                     {
-                        contract.isActive = true;
-                        acceptedContracts.Add(contract);
+                        if (PlayerPrefs.HasKey("BombQuest") && PlayerPrefs.GetInt("BombQuestCompleted") == 0)
+                        {
+                            contract.isActive = true;
+                            acceptedContracts.Add(contract);
 
-                        Button contractButtonMain = contractButtons[contractIndex];
-                        contractButtonMain.interactable = false;
+                            Button contractButtonMain = contractButtons[contractIndex];
+                            contractButtonMain.interactable = false;
 
-                        // Update UI or provide visual feedback for the accepted contract
-                        contractButton.image.color = Color.green; // Highlight the accepted contract button
+                            // Update UI or provide visual feedback for the accepted contract
+                            contractButton.image.color = Color.green; // Highlight the accepted contract button
+                        }
                     }
-                }
 
-                else if (contract.goal.ContractType.ToString() == "Guardian")
-                {
-                    if (PlayerPrefs.HasKey("GuardianQuest") && PlayerPrefs.GetInt("GuardianQuestCompleted") == 0)
+                    else if (contract.goal.ContractType.ToString() == "Guardian")
                     {
-                        contract.isActive = true;
-                        acceptedContracts.Add(contract);
+                        if (PlayerPrefs.HasKey("GuardianQuest") && PlayerPrefs.GetInt("GuardianQuestCompleted") == 0)
+                        {
+                            contract.isActive = true;
+                            acceptedContracts.Add(contract);
 
-                        Button contractButtonMain = contractButtons[contractIndex];
-                        contractButtonMain.interactable = false;
+                            Button contractButtonMain = contractButtons[contractIndex];
+                            contractButtonMain.interactable = false;
 
-                        // Update UI or provide visual feedback for the accepted contract
-                        contractButton.image.color = Color.green; // Highlight the accepted contract button
+                            // Update UI or provide visual feedback for the accepted contract
+                            contractButton.image.color = Color.green; // Highlight the accepted contract button
+                        }
                     }
-                }
 
-                else if (contract.goal.ContractType.ToString() == "Intel")
-                {
-                    if (PlayerPrefs.HasKey("IntelQuest") && PlayerPrefs.GetInt("IntelQuestCompleted") == 0)
+                    else if (contract.goal.ContractType.ToString() == "Intel")
                     {
-                        contract.isActive = true;
-                        acceptedContracts.Add(contract);
+                        if (PlayerPrefs.HasKey("IntelQuest") && PlayerPrefs.GetInt("IntelQuestCompleted") == 0)
+                        {
+                            contract.isActive = true;
+                            acceptedContracts.Add(contract);
 
-                        Button contractButtonMain = contractButtons[contractIndex];
-                        contractButtonMain.interactable = false;
+                            Button contractButtonMain = contractButtons[contractIndex];
+                            contractButtonMain.interactable = false;
 
-                        // Update UI or provide visual feedback for the accepted contract
-                        contractButton.image.color = Color.green; // Highlight the accepted contract button
+                            // Update UI or provide visual feedback for the accepted contract
+                            contractButton.image.color = Color.green; // Highlight the accepted contract button
+                        }
                     }
-                }
 
-                else if (contract.goal.ContractType.ToString() == "Collector")
-                {
-                    if (PlayerPrefs.HasKey("CollectorQuest") && PlayerPrefs.GetInt("CollectorQuestCompleted") == 0)
+                    else if (contract.goal.ContractType.ToString() == "Collector")
                     {
-                        contract.isActive = true;
-                        acceptedContracts.Add(contract);
+                        if (PlayerPrefs.HasKey("CollectorQuest") && PlayerPrefs.GetInt("CollectorQuestCompleted") == 0)
+                        {
+                            contract.isActive = true;
+                            acceptedContracts.Add(contract);
 
-                        Button contractButtonMain = contractButtons[contractIndex];
-                        contractButtonMain.interactable = false;
+                            Button contractButtonMain = contractButtons[contractIndex];
+                            contractButtonMain.interactable = false;
 
-                        // Update UI or provide visual feedback for the accepted contract
-                        contractButton.image.color = Color.green; // Highlight the accepted contract button
+                            // Update UI or provide visual feedback for the accepted contract
+                            contractButton.image.color = Color.green; // Highlight the accepted contract button
+                        }
                     }
-                }
 
-                // Add the index to the filteredContractIndices list
-                filteredContractIndices.Add(contractButtons.Count);
+                    // Add the index to the filteredContractIndices list
+                    filteredContractIndices.Add(contractButtons.Count);
+                }
             }
         }
     }

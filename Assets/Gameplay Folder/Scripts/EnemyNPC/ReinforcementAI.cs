@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using Unity.XR.CoreUtils;
+using Umbrace.Unity.PurePool;
 
 public class ReinforcementAI : MonoBehaviour
 {
@@ -67,6 +68,7 @@ public class ReinforcementAI : MonoBehaviour
     public MatchEffects match;
 
     public float sphereRadius = 0.5f;
+    public GameObjectPoolManager PoolManager;
 
     // Start is called before the first frame update
     public void OnEnable()
@@ -95,6 +97,12 @@ public class ReinforcementAI : MonoBehaviour
 
             Patrol();
         }
+
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+
     }
 
     public void FindClosestEnemy()

@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using static DroneHealth;
@@ -34,6 +35,16 @@ public class ReactorDrone : MonoBehaviour
 
     public float sphereRadius = 0.5f;
 
+    public GameObjectPoolManager PoolManager;
+
+    private void Awake()
+    {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+    }
 
     private void Start()
     {
@@ -120,20 +131,19 @@ public class ReactorDrone : MonoBehaviour
         RaycastHit hit;
         if (Physics.SphereCast(transform.position, sphereRadius, directionToTarget, out hit, shootDistance, obstacleMask))
         {
-            // Debugging line
-            if (hit.collider != null)
-            {
-                // More debugging
-                if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("ReactorInteractor") || hit.collider.gameObject.CompareTag("Reinforcements")
-                    || hit.collider.gameObject.CompareTag("Bullet") || hit.collider.gameObject.CompareTag("RightHand") || hit.collider.gameObject.CompareTag("LeftHand")
-                    || hit.collider.gameObject.CompareTag("RHand") || hit.collider.gameObject.CompareTag("LHand") || hit.collider.gameObject.CompareTag("EnemyBullet")
-                    || hit.collider.gameObject.CompareTag("PickupSlot") || hit.collider.gameObject.CompareTag("PickupStorage") || hit.collider.gameObject.CompareTag("toxicRadius")
-                    || hit.collider.gameObject.CompareTag("Untagged"))
-                {
-                    if (hit.collider.gameObject.GetComponentInParent<PlayerHealth>() != null)
-                        return true;
-                }
-            }
+            // Check for PlayerHealth in the hit object and its parents
+            return CheckForPlayerHealthInHierarchy(hit.collider.gameObject);
+        }
+        return false;
+    }
+
+    private bool CheckForPlayerHealthInHierarchy(GameObject obj)
+    {
+        while (obj != null)
+        {
+            if (obj.GetComponent<PlayerHealth>() != null)
+                return true;
+            obj = obj.transform.parent?.gameObject;
         }
         return false;
     }
@@ -164,7 +174,7 @@ public class ReactorDrone : MonoBehaviour
             fireWeaponBool = true;
             foreach (Transform spawn in droneBulletSpawn)
             {
-                GameObject spawnedBullet = Instantiate(droneBullet, spawn.position, Quaternion.identity);
+                GameObject spawnedBullet = this.PoolManager.Acquire(droneBullet, spawn.position, Quaternion.identity);
                 spawnedBullet.GetComponent<Bullet>().audioSource.PlayOneShot(spawnedBullet.GetComponent<Bullet>().clip);
                 spawnedBullet.GetComponent<Bullet>().bulletModifier = 6;
                 spawnedBullet.GetComponent<Rigidbody>().velocity = spawn.right * shootForce * GlobalSpeedManager.SpeedMultiplier;

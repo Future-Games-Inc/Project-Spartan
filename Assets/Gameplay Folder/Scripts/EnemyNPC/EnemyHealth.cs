@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,6 +19,7 @@ public class EnemyHealth : MonoBehaviour
 
     public Transform[] lootSpawn;
     public float xpDropRate;
+    public GameObjectPoolManager PoolManager;
 
     // Start is called before the first frame update
     void Start()
@@ -27,8 +29,13 @@ public class EnemyHealth : MonoBehaviour
 
     public void OnEnable()
     {
-            alive = true;
-            enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        alive = true;
+        enemyCounter = GameObject.FindGameObjectWithTag("spawnManager").GetComponent<SpawnManager1>();
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+
+        }
     }
 
     public void KillEnemy()
@@ -60,12 +67,12 @@ public class EnemyHealth : MonoBehaviour
 
             if (Random.Range(0, 100f) < xpDropRate)
             {
-                GameObject DropExtra = Instantiate(xpDropExtra, t.position, Quaternion.identity);
+                GameObject DropExtra = this.PoolManager.Acquire(xpDropExtra, t.position, Quaternion.identity);
                 DropExtra.GetComponent<Rigidbody>().isKinematic = false;
             }
             else
             {
-                GameObject DropNormal = Instantiate(xpDrop, t.position, Quaternion.identity);
+                GameObject DropNormal = this.PoolManager.Acquire(xpDrop, t.position, Quaternion.identity);
                 DropNormal.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
@@ -77,6 +84,6 @@ public class EnemyHealth : MonoBehaviour
         enemyCounter.UpdateEnemy();
         enemyCounter.UpdateEnemyCount();
         yield return new WaitForSeconds(2);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 }

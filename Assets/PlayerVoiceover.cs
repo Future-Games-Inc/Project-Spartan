@@ -26,6 +26,7 @@ public class PlayerVoiceover : MonoBehaviour
 
     public IEnumerator VoiceOvers(string faction, int Index)
     {
+        yield return new WaitForSeconds(1f);
         if (faction == "Cyber SK Gang" && !audioSource.isPlaying)
         {
             leaderImages[0].SetActive(true);

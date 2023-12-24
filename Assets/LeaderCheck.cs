@@ -9,7 +9,7 @@ public class LeaderCheck : MonoBehaviour
     public GameObject[] gameObjects; // assuming you have 4 gameObjects corresponding to 4 owner strings
     public TextMeshProUGUI extractionTime;
 
-    void OnEnable()
+    void Start()
     {
         LootLockerSDKManager.GetMemberRank(sceneName.text.ToString(), sceneName.text.ToString(), (response) =>
         {

@@ -1,4 +1,5 @@
 using System.Collections;
+using Umbrace.Unity.PurePool;
 using UnityEngine;
 
 public class BlackoutBullet : MonoBehaviour
@@ -28,6 +29,18 @@ public class BlackoutBullet : MonoBehaviour
         public string Tag;
     }
     public TargetInfo[] Targets;
+
+    public GameObjectPoolManager PoolManager;
+
+    private void OnEnable()
+    {
+        // Find the manager if one hasn't been specified.
+        if (this.PoolManager == null)
+        {
+            this.PoolManager = Object.FindObjectOfType<GameObjectPoolManager>();
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -130,7 +143,7 @@ public class BlackoutBullet : MonoBehaviour
     {
         objectRenderer.enabled = false;
         yield return new WaitForSeconds(delay);
-        Destroy(gameObject);
+        this.PoolManager.Release(gameObject);
     }
 
 }

@@ -7,6 +7,7 @@ public class SlowMotionManager : MonoBehaviour
 {
     public float slowDownFactor = 0.25f;
     private bool isSlowMotionActive = false;
+    private bool charged;
     public bool available = true;
     public InputActionProperty rightThumbstickPress;
     public GameObject warpIcon;
@@ -36,7 +37,7 @@ public class SlowMotionManager : MonoBehaviour
                 cooldownTime = 0;
             }
         }
-        else if (!available)
+        else if (!available && charged)
         {
             cooldownTime += Time.deltaTime;
 
@@ -51,7 +52,7 @@ public class SlowMotionManager : MonoBehaviour
             ActivateSlowMotion();
         }
 
-        warpIcon.SetActive(available);
+        warpIcon.SetActive(available && charged);
     }
 
     void ActivateSlowMotion()
@@ -72,6 +73,7 @@ public class SlowMotionManager : MonoBehaviour
     IEnumerator Recharge()
     {
         yield return new WaitForSeconds(20);
+        charged = true;
         available = true;
     }
 }
